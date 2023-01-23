@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600&display=swap');
+
+html, body {
+  background: #FFFCF5;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+* {
+  font-family: 'Bai Jamjuree', sans-serif !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.none-pointer {
+  cursor: default !important;
+}
+
+.hyper-link {
+  text-decoration: underline !important;
+  text-decoration-color: #0000EE !important;
+  color: #0000EE !important;
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  transition: height 1s ease-in-out;
+  overflow: hidden;
+}
+
+.expand-enter,
+.expand-leave-to {
+  height: 0;
+}
+
+.navigation-ham-enter-active,
+.navigation-ham-leave-active {
+  transition: width 1s ease-in-out;
+  overflow: hidden;
+}
+
+.navigation-ham-enter,
+.navigation-ham-leave-to {
+  width: 0;
+}
+
+input::-ms-reveal, input::-ms-clear {
+  display: none;
+}
+
+input::-ms-reveal, input::-ms-clear {
+  display: none;
+}
+
+.message-error {
+  color: #FF0000;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+
+.button-success {
+  border: 0 !important;
+  background-color: #007773 !important;
+  color: #ffffff !important;
+}
+
+.button-danger {
+  border: 0 !important;
+  background-color: #cd7a82 !important;
+  color: #ffffff !important;
+}
+
+.button-primary {
+  border: 0 !important;
+  background-color: #15466e !important;
+  color: #ffffff !important;
+}
+
+.button-secondary {
+  border: 0 !important;
+  background-color: rgb(125, 133, 146, 0.9) !important;
+  color: #ffffff !important;
+}
+
+.button-info {
+  border: 0 !important;
+  background-color: rgb(23, 162, 184, 0.9) !important;
+  color: #ffffff !important;
+}
+
+.button-warning {
+  border: 0 !important;
+  background-color: rgb(255, 193, 7, 0.9) !important;
+  color: #ffffff !important;
+}
