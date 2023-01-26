@@ -477,10 +477,10 @@ export default {
       data: {
         myBook: '1',
         username: '',
-        type: '1',
-        typeBook: '1',
-        secret: '1',
-        level: '1',
+        type: '',
+        typeBook: '',
+        secret: '12',
+        level: '12',
         refers: [{code: '', name: '', date: ''}],
         name: '',
         set: [],
@@ -492,7 +492,7 @@ export default {
         see: '',
       },
       optionSelect: {
-        type: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
+        type: [{ name: 'บันทึกข้อความเสนอ นรม./รอง นรม.',value: '1' },{ name: 'หนังสือส่งออกภายนอก',value: '2' }],
         typeBook: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
         secret: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
         level: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
@@ -605,6 +605,7 @@ export default {
       this.data.attachment.push({name: ''})
     },
     addRefersClick() {
+      this.axios.get(`/master-data/book-refer`)
       this.data.refers.push({code: '', name: '', date: ''})
     },
     addRegister() {
@@ -616,7 +617,7 @@ export default {
         deliveryFormat: 'ไม่ระบุ',
         department: [],
         optionSelect: {
-          sendRegistration: this.optionSelectDefault.sendRegistration,
+           sendRegistration: this.optionSelectDefault.sendRegistration,
           issuingNumbers: this.optionSelectDefault.issuingNumbers,
           deliveryFormat: this.optionSelectDefault.deliveryFormat,
           department: this.optionSelectDefault.department,
@@ -786,14 +787,73 @@ export default {
       //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       // })
     },
+    apiMaster() {
+      this.showLoading = true
+      const book_type = this.axios.get(`/master-data/book-type`)
+      const speed = this.axios.get(`/master-data/speed`)
+      const secret = this.axios.get(`/master-data/secret`)
+      const process_type = this.axios.get(`/master-data/process-type`)
+      const perrmission_type = this.axios.get(`/master-data/permission-type`)
+
+        this.axios.all([book_type, speed, secret, process_type, perrmission_type])
+      .then(this.axios.spread((...response) => {
+        this.showLoading = false
+        const book_type = response[0]
+        const speed = response[1]
+        const secret = response[2]
+        const process_type = response[3]
+        const perrmission_type = response[4]
+        
+        book_type.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        this.optionSelect.typeBook = book_type.data.data
+        speed.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        this.optionSelect.level = speed.data.data
+        
+        secret.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        this.optionSelect.secret = secret.data.data
+        
+        process_type.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        this.optionSelect.model = process_type.data.data
+        
+        perrmission_type.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        this.optionSelect.see = perrmission_type.data.data
+        
+        if (this.$route.params.id) {
+          this.edit = true
+          this.apiDetail()
+        } else {
+          this.edit = false
+        }
+        
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+      
+    },
   },
   mounted () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.apiDetail()
-    } else {
-      this.edit = false
-    }
+    this.apiMaster()
   },
   watch: {
     'modalRegiter.showModal' () {
