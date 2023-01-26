@@ -30,7 +30,7 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ไอดี</th>
-                <th class="col2">ชื่อผู้ใช้งาน</th>
+                <th class="col2">ชื่อ-นามสกุล</th>
                 <th class="col3">หน่วยงาน</th>
                 <th class="col4">ชื่อผู้ใช้งาน</th>
                 <th class="col5">Email</th>
@@ -41,8 +41,8 @@
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.id}}</td>
-                <td class="col2">{{item.name}}</td>
-                <td class="col3">{{item.division_name}}</td>
+                <td class="col2">{{item.fname}}  {{item.lname}}</td>
+                <td class="col3">{{item.department_name}}</td>
                 <td class="col4">{{item.username}}</td>
                 <td class="col5">{{item.email}}</td>
                 <td class="col6">
@@ -130,58 +130,46 @@ export default {
     },
     apiUser() {
       this.data.table = []
-      this.data.table = [{
-          "id": 5968,
-          "name": "ไกรกฤษฏิ์ หินันท์ชัย",
-          "username": "kraikrit.pkm",
-          "email": "kraikrit@samudjodkodmhai.com",
-          "position": "ผู้ทดสอบ",
-          "division_name": " กองบริหารงานสารสนเทศ ",
-          "group_name": "เจ้าหน้าที่บริษัท",
-          "department": "INTERNAL",
-          "department_id": 0,
-          "department_name": "",
-          "permission_id": 1,
-          "permission_name": "User Admin",
-          "roles": []
-      }]
-      this.data.table.filter(row => {
-        row.levelDesc = ''
-        row.roles.filter((row2, index) => {
-          row.levelDesc += (row2.role_name + (row.roles.length == (index+1) ? '' : ', '))
-        })
-        return row
-      })
-
-      this.data.page = 1
-      this.data.lastPage = 1
-      this.data.total = 1
+      // this.data.table = [{
+      //     "id": 5968,
+      //     "name": "ไกรกฤษฏิ์ หินันท์ชัย",
+      //     "username": "kraikrit.pkm",
+      //     "email": "kraikrit@samudjodkodmhai.com",
+      //     "position": "ผู้ทดสอบ",
+      //     "division_name": " กองบริหารงานสารสนเทศ ",
+      //     "group_name": "เจ้าหน้าที่บริษัท",
+      //     "department": "INTERNAL",
+      //     "department_id": 0,
+      //     "department_name": "",
+      //     "permission_id": 1,
+      //     "permission_name": "User Admin",
+      //     "roles": []
+      // }]
+      // this.data.page = 1
+      // this.data.lastPage = 1
+      // this.data.total = 1
       
-      // this.showLoading = true
-      // this.axios.get('/v1/report/announcement/quantity/monthly', {
-      //   params: {
-      //     month_str: this.assetsUtils.year543(this.data.dateSt),
-      //     month_end: this.assetsUtils.year543(this.data.dateEn),
-      //     page: this.data.page,
-      //     user: 'INTERNAL',
-      //     page_size: this.data.pageSize
-      //   }
-      // })
-      // .then((response) => {
-      //   this.showLoading = false
-      //   response.data.data.meta.filter(row => {
-      //     row.Total = row.Type1 + row.Type2 + row.Type3 + row.Type4 + row.Type5
-      //     row.Date = this.assetsUtils.yearPlus543(row.Date)
-      //   })
-      //   this.data.table = response.data.data.meta
-      //   this.data.lastPage = response.data.data.last_page
-      //   this.data.total = response.data.data.total
-      //   this.data.active = response.data.data.page
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get('/user' , {
+        // params: {
+        //   headers: {
+        //   'Content-Type': "application/json"
+        // }
+        // }
+      })
+      .then((response) => {
+        this.showLoading = false
+        response.data.data.filter(row => {
+          //row.permission_id = row.role_id
+          // row.roles.filter((row2, index) => {
+          //   row.levelDesc += (row2.role_name + (row.roles.length == (index+1) ? '' : ', '))  
+        })
+        this.data.table = response.data.data
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     deleteClick(data) {
       let _this = this
