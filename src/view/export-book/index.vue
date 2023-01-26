@@ -116,76 +116,82 @@ export default {
     },
     apiDepartment() {
       this.data.table = []
-      this.data.table = [{
-        "bookNum": "2566/20",
-        "departmentName": "กศน. : กรมการศึกษานอกโรงเรียน",
-        "bookingId": 3116,
-        "bookingNoN": "นร0501/15",
-        "categoryId": null,
-        "categoryName": "",
-        "cateType": 2,
-        "bookingDate": null,
-        "bookingDateN": "2023-01-13T00:00:00",
-        "bookingIssuesDate": "2023-01-13T00:00:00",
-        "date": "13/01/2566",
-        "methodId": null,
-        "methodName": null,
-        "id": 51,
-        "typeId": 51,
-        "typename": "ขอความเห็น",
-        "secretId": 4,
-        "secretName": "ธรรมดา",
-        "bookingSubject": "เทสใช้เลขจอง",
-        "bookingHint": "",
-        "statusId": 8,
-        "statusName": "ระหว่างดำเนินการ",
-        "bookingoutFlag": 1,
-        "deleteFlag": 0,
-        "bookingNo": null,
-        "speedPic": "/files/icon/speed/4/icon_bookSpeed(02-09-2020)_LSA.png",
-        "statusPic": null,
-        "createBy": "phawitphorn.m",
-        "createDate": "2023-01-13T14:25:40.567298",
-        "response": null,
-        "speedId": 4,
-        "speedName": "ธรรมดา",
-        "speedPicName": "icon_bookSpeed(02-09-2020)_LSA.png",
-        "statusPicName": "/files/icon/status/8/icon_bookStatus(11-09-2020)_KdE.png",
-        "amtbook": 12,
-        "sendingDate": "",
-        "total": 956,
-        "responseSub": null,
-        "prepareBy": "phawitphorn.m"
-    }]
-      this.data.page = 1
-      this.data.lastPage = 1
-      this.data.total = 1
+    //   this.data.table = [{
+    //     "bookNum": "2566/20",
+    //     "departmentName": "กศน. : กรมการศึกษานอกโรงเรียน",
+    //     "bookingId": 3116,
+    //     "bookingNoN": "นร0501/15",
+    //     "categoryId": null,
+    //     "categoryName": "",
+    //     "cateType": 2,
+    //     "bookingDate": null,
+    //     "bookingDateN": "2023-01-13T00:00:00",
+    //     "bookingIssuesDate": "2023-01-13T00:00:00",
+    //     "date": "13/01/2566",
+    //     "methodId": null,
+    //     "methodName": null,
+    //     "id": 51,
+    //     "typeId": 51,
+    //     "typename": "ขอความเห็น",
+    //     "secretId": 4,
+    //     "secretName": "ธรรมดา",
+    //     "bookingSubject": "เทสใช้เลขจอง",
+    //     "bookingHint": "",
+    //     "statusId": 8,
+    //     "statusName": "ระหว่างดำเนินการ",
+    //     "bookingoutFlag": 1,
+    //     "deleteFlag": 0,
+    //     "bookingNo": null,
+    //     "speedPic": "/files/icon/speed/4/icon_bookSpeed(02-09-2020)_LSA.png",
+    //     "statusPic": null,
+    //     "createBy": "phawitphorn.m",
+    //     "createDate": "2023-01-13T14:25:40.567298",
+    //     "response": null,
+    //     "speedId": 4,
+    //     "speedName": "ธรรมดา",
+    //     "speedPicName": "icon_bookSpeed(02-09-2020)_LSA.png",
+    //     "statusPicName": "/files/icon/status/8/icon_bookStatus(11-09-2020)_KdE.png",
+    //     "amtbook": 12,
+    //     "sendingDate": "",
+    //     "total": 956,
+    //     "responseSub": null,
+    //     "prepareBy": "phawitphorn.m"
+    // }]
+    //   this.data.page = 1
+    //   this.data.lastPage = 1
+    //   this.data.total = 1
       
-      // this.showLoading = true
-      // this.axios.get('/v1/report/announcement/quantity/monthly', {
-      //   params: {
-      //     month_str: this.assetsUtils.year543(this.data.dateSt),
-      //     month_end: this.assetsUtils.year543(this.data.dateEn),
-      //     page: this.data.page,
-      //     export-book: 'INTERNAL',
-      //     page_size: this.data.pageSize
-      //   }
-      // })
-      // .then((response) => {
-      //   this.showLoading = false
-      //   response.data.data.meta.filter(row => {
-      //     row.Total = row.Type1 + row.Type2 + row.Type3 + row.Type4 + row.Type5
-      //     row.Date = this.assetsUtils.yearPlus543(row.Date)
-      //   })
-      //   this.data.table = response.data.data.meta
-      //   this.data.lastPage = response.data.data.last_page
-      //   this.data.total = response.data.data.total
-      //   this.data.active = response.data.data.page
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get('/booking-out', {
+        params: {
+          // month_str: this.assetsUtils.year543(this.data.dateSt),
+          // month_end: this.assetsUtils.year543(this.data.dateEn),
+          // page: this.data.page,
+          // export-book: 'INTERNAL',
+          // page_size: this.data.pageSize
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        response.data.data.filter(row => {
+          row.speedName = row.speed_name
+          // row.bookingNoN = row.receive_document_number
+          row.bookingSubject = row.subject
+          // row.bookingSubject = row.subject
+          row.amtbook = row.department_name
+          // row.date = row.as_of_date
+          // row.response = row.response_name
+          // row.statusName = row.as_of_date
+        })
+        this.data.table = response.data.data
+        // this.data.lastPage = response.data.data.last_page
+        // this.data.total = response.data.data.total
+        // this.data.active = response.data.data.page
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     deleteClick(data) {
       let _this = this
