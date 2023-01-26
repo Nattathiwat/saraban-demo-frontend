@@ -14,7 +14,7 @@
             </button>
           </div>
           <div class="group-end">
-            <div class="search">
+            <div class="search" v-if="false">
               <cpn-input  v-model="data.search"
                           name="search"
                           type="search"
@@ -30,22 +30,16 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ไอดี</th>
-                <th class="col2">รหัสหน่วยงาน</th>
-                <th class="col3">ชื่อย่อหน่วยงาน</th>
-                <th class="col4">ชื่อหน่วยงาน</th>
-                <th class="col5">วันที่สร้าง</th>
-                <th class="col6">เวลาที่สร้าง</th>
+                <th class="col2">ชื่อย่อหน่วยงาน</th>
+                <th class="col3">ชื่อหน่วยงาน</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.id}}</td>
-                <td class="col2">{{item.code}}</td>
-                <td class="col3">{{item.short_name}}</td>
-                <td class="col4">{{item.name}}</td>
-                <td class="col5">{{item.date}}</td>
-                <td class="col6">{{item.time}}</td>
+                <td class="col2">{{item.department_short_name}}</td>
+                <td class="col3">{{item.department_full_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -54,12 +48,12 @@
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="7">ไม่มีข้อมูล</td>
+                <td colspan="4">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="group-footer">
+        <div class="group-footer" v-if="false">
           <cpn-pagination :page="data.page"
                           :total="data.total"
                           :lastPage="data.lastPage"
@@ -119,43 +113,19 @@ export default {
     },
     apiDepartment() {
       this.data.table = []
-      this.data.table = [{
-          "id": 1,
-          "code": " 0501",
-          "name": " สำนักงานเลขาธิการ ",
-          "short_name": " สลธ. ",
-          "date": "27 ก.ย. 2565",
-          "time": "13:52:48 น."
-      }]
-      this.data.page = 1
-      this.data.lastPage = 1
-      this.data.total = 1
-      
-      // this.showLoading = true
-      // this.axios.get('/v1/report/announcement/quantity/monthly', {
-      //   params: {
-      //     month_str: this.assetsUtils.year543(this.data.dateSt),
-      //     month_end: this.assetsUtils.year543(this.data.dateEn),
-      //     page: this.data.page,
-      //     department: 'INTERNAL',
-      //     page_size: this.data.pageSize
-      //   }
-      // })
-      // .then((response) => {
-      //   this.showLoading = false
-      //   response.data.data.meta.filter(row => {
-      //     row.Total = row.Type1 + row.Type2 + row.Type3 + row.Type4 + row.Type5
-      //     row.Date = this.assetsUtils.yearPlus543(row.Date)
-      //   })
-      //   this.data.table = response.data.data.meta
-      //   this.data.lastPage = response.data.data.last_page
-      //   this.data.total = response.data.data.total
-      //   this.data.active = response.data.data.page
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get('/department')
+      .then((response) => {
+        this.showLoading = false
+        this.data.table = response.data.data
+        // this.data.lastPage = response.data.data.last_page
+        // this.data.total = response.data.data.total
+        // this.data.active = response.data.data.page
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     deleteClick(data) {
       let _this = this
@@ -167,10 +137,10 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          // _this.showLoading = true
-          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
-          // .then(() => { 
-          //   _this.showLoading = false
+          _this.showLoading = true
+          _this.axios.delete(`/department/${data.id}`)
+          .then(() => { 
+            _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
@@ -180,11 +150,11 @@ export default {
                 _this.apiDepartment()
               }
             }
-          // })
-          // .catch((error) => {
-          //   _this.showLoading = false
-          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          // })
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
         }
       }
     },

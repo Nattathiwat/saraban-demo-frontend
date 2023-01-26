@@ -9,7 +9,7 @@
               />
       <span class="checkmark" :style="this.style"/>
     </label>
-    <div class="name-checkbox">{{label}}</div>
+    <div class="name-checkbox pointer" @click="value=!value">{{label}}</div>
   </div>
 
 </template>
@@ -46,7 +46,7 @@ export default {
     display: flex;
 
     .name-checkbox {
-      margin-left: 15px;
+      padding-left: 15px;
       margin-top: 2px;
     }
 

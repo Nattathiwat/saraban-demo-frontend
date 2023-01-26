@@ -20,29 +20,19 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">รหัสหน่วยงาน <span class="required">*</span></div>
-                <cpn-input  v-model="data.code"
-                            name="code"
+                <div class="name">ชื่อย่อหน่วยงาน <span class="required">*</span></div>
+                <cpn-input  v-model="data.department_short_name"
+                            name="department_short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อย่อหน่วยงาน <span class="required">*</span></div>
-                <cpn-input  v-model="data.short_name"
-                            name="short_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
-              </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
                 <div class="name">ชื่อหน่วยงาน <span class="required">*</span></div>
-                <cpn-input  v-model="data.name"
-                            name="name"
+                <cpn-input  v-model="data.department_full_name"
+                            name="department_full_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
-              <div class="group-input"></div>
             </div>
           </div>
           <div class="line"></div>
@@ -80,9 +70,8 @@ export default {
       showLoading: false,
       edit: false,
       data: {
-        code: '',
-        short_name: '',
-        name: '',
+        department_short_name: '',
+        department_full_name: '',
       },
     }
   },
@@ -94,9 +83,8 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.code = ''
-      this.data.short_name = ''
-      this.data.name = ''
+      this.data.department_short_name = ''
+      this.data.department_full_name = ''
     },
     onSubmit() {
       let _this = this
@@ -108,68 +96,51 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           if (_this.edit) {
-            // let groupdata = {
-            //   name: _this.data.name,
-            //   active: _this.data.active,
-            //   description: _this.data.description,
-            //   name: _this.data.name,
-            //   code: _this.data.code,
-            //   short_name: _this.data.short_name,
-            //   user_id: parseInt(_this.data.user_id)
-            // }
-            // _this.showLoading = true
-            // _this.axios.put(`/v1/master_data/department/${_this.$route.params.id}`, groupdata)
-            // .then(() => { 
-            //   _this.showLoading = false
+            let groupdata = {
+              department_full_name: _this.data.department_full_name,
+              department_short_name: _this.data.department_short_name,
+            }
+            _this.showLoading = true
+            _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            // })
-            // .catch((error) => {
-            //   _this.showLoading = false
-            //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            // })
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           } else {
-            // let groupdata = {
-            //   name: _this.data.name,
-            //   active: _this.data.active,
-            //   description: _this.data.description,
-            //   name: _this.data.name,
-            //   department: parseInt(_this.data.department),
-            //   code: _this.data.code,
-            //   short_name: _this.data.short_name
-            // }
-            // _this.showLoading = true
-            // _this.axios.post(`/v1/master_data/department`, groupdata)
-            // .then(() => { 
-            //   _this.showLoading = false
+            let groupdata = {
+              department_full_name: _this.data.department_full_name,
+              department_short_name: _this.data.department_short_name,
+            }
+            _this.showLoading = true
+            _this.axios.post(`/department`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            // })
-            // .catch((error) => {
-            //   _this.showLoading = false
-            //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            // })
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           }
         }
       }
     },
     apiDetail() {
-        this.data.code = 'aaaaa'
-        this.data.short_name = 'bbbbb'
-        this.data.name = 'aaa@aa.aa'
-        this.data.department = 'สำนักงานเลขาธิการ'
-      // this.showLoading = true
-      // this.axios.get(`/v1/master_data/department/${this.$route.params.id}`)
-      // .then((response) => { 
-      //   this.showLoading = false
-      //   this.data.code = response.data.data.code
-      //   this.data.short_name = response.data.data.short_name
-      //   this.data.name = response.data.data.name
-      //   this.data.department = response.data.data.department
-      //   this.data.user_id = response.data.data.user_id
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get(`/department/${this.$route.params.id}`)
+      .then((response) => { 
+        this.showLoading = false
+        this.data.department_short_name = response.data.data.department_short_name
+        this.data.department_full_name = response.data.data.department_full_name
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
   },
   mounted () {
