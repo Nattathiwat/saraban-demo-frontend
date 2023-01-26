@@ -7,12 +7,14 @@
               :name="name+'Input'"
               :type="type" 
               :rules="rules"
+              autocomplete="off"
               :class="['form-control', this.class]"
               :disabled="disabled"
               :placeholder="placeholder"
               :validateOnBlur="true"
               :validateOnChange="true"
               :validateOnInput="true"
+              @keypress="keypress"
               @keyup.enter="search(value)" />
       <button type="button" :disabled="disabled" v-show="searchFlag" @click="search(value)" class="button-search"><i class="bi bi-search icon-search"></i> ค้นหา</button>
     </div>
@@ -30,6 +32,17 @@ export default {
     }
   },
   methods: {
+    keypress(evt) {
+      if (this.isNumber) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+          evt.preventDefault();
+        } else {
+          return true;
+        }
+      }
+    },
     search(data) {
       if (this.searchFlag) {
         this.$emit('searchClick', data)
@@ -46,7 +59,7 @@ export default {
       this.value = this.modelValue
     }
   },
-  props: ['modelValue', 'rules', 'name', 'type', 'disabled', 'placeholder', 'class', 'errorMessage', 'searchFlag']
+  props: ['modelValue', 'rules', 'name', 'type', 'disabled', 'placeholder', 'class', 'errorMessage', 'searchFlag', 'isNumber']
 };
 </script>
 

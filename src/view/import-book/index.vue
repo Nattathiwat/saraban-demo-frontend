@@ -40,7 +40,7 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNo}}</td>
                 <td class="col3">{{item.referBookno}}</td>
@@ -140,6 +140,7 @@ export default {
         "contactFax": "",
         "bookingStatus": 0,
         "bookingHint": "",
+        "id": 5976,
         "bookingId": 5976,
         "date": "13/01/2566",
         "createDate": "2023-01-23T17:21:14.676528",
