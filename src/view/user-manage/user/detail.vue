@@ -38,16 +38,16 @@
               <div class="group-input left">
                 <div class="name">ชื่อผู้ใช้งาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.username"
-                            name="username"
+                            name="Usern"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">รหัสผ่าน <span class="required">*</span></div>
+                <div class="name">รหัสผ่าน <span v-if="!edit" class="required">*</span></div>
                 <cpn-input  v-model="data.password"
-                            name="password"
+                            name="passw"
                             type="password"
-                            rules="required"
+                            :rules="edit ? '' : 'required'"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
@@ -56,7 +56,7 @@
                 <div class="name">วัน เดือน ปีเกิด <span class="required">*</span></div>
               <div>
                 <cpn-datepicker v-model="data.birthdate"
-                        name="birthdate"
+                        name="birthdate "
                          />
               </div>
               </div>
@@ -71,7 +71,7 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">หน่วยงาน <span class="required">*</span></div>
-                <cpn-select v-model="data.department"
+                <cpn-select v-model="data.department_id"
                             name="department"
                             placeholder="กรุณาระบุ"
                             rules="required"
@@ -182,7 +182,7 @@ export default {
               "fname": _this.data.fname,
               "lname": _this.data.lname,
               "email": _this.data.email,
-              "department_id": parseInt(_this.data.department),
+              "department_id": parseInt(_this.data.department_id),
               "username": _this.data.username,
               "password": _this.data.password,
               "role_id":_this.data.level,
@@ -203,7 +203,7 @@ export default {
               "fname": _this.data.fname,
               "lname": _this.data.lname,
               "email": _this.data.email,
-              "department_id": parseInt(_this.data.department),
+              "department_id": parseInt(_this.data.department_id),
               "username": _this.data.username,
               "password": _this.data.password,
               "role_id": _this.data.level,
@@ -233,8 +233,9 @@ export default {
         this.data.username = response.data.data.username
         this.data.password = response.data.data.password
         this.data.email = response.data.data.email
-        this.data.department_id = response.data.department
-        this.data.birthdate = response.data.birthdate
+        this.data.department_id = response.data.data.department_id
+        this.data.birthdate = response.data.data.birthdate
+        this.data.level = response.data.data.role_id
       })
       .catch((error) => {
         this.showLoading = false

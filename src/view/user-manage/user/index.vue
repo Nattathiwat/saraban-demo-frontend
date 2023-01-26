@@ -14,7 +14,7 @@
             </button>
           </div>
           <div class="group-end">
-            <div class="search">
+            <div class="search" v-if="false">
               <cpn-input  v-model="data.search"
                           name="search"
                           type="search"
@@ -70,7 +70,7 @@
             </tbody>
           </table>
         </div>
-        <div class="group-footer">
+        <div class="group-footer" v-if="false">
           <cpn-pagination :page="data.page"
                           :total="data.total"
                           :lastPage="data.lastPage"
@@ -179,14 +179,14 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบผู้ใช้งาน`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        message: `“${data.fname}  ${data. lname}”  ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          // _this.showLoading = true
-          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
-          // .then(() => { 
-          //   _this.showLoading = false
+          _this.showLoading = true
+          _this.axios.delete(`/user/${data.id}`)
+          .then(() => { 
+            _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
@@ -196,11 +196,11 @@ export default {
                 _this.apiUser()
               }
             }
-          // })
-          // .catch((error) => {
-          //   _this.showLoading = false
-          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          // })
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
         }
       }
     },
