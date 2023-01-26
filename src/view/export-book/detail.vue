@@ -303,7 +303,7 @@
             </div>
           </div>
           <div class="line mt-4" v-if="data.set.length>0"></div>
-          <div class="send-to" v-if="data.set.length>0 || true">
+          <div class="send-to" v-if="data.set.length>0">
             <div class="group-input">
               <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) <span class="required">*กรุณาใส่รายชื่อที่ต้องการส่งต่อ</span></div>
               <cpn-input-tags v-model="data.sendTo"

@@ -40,7 +40,7 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNoN}}</td>
                 <td class="col3">{{item.bookingSubject}}</td>
@@ -130,6 +130,7 @@ export default {
         "date": "13/01/2566",
         "methodId": null,
         "methodName": null,
+        "id": 51,
         "typeId": 51,
         "typename": "ขอความเห็น",
         "secretId": 4,

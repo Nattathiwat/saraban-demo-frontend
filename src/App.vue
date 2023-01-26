@@ -20,7 +20,7 @@
           </div>
           <div class="group-list-head">
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'import-book' ? 'active': ''" @click="removeSelect(), $router.push({name: 'import-book'})">
+              <div class="list-navbar pointer" :class="$route.name == 'import-book'|| $route.name == 'import-book-create' || $route.name == 'import-book-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'import-book'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
@@ -29,7 +29,7 @@
               </div>
             </div>
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'export-book' ? 'active': ''" @click="removeSelect(), $router.push({name: 'export-book'})">
+              <div class="list-navbar pointer" :class="$route.name == 'export-book'|| $route.name == 'export-book-create' || $route.name == 'export-book-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'export-book'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
