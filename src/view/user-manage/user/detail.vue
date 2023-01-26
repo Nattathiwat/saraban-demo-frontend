@@ -40,7 +40,7 @@
                 <cpn-input  v-model="data.username"
                             name="Usern"
                             :rules="edit ? '' : 'required'"
-                            :disabled="edit ? '' :'disabled'"
+                            :disabled="edit"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
@@ -49,7 +49,7 @@
                             name="passw"
                             type="password"
                             :rules="edit ? '' : 'required'"
-                            :disabled="edit ? '' :'disabled'"
+                            :disabled="edit"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
