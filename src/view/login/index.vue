@@ -74,7 +74,9 @@ export default {
       data: {
         personNo: '',
         password: '',
-        message: 'ชื่อผู้ใช้ หรือ รหัสผ่าน ไม่ถูกต้อง !'
+        message: 'ชื่อผู้ใช้ หรือ รหัสผ่าน ไม่ถูกต้อง !',
+        fname: '',
+        lname: '',
       },
       modalAlert: {
         showModal: false,
@@ -93,45 +95,43 @@ export default {
       this.modalRepass = true
     },
     onSubmit(flag) { 
-
-      localStorage.setItem('login', 'true')
+      let formData = {}
+      formData = {
+        username: this.data.personNo,
+        password: this.data.password,
+        // name: this.dataAd?.name,
+        // email: this.dataAd?.username.split('@')[0],
+        // ad_flag: true
+      }
+      this.showLoading = true
+      this.axios.post('/auth/login',
+      formData,
+      {
+        headers: {
+          'Content-Type': "application/json"
+        }
+      })
+      .then((response) => {    
+        this.showLoading = false
+        console.log('ert')
+        //localStorage.setItem('token', response.data.access_token)
+        localStorage.setItem('department_name',response.data.department)
+        localStorage.setItem('department_id', response.data.department_id)
+        localStorage.setItem('fname', response.data.fname)
+        localStorage.setItem('lname', response.data.lname)
+        localStorage.setItem('login', 'true')
         this.$router.push({ 
           name: 'user',
         }).catch(()=>{});
-      // let formData = {}
-      // formData = {
-      //   username: this.data.personNo,
-      //   password: this.data.password,
-      //   name: this.dataAd?.name,
-      //   email: this.dataAd?.username.split('@')[0],
-      //   ad_flag: true
-      // }
-      // this.showLoading = true
-      // this.axios.post('/v1/login',
-      // formData,
-      // {
-      //   headers: {
-      //     'Content-Type': "application/json"
-      //   }
-      // })
-      // .then((response) => {    
-      //   this.showLoading = false
-      //   localStorage.setItem('token', response.data.access_token)
-      //   localStorage.setItem('department', flag ? 'INTERNAL' :response.data.department)
-      //   localStorage.setItem('department_id', response.data.department_id)
-      //   localStorage.setItem('userId', response.data.user_id)
-
-      //   this.$router.push({ 
-      //     name: 'announcementIn',
-      //   }).catch(()=>{});
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.data.message = error.response.data
-      //   this.loginFalse = true
-      //   this.data.personNo = ''
-      //   this.data.password = ''
-      // })
+      })
+      .catch((error) => {
+        console.log('dddd')
+        this.showLoading = false
+        this.data.message = error.response.data
+        this.loginFalse = true
+        this.data.personNo = ''
+        this.data.password = ''
+      })
     },
   },
   created() {
