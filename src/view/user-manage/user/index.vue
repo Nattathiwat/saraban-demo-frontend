@@ -160,7 +160,9 @@ export default {
       .then((response) => {
         this.showLoading = false
         response.data.data.filter(row => {
-          //row.permission_id = row.role_id
+          row.permission_id = row.role_id
+          row.permission_name = row.role_name
+
           // row.roles.filter((row2, index) => {
           //   row.levelDesc += (row2.role_name + (row.roles.length == (index+1) ? '' : ', '))  
         })
