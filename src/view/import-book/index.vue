@@ -125,129 +125,135 @@ export default {
     },
     apiDepartment() {
       this.data.table = []
-      this.data.table = [{
-        "bookingNo": "ธ14/66",
-        "categoryId": 3,
-        "referBookno": "01",
-        "typeId": null,
-        "secretId": 4,
-        "speedId": 4,
-        "bookingSubject": "ทดสอบเข้าใหม่",
-        "bookingSendto": "ลคร.",
-        "methodId": 0,
-        "contactName": "",
-        "contactTel": "",
-        "contactFax": "",
-        "bookingStatus": 0,
-        "bookingHint": "",
-        "id": 5976,
-        "bookingId": 5976,
-        "date": "13/01/2566",
-        "createDate": "2023-01-23T17:21:14.676528",
-        "createBy": "pkm.test",
-        "updateDate": "2023-01-23T17:21:14.676535",
-        "updateBy": "pkm.test",
-        "deleteFlag": 0,
-        "bookingGetdate": "2023-01-23",
-        "bookingIssuesDate": "2023-01-23T17:21:00",
-        "departmentId": null,
-        "bookingInoutFlag": 0,
-        "statusName": "รอข้อมูล",
-        "speedName": "ธรรมดา",
-        "secretName": "ธรรมดา",
-        "departmentName": "",
-        "departmentShortName": null,
-        "typename": "เรื่องเข้าใหม่ (สายครม.)",
-        "categoryName": "01 : รับเข้า(สาย ครม)",
-        "methodName": "ไม่ระบุ",
-        "cnt": 0,
-        "countday": 0,
-        "speedPicName": "icon_bookSpeed(02-09-2020)_LSA.png",
-        "speedPic": "/files/icon/speed/4/icon_bookSpeed(02-09-2020)_LSA.png",
-        "statusPicName": "clipart949598.png",
-        "statusPic": "/files/icon/status/0/clipart949598.png",
-        "statusId": null,
-        "subid": 1,
-        "noteId": null,
-        "govtSector": null,
-        "uidApprove": null,
-        "response": "กลุ่มงานราชกิจจานุเบกษา(ส่งประกาศราชกิจ)",
-        "bookingContent": "",
-        "bookingContent2": null,
-        "originalFlag": 0,
-        "cntbookwaitdata": 1,
-        "cntBookNew": 0,
-        "cntBookWalk": 0,
-        "cntBookGet": 0,
-        "cntBookReturn": 0,
-        "cntBookCancel": 0,
-        "cntBookReject": 0,
-        "cntBookClose": 0,
-        "total": 376,
-        "createByFullname": null,
-        "createBySub": null,
-        "sendoutdate": null,
-        "processId": null,
-        "processTime": null,
-        "receive_processid": null,
-        "receive_processtime": null,
-        "receive_acceptdate": null,
-        "receive_acceptdepartmentcode": null,
-        "receive_acceptdepartmentname": "",
-        "accept_processid": null,
-        "accept_processtime": null,
-        "accept_acceptdate": null,
-        "accept_acceptdepartmentcode": null,
-        "accept_acceptdepartmentname": "",
-        "reject_processid": null,
-        "reject_processtime": null,
-        "reject_acceptdate": null,
-        "reject_acceptdepartmentcode": null,
-        "reject_acceptdepartmentname": "",
-        "invalid_processid": null,
-        "invalid_processtime": null,
-        "invalid_acceptdate": null,
-        "invalid_acceptdepartmentcode": null,
-        "invalid_acceptdepartmentname": "",
-        "invalidacceptid_processid": null,
-        "invalidacceptid_processtime": null,
-        "invalidacceptid_acceptid": null,
-        "invalidacceptid_acceptdate": null,
-        "invalidacceptid_acceptdepartmentcode": null,
-        "invalidacceptid_acceptdepartmentname": "",
-        "status": null,
-        "message": null,
-        "prepareBy": null
-    }]
-      this.data.page = 1
-      this.data.lastPage = 1
-      this.data.total = 1
+    //   this.data.table = [{
+    //     "bookingNo": "ธ14/66",
+    //     "categoryId": 3,
+    //     "referBookno": "01",
+    //     "typeId": null,
+    //     "secretId": 4,
+    //     "speedId": 4,
+    //     "bookingSubject": "ทดสอบเข้าใหม่",
+    //     "bookingSendto": "ลคร.",
+    //     "methodId": 0,
+    //     "contactName": "",
+    //     "contactTel": "",
+    //     "contactFax": "",
+    //     "bookingStatus": 0,
+    //     "bookingHint": "",
+    //     "id": 5976,
+    //     "bookingId": 5976,
+    //     "date": "13/01/2566",
+    //     "createDate": "2023-01-23T17:21:14.676528",
+    //     "createBy": "pkm.test",
+    //     "updateDate": "2023-01-23T17:21:14.676535",
+    //     "updateBy": "pkm.test",
+    //     "deleteFlag": 0,
+    //     "bookingGetdate": "2023-01-23",
+    //     "bookingIssuesDate": "2023-01-23T17:21:00",
+    //     "departmentId": null,
+    //     "bookingInoutFlag": 0,
+    //     "statusName": "รอข้อมูล",
+    //     "speedName": "ธรรมดา",
+    //     "secretName": "ธรรมดา",
+    //     "departmentName": "",
+    //     "departmentShortName": null,
+    //     "typename": "เรื่องเข้าใหม่ (สายครม.)",
+    //     "categoryName": "01 : รับเข้า(สาย ครม)",
+    //     "methodName": "ไม่ระบุ",
+    //     "cnt": 0,
+    //     "countday": 0,
+    //     "speedPicName": "icon_bookSpeed(02-09-2020)_LSA.png",
+    //     "speedPic": "/files/icon/speed/4/icon_bookSpeed(02-09-2020)_LSA.png",
+    //     "statusPicName": "clipart949598.png",
+    //     "statusPic": "/files/icon/status/0/clipart949598.png",
+    //     "statusId": null,
+    //     "subid": 1,
+    //     "noteId": null,
+    //     "govtSector": null,
+    //     "uidApprove": null,
+    //     "response": "กลุ่มงานราชกิจจานุเบกษา(ส่งประกาศราชกิจ)",
+    //     "bookingContent": "",
+    //     "bookingContent2": null,
+    //     "originalFlag": 0,
+    //     "cntbookwaitdata": 1,
+    //     "cntBookNew": 0,
+    //     "cntBookWalk": 0,
+    //     "cntBookGet": 0,
+    //     "cntBookReturn": 0,
+    //     "cntBookCancel": 0,
+    //     "cntBookReject": 0,
+    //     "cntBookClose": 0,
+    //     "total": 376,
+    //     "createByFullname": null,
+    //     "createBySub": null,
+    //     "sendoutdate": null,
+    //     "processId": null,
+    //     "processTime": null,
+    //     "receive_processid": null,
+    //     "receive_processtime": null,
+    //     "receive_acceptdate": null,
+    //     "receive_acceptdepartmentcode": null,
+    //     "receive_acceptdepartmentname": "",
+    //     "accept_processid": null,
+    //     "accept_processtime": null,
+    //     "accept_acceptdate": null,
+    //     "accept_acceptdepartmentcode": null,
+    //     "accept_acceptdepartmentname": "",
+    //     "reject_processid": null,
+    //     "reject_processtime": null,
+    //     "reject_acceptdate": null,
+    //     "reject_acceptdepartmentcode": null,
+    //     "reject_acceptdepartmentname": "",
+    //     "invalid_processid": null,
+    //     "invalid_processtime": null,
+    //     "invalid_acceptdate": null,
+    //     "invalid_acceptdepartmentcode": null,
+    //     "invalid_acceptdepartmentname": "",
+    //     "invalidacceptid_processid": null,
+    //     "invalidacceptid_processtime": null,
+    //     "invalidacceptid_acceptid": null,
+    //     "invalidacceptid_acceptdate": null,
+    //     "invalidacceptid_acceptdepartmentcode": null,
+    //     "invalidacceptid_acceptdepartmentname": "",
+    //     "status": null,
+    //     "message": null,
+    //     "prepareBy": null
+    // }]
+      // this.data.page = 1
+      // this.data.lastPage = 1
+      // this.data.total = 1
       
-      // this.showLoading = true
-      // this.axios.get('/v1/report/announcement/quantity/monthly', {
-      //   params: {
-      //     month_str: this.assetsUtils.year543(this.data.dateSt),
-      //     month_end: this.assetsUtils.year543(this.data.dateEn),
-      //     page: this.data.page,
-      //     import-book: 'INTERNAL',
-      //     page_size: this.data.pageSize
-      //   }
-      // })
-      // .then((response) => {
-      //   this.showLoading = false
-      //   response.data.data.meta.filter(row => {
-      //     row.Total = row.Type1 + row.Type2 + row.Type3 + row.Type4 + row.Type5
-      //     row.Date = this.assetsUtils.yearPlus543(row.Date)
-      //   })
-      //   this.data.table = response.data.data.meta
-      //   this.data.lastPage = response.data.data.last_page
-      //   this.data.total = response.data.data.total
-      //   this.data.active = response.data.data.page
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get('/booking-receive', {
+        params: {
+          // month_str: this.assetsUtils.year543(this.data.dateSt),
+          // month_end: this.assetsUtils.year543(this.data.dateEn),
+          // page: this.data.page,
+          // import-book: 'INTERNAL',
+          // page_size: this.data.pageSize
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        response.data.data.filter(row => {
+          row.speedName = row.speed_name
+          row.bookingNo = row.receive_document_number
+          row.referBookno = row.document_number
+          row.bookingSubject = row.subject
+          row.typename = row.receive_type_name
+          row.date = row.as_of_date
+          row.response = row.response_name
+          row.statusName = row.status
+        })
+        this.data.table = response.data.data
+        // this.data.lastPage = response.data.data.last_page
+        // this.data.total = response.data.data.total
+        // this.data.active = response.data.data.page
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     deleteClick(data) {
       let _this = this
