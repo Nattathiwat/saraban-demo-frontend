@@ -7,7 +7,7 @@
               :name="name+'Input'"
               :type="type" 
               :rules="rules"
-              autocomplete="off"
+              autocomplete="new-password"
               :class="['form-control', this.class]"
               :disabled="disabled"
               :placeholder="placeholder"

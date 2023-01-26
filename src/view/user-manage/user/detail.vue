@@ -36,10 +36,11 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อผู้ใช้งาน <span class="required">*</span></div>
+                <div class="name">ชื่อผู้ใช้งาน <span v-if="!edit" class="required">*</span></div>
                 <cpn-input  v-model="data.username"
                             name="Usern"
-                            rules="required"
+                            :rules="edit ? '' : 'required'"
+                            :disabled="edit ? '' :'disabled'"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
@@ -48,6 +49,7 @@
                             name="passw"
                             type="password"
                             :rules="edit ? '' : 'required'"
+                            :disabled="edit ? '' :'disabled'"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
