@@ -44,8 +44,8 @@
               <img src="@/assets/images/icon/brake-warning-duotone.svg" alt="" class="image-confirm">
             </div>
             <div class="title-size">กรุณาติดต่อผู้ดูแลระบบเพื่อทำการเปลี่ยนรหัสผ่าน</div> 
-            <div class="message">Email : raytasto11@gmail.com</div>
-            <div class="message">โทร : 088-611-9821 (ภัทราพร)</div>
+            <div class="message">Email : xxxxx123@gmail.com</div>
+            <div class="message">โทร : 0xx-xxx-xxxx</div>
           </div>
           <div class="group-footer center">
             <button type="button" @click="closeModalRepass" class="button-confirm button-success">
@@ -113,8 +113,6 @@ export default {
       })
       .then((response) => {    
         this.showLoading = false
-        console.log('ert')
-        //localStorage.setItem('token', response.data.access_token)
         localStorage.setItem('department_name',response.data.department)
         localStorage.setItem('department_id', response.data.department_id)
         localStorage.setItem('fname', response.data.fname)
@@ -125,9 +123,8 @@ export default {
         }).catch(()=>{});
       })
       .catch((error) => {
-        console.log('dddd')
         this.showLoading = false
-        this.data.message = error.response.data
+        this.data.message = error.response.data.message
         this.loginFalse = true
         this.data.personNo = ''
         this.data.password = ''
