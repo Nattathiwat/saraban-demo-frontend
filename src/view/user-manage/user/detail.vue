@@ -20,6 +20,22 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
+                <div class="name">ชื่อ<span class="required">*</span></div>
+                <cpn-input  v-model="data.fname"
+                            name="fname"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">นามสกุล<span class="required">*</span></div>
+                <cpn-input  v-model="data.lname"
+                            name="lname"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
                 <div class="name">ชื่อผู้ใช้งาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.username"
                             name="username"
@@ -37,12 +53,22 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
+                <div class="name">วัน เดือน ปีเกิด <span class="required">*</span></div>
+              <div>
+                <cpn-datepicker v-model="data.birthdate"
+                        name="birthdate"
+                         />
+              </div>
+              </div>
+              <div class="group-input">
                 <div class="name">Email <span class="required">*</span></div>
                 <cpn-input  v-model="data.email"
                             name="email"
                             rules="required|email"
                             placeholder="กรุณาระบุ" />
               </div>
+            </div>
+            <div class="group-between">
               <div class="group-input">
                 <div class="name">หน่วยงาน <span class="required">*</span></div>
                 <cpn-select v-model="data.department"
@@ -59,14 +85,14 @@
               <div class="name">สิทธิ์ <span class="required">*</span></div>
             </div>
             <div class="level-button">
-              <button type="button" class="button-admin" v-bind:class="data.level == '1' ? 'active' : ''" @click="levelClick('1')">
+              <button type="button" class="button-admin" v-bind:class="data.level == 1 ? 'active' : ''" @click="levelClick(1)">
                 <div class="group-user">
-                  <img v-show="data.level == '1'" src="@/assets/images/icon/user-crown-duotoneffffff.svg" alt="" class="icon-user-crown">
-                  <img v-show="data.level != '1'" src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
+                  <img v-show="data.level == 1" src="@/assets/images/icon/user-crown-duotoneffffff.svg" alt="" class="icon-user-crown">
+                  <img v-show="data.level != 1" src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
                   User Admin
                 </div>
               </button>
-              <button type="button" class="button-user" v-bind:class="data.level == '3' ? 'active' : ''" @click="levelClick('3')">
+              <button type="button" class="button-user" v-bind:class="data.level == 2 ? 'active' : ''" @click="levelClick(2)">
                 User
               </button>
             </div>
@@ -94,6 +120,7 @@
   </div>
 </template>
 <script>
+import date from '../../../components/date/index.vue'
 export default {
   name: 'user-detail',
   data() {
@@ -106,16 +133,22 @@ export default {
       showLoading: false,
       edit: false,
       data: {
+        fname: '',
+        lname: '',
         username: '',
         password: '',
         email: '',
-        department: '',
-        level: '1',
+        department_id: '',
+        level:  2,
+        birthdate:'',
         optionSelect: {
           department: [{name:'สำนักงานเลขาธิการ', value: 'สำนักงานเลขาธิการ'}]
         }
       },
     }
+  },
+  components:{
+    date
   },
   methods: {
     levelClick(data) {
@@ -131,8 +164,9 @@ export default {
       this.data.username = ''
       this.data.password = ''
       this.data.email = ''
-      this.data.department = ''
-      this.data.level = '1'
+      this.data.department_id = ''
+      this.data.level = 2
+      this.data.birthdate = ''
     },
     onSubmit() {
       let _this = this
@@ -144,92 +178,91 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           if (_this.edit) {
-            // let groupdata = {
-            //   name: _this.data.name,
-            //   active: _this.data.active,
-            //   description: _this.data.description,
-            //   email: _this.data.email,
-            //   department: parseInt(_this.data.department),
-            //   username: _this.data.username,
-            //   password: _this.data.password,
-            //   user_id: parseInt(_this.data.user_id)
-            // }
-            // _this.showLoading = true
-            // _this.axios.put(`/v1/master_data/department/${_this.$route.params.id}`, groupdata)
-            // .then(() => { 
-            //   _this.showLoading = false
+            let groupdata = {
+              "fname": _this.data.fname,
+              "lname": _this.data.lname,
+              "email": _this.data.email,
+              "department_id": parseInt(_this.data.department),
+              "username": _this.data.username,
+              "password": _this.data.password,
+              "role_id":_this.data.level,
+              "birthdate":_this.data.birthdate,
+            }
+            _this.showLoading = true
+            _this.axios.put(`/user/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            // })
-            // .catch((error) => {
-            //   _this.showLoading = false
-            //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            // })
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           } else {
-            // let groupdata = {
-            //   name: _this.data.name,
-            //   active: _this.data.active,
-            //   description: _this.data.description,
-            //   email: _this.data.email,
-            //   department: parseInt(_this.data.department),
-            //   username: _this.data.username,
-            //   password: _this.data.password
-            // }
-            // _this.showLoading = true
-            // _this.axios.post(`/v1/master_data/department`, groupdata)
-            // .then(() => { 
-            //   _this.showLoading = false
+            let groupdata = {
+              "fname": _this.data.fname,
+              "lname": _this.data.lname,
+              "email": _this.data.email,
+              "department_id": parseInt(_this.data.department),
+              "username": _this.data.username,
+              "password": _this.data.password,
+              "role_id": _this.data.level,
+              "birthdate":_this.data.birthdate,
+            }
+            _this.showLoading = true
+            _this.axios.post(`/user`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            // })
-            // .catch((error) => {
-            //   _this.showLoading = false
-            //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            // })
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           }
         }
       }
     },
     apiDetail() {
-        this.data.username = 'aaaaa'
-        this.data.password = 'bbbbb'
-        this.data.email = 'aaa@aa.aa'
-        this.data.department = 'สำนักงานเลขาธิการ'
-        this.data.level = '1'
-      // this.showLoading = true
-      // this.axios.get(`/v1/master_data/department/${this.$route.params.id}`)
-      // .then((response) => { 
-      //   this.showLoading = false
-      //   this.data.username = response.data.data.username
-      //   this.data.password = response.data.data.password
-      //   this.data.email = response.data.data.email
-      //   this.data.department = response.data.data.department
-      //   this.data.user_id = response.data.data.user_id
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get(`/user/${this.$route.params.id}`)
+      .then((response) => { 
+        this.showLoading = false
+        this.data.fname = response.data.data.fname
+        this.data.lname = response.data.data.lname
+        this.data.username = response.data.data.username
+        this.data.password = response.data.data.password
+        this.data.email = response.data.data.email
+        this.data.department_id = response.data.department
+        this.data.birthdate = response.data.birthdate
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     apiMaster() {
-      // this.showLoading = true
-      // this.axios.get(`/v1/master_data/ministry`)
-      // .then((response) => { 
-      //   this.showLoading = false
-      //   response.data.data.meta.filter(row => {
-      //     row.value = row.id
-      //     return row
-      //   })
-      //   this.data.optionSelect.department = response.data.data.meta
+      this.showLoading = true
+      this.axios.get(`/department`)
+      .then((response) => { 
+        this.showLoading = false
+        response.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.department_full_name
+          return row
+        })
+        this.data.optionSelect.department = response.data.data
         if (this.$route.params.id) {
           this.edit = true
           this.apiDetail()
         } else {
           this.edit = false
         }
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     }
   },
   mounted () {
