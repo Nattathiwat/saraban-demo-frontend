@@ -90,7 +90,7 @@
       </div>
     </div>
     <div :style="hamburger ?'padding-left: 0px;':''" class="foot-index">
-      Terms of Service | Copyright © 2022 Smartsure. All Rights Reserved
+      สงวนลิขสิทธิ์ © 2566 สำนักเลขาธิการคณะรัฐมนตรี ทำเนียบรัฐบาล
     </div>
     <cpn-modal-alert :modal-alert="modalAlert" />
     <cpn-loading :show="showLoading" />
@@ -138,8 +138,16 @@ export default {
         return 'การจัดการผู้ใช้งาน / หน่วยงาน / เพิ่มหน่วยงาน'
       } else if (this.$route.name == 'export-book') {
         return 'หนังสือส่งออก'
+      } else if (this.$route.name == 'export-book-create') {
+        return 'หนังสือส่งออก / สร้างหนังสือส่งออก'
+      } else if (this.$route.name == 'export-book-edit') {
+        return 'หนังสือส่งออก / แก้ไขหนังสือส่งออก'
       } else if (this.$route.name == 'import-book') {
         return 'หนังสือรับเข้า'
+      } else if (this.$route.name == 'import-book-create') {
+        return 'หนังสือรับเข้า / สร้างหนังสือรับเข้า'
+      } else if (this.$route.name == 'import-book-edit') {
+        return 'หนังสือรับเข้า / แก้ไขหนังสือรับเข้า'
       } else {
         return this.$route.name
       }

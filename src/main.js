@@ -36,6 +36,9 @@ import pagination from "@/components/table/pagination.vue";
 //input
 import input from "@/components/input/index.vue";
 
+//inputTags
+import inputTags from "@/components/inputTags/index.vue";
+
 //select
 import select from "@/components/select/index.vue";
 
@@ -67,6 +70,12 @@ import toggleSwitch from "@/components/toggleSwitch/index.vue";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+//axios
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+const baseURL = import.meta.env.VITE_BASE_URL_BACKEND;
+
 //routes
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from './routes.js';
@@ -85,6 +94,8 @@ router.beforeEach(async (to) => {
 });
 const app = createApp(App)
 
+axios.defaults.baseURL = baseURL;
+
 setupValidate(app) // Validate
 app.config.globalProperties.assetsUtils = assetsUtils //assetsUtils
 app.component('Datepicker', Datepicker); //Datepicker
@@ -94,6 +105,7 @@ app.component('cpnModalAlert', modalAlert); //modal
 app.component('cpnTable', table); //table
 app.component('cpnPagination', pagination); //pagination
 app.component('cpnInput', input); //input
+app.component('cpnInputTags', inputTags); //inputTags
 app.component('cpnSelect', select); //select
 app.component('cpnAutoComplete', autoComplete); //autoComplete
 app.component('cpnTextArea', textArea); //textArea
@@ -105,7 +117,7 @@ app.component('cpnTime', time); //time
 app.component('cpnToggleSwitch', toggleSwitch); //toggleSwitch
 
 
-
+app.use(VueAxios, axios) //axios
 app.use(router) //router
 app.use(VueSweetalert2); //VueSweetalert2
 

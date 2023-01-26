@@ -82,8 +82,8 @@ export default {
   }
 
   input:checked + .slider {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: #0f3a64;
+    border-color: #0f3a64;
   }
 
   input:checked + .slider:before {
@@ -115,8 +115,8 @@ export default {
     cursor: default;
   }
   input:checked, input:disabled + .slider {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: #0f3a64;
+    border-color: #0f3a64;
   }
 }
 </style>

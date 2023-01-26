@@ -20,9 +20,29 @@ export default {
       component: () => import("./view/import-book/index.vue"),
     },
     { 
+      path: '/import-book/create', 
+      name: 'import-book-create',
+      component: () => import("./view/import-book/detail.vue"),
+    },
+    { 
+      path: '/import-book/:id', 
+      name: 'import-book-edit',
+      component: () => import("./view/import-book/detail.vue"),
+    },
+    { 
       path: '/export-book', 
       name: 'export-book',
       component: () => import("./view/export-book/index.vue"),
+    },
+    { 
+      path: '/export-book/create', 
+      name: 'export-book-create',
+      component: () => import("./view/export-book/detail.vue"),
+    },
+    { 
+      path: '/export-book/:id', 
+      name: 'export-book-edit',
+      component: () => import("./view/export-book/detail.vue"),
     },
     { 
       path: '/user-manage/department', 

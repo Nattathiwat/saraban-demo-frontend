@@ -80,7 +80,7 @@ export default {
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
-        confirmButtonColor: '#0d6efd',
+        confirmButtonColor: '#0f3a64',
         confirmButtonText: 'Yes, delete it!',
         showCancelButton: true,
         cancelButtonColor: '#7066e0',

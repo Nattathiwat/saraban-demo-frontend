@@ -92,7 +92,7 @@ export default {
     }
 
     .component-checkbox input:checked ~ .checkmark {
-      background-color: #0d6efd;
+      background-color: #0f3a64;
       width: 26px;
       height: 26px;
       border-radius: 5px;

@@ -54,7 +54,7 @@ export default {
       background: transparent;
       border-radius: 50%;
       border: 12px solid rgba(rgb(128, 128, 128), 0.2);
-      border-left: 12px solid #0d6efd;
+      border-left: 12px solid #0f3a64;
       
       animation: 1s rotate infinite linear;
     }

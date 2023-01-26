@@ -17,7 +17,7 @@
         </div>
         <div class="line"></div>
         <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
-          <div class="search-detail">
+          <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อผู้ใช้งาน <span class="required">*</span></div>
@@ -313,7 +313,7 @@ export default {
         margin-bottom: 5px;
       }
 
-      .search-detail {
+      .group-detail {
         padding: 20px 23px;
 
         .group-between {
@@ -441,7 +441,7 @@ export default {
 
         .footer-left {
           .button-danger {
-            width: 205px;
+            width: 140px;
           }
         }
 
@@ -449,16 +449,16 @@ export default {
           display: flex;
 
           .button-success {
-            width: 285px;
+            width: 225px;
           }
         }
 
         button {
-          height: 65px;
+          height: 55px;
           border-radius: 10px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 24px;
+          font-size: 18px;
           font-weight: 500;
           color: #fff;
           display: flex;

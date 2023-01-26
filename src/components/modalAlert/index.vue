@@ -12,7 +12,7 @@
               <img v-show="modalAlert.type !== 'success'" src="@/assets/images/icon/brake-warning-duotone.svg" alt="" class="image-confirm">
               <img v-show="modalAlert.type === 'success'" src="@/assets/images/icon/check-circle-duotone007773.svg" alt="" class="image-success">
             </div>
-            <div class="title-size">{{modalAlert.title}}</div> 
+            <div class="title-size">{{modalAlert.title}}</div>
             <div class="message">{{modalAlert.message}}</div>
           </div>
           <div class="group-footer center" v-show="!modalAlert.confirm">
@@ -195,20 +195,19 @@ export default {
           
           .button-cancel {
             width: 150px;
-            height: 65px;
+            height: 55px;
             border-radius: 10px;
             background-color: #cd7a82;
             border: 0;
           }
 
           .button-confirm {
-            width: 150px;
-            height: 65px;
+            width: 130px;
+            height: 55px;
             border-radius: 10px;
             background-color: #007773;
             border: 0;
           }
-
 
           .group-name {
             display: flex;
@@ -223,7 +222,7 @@ export default {
 
             .name {
               color: #ffffff;
-              font-size: 24px;
+              font-size: 18px;
               font-weight: 500;
             }
           }

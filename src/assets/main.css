@@ -75,7 +75,7 @@ input::-ms-reveal, input::-ms-clear {
 
 .button-danger {
   border: 0 !important;
-  background-color: #cd7a82 !important;
+  background-color: #f74756 !important;
   color: #ffffff !important;
 }
 
@@ -101,4 +101,12 @@ input::-ms-reveal, input::-ms-clear {
   border: 0 !important;
   background-color: rgb(255, 193, 7, 0.9) !important;
   color: #ffffff !important;
+}
+
+.required {
+  color: #dc3545!important;
+}
+
+button:disabled {
+  opacity: 0.7;
 }

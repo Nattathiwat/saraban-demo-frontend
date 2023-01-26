@@ -1,235 +1,434 @@
-
 <template>
-  <div class="form-controls">
-    <h2 class="name mb-4">Input</h2>
-    <div class="group-input">
-      <div class="name">Text Value: {{input1}}</div>
-      <cpn-input  v-model="input1"
-                  name="input1"
-                  class=""
-                  style=""
-                  type="text"
-                  :disabled="input11"
-                  @keyup="keyup"
-                  @keypress="keypress"
-                  @keydown="keydown"
-                  @focusin="focusin"
-                  @focusout="focusout"
-                  placeholder="Text" />
-    </div>
-    <div class="group-input">
-      <div class="name">Search Value: {{input12}}</div>
-      <cpn-input  v-model="input12"
-                  name="input12"
-                  class=""
-                  style=""
-                  type="text"
-                  :searchFlag="true"
-                  :disabled="input11"
-                  @keyup="keyup"
-                  @keypress="keypress"
-                  @keydown="keydown"
-                  @focusin="focusin"
-                  @focusout="focusout"
-                  @searchClick="search"
-                  placeholder="Text" />
-    </div>
-    <div class="group-input">
-      <div class="name">Select Value: {{input2}}</div>
-      <cpn-select v-model="input2"
-                  name="input2"
-                  class=""
-                  style=""
-                  :disabled="input11"
-                  :firstSelect="firstSelect"
-                  @change="change"
-                  :optionSelect="optionSelect"
-                  placeholder="Select" />
-    </div>
-    <div class="group-input">
-      <div class="name">Auto complete Value: {{input3}}</div>
-      <cpn-autoComplete v-model="input3"
-                        name="input3"
-                        class=""
-                        style=""
-                        type="text"
-                        :disabled="input11"
-                        :firstSelect="firstSelect"
-                        :optionSelect="optionSelect2"
-                        @change="change"
-                        @keyupData="keyupData"
-                        @keypress="keypress"
-                        @keydown="keydown"
-                        @focusin="focusin"
-                        @focusout="focusout"
-                        placeholder="Auto Complete" />
-    </div>
-    <div class="group-input">
-      <div class="name">Text Area Value: {{input4}}</div>
-      <cpn-textArea v-model="input4"
-                    name="input4"
-                    class=""
-                    style=""
-                    rows="5"
-                    :disabled="input11"
-                    @keyup="keyup"
-                    @keypress="keypress"
-                    @keydown="keydown"
-                    @focusin="focusin"
-                    @focusout="focusout"
-                    placeholder="Text Area"  />
-    </div>
-    <div class="group-input">
-      <div class="name">Checkbox Value: {{input5}}</div>
-      <cpn-checkbox v-model="input5"
-                    name="input5"
-                    class=""
-                    style=""
-                    label="checbox click!!!"
-                    :disabled="input11"
-                    @change="change"/>
-    </div>
-    <div class="group-input">
-      <div class="name">Radio Value: {{input6}}</div>
-      <cpn-radio  v-model="input6"
-                  name="input6"
-                  class=""
-                  style=""
-                  value="one"
-                  :disabled="input11"
-                  @change="change"/>
-              
-      <cpn-radio  v-model="input6"
-                  name="input6"
-                  class="mt-2"
-                  style=""
-                  value="two"
-                  :disabled="input11"
-                  @change="change"/>
-    </div>
-    <a href="https://vue3datepicker.com/" target="_blank">Vue datepicker</a>
-    <div class="group-input">
-      <div class="name">Datepicker Value: {{input7}} {{input7 && input8 ? '-' : ''}} {{input8}}</div>
-      <div class="d-flex w-100">
-        <cpn-datepicker v-model="input7"
-                        name="input7"
-                        class=""
-                        style=""
-                        :minDate="input8"
-                        @change="change"
-                        :disabled="input11"
-                        placeholder="date start" />
-
-        <cpn-datepicker v-model="input8"
-                        name="input8"
-                        class="ms-2"
-                        style=""
-                        @change="change"
-                        :disabled="input11"
-                        placeholder="date end" />
+  <div class="export-book-inex">
+    <div class="group-overflow">
+      <div class="detail">
+        <div class="group-head">
+          <div class="group-first">
+            <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
+            <div class="name">หนังสือส่งออก</div>
+            <button type="button" class="add-export-book" @click="addClick()">
+              <div class="group-image">
+                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
+                สร้างหนังสือส่งออก
+              </div>
+            </button>
+          </div>
+          <div class="group-end">
+            <div class="search">
+              <cpn-input  v-model="data.search"
+                          name="search"
+                          type="search"
+                          :searchFlag="true"
+                          @search="search()"
+                          placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
+            </div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="group-body">
+          <table class="table-export-book-inex">
+            <thead class="thead">
+              <tr class="thead-row">
+                <th class="col1">ความเร่งด่วน</th>
+                <th class="col2">เลขที่หนังสือออก</th>
+                <th class="col3">ชื่อเรื่อง</th>
+                <th class="col4">หน่วยงานปลายทาง</th>
+                <th class="col5">ลงวันที่</th>
+                <th class="col6">ชนิด</th>
+                <th class="col7">ผู้รับผิดชอบ</th>
+                <th class="col8">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody class="tbody">
+              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+                <td class="col1">{{item.speedName}}</td>
+                <td class="col2">{{item.bookingNoN}}</td>
+                <td class="col3">{{item.bookingSubject}}</td>
+                <td class="col4">{{item.amtbook}}</td>
+                <td class="col5">{{item.date}}</td>
+                <td class="col6">{{item.typename}}</td>
+                <td class="col7">{{item.prepareBy}}</td>
+                <td class="col8">{{item.statusName}}</td>
+              </tr>
+              <tr class="tbody-row" v-if="data.table.length == 0">
+                <td colspan="8">ไม่มีข้อมูล</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-footer">
+          <cpn-pagination :page="data.page"
+                          :total="data.total"
+                          :lastPage="data.lastPage"
+                          :perPage="data.perPage"
+                          @pageChange="pageChange"
+                    />
+        </div>
       </div>
     </div>
-    <div class="group-input">
-      <div class="name">Datepicker Range Value: {{input9}}</div>
-      <cpn-datepickerRange  v-model="input9"
-                            name="input9"
-                            class=""
-                            style=""
-                            @change="change"
-                            :disabled="input11"
-                            placeholder="date range" />
-    </div>
-    <div class="group-input">
-      <div class="name">Time Value: {{input10}}</div>
-      <cpn-time v-model="input10"
-                name="input10"
-                class=""
-                style=""
-                @change="change"
-                :disabled="input11"
-                placeholder="time" />
-    </div>
-    <div class="group-input">
-      <div class="name">ToggleSwitch Value: {{input11}}</div>
-      <cpn-toggleSwitch v-model="input11"
-                        name="input11"
-                        class=""
-                        style=""
-                        :disabled="false"
-                        @change="change" />
-    </div>
+    <cpn-modal-alert :modalAlert="modalAlert"/>
+    <cpn-loading :show="showLoading"/>
   </div>
 </template>
 <script>
 export default {
-  name: 'form-controls',
+  name: 'export-book-inex',
   data() {
     return {
-      input1: '',
-      input2: '',
-      firstSelect: { show: true,name: 'none' },
-      optionSelect: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-      input3: '',
-      optionSelect2: [{ name: 'select1', value: '1' },{ name: 'select2', value: '2' },{ name: 'select3', value: '3' }],
-      input4: '',
-      input5: true,
-      input6: 'one',
-      input7: '',
-      input8: '',
-      input9: '',
-      input10: '',
-      input11: false,
-      input12: '',
+      modalAlert: {
+        showModal: false,
+        title: '',
+        message: ''
+      },
+      showLoading: false,
+      data: {
+        search: '',
+        table: [],
+        page: 1,
+        total: 0,
+        lastPage: 0,
+        perPage: 50,
+      },
     }
   },
   methods: {
-    keyupData(data) {
-      this.optionSelect2 = [{ name: 'select1', value: '1' },{ name: 'select2', value: '2' },{ name: 'select3', value: '3' }]
-      this.optionSelect2 = this.optionSelect2.filter(row => {
-        return (row.name.toString().toLowerCase().indexOf(data.toLowerCase()) > -1)
-      })
+    addClick() {
+      this.$router.push({ 
+        name: 'export-book-create',
+      }).catch(()=>{});
     },
-    change(data) {
-      console.log('change', data)
-    },  
-    keyup(data) {
-      console.log('keyup', data.key)
+    editClick(item) {
+      this.$router.push({ 
+        name: 'export-book-edit',
+        params: {id: item.id}
+      }).catch(()=>{});
     },
-    keydown(data) {
-      console.log('keydown', data.key)
+    pageChange(data) {
+      this.data.perPage = data.perPage
+      this.data.page = data.page
+      this.apiDepartment()
     },
-    keypress(data) {
-      console.log('keypress', data.key)
+    search() {
+      this.data.status = true
+      this.data.perPage = 50
+      this.data.page = 1
+      this.apiDepartment()
     },
-    focusin(data) {
-      console.log('focusin', data)
+    apiDepartment() {
+      this.data.table = []
+      this.data.table = [{
+        "bookNum": "2566/20",
+        "departmentName": "กศน. : กรมการศึกษานอกโรงเรียน",
+        "bookingId": 3116,
+        "bookingNoN": "นร0501/15",
+        "categoryId": null,
+        "categoryName": "",
+        "cateType": 2,
+        "bookingDate": null,
+        "bookingDateN": "2023-01-13T00:00:00",
+        "bookingIssuesDate": "2023-01-13T00:00:00",
+        "date": "13/01/2566",
+        "methodId": null,
+        "methodName": null,
+        "typeId": 51,
+        "typename": "ขอความเห็น",
+        "secretId": 4,
+        "secretName": "ธรรมดา",
+        "bookingSubject": "เทสใช้เลขจอง",
+        "bookingHint": "",
+        "statusId": 8,
+        "statusName": "ระหว่างดำเนินการ",
+        "bookingoutFlag": 1,
+        "deleteFlag": 0,
+        "bookingNo": null,
+        "speedPic": "/files/icon/speed/4/icon_bookSpeed(02-09-2020)_LSA.png",
+        "statusPic": null,
+        "createBy": "phawitphorn.m",
+        "createDate": "2023-01-13T14:25:40.567298",
+        "response": null,
+        "speedId": 4,
+        "speedName": "ธรรมดา",
+        "speedPicName": "icon_bookSpeed(02-09-2020)_LSA.png",
+        "statusPicName": "/files/icon/status/8/icon_bookStatus(11-09-2020)_KdE.png",
+        "amtbook": 12,
+        "sendingDate": "",
+        "total": 956,
+        "responseSub": null,
+        "prepareBy": "phawitphorn.m"
+    }]
+      this.data.page = 1
+      this.data.lastPage = 1
+      this.data.total = 1
+      
+      // this.showLoading = true
+      // this.axios.get('/v1/report/announcement/quantity/monthly', {
+      //   params: {
+      //     month_str: this.assetsUtils.year543(this.data.dateSt),
+      //     month_end: this.assetsUtils.year543(this.data.dateEn),
+      //     page: this.data.page,
+      //     export-book: 'INTERNAL',
+      //     page_size: this.data.pageSize
+      //   }
+      // })
+      // .then((response) => {
+      //   this.showLoading = false
+      //   response.data.data.meta.filter(row => {
+      //     row.Total = row.Type1 + row.Type2 + row.Type3 + row.Type4 + row.Type5
+      //     row.Date = this.assetsUtils.yearPlus543(row.Date)
+      //   })
+      //   this.data.table = response.data.data.meta
+      //   this.data.lastPage = response.data.data.last_page
+      //   this.data.total = response.data.data.total
+      //   this.data.active = response.data.data.page
+      // })
+      // .catch((error) => {
+      //   this.showLoading = false
+      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      // })
     },
-    focusout(data) {
-      console.log('focusout', data)
+    deleteClick(data) {
+      let _this = this
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการลบหนังสือส่งออก`,
+        message: `“${data.name}” ใช่หรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          // _this.showLoading = true
+          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
+          // .then(() => { 
+          //   _this.showLoading = false
+            _this.modalAlert = {
+              showModal: true,
+              type: 'success',
+              title: 'ทำการลบหนังสือส่งออกสำเร็จแล้ว',
+              msgSuccess: true,
+              afterPressAgree() {
+                _this.apiDepartment()
+              }
+            }
+          // })
+          // .catch((error) => {
+          //   _this.showLoading = false
+          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          // })
+        }
+      }
     },
-    search(data) {
-      console.log('search', data)
-    }
-  }
+  },
+  mounted() {
+    this.apiDepartment()
+  },
 }
+
 </script>
 <style lang="scss">
-  .form-controls {
-    width: 100%;
-    height: 100%;
-    min-width: 800px;
-    min-height: 200px;
-    border-radius: 15px;
-    box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
-    background-color: #fff;
-    border: 0px;
-    padding: 22px 29px;
-    
-    .group-input {
-      margin-bottom: 22px;
+  .export-book-inex {
+    .group-overflow {
+      // overflow: auto;
+    }
 
-      .name {
+    .detail {
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      min-height: 200px;
+      border-radius: 15px;
+      // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+      background-color: #fff;
+      border: 0px;
+      padding-bottom: 22px;
+
+      .group-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 29px;
+
+        .group-first {
+          display: flex;
+          align-items: center;
+
+          .icon-users-cog {
+            width: 46px;
+            height: 32px;
+            margin-right: 16px;
+            color: #0f3a64;
+          }
+
+          .name {
+            color: #1a456b;
+            font-weight: bold;
+            font-size: 18px;
+          }
+
+          .add-export-book {
+            height: 46px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 18px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-left: 35px;
+            padding: 0 25px 0 21px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-plus {
+                width: 24px;
+                height: 24px;
+                margin-right: 17px;
+              }
+            }
+          }
+        }
+
+        .group-end {
+          display: flex;
+
+          .date {
+            margin-right: 25px;
+            width: 230px;
+          }
+
+          .search {
+            min-width: 480px;
+          }
+        }
+      }
+
+      .line {
+        height: 2px;
+        width: 100%;
+        background-color: #e2ebf7;
+        margin-top: 5px;
         margin-bottom: 5px;
+      }
+
+      .group-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 26px 30px;
+        overflow: auto;
+        margin-bottom: 1px;
+
+        table tbody tr:nth-child(odd) {
+          background-color: #ffffff;
+        }
+
+        table tbody tr:nth-child(even) {
+          background-color: #f1f5fa;
+        }
+
+        .table-export-book-inex {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0px;
+          border-radius: 5px;
+          border: solid 1px #c1cfe3;
+          background-color: #fff;
+          overflow: hidden;
+          
+          .thead {
+            .thead-row {
+              font-weight: bold;
+              font-size: 18px;
+              color: #333333;
+              height: 71px;
+
+              th {
+                border-bottom: solid 1px #c1cfe3;
+                padding: 0 10px;
+                text-align: center !important;
+              }
+            }
+
+            .col1 {
+              min-width: 170px;
+              width: 15%;
+              padding-left: 28px !important;
+            }
+
+            .col2 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col3 {
+              min-width: 250px;
+              width: 25%;
+            }
+
+            .col4 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col5 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col6 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col7 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col8 {
+              min-width: 200px;
+              width: 20%;
+              padding-right: 28px !important;
+            }
+          }
+
+          .tbody {
+            .color-tr {
+              background-color: #f1f5fa;
+            }
+
+            .tbody-row {
+              width: 100%;
+              height: 70px;
+              text-align: center;
+              color: #333333;
+              border-bottom: 0px;
+              font-weight: 500;
+              font-size: 18px;
+
+              td {
+                padding: 0 10px;
+              }
+
+              .col3 {
+                text-align: left;
+              }
+
+              .col1 {
+                padding-left: 28px;
+              }
+
+              .col8 {
+                padding-right: 28px;
+              }
+            }
+          }
+        }
+      }
+
+      .group-footer {
+        margin: 0px 29px;
       }
     }
   }

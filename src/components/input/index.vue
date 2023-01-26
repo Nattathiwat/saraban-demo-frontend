@@ -14,7 +14,7 @@
               :validateOnChange="true"
               :validateOnInput="true"
               @keyup.enter="search(value)" />
-      <button :disabled="disabled" v-show="searchFlag" @click="search(value)" class="button-search"><i class="bi bi-search icon-search"></i> ค้นหา</button>
+      <button type="button" :disabled="disabled" v-show="searchFlag" @click="search(value)" class="button-search"><i class="bi bi-search icon-search"></i> ค้นหา</button>
     </div>
     <ErrorMessage :name="name+'Input'" v-slot="{ message }">
       <p class="message-error">{{this?.errorMessage || (message ? message : this.defaultMessageError)}}</p>

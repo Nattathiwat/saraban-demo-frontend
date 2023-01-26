@@ -11,7 +11,7 @@
               />
       <span class="checkmark"></span>
     </label>
-    <div class="name-radio">{{value}}</div>
+    <div class="name-radio">{{label}}</div>
   </div>
 
 </template>
@@ -24,7 +24,7 @@ export default {
       data: this.modelValue
     }
   },
-  props: ['name', 'modelValue', 'disabled', 'class', 'style', 'value'],
+  props: ['name', 'modelValue', 'disabled', 'class', 'style', 'value', 'label'],
   methods: {
     change() {
       this.$emit('update:modelValue', this.data)
@@ -49,6 +49,9 @@ export default {
     height: 26px;
 
     .name-radio {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
     }
 
     input:disabled ~ .checkmark{
@@ -88,7 +91,7 @@ export default {
 
     .group-radio input:checked ~ .checkmark {
       background-color: #ffffff;
-      border: 3px solid #0d6efd;
+      border: 3px solid #0f3a64;
     }
 
     .checkmark:after {
@@ -102,12 +105,15 @@ export default {
     }
 
     .group-radio .checkmark:after {
-      top: 3px;
-      left: 3px;
-      width: 13px;
-      height: 13px;
+      // top: 3px;
+      // left: 3px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
-      background: #0d6efd;
+      background: #0f3a64;
     }
   }
 </style>

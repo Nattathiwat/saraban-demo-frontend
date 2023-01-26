@@ -58,8 +58,8 @@
         </div>
       </div>
     </div>
-    <modal-alert :modalAlert="modalAlert"/>
-    <loading :show="showLoading"/>
+    <cpn-modal-alert :modalAlert="modalAlert"/>
+    <cpn-loading :show="showLoading"/>
   </div>
 </template>
 
