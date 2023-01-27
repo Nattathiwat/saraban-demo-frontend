@@ -12,8 +12,8 @@
         <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-input">
-              <cpn-checkbox v-model="data.originalBook"
-                            name="originalBook"
+              <cpn-checkbox v-model="data.original_flag"
+                            name="original_flag"
                             label="หนังสือต้นเรื่อง" />
             </div>
             <div class="group-between">
@@ -79,21 +79,21 @@
             </div>
             <div class="group-between" v-for="(item, index) in data.booking_refers" :key="index">
               <div class="group-input left">
-                <cpn-input  v-model="item.book_refer_id"
+                <cpn-input  v-model="item.keyword"
                             :name="`codeRefers${index}`"
-                            type="search"
+                            type="text"
                             :searchFlag="true"
-                            @searchClick="searchClick(item)"
+                            @searchClick="booking_refersClick(item)"
                             placeholder="เลขที่หนังสืออ้างอิง" />
               </div>
               <div class="group-input left">
-                <cpn-input  v-model="item.original_refer_id"
+                <cpn-input  v-model="item.desc"
                             :name="`nameRefers${index}`"
                             :disabled="true"
                             placeholder="ชื่อเรื่อง" />
               </div>
               <div class="group-input d-flex">
-                <cpn-datepicker v-model="item.date"
+                <cpn-datepicker v-model="item.receive_date"
                                 :name="`dateRefers${index}`"
                                 :disabled="true"
                                 placeholder="วันที่รับหนังสือ" />
@@ -178,12 +178,14 @@
                   <div class="name">โทรศัพท์</div>
                   <cpn-input  v-model="item.contract_phone"
                               :isNumber="true"
+                              maxlength="10"
                               :name="`${index}contract_phone`" />
                 </div>
                 <div class="group-input">
                   <div class="name">โทรสาร</div>
                   <cpn-input  v-model="item.contract_fax"
                               :isNumber="true"
+                              maxlength="10"
                               :name="`${index}contract_fax`" />
                 </div>
               </div>
@@ -245,6 +247,7 @@
               <cpn-input-tags v-model="data.sendTo"
                               :flagSearch="true"
                               :optionSelect="optionSelect.sendTo"
+                              @keyup="keyupSendTo"
                               name="sendTo" />
             </div>
             <div class="group-input">
@@ -256,26 +259,26 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">รูปแบบการดำเนินการ</div>
-                <cpn-select v-model="data.model"
-                            name="model"
-                            :optionSelect="optionSelect.model" />
+                <cpn-select v-model="data.process_type"
+                            name="process_type"
+                            :optionSelect="optionSelect.process_type" />
               </div>
               <div class="group-input">
                 <div class="name">การมองเห็น</div>
-                <cpn-select v-model="data.see"
-                            name="see"
-                            :optionSelect="optionSelect.see" />
+                <cpn-select v-model="data.permission_type"
+                            name="permission_type"
+                            :optionSelect="optionSelect.permission_type" />
               </div>
             </div>
             <div class="d-flex align-items-center justify-content-between">
               <div>
-                <button type="button" class="button button-danger" @click="back()">
+                <button type="button" class="button button-danger" @click="data.sendTo=[], data.comments='', data.process_type='', data.permission_type=''">
                   <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                   ยกเลิก
                 </button>
               </div>
               <div>
-                <button type="button" @click="sendToClick()" class="button button-success">
+                <button type="button" @click="sendToClick()" class="button button-success" v-show="false">
                   <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                   เพิ่มการส่งต่อ
                 </button>
@@ -295,7 +298,7 @@
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
-              <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo.length<1">
+              <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo?.length<1">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกและส่งต่อ
               </button>
@@ -318,27 +321,23 @@ export default {
         title: '',
         message: ''
       },
-      optionSelectDefault: {
-        nameSignature: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        department: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        sendRegistration: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        issuingNumbers: [{name: 'เลขเดี่ยว', value: 'เลขเดี่ยว'}, {name: 'หลายเลข', value: 'หลายเลข'}],
-        deliveryFormat: [{name: 'ตอบรับ', value: 'ตอบรับ'}, {name: 'แจ้งเพื่อทราบ', value: 'แจ้งเพื่อทราบ'}, {name: 'ไม่ระบุ', value: 'ไม่ระบุ'}],
-      },
       showLoading: false,
       edit: false,
       flagSave: 1,
       data: {
+        original_flag: false,
         receive_regis_id: '',
         book_type_id: '',
-        receive_date: '',
-        receive_time: '',
+        receive_date: this.assetsUtils.currentDate(),
+        receive_time: this.assetsUtils.currentTime(),
         document_number: '',
-        as_of_date: '',
+        as_of_date: this.assetsUtils.currentDate(),
         subject: '',
         secret_id: '',
+        speed_id: '',
         send_to: '',
         book_desc: '',
+        tag: [],
         contracts: [{
           department_id: '',
           receive_type: '',
@@ -348,44 +347,97 @@ export default {
         }],
         main_docs: [{ filename: '', file: []}],
         attachments: [{ filename: '', file: []}],
-        booking_refers: [{ book_refer_id: '', original_refer_id: '', book_type: '', date: ''}],
+        booking_refers: [{ keyword: 'ท584/66', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [],
         comments: '',
-        model: '',
-        see: '',
+        process_type: '',
+        permission_type: '',
       },
       optionSelect: {
-        receive_regis_id: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        book_type_id: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        secret_id: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        speed_id: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        department_id: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        receive_type: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        model: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        see: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
-        sendTo: [{ name: 'select1',value: '1' },{ name: 'select2',value: '2' },{ name: 'select3',value: '3' }],
+        receive_regis_id: [],
+        book_type_id: [],
+        secret_id: [],
+        speed_id: [],
+        department_id: [],
+        receive_type: [],
+        process_type: [],
+        permission_type: [],
+        sendTo: [],
       },
     }
   },
   methods: {
+    keyupSendTo(e) {
+      this.optionSelect.sendTo = []
+      this.axios.get('/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+          this.optionSelect.sendTo = response.data.data
+        }
+      })
+    },
     sendToClick() {
       this.axios.get('/v1/login')
     },
-    searchClick(item) {
-      item.original_refer_id='aaaa'
-      item.date='10/11/2565'
+    booking_refersClick(item) {
+      //ท584/66
+      this.showLoading = true
+      this.axios.get('/master-data/book-refer', {
+        params: {
+          keyword: item.keyword
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        if (response.data.data.length > 0) {
+          item.book_refer_id = response.data.data[0].id
+          item.original_refer_id = response.data.data[0].id
+          item.book_type = response.data.data[0].book_type
+          item.desc = response.data.data[0].desc
+          item.receive_date = response.data.data[0].receive_date
+        } else {
+          item.keyword = ''
+          item.book_refer_id = ''
+          item.original_refer_id = ''
+          item.book_type = ''
+          item.original_refer_id = ''
+          item.dreceive_dateate = ''
+          this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
+        }
+      })
+      .catch((error) => {
+        item.keyword = ''
+        item.book_refer_id = ''
+        item.original_refer_id = ''
+        item.book_type = ''
+        item.original_refer_id = ''
+        item.dreceive_dateate = ''
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
+      })
     },
     downloadFile(data) {
-      this.axios({
-        method:'get',
-        url: data.link,
-        baseURL: '',
-        responseType: 'blob',
-      })
-      .then(response => {
-        const blob = new Blob([response.data], { type: 'application/pdf' })
-        window.open(URL.createObjectURL(blob))
-      })
+      if (data.filename && data.type == 'pdf') {
+        this.axios({
+          method:'get',
+          url: data.link,
+          baseURL: '',
+          responseType: 'blob',
+        })
+        .then(response => {
+          const blob = new Blob([response.data], { type: 'application/pdf' })
+          window.open(URL.createObjectURL(blob))
+        })
+      }
     },
     uploadFile(data) {
       document.querySelector(`[name="${data}"]`).click()
@@ -393,25 +445,27 @@ export default {
     fileSetChange(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type == 'application/pdf') {
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
+            let dataFile = {
+              filename: file.name,
+              type: file.type == 'application/pdf' ? 'pdf' : '',
+              link: URL.createObjectURL(file),
+              size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              file: file,
+            }
+            this.data[name][index] = dataFile
+            document.querySelector(`[name="${data}"]`).value=null;
+          }
+        } else {
           let dataFile = {
-            name: file.name,
+            filename: file.name,
             type: file.type == 'application/pdf' ? 'pdf' : '',
             link: URL.createObjectURL(file),
             size: (file.size /1024 /1024).toFixed(2) + ' MB',
             file: file,
           }
-          if (name == 'fileOriginllBook') {
-            this.data.set[index].originllBookFile = dataFile
-            this.data.set[index].department.filter(item => {
-              item.originllBookFile = dataFile
-            })
-          } else {
-            this.data.set[index].duplicateCopyFile = dataFile
-            this.data.set[index].department.filter(item => {
-              item.duplicateCopyFile = dataFile
-            })
-          }
+          this.data[name][index] = dataFile
           document.querySelector(`[name="${data}"]`).value=null;
         }
       }
@@ -422,7 +476,6 @@ export default {
       }).catch(()=>{});
     },
     onSubmit() {
-      console.log('xx', this.flagSave)
       let _this = this
       this.modalAlert = {
         showModal: true,
@@ -431,78 +484,273 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.flagSave == 1) {
-            // let groupdata = {
-            //   name: _this.data.name,
-            //   active: _this.data.active,
-            //   description: _this.data.description,
-            //   name: _this.data.name,
-            //   code: _this.data.code,
-            //   short_name: _this.data.short_name,
-            //   user_id: parseInt(_this.data.user_id)
-            // }
-            // _this.showLoading = true
-            // _this.axios.put(`/v1/master_data/department/${_this.$route.params.id}`, groupdata)
-            // .then(() => { 
-            //   _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            // })
-            // .catch((error) => {
-            //   _this.showLoading = false
-            //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            // })
+          this.showLoading = true
+          if (_this.data.main_docs.length>0||_this.data.attachments.length>0) {
+            _this.uploadFileAll()
           } else {
-            // let groupdata = {
-            //   name: _this.data.name,
-            //   active: _this.data.active,
-            //   description: _this.data.description,
-            //   name: _this.data.name,
-            //   department: parseInt(_this.data.department),
-            //   code: _this.data.code,
-            //   short_name: _this.data.short_name
-            // }
-            // _this.showLoading = true
-            // _this.axios.post(`/v1/master_data/department`, groupdata)
-            // .then(() => { 
-            //   _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            // })
-            // .catch((error) => {
-            //   _this.showLoading = false
-            //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            // })
+            _this.callApiSave([],[])
           }
         }
       }
     },
-    apiDetail() {
-        this.data.code = 'aaaaa'
-        this.data.short_name = 'bbbbb'
-        this.data.name = 'aaa@aa.aa'
-        this.data.department = 'สำนักงานเลขาธิการ'
-      // this.showLoading = true
-      // this.axios.get(`/v1/master_data/department/${this.$route.params.id}`)
-      // .then((response) => { 
-      //   this.showLoading = false
-      //   this.data.code = response.data.data.code
-      //   this.data.short_name = response.data.data.short_name
-      //   this.data.name = response.data.data.name
-      //   this.data.department = response.data.data.department
-      //   this.data.user_id = response.data.data.user_id
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+    uploadFileAll() {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let axiosArray2 = []
+      let fileMain_docs = []
+      let fileAttachments = []
+
+      this.data.main_docs.filter((item) => {
+        if (item.filename) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      });
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter(item => {
+            fileMain_docs.push(item.data.data)
+          })
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
+            this.callApiSave(fileMain_docs,fileAttachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      }
+      if (axiosArray2.length>0) {
+        this.data.attachments.filter((item) => {
+          if (item.filename) {
+            let formDataFile = new FormData();
+            formDataFile.append('file', item.file);
+            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+            axiosArray2.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+          }
+        });
+        this.axios.all([...axiosArray2])
+        .then(this.axios.spread((...responses) => {
+          responses.filter(item => {
+            fileAttachments.push(item.data.data)
+          })
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
+            this.callApiSave(fileMain_docs,fileAttachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      }
+      if (axiosArray1.length<1 && axiosArray2.length<1) {
+        this.callApiSave([],[])
+      }
     },
+    callApiSave(fileMain_docs,fileAttachments) {
+      let _this = this
+      let tag = ''
+      this.data.tag.filter(item => {
+        tag += item.name+','
+      })
+      tag.slice(0, -1)
+      let booking_follows = []
+      this.data.sendTo.filter(item => {
+        booking_follows.push({
+          department_id: parseInt(item.value),
+          comment: this.data.comments,
+          process_type_id: parseInt(this.data.process_type),
+          permission_id: parseInt(this.data.permission_type)
+        })
+      })
+      let dataSave = {
+        original_flag: this.data.original_flag,
+        receive_regis_id: parseInt(this.data.receive_regis_id),
+        book_type_id: parseInt(this.data.book_type_id),
+        receive_date: this.data.receive_date,
+        receive_time: this.data.receive_time,
+        as_of_date: this.data.as_of_date,
+        document_number: this.data.document_number,
+        subject: this.data.subject,
+        secret_id: parseInt(this.data.secret_id),
+        speed_id: parseInt(this.data.speed_id),
+        send_to: this.data.send_to,
+        book_desc: this.data.book_desc,
+        tag: tag,
+        contracts: this.data.contracts,
+        main_docs: fileMain_docs,
+        attachments: fileAttachments,
+        booking_refers: this.data.booking_refers[0].book_refer_id ? this.data.booking_refers : [],
+        booking_follows: booking_follows,
+        //"receive_document_number": "ท584/66",
+        user_id: parseInt(localStorage.getItem('user_id')),
+        flag: this.flagSave == 1 ? "draft" : '',
+      }
+
+      if (this.edit) {
+        if (this.flagSave == 1) {
+          this.showLoading = true
+          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
+          .then(() => { 
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        } else {
+          this.showLoading = true
+          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
+          .then(() => { 
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        }
+      } else {
+        if (this.flagSave == 1) {
+          this.showLoading = true
+          this.axios.post(`/booking-receive`, dataSave)
+          .then(() => { 
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        } else {
+          this.showLoading = true
+          this.axios.post(`/booking-receive`, dataSave)
+          .then(() => { 
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        }
+      }
+    },
+    apiDetail() {
+      this.showLoading = true
+      this.axios.get(`/booking-receive/${this.$route.params.id}`)
+      .then((response) => { 
+        this.showLoading = false
+        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data.tag = []
+        console.log('aa')
+        console.log(response.data.data.tag)
+        response.data.data.tag?.split(',').filter(item => {
+          console.log(item)
+          this.data.tag.push({value: '', name: item})
+        })
+        this.data.sendTo = []
+        response.data.data.booking_follows.filter(item => {
+          console.log('item', item)
+          this.data.sendTo.push({value: item.department_id, name: item.department_name})
+          this.data.comment = item.comment
+          this.data.process_type_id = item.process_type_id
+          this.data.permission_id = item.permission_id
+        })
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
+    apiMaster() {
+      this.showLoading = true
+      const request1 = this.axios.get('/master-data/register-type')
+      const request2 = this.axios.get('/master-data/book-type')
+      const request3 = this.axios.get('/master-data/secret')
+      const request4 = this.axios.get('/master-data/speed')
+      const request5 = this.axios.get('/master-data/process-type')
+      const request6 = this.axios.get('/master-data/permission-type')
+      const request7 = this.axios.get('/department')
+      const request8 = this.axios.get('/master-data/receive-type')
+
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false;
+        const response1 = responses[0]
+        const response2 = responses[1]
+        const response3 = responses[2]
+        const response4 = responses[3]
+        const response5 = responses[4]
+        const response6 = responses[5]
+        const response7 = responses[6]
+        const response8 = responses[7]
+        
+        response1.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        response2.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        response3.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        response4.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        response5.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        response6.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        response7.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.department_full_name
+          return item
+        })
+        response8.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.desc
+          return item
+        })
+        this.optionSelect.receive_regis_id = response1.data.data
+        this.optionSelect.book_type_id = response2.data.data
+        this.optionSelect.secret_id = response3.data.data
+        this.optionSelect.speed_id = response4.data.data
+        this.optionSelect.process_type = response5.data.data
+        this.optionSelect.permission_type = response6.data.data
+        this.optionSelect.department_id = response7.data.data
+        this.optionSelect.receive_type = response8.data.data
+
+        if (this.$route.params.id) {
+          this.edit = true
+          this.apiDetail()
+        } else {
+          this.edit = false
+        }
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    }
   },
   mounted () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.apiDetail()
-    } else {
-      this.edit = false
-    }
+    this.apiMaster()
   },
   watch: {
     'modalRegiter.showModal' () {

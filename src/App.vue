@@ -111,8 +111,8 @@ export default {
         userManage: false
       },
       dataUser: {
-        name: 'admin admin',
-        position: 'Admib page'
+        name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
+        position: localStorage.getItem('department_name')
       },
       modalAlert: {
         showModal: false,

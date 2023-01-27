@@ -44,16 +44,24 @@
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNo}}</td>
                 <td class="col3">{{item.referBookno}}</td>
-                <td class="col4">{{item.bookingSubject}}</td>
+                <td class="col4">
+                  <div class="group-show none-bg">
+                    <span class="span">
+                      {{item.bookingSubject}}
+                    </span>
+                    <div v-if="false" class="show-detail">{{item.bookingSubject}}
+                    </div>
+                  </div>
+                </td>
                 <td class="col5">{{item.typename}}</td>
                 <td class="col6">{{item.date}}</td>
                 <td class="col7">
-                  <div class="group-col7">
+                  <div class="group-show">
                     <span class="span">
                       {{item.response}}
                     </span>
-                    <div class="col7-detail">{{item.response}}
-                      <div class="image-size"></div>
+                    <div class="show-detail">{{item.response}}
+                      <div v-if="false" class="image-size"></div>
                     </div>
                   </div>
                 </td>
@@ -489,59 +497,64 @@ export default {
                 padding-left: 28px;
               }
 
-              .col7 {
-                .group-col7 {
+              .none-bg {
+                background-color: transparent !important;
+              }
+
+              .group-show {
+                text-align: left;
+                position: relative;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                padding: 5px 10px;
+                border-radius: 5px;
+                background-color: #f8f9fa;
+
+
+                .span {
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  line-height: 40px;
+                }
+
+                .show-detail {
+                  width: 100%;
+                  overflow: auto;
+                  max-height: 85px;
+                  color: #fff;
+                  position: absolute;
+                  bottom: 45px;
+                  left: 50%;
+                  transform: translate(-50%, 0px);
+                  padding: 9px 13px 9px 13px;
+                  display: none;
+                  font-size: 16px;
+                  font-weight: 500;
                   text-align: left;
-                  position: relative;
-                  height: 100%;
-                  display: flex;
-                  align-items: center;
-                  padding: 5px 10px;
-                  border-radius: 5px;
-                  background-color: #f8f9fa;
+                  z-index: 1;
+                  background-color: #15466e;
+                  border-radius: 9px;
 
-
-                  .span {
-                    display: -webkit-box;
-                    -webkit-line-clamp: 1;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                  }
-
-                  .col7-detail {
-                    width: 230px;
-                    color: #fff;
+                  .image-size {
                     position: absolute;
-                    bottom: 40px;
                     left: 50%;
-                    transform: translate(-50%, 0px);
-                    padding: 9px 13px 9px 13px;
-                    display: none;
-                    font-size: 16px;
-                    font-weight: 500;
-                    text-align: left;
-                    z-index: 1;
+                    z-index: -1;
+                    bottom: -5px;
+                    width: 22px;
+                    height: 22px;
                     background-color: #15466e;
-                    border-radius: 9px;
-
-                    .image-size {
-                      position: absolute;
-                      left: 50%;
-                      z-index: -1;
-                      bottom: -5px;
-                      width: 22px;
-                      height: 22px;
-                      background-color: #15466e;
-                      -ms-transform: rotate(45deg);
-                      transform: rotate(45deg);
-                      margin-left: -11px;
-                    }
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    margin-left: -11px;
                   }
                 }
               }
 
-              .col7 .group-col7 {
+              .group-show {
                 float: left;
 
                 .icon-user-crown {
@@ -557,8 +570,8 @@ export default {
                 }
               }
 
-              .col7 .group-col7:hover{
-                .col7-detail{
+              .group-show:hover{
+                .show-detail{
                   display: block;
                 }
               }

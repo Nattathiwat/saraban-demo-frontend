@@ -4,7 +4,7 @@
       <input v-bind="field"  v-show="false">
     </Field>
     <div class="group-input-tags">
-      <div class="tags-box" v-for="(item, index) in data" :key="index">{{item}} <i class="bi bi-x-lg icon-close pointer" @click="data.splice(index,1)"></i></div>
+      <div class="tags-box" v-for="(item, index) in data" :key="index">{{item.name}} <i class="bi bi-x-lg icon-close pointer" @click="data.splice(index,1)"></i></div>
       <input  v-model="value"
               :style="this.style"
               :class="this.class"
@@ -57,8 +57,9 @@ export default {
       } else {
         if (e.key === 'Enter' || e.keyCode === 13) {
           if (e.target.value) {
-            if (this.data.indexOf(e.target.value) === -1) {
-              this.data.push(e.target.value)
+            if (!this.data.some(el => el.name === e.target.value)) {
+              this.data.push({name: e.target.value, value: ''})
+              this.$emit('update:modelValue', this.data)
             }
             this.value = ''
           }
@@ -83,8 +84,9 @@ export default {
               if (row.name == this.value && this.value) {
                 check = false
                 this.value = ''
-                if (this.data.indexOf(row.name) === -1) {
-                  this.data.push(row.name)
+                if (!this.data.some(el => el.name === row.name)) {
+                  this.data.push(row)
+                  this.$emit('update:modelValue', this.data)
                 }
               }
             })
@@ -97,8 +99,9 @@ export default {
       }
     },
     select(data) {
-      if (this.data.indexOf(data.name) === -1) {
-        this.data.push(data.name)
+      if (!this.data.some(el => el.name === data.name)) {
+        this.data.push(data)
+        this.$emit('update:modelValue', this.data)
       }
       this.value = ''
       this.dropdown = false

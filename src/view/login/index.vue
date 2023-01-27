@@ -113,10 +113,11 @@ export default {
       })
       .then((response) => {    
         this.showLoading = false
-        localStorage.setItem('department_name',response.data.department)
-        localStorage.setItem('department_id', response.data.department_id)
-        localStorage.setItem('fname', response.data.fname)
-        localStorage.setItem('lname', response.data.lname)
+        localStorage.setItem('user_id',response.data.data?.user_id || '')
+        localStorage.setItem('department_name',response.data.data?.department || '')
+        localStorage.setItem('department_id', response.data.data?.department_id || '')
+        localStorage.setItem('fname', response.data.data?.fname || '')
+        localStorage.setItem('lname', response.data.data?.lname || '')
         localStorage.setItem('login', 'true')
         this.$router.push({ 
           name: 'user',

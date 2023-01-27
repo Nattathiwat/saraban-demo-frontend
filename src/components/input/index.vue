@@ -11,6 +11,7 @@
               :class="['form-control', this.class]"
               :disabled="disabled"
               :placeholder="placeholder"
+              :maxlength="maxlength"
               :validateOnBlur="true"
               :validateOnChange="true"
               :validateOnInput="true"
@@ -59,7 +60,7 @@ export default {
       this.value = this.modelValue
     }
   },
-  props: ['modelValue', 'rules', 'name', 'type', 'disabled', 'placeholder', 'class', 'errorMessage', 'searchFlag', 'isNumber']
+  props: ['modelValue', 'rules', 'name', 'type', 'disabled', 'placeholder', 'class', 'errorMessage', 'searchFlag', 'isNumber', 'maxlength']
 };
 </script>
 
