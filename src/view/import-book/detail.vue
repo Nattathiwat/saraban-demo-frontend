@@ -70,7 +70,7 @@
             </div>
             <div class="group-input d-flex align-items-center">
               <div class="name">อ้างอิงถึง</div>
-              <button type="button" class="add-import-book" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', date: ''})">
+              <button type="button" class="add-import-book" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', receive_date: '', receive_document_number: '', desc: ''})">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มเอกสารอ้างอิง
@@ -97,7 +97,7 @@
                                 :name="`dateRefers${index}`"
                                 :disabled="true"
                                 placeholder="วันที่รับหนังสือ" />
-                <button type="button" @click="data.booking_refers.length > 1 ? data.booking_refers.splice(index,1) : item.book_refer_id = '', item.original_refer_id = '', item.date = ''" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
+                <button type="button" @click="data.booking_refers.length > 1 ? data.booking_refers.splice(index,1) : item.book_refer_id = '', item.original_refer_id = '', item.receive_document_number = '', item.desc = '', item.receive_date = ''" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
               </div>
             </div>
             <div class="group-input">
@@ -278,7 +278,7 @@
                 </button>
               </div>
               <div>
-                <button type="button" @click="sendToClick()" class="button button-success" v-show="false">
+                <button type="button" @click="sendToClick()" class="button button-success" v-if="false">
                   <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                   เพิ่มการส่งต่อ
                 </button>
@@ -409,8 +409,8 @@ export default {
           item.book_refer_id = ''
           item.original_refer_id = ''
           item.book_type = ''
-          item.original_refer_id = ''
-          item.dreceive_dateate = ''
+          item.desc = ''
+          item.receive_date = ''
           this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
         }
       })
@@ -419,8 +419,8 @@ export default {
         item.book_refer_id = ''
         item.original_refer_id = ''
         item.book_type = ''
-        item.original_refer_id = ''
-        item.dreceive_dateate = ''
+        item.desc = ''
+        item.receive_date = ''
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
       })
@@ -484,7 +484,7 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          this.showLoading = true
+          _this.showLoading = true
           if (_this.data.main_docs.length>0||_this.data.attachments.length>0) {
             _this.uploadFileAll()
           } else {
@@ -554,7 +554,7 @@ export default {
       this.data.tag.filter(item => {
         tag += item.name+','
       })
-      tag.slice(0, -1)
+      tag = tag.slice(0, -1)
       let booking_follows = []
       this.data.sendTo.filter(item => {
         booking_follows.push({
