@@ -49,7 +49,8 @@
                     <span class="span">
                       {{item.bookingSubject}}
                     </span>
-                    <div v-if="false" class="show-detail">{{item.bookingSubject}}
+                    <div class="show-detail">{{item.bookingSubject}}
+                      <div v-if="false" class="image-size"></div>
                     </div>
                   </div>
                 </td>
@@ -444,8 +445,8 @@ export default {
             }
 
             .col4 {
-              min-width: 250px;
-              width: 25%;
+              min-width: 300px;
+              width: 30%;
             }
 
             .col5 {
