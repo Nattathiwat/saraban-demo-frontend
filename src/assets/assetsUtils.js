@@ -28,7 +28,7 @@ export default {
   commaNumber(data) {
     return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   },
-  year543(data) {
+  yearDel543(data) {
     return data ? data.split('/')[0]+'/'+data.split('/')[1]+'/'+(data.split('/')[2]-543) : ''
   },
   yearPlus543(data) {

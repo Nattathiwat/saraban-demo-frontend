@@ -79,7 +79,7 @@
             </div>
             <div class="group-between" v-for="(item, index) in data.booking_refers" :key="index">
               <div class="group-input left">
-                <cpn-input  v-model="item.keyword"
+                <cpn-input  v-model="item.receive_document_number"
                             :name="`codeRefers${index}`"
                             type="text"
                             :searchFlag="true"
@@ -252,27 +252,27 @@
             </div>
             <div class="group-input">
               <div class="name">ความเห็น / คำสั่ง</div>
-              <cpn-textArea v-model="data.comments"
-                            name="comments"
+              <cpn-textArea v-model="data.comment"
+                            name="comment"
                             rows="3" />
             </div>
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">รูปแบบการดำเนินการ</div>
-                <cpn-select v-model="data.process_type"
-                            name="process_type"
-                            :optionSelect="optionSelect.process_type" />
+                <cpn-select v-model="data.process_type_id"
+                            name="process_type_id"
+                            :optionSelect="optionSelect.process_type_id" />
               </div>
               <div class="group-input">
                 <div class="name">การมองเห็น</div>
-                <cpn-select v-model="data.permission_type"
-                            name="permission_type"
-                            :optionSelect="optionSelect.permission_type" />
+                <cpn-select v-model="data.permission_id"
+                            name="permission_id"
+                            :optionSelect="optionSelect.permission_id" />
               </div>
             </div>
             <div class="d-flex align-items-center justify-content-between">
               <div>
-                <button type="button" class="button button-danger" @click="data.sendTo=[], data.comments='', data.process_type='', data.permission_type=''">
+                <button type="button" class="button button-danger" @click="data.sendTo=[], data.comment='', data.process_type_id='', data.permission_id=''">
                   <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                   ยกเลิก
                 </button>
@@ -347,11 +347,11 @@ export default {
         }],
         main_docs: [{ filename: '', file: []}],
         attachments: [{ filename: '', file: []}],
-        booking_refers: [{ keyword: 'ท584/66', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
+        booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [],
-        comments: '',
-        process_type: '',
-        permission_type: '',
+        comment: '',
+        process_type_id: '',
+        permission_id: '',
       },
       optionSelect: {
         receive_regis_id: [],
@@ -360,8 +360,8 @@ export default {
         speed_id: [],
         department_id: [],
         receive_type: [],
-        process_type: [],
-        permission_type: [],
+        process_type_id: [],
+        permission_id: [],
         sendTo: [],
       },
     }
@@ -393,7 +393,7 @@ export default {
       this.showLoading = true
       this.axios.get('/master-data/book-refer', {
         params: {
-          keyword: item.keyword
+          keyword: item.receive_document_number
         }
       })
       .then((response) => {
@@ -405,7 +405,7 @@ export default {
           item.desc = response.data.data[0].desc
           item.receive_date = response.data.data[0].receive_date
         } else {
-          item.keyword = ''
+          item.receive_document_number = ''
           item.book_refer_id = ''
           item.original_refer_id = ''
           item.book_type = ''
@@ -415,7 +415,7 @@ export default {
         }
       })
       .catch((error) => {
-        item.keyword = ''
+        item.receive_document_number = ''
         item.book_refer_id = ''
         item.original_refer_id = ''
         item.book_type = ''
@@ -559,18 +559,18 @@ export default {
       this.data.sendTo.filter(item => {
         booking_follows.push({
           department_id: parseInt(item.value),
-          comment: this.data.comments,
-          process_type_id: parseInt(this.data.process_type),
-          permission_id: parseInt(this.data.permission_type)
+          comment: this.data.comment,
+          process_type_id: parseInt(this.data.process_type_id),
+          permission_id: parseInt(this.data.permission_id)
         })
       })
       let dataSave = {
         original_flag: this.data.original_flag,
         receive_regis_id: parseInt(this.data.receive_regis_id),
         book_type_id: parseInt(this.data.book_type_id),
-        receive_date: this.data.receive_date,
+        receive_date: this.assetsUtils.yearDel543(this.data.receive_date),
         receive_time: this.data.receive_time,
-        as_of_date: this.data.as_of_date,
+        as_of_date: this.assetsUtils.yearDel543(this.data.as_of_date),
         document_number: this.data.document_number,
         subject: this.data.subject,
         secret_id: parseInt(this.data.secret_id),
@@ -645,20 +645,33 @@ export default {
         this.showLoading = false
         this.data = JSON.parse(JSON.stringify(response.data.data))
         this.data.tag = []
-        console.log('aa')
-        console.log(response.data.data.tag)
         response.data.data.tag?.split(',').filter(item => {
-          console.log(item)
-          this.data.tag.push({value: '', name: item})
+          if (item) {
+            this.data.tag.push({value: '', name: item})
+          }
         })
         this.data.sendTo = []
         response.data.data.booking_follows.filter(item => {
-          console.log('item', item)
           this.data.sendTo.push({value: item.department_id, name: item.department_name})
           this.data.comment = item.comment
           this.data.process_type_id = item.process_type_id
           this.data.permission_id = item.permission_id
         })
+
+        this.data.booking_refers = []
+        response.data.data.booking_refers.filter(item => {
+          this.axios.get(`/master-data/book-refer/${item.book_type}/${item.id}`)
+          .then((response2) => {
+            this.data.booking_refers.push({...item, ...response2.data.data})
+          })
+          .catch((error) => {
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        })
+
+        if (this.data.main_docs.length < 1) this.data.main_docs = [{ filename: '', file: []}]
+        if (this.data.attachments.length < 1) this.data.attachments = [{ filename: '', file: []}]
+        
       })
       .catch((error) => {
         this.showLoading = false
@@ -732,8 +745,8 @@ export default {
         this.optionSelect.book_type_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data
         this.optionSelect.speed_id = response4.data.data
-        this.optionSelect.process_type = response5.data.data
-        this.optionSelect.permission_type = response6.data.data
+        this.optionSelect.process_type_id = response5.data.data
+        this.optionSelect.permission_id = response6.data.data
         this.optionSelect.department_id = response7.data.data
         this.optionSelect.receive_type = response8.data.data
 
