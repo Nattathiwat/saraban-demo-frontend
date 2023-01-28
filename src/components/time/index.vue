@@ -72,7 +72,7 @@ export default {
         this.time = '';
       } else {
         let newData = parseInt(newVal.split(':')[0]) + parseInt(newVal.split(':')[1]) + parseInt(newVal.split(':')[2])
-        let oldData = parseInt(oldVal.split(':')[0]) + parseInt(oldVal.split(':')[1]) + parseInt(oldVal.split(':')[2])
+        let oldData = parseInt(oldVal?.split(':')[0]) + parseInt(oldVal?.split(':')[1]) + parseInt(oldVal?.split(':')[2])
         if (newData != oldData) {
           let array = newVal.split(':');
           let data = { "hours": parseInt(array[0]), "minutes": parseInt(array[1]), "seconds": parseInt(array[2]) };
@@ -85,7 +85,7 @@ export default {
         this.time = ''
       } else {
         let newData = parseInt(newVal.split(':')[0]) + parseInt(newVal.split(':')[1]) + parseInt(newVal.split(':')[2])
-        let oldData = parseInt(oldVal.split(':')[0]) + parseInt(oldVal.split(':')[1]) + parseInt(oldVal.split(':')[2])
+        let oldData = parseInt(oldVal?.split(':')[0]) + parseInt(oldVal?.split(':')[1]) + parseInt(oldVal?.split(':')[2])
         if (newData != oldData) {
           let array = this.modelValue.split(':');
           let data = { "hours": parseInt(array[0]), "minutes": parseInt(array[1]), "seconds": parseInt(array[2]) };
