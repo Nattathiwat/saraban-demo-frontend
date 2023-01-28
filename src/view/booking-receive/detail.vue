@@ -184,7 +184,7 @@
                 <div class="group-input">
                   <div class="name">E-mail</div>
                   <cpn-input  v-model="item.contract_mail"
-                              rules="required|email"
+                              rules="email"
                               :name="`${index}contract_mail`" />
                 </div>
               </div>
@@ -352,6 +352,7 @@ export default {
         process_type_id: '',
         permission_id: '',
         book_type:'',
+        regis_id:'',
       },
       optionSelect: {
         receive_regis_id: [],
@@ -588,7 +589,8 @@ export default {
         //"receive_document_number": "ท584/66",
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
-        book_type : this.$route.query.book_type 
+        book_type : parseInt(this.$route.query.book_type ),
+        regis_id : parseInt(this.$route.query.regis_id ),
       }
 
       if (this.edit) {
@@ -645,7 +647,8 @@ export default {
       this.showLoading = true
       this.axios.get(`/booking-receive/${this.$route.params.id}`, {
         params:{
-          book_type : this.$route.query.book_type 
+          book_type : this.$route.query.book_type ,
+          regis_id: this.$route.query.regis_id,
         }
       })
       .then((response) => { 

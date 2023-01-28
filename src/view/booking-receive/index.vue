@@ -129,7 +129,8 @@ export default {
           id: item.id,
         },
         query:{
-          book_type:item.book_type   
+          book_type:item.book_type,   
+          regis_id:item.regis_id,
         }
       }).catch(()=>{});
     },
