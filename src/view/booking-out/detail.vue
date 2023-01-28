@@ -109,9 +109,10 @@
               </div>
             </div>
             <div class="group-input">
-              <div class="name">ชื่อเรื่อง</div>
+              <div class="name">ชื่อเรื่อง <span class="required">*</span></div>
               <cpn-textArea v-model="data.subject"
                             name="subject"
+                            rules="required"
                             rows="1" />
             </div>
           </div>

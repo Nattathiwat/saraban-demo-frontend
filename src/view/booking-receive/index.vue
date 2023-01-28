@@ -30,7 +30,7 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขรับ สลค.</th>
+                <th class="col2">เลขรับ ส่งออก</th>
                 <th class="col3">เลขที่หนังสือ</th>
                 <th class="col4">ชื่อเรื่อง</th>
                 <th class="col5">ชนิด</th>
