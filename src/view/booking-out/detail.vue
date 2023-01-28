@@ -165,7 +165,7 @@
                   <div class="d-flex">
                     <cpn-autoComplete v-model="item.signer_id"
                                       :name="`signer_id${index}`"
-                                      :optionSelect="item?.optionSelect?.signer_id"
+                                      :optionSelect="item.optionSelect.signer_id"
                                       @change="changeSigner_id(index)" />
 
                     <cpn-checkbox v-model="item.is_signed"
@@ -219,7 +219,7 @@
               <div class="group-input">
                 <div class="name">หน่วยงานปลายทาง</div>
                 <cpn-autoComplete v-model="item2.department_dest_id"
-                                  :optionSelect="item2?.optionSelect?.department_dest_id"
+                                  :optionSelect="item2.optionSelect.department_dest_id"
                                   @keyup="keyupDepartment($event, item2)"
                                   :name="`department_dest_id${index}${index2}`" />
               </div>
@@ -256,7 +256,7 @@
                     <div class="d-flex">
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2?.optionSelect?.signer_id"  />
+                                        :optionSelect="item2.optionSelect.signer_id"  />
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
@@ -912,6 +912,12 @@ export default {
             }
           }
         })
+        if (item.booking_registers.length < 1) {
+          completeFile.push(true)
+          if (completeFile.length == this.data.booking_register_details.length) {
+            this.callApiSave(data)
+          }
+        }
       })
     },
     callApiSave(data) {
@@ -948,6 +954,7 @@ export default {
           item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
           item.booking_registers.filter(item2 => {
             item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
+            item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
             return item2
           })
           return item
