@@ -63,11 +63,12 @@
               </div>
               <div class="group-input">
                 <div class="name">หน่วยงาน <span class="required">*</span></div>
-                <cpn-select v-model="data.department_id"
-                            name="department"
-                            placeholder="กรุณาระบุ"
-                            rules="required"
-                            :optionSelect="data.optionSelect.department" />
+                <cpn-autoComplete v-model="data.department_id"
+                                  name="department"
+                                  placeholder="กรุณาระบุ"
+                                  rules="required"
+                                  @keyup="keyupDepartment($event)"
+                                  :optionSelect="data.optionSelect.department" />
               </div>
             </div>
           </div>
@@ -143,6 +144,24 @@ export default {
     date
   },
   methods: {
+    keyupDepartment(e) {
+      this.data.optionSelect.department = []
+      this.axios.get('/master-data/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+          this.data.optionSelect.department = response.data.data
+        }
+      })
+    },
     levelClick(data) {
       this.data.level = data
     },
@@ -236,7 +255,7 @@ export default {
     },
     apiMaster() {
       this.showLoading = true
-      this.axios.get(`/department`)
+      this.axios.get(`/master-data/department`)
       .then((response) => { 
         this.showLoading = false
         response.data.data.filter(row => {

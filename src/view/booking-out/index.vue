@@ -164,8 +164,6 @@ export default {
         })
         this.data.table = response.data.data
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
-        // localStorage.getItem('user_id',response.data.data?.user_id || '')
-        this.data.user_id = JSON.parse(localStorage.getItem("user_id"))
       })
       .catch((error) => {
         this.showLoading = false

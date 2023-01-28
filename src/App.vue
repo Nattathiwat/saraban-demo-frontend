@@ -7,14 +7,14 @@
     <div class="detail-index-page">
       <transition name="navigation-ham" @enter="enter" @after-enter="afterEnter" @leave="leave">
         <div v-if="!hamburger" class="navigation">
-          <img src="@/assets/images/navbar/triangle.png" class="icon-triangle" alt="logo">
-          <img src="@/assets/images/navbar/logo2.svg" class="icon-logo2" alt="logo">
+          <img src="@/assets/images/navbar/triangle.png" class="icon-triangle" alt="logo" v-if="false">
+          <img src="@/assets/images/navbar/logo2.svg" class="icon-logo2" alt="logo" v-if="false">
           <div class="group-image-logo">
             <img class="image-logo" src="~@/assets/images/navbar/logo.png" alt="logo">
-            <div class="title">
-              สำนักเลขาธิการคณะรัฐมนตรี
+            <div class="title mt-3">
+              ระบบสารบรรณ Demo
             </div>
-            <div class="sub-title">
+            <div class="sub-title" v-if="false">
               ระบบสารบรรณ Demo
             </div>
           </div>
@@ -90,7 +90,7 @@
       </div>
     </div>
     <div :style="hamburger ?'padding-left: 0px;':''" class="foot-index">
-      สงวนลิขสิทธิ์ © 2566 สำนักเลขาธิการคณะรัฐมนตรี ทำเนียบรัฐบาล
+      สงวนลิขสิทธิ์ © 2566 ระบบสารบรรณ Demo
     </div>
     <cpn-modal-alert :modal-alert="modalAlert" />
     <cpn-loading :show="showLoading" />
