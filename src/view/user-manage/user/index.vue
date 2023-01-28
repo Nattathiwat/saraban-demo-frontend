@@ -130,32 +130,17 @@ export default {
     },
     apiUser() {
       this.data.table = []
-      // this.data.table = [{
-      //     "id": 5968,
-      //     "name": "ไกรกฤษฏิ์ หินันท์ชัย",
-      //     "username": "kraikrit.pkm",
-      //     "email": "kraikrit@samudjodkodmhai.com",
-      //     "position": "ผู้ทดสอบ",
-      //     "division_name": " กองบริหารงานสารสนเทศ ",
-      //     "group_name": "เจ้าหน้าที่บริษัท",
-      //     "department": "INTERNAL",
-      //     "department_id": 0,
-      //     "department_name": "",
-      //     "permission_id": 1,
-      //     "permission_name": "User Admin",
-      //     "roles": []
-      // }]
       // this.data.page = 1
       // this.data.lastPage = 1
       // this.data.total = 1
       
       this.showLoading = true
       this.axios.get('/user' , {
-        // params: {
-        //   headers: {
-        //   'Content-Type': "application/json"
-        // }
-        // }
+        params: {
+          keyword: this.data.search,
+          page_size: this.data.pageSize,
+          page: this.data.page, 
+        }
       })
       .then((response) => {
         this.showLoading = false

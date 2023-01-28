@@ -88,6 +88,13 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 50,
+        // desc:'',
+        // receive_date_str:'',
+        // receive_date_end:'',
+        // as_of_date_str:'',
+        // as_of_date_end:'',
+        // booktype:'',
+        // tag:'',
       },
     }
   },
@@ -106,87 +113,62 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiDepartment()
+      this.apigetexport()
+      console.log('page')
+      
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      this.apiDepartment()
+      this.data.total = 0
+      this.data.lastPage = 1
+      // this.data.desc = ''
+      // this.data.receive_date_str = ''
+      // this.data.receive_date_end = ''
+      // this.data.as_of_date_str = ''
+      // this.data.as_of_date_end = ''
+      // this.data.booktype = ''
+      // this.data.tag = ''
+      this.apigetexport()
     },
-    apiDepartment() {
+    apigetexport() {
       this.data.table = []
-    //   this.data.table = [{
-    //     "bookNum": "2566/20",
-    //     "departmentName": "กศน. : กรมการศึกษานอกโรงเรียน",
-    //     "bookingId": 3116,
-    //     "bookingNoN": "นร0501/15",
-    //     "categoryId": null,
-    //     "categoryName": "",
-    //     "cateType": 2,
-    //     "bookingDate": null,
-    //     "bookingDateN": "2023-01-13T00:00:00",
-    //     "bookingIssuesDate": "2023-01-13T00:00:00",
-    //     "date": "13/01/2566",
-    //     "methodId": null,
-    //     "methodName": null,
-    //     "id": 51,
-    //     "typeId": 51,
-    //     "typename": "ขอความเห็น",
-    //     "secretId": 4,
-    //     "secretName": "ธรรมดา",
-    //     "bookingSubject": "เทสใช้เลขจอง",
-    //     "bookingHint": "",
-    //     "statusId": 8,
-    //     "statusName": "ระหว่างดำเนินการ",
-    //     "bookingoutFlag": 1,
-    //     "deleteFlag": 0,
-    //     "bookingNo": null,
-    //     "speedPic": "/files/icon/speed/4/icon_bookSpeed(02-09-2020)_LSA.png",
-    //     "statusPic": null,
-    //     "createBy": "phawitphorn.m",
-    //     "createDate": "2023-01-13T14:25:40.567298",
-    //     "response": null,
-    //     "speedId": 4,
-    //     "speedName": "ธรรมดา",
-    //     "speedPicName": "icon_bookSpeed(02-09-2020)_LSA.png",
-    //     "statusPicName": "/files/icon/status/8/icon_bookStatus(11-09-2020)_KdE.png",
-    //     "amtbook": 12,
-    //     "sendingDate": "",
-    //     "total": 956,
-    //     "responseSub": null,
-    //     "prepareBy": "phawitphorn.m"
-    // }]
-    //   this.data.page = 1
-    //   this.data.lastPage = 1
-    //   this.data.total = 1
+      this.data.page = 1
+      this.data.lastPage = 1
+      this.data.total = 1
       
       this.showLoading = true
       this.axios.get('/booking-out', {
         params: {
-          // month_str: this.assetsUtils.year543(this.data.dateSt),
-          // month_end: this.assetsUtils.year543(this.data.dateEn),
-          // page: this.data.page,
-          // booking-out: 'INTERNAL',
-          // page_size: this.data.pageSize
+          keyword: this.data.search,
+          page_size: this.data.pageSize,
+          page: this.data.page,
+          // desc: this.data.desc,
+          // receive_date_str: this.data.receive_date_str,
+          // receive_date_end: this.data.receive_date_end,
+          // as_of_date_str: this.data.as_of_date_str,
+          // as_of_date_end: this.data.as_of_date_end,
+          // book_type_id: this.data.booktype,
+          // tag: this.data.tag,
         }
       })
       .then((response) => {
         this.showLoading = false
         response.data.data.filter(row => {
           row.speedName = row.speed_name
-          // row.bookingNoN = row.receive_document_number
+          row.bookingNoN = row.book_out_num
           row.bookingSubject = row.subject
-          // row.bookingSubject = row.subject
           row.amtbook = row.department_name
-          // row.date = row.as_of_date
-          // row.response = row.response_name
-          // row.statusName = row.as_of_date
+          row.date = row.regis_date
+          row.typename = row.book_type_name
+          row.prepareBy = row.creater_name
+          row.statusName = row.status_name
         })
         this.data.table = response.data.data
-        // this.data.lastPage = response.data.data.last_page
-        // this.data.total = response.data.data.total
-        // this.data.active = response.data.data.page
+        this.data.lastPage = response.data.data.last_page
+        this.data.total = response.data.data.total
+        this.data.active = response.data.data.page
       })
       .catch((error) => {
         this.showLoading = false
@@ -213,7 +195,7 @@ export default {
               title: 'ทำการลบหนังสือส่งออกสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apiDepartment()
+                _this.apigetexport()
               }
             }
           // })
@@ -226,7 +208,7 @@ export default {
     },
   },
   mounted() {
-    this.apiDepartment()
+    this.apigetexport()
   },
 }
 
