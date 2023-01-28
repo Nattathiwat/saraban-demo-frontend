@@ -110,3 +110,8 @@ input::-ms-reveal, input::-ms-clear {
 button:disabled {
   opacity: 0.7;
 }
+
+.disabled {
+  opacity: 0.7;
+  cursor: default;
+}
