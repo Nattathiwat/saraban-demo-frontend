@@ -113,16 +113,12 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apigetexport()
-      console.log('page')
-      
+      this.apigetexport()      
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      this.data.total = 0
-      this.data.lastPage = 1
       // this.data.desc = ''
       // this.data.receive_date_str = ''
       // this.data.receive_date_end = ''
@@ -134,15 +130,12 @@ export default {
     },
     apigetexport() {
       this.data.table = []
-      this.data.page = 1
-      this.data.lastPage = 1
-      this.data.total = 1
       
       this.showLoading = true
       this.axios.get('/booking-out', {
         params: {
           keyword: this.data.search,
-          page_size: this.data.pageSize,
+          page_size: this.data.perPage,
           page: this.data.page,
           // desc: this.data.desc,
           // receive_date_str: this.data.receive_date_str,
@@ -164,11 +157,10 @@ export default {
           row.typename = row.book_type_name
           row.prepareBy = row.creater_name
           row.statusName = row.status_name
+          this.data.total = row.total
         })
         this.data.table = response.data.data
-        this.data.lastPage = response.data.data.last_page
-        this.data.total = response.data.data.total
-        this.data.active = response.data.data.page
+        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
         this.showLoading = false
