@@ -647,7 +647,9 @@ export default {
             }
             this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
             this.data.booking_register_details[index].booking_registers.filter(item => {
+              console.log(item)
               item = {...item, ...dataFile}
+              return item
             })
           } else {
             let dataFile = {
@@ -660,6 +662,7 @@ export default {
             this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
             this.data.booking_register_details[index].booking_registers.filter(item => {
               item = {...item, ...dataFile}
+              return item
             })
           }
           document.querySelector(`[name="${data}"]`).value=null;

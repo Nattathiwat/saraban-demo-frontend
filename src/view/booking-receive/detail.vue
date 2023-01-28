@@ -521,7 +521,7 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter(item => {
-            fileMain_docs.push(item.data.data)
+            fileMain_docs.push({...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
             this.callApiSave(fileMain_docs,fileAttachments)
@@ -535,7 +535,7 @@ export default {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter(item => {
-            fileAttachments.push(item.data.data)
+            fileAttachments.push({...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
             this.callApiSave(fileMain_docs,fileAttachments)
