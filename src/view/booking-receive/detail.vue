@@ -214,7 +214,7 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" @click="data.attachments.push({ filename: '', file: []})">
+                  <button type="button" class="add-booking-receive" @click="data.attachments.push({ filename: ''})">
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
@@ -344,8 +344,8 @@ export default {
           contract_phone: '',
           contract_mail: '',
         }],
-        main_docs: [{ filename: '', file: []}],
-        attachments: [{ filename: '', file: []}],
+        main_docs: [{ filename: ''}],
+        attachments: [{ filename: ''}],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [],
         comment: '',
@@ -486,11 +486,7 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          if (_this.data.main_docs.length>0||_this.data.attachments.length>0) {
-            _this.uploadFileAll()
-          } else {
-            _this.callApiSave([],[])
-          }
+          _this.uploadFileAll()
         }
       }
     },
@@ -500,21 +496,27 @@ export default {
       let axiosArray2 = []
       let fileMain_docs = []
       let fileAttachments = []
+      let fileMain_docs_old = []
+      let fileAttachments_old = []
 
       this.data.main_docs.filter((item) => {
-        if (item.filename) {
+        if (item.file) {
           let formDataFile = new FormData();
           formDataFile.append('file', item.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
           axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        } else if (item.id) {
+          fileMain_docs_old.push({filename: item.filename, filepath: item.filepath})
         }
       });
       this.data.attachments.filter((item) => {
-        if (item.filename) {
+        if (item.file) {
           let formDataFile = new FormData();
           formDataFile.append('file', item.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
           axiosArray2.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        } else if (item.id) {
+          fileAttachments_old.push({filename: item.filename, filepath: item.filepath})
         }
       });
       if (axiosArray1.length>0) {
@@ -524,7 +526,7 @@ export default {
             fileMain_docs.push({...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.callApiSave(fileMain_docs,fileAttachments)
+            this.callApiSave([...fileMain_docs, ...fileMain_docs_old],[...fileAttachments, ...fileAttachments_old])
           }
         })).catch((error) => {
           this.showLoading = false
@@ -538,7 +540,7 @@ export default {
             fileAttachments.push({...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.callApiSave(fileMain_docs,fileAttachments)
+            this.callApiSave([...fileMain_docs, ...fileMain_docs_old],[...fileAttachments, ...fileAttachments_old])
           }
         })).catch((error) => {
           this.showLoading = false
@@ -546,11 +548,10 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.callApiSave([],[])
+        this.callApiSave([...fileMain_docs_old],[...fileAttachments_old])
       }
     },
     callApiSave(fileMain_docs,fileAttachments) {
-      console.log('call')
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -566,7 +567,6 @@ export default {
           permission_id: parseInt(this.data.permission_id)
         })
       })
-      console.log('save')
       let dataSave = {
         original_flag: this.data.original_flag,
         receive_regis_id: parseInt(this.data.receive_regis_id),
@@ -582,8 +582,8 @@ export default {
         book_desc: this.data.book_desc,
         tag: tag,
         contracts: this.data.contracts,
-        main_docs: fileMain_docs,
-        attachments: fileAttachments,
+        main_docs: [...fileMain_docs, ...this.data.main_docs_del],
+        attachments: [...fileAttachments, ...this.data.attachments_del],
         booking_refers: this.data.booking_refers[0].book_refer_id ? this.data.booking_refers : [],
         booking_follows: booking_follows,
         //"receive_document_number": "ท584/66",
@@ -592,7 +592,6 @@ export default {
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
       }
-
       if (this.edit) {
         if (this.flagSave == 1) {
           this.showLoading = true
@@ -653,6 +652,15 @@ export default {
       })
       .then((response) => { 
         this.showLoading = false
+        let main_docs_del = []
+        let attachments_del = []
+        response.data.data.main_docs.filter(item => {
+          main_docs_del.push({...item,flag: 'delete'})
+        })
+        response.data.data.attachments.filter(item => {
+          attachments_del.push({...item,flag: 'delete'})
+        })
+        response.data.data = {...response.data.data, main_docs_del, attachments_del}
         this.data = JSON.parse(JSON.stringify(response.data.data))
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
@@ -680,8 +688,8 @@ export default {
           })
         })
 
-        if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', file: []}]
-        if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', file: []}]
+        if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: ''}]
+        if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: ''}]
         if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '',}]
         if (this.data.booking_refers?.length < 1 || !this.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}]
       })

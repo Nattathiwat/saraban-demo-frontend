@@ -646,10 +646,8 @@ export default {
               main_file: file,
             }
             this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
-            this.data.booking_register_details[index].booking_registers.filter(item => {
-              console.log(item)
-              item = {...item, ...dataFile}
-              return item
+            this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
+              this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
             })
           } else {
             let dataFile = {
@@ -660,9 +658,8 @@ export default {
               attach_file: file,
             }
             this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
-            this.data.booking_register_details[index].booking_registers.filter(item => {
-              item = {...item, ...dataFile}
-              return item
+            this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
+              this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
             })
           }
           document.querySelector(`[name="${data}"]`).value=null;
@@ -712,12 +709,12 @@ export default {
         },
       }]
     },
-    addDepartmentClick(item) {
+    async addDepartmentClick(item) {
       console.log(item)
       for (let i = 0; i < item.num; i++) {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
-            this.axios.get('/master-data/department')
+            await this.axios.get('/master-data/department')
             .then((response) => {
               console.log('f', i)
               item.booking_registers.push({
