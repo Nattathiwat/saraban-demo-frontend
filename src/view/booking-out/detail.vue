@@ -768,8 +768,8 @@ export default {
       this.modalRegiter.booking_register_details.push({
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),
-        book_out_num_type: 'เลขเดียว',
-        send_method_id: 'ไม่ระบุ',
+        book_out_num_type: '0',
+        send_method_id: '2',
         department_dest_id: [],
         optionSelect: {
           regis_id: this.optionSelectDefault.regis_id,
@@ -797,8 +797,9 @@ export default {
         }
       }
     },
-    onSubmitModal() {
-      this.modalRegiter.booking_register_details.filter(item => {
+    async onSubmitModal() {
+      for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
+        let item = this.modalRegiter.booking_register_details[i]
         let regis_id_desc = ''
         let book_out_num_type_desc = ''
         let send_method_id_desc = ''
@@ -824,38 +825,66 @@ export default {
           booking_registers: []
         }
         if (item.department_dest_id.length > 0) {
-          item.department_dest_id.filter(item2 => {
+          if (item.book_out_num_type == 0) {
+            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            .then((response) => {
+              item.department_dest_id.filter(item2 => {
+                data.booking_registers.push({
+                  book_out_num: response.data.data.out_document_number,
+                  greeting: '',
+                  department_dest_id: item2.value,
+                  main_filename: '',
+                  attach_filename: '',
+                  signer_id: '',
+                  is_signed: false,
+                  optionSelect: {
+                    signer_id: this.optionSelectDefault.signer_id,
+                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
+                  },
+                })
+              })
+            })
+          } else {
+            for (let i = 0; i < item.department_dest_id.length; i++) {
+              let item2 = item.department_dest_id[i]
+              await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+              .then((response) => {
+                data.booking_registers.push({
+                  book_out_num: response.data.data.out_document_number,
+                  greeting: '',
+                  department_dest_id: item2.value,
+                  main_filename: '',
+                  attach_filename: '',
+                  signer_id: '',
+                  is_signed: false,
+                  optionSelect: {
+                    signer_id: this.optionSelectDefault.signer_id,
+                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
+                  },
+                })
+              })
+            }
+          }
+        } else {
+          await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+          .then((response) => {
             data.booking_registers.push({
-              book_out_num: '2566/63',
+              book_out_num: response.data.data.out_document_number,
               greeting: '',
-              department_dest_id: item2.value,
+              department_dest_id: '',
               main_filename: '',
               attach_filename: '',
               signer_id: '',
               is_signed: false,
               optionSelect: {
                 signer_id: this.optionSelectDefault.signer_id,
-                department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
+                department_dest_id: this.optionSelectDefault.department_dest_id
               },
             })
           })
-        } else {
-          data.booking_registers.push({
-            book_out_num: '2566/63',
-            greeting: '',
-            department_dest_id: '',
-            main_filename: '',
-            attach_filename: '',
-            signer_id: '',
-            is_signed: false,
-            optionSelect: {
-              signer_id: this.optionSelectDefault.signer_id,
-              department_dest_id: this.optionSelectDefault.department_dest_id
-            },
-          })
         }
         this.data.booking_register_details.push(data)
-      })
+      }
       this.modalRegiter.showModal = false
     },
     uploadFileAll() {
@@ -874,7 +903,7 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter(item => {
-            fileAttachments.push(item.data.data)
+            fileAttachments.push({...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileAttachments.length) {
             this.uploadFileAll2(fileAttachments)
@@ -902,6 +931,7 @@ export default {
             this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
             .then((responses) => {
               item2.main_filepath = responses.data.data.filepath
+              check_main = true
               if (check_main && check_attach) {
                 completeFile2.push(true)
                 if (completeFile2.length == item.booking_registers.length) {
@@ -925,6 +955,7 @@ export default {
             this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
             .then((responses) => {
               item2.attach_filepath = responses.data.data.filepath
+              check_attach = true
               if (check_main && check_attach) {
                 completeFile2.push(true)
                 if (completeFile2.length == item.booking_registers.length) {
@@ -939,7 +970,7 @@ export default {
               this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
-            check_main = true
+            check_attach = true
           }
           if (!item2.main_filename && !item2.attach_filename) {
             completeFile2.push(true)
@@ -1000,6 +1031,7 @@ export default {
         }),
         flag: this.flagSave == 1 ? "draft" : '',
       }
+      this.showLoading = false
       if (this.edit) {
         if (this.flagSave == 1) {
           this.showLoading = true
