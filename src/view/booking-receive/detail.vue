@@ -31,6 +31,7 @@
                   <cpn-datepicker v-model="data.receive_date"
                                   name="receive_date"
                                   rules="required"
+                                  :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
@@ -57,6 +58,7 @@
                   <cpn-input v-model="data.document_number"
                                   name="document_number"
                                   rules="required"
+                                  :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
@@ -64,6 +66,7 @@
                   <cpn-datepicker v-model="data.as_of_date"
                                   name="as_of_date"
                                   rules="required"
+                                  :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
               </div>
@@ -108,6 +111,7 @@
                 <cpn-textArea v-model="data.subject"
                               name="subject"
                               rules="required"
+                              :disabled="edit"
                               rows="3" />
               </div>
               <div class="group-between">
@@ -117,7 +121,8 @@
                               name="secret_id"
                               rules="required"
                               :optionSelect="optionSelect.secret_id"
-                              placeholder="กรุณาระบุ" />
+                              placeholder="กรุณาระบุ"
+                              :disabled="edit" />
                 </div>
                 <div class="group-input">
                   <div class="name">ความเร่งด่วน <span class="required">*</span></div>
@@ -125,7 +130,8 @@
                               name="speed_id"
                               rules="required"
                               :optionSelect="optionSelect.speed_id"
-                              placeholder="กรุณาระบุ" />
+                              placeholder="กรุณาระบุ"
+                              :disabled="edit" />
                 </div>
               </div>
             </div>
@@ -134,7 +140,8 @@
               <cpn-textArea v-model="data.send_to"
                             name="send_to"
                             rules="required"
-                            rows="1" />
+                            rows="1"
+                            :disabled="edit" />
             </div>
             <div class="group-input left">
               <div class="name">รายละเอียดหนังสือ</div>
@@ -156,6 +163,7 @@
                 <cpn-autoComplete v-model="item.department_id"
                                   :name="`${index}department_id`"
                                   rules="required"
+                                  :disabled="edit"
                                   @keyup="keyupDepartment($event)"
                                   :optionSelect="optionSelect.department_id" />
               </div>
@@ -164,15 +172,17 @@
                 <cpn-select v-model="item.receive_type"
                             :name="`${index}receive_type`"
                             rules="required"
+                            :disabled="edit"
                             :optionSelect="optionSelect.receive_type" />
               </div>
             </div>
-            <div class="group-between" v-if="item.department_id == 1860">
+            <div class="group-between" v-if="item.department_id == 1860 || false ">
               <div class="group-input left">
                 <div class="name">ระบุชื่อหน่วยงานอื่นๆ <span class="required">*</span></div>
                 <cpn-input v-model="item.department_other"
                                   :name="`${index}department_other`"
-                                  :rules="item.department_id == 1860 ? 'required' : ''" />
+                                  :rules="item.department_id == 1860 ? 'required' : ''"
+                                  :disabled="edit" />
               </div>
               <div class="group-input"></div>
             </div>
@@ -180,7 +190,8 @@
               <div class="group-input left">
                 <div class="name">ผู้ติดต่อ</div>
                 <cpn-input  v-model="item.contract_name"
-                            :name="`${index}contract_name`" />
+                            :name="`${index}contract_name`"
+                            :disabled="edit" />
               </div>
               <div class="group-between">
                 <div class="group-input left">
@@ -188,13 +199,15 @@
                   <cpn-input  v-model="item.contract_phone"
                               :isNumber="true"
                               maxlength="10"
-                              :name="`${index}contract_phone`" />
+                              :name="`${index}contract_phone`"
+                              :disabled="edit" />
                 </div>
                 <div class="group-input">
                   <div class="name">E-mail</div>
                   <cpn-input  v-model="item.contract_mail"
                               rules="email"
-                              :name="`${index}contract_mail`" />
+                              :name="`${index}contract_mail`"
+                              :disabled="edit" />
                 </div>
               </div>
             </div>
@@ -206,12 +219,12 @@
                 <div class="name">หนังสือต้นเรื่อง</div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.main_docs" :key="index">
                   <div class="group-input-file">
-                    <button type="button" class="button-file" @click="uploadFile(`main_docs${index}`)">
+                    <button type="button" class="button-file" @click="edit ? '' : uploadFile(`main_docs${index}`)" :disabled="edit" >
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'หนังสือต้นเรื่อง'}}
                       </span>
                     </button>
-                    <div class="text pointer" @click="uploadFile(`main_docs${index}`)">แนบเอกสาร</div>
+                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : uploadFile(`main_docs${index}`)" >แนบเอกสาร</div>
                     <input type="file" @change="fileSetChange(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="downloadFile(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
@@ -223,7 +236,7 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" @click="data.attachments.push({ filename: ''})">
+                  <button type="button" class="add-booking-receive" @click="edit ? '' : data.attachments.push({ filename: ''})" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
@@ -232,12 +245,12 @@
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments" :key="index">
                   <div class="group-input-file">
-                    <button type="button" class="button-file" @click="uploadFile(`attachments${index}`)">
+                    <button type="button" class="button-file" @click="edit ? '' : uploadFile(`attachments${index}`)" :disabled="edit">
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
                       </span>
                     </button>
-                    <div class="text pointer" @click="uploadFile(`attachments${index}`)">แนบเอกสาร</div>
+                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : uploadFile(`attachments${index}`)">แนบเอกสาร</div>
                     <input type="file" @change="fileSetChange(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="downloadFile(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
@@ -469,7 +482,7 @@ export default {
       }
     },
     uploadFile(data) {
-      document.querySelector(`[name="${data}"]`).click()
+      document.querySelector(`[name="${data}"]` ).click()
     },
     fileSetChange(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
