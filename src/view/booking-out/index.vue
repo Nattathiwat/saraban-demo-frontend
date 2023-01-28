@@ -1,12 +1,12 @@
 <template>
-  <div class="export-book-inex">
+  <div class="booking-out-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">หนังสือส่งออก</div>
-            <button type="button" class="add-export-book" @click="addClick()">
+            <button type="button" class="add-booking-out" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                 สร้างหนังสือส่งออก
@@ -26,7 +26,7 @@
         </div>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-export-book-inex">
+          <table class="table-booking-out-inex">
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
@@ -72,7 +72,7 @@
 </template>
 <script>
 export default {
-  name: 'export-book-inex',
+  name: 'booking-out-inex',
   data() {
     return {
       modalAlert: {
@@ -94,12 +94,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'export-book-create',
+        name: 'booking-out-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'export-book-edit',
+        name: 'booking-out-edit',
         params: {id: item.id}
       }).catch(()=>{});
     },
@@ -167,7 +167,7 @@ export default {
           // month_str: this.assetsUtils.year543(this.data.dateSt),
           // month_end: this.assetsUtils.year543(this.data.dateEn),
           // page: this.data.page,
-          // export-book: 'INTERNAL',
+          // booking-out: 'INTERNAL',
           // page_size: this.data.pageSize
         }
       })
@@ -232,7 +232,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .export-book-inex {
+  .booking-out-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -271,7 +271,7 @@ export default {
             font-size: 18px;
           }
 
-          .add-export-book {
+          .add-booking-out {
             height: 46px;
             border: 0;
             border-radius: 5px;
@@ -334,7 +334,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-export-book-inex {
+        .table-booking-out-inex {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;

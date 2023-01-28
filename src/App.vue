@@ -20,7 +20,7 @@
           </div>
           <div class="group-list-head">
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'import-book'|| $route.name == 'import-book-create' || $route.name == 'import-book-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'import-book'})">
+              <div class="list-navbar pointer" :class="$route.name == 'booking-receive'|| $route.name == 'booking-receive-create' || $route.name == 'booking-receive-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'booking-receive'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
@@ -29,7 +29,7 @@
               </div>
             </div>
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'export-book'|| $route.name == 'export-book-create' || $route.name == 'export-book-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'export-book'})">
+              <div class="list-navbar pointer" :class="$route.name == 'booking-out'|| $route.name == 'booking-out-create' || $route.name == 'booking-out-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'booking-out'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
@@ -136,17 +136,17 @@ export default {
         return 'การจัดการผู้ใช้งาน / หน่วยงาน / แก้ไขหน่วยงาน'
       } else if (this.$route.name == 'department-create') {
         return 'การจัดการผู้ใช้งาน / หน่วยงาน / เพิ่มหน่วยงาน'
-      } else if (this.$route.name == 'export-book') {
+      } else if (this.$route.name == 'booking-out') {
         return 'หนังสือส่งออก'
-      } else if (this.$route.name == 'export-book-create') {
+      } else if (this.$route.name == 'booking-out-create') {
         return 'หนังสือส่งออก / สร้างหนังสือส่งออก'
-      } else if (this.$route.name == 'export-book-edit') {
+      } else if (this.$route.name == 'booking-out-edit') {
         return 'หนังสือส่งออก / แก้ไขหนังสือส่งออก'
-      } else if (this.$route.name == 'import-book') {
+      } else if (this.$route.name == 'booking-receive') {
         return 'หนังสือรับเข้า'
-      } else if (this.$route.name == 'import-book-create') {
+      } else if (this.$route.name == 'booking-receive-create') {
         return 'หนังสือรับเข้า / สร้างหนังสือรับเข้า'
-      } else if (this.$route.name == 'import-book-edit') {
+      } else if (this.$route.name == 'booking-receive-edit') {
         return 'หนังสือรับเข้า / แก้ไขหนังสือรับเข้า'
       } else {
         return this.$route.name

@@ -1,5 +1,5 @@
 <template>
-  <div class="export-book-detail">
+  <div class="booking-out-detail">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -78,7 +78,7 @@
             </div>
             <div class="group-input d-flex align-items-center">
               <div class="name">อ้างอิงถึง</div>
-              <button type="button" class="add-export-book" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', receive_date: '', receive_document_number: '', desc: ''})">
+              <button type="button" class="add-booking-out" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', receive_date: '', receive_document_number: '', desc: ''})">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มเอกสารอ้างอิง
@@ -165,7 +165,7 @@
                   <div class="d-flex">
                     <cpn-autoComplete v-model="item.signer_id"
                                       :name="`signer_id${index}`"
-                                      :optionSelect="item.optionSelect.signer_id"
+                                      :optionSelect="item?.optionSelect?.signer_id"
                                       @change="changeSigner_id(index)" />
 
                     <cpn-checkbox v-model="item.is_signed"
@@ -218,9 +218,10 @@
               </div>
               <div class="group-input">
                 <div class="name">หน่วยงานปลายทาง</div>
-                <cpn-select v-model="item2.department_dest_id"
-                            :optionSelect="item2.optionSelect.department_dest_id"
-                            :name="`department_dest_id${index}${index2}`" />
+                <cpn-autoComplete v-model="item2.department_dest_id"
+                                  :optionSelect="item2?.optionSelect?.department_dest_id"
+                                  @keyup="keyupDepartment($event, item2)"
+                                  :name="`department_dest_id${index}${index2}`" />
               </div>
               <div class="group-between">
                 <div class="w-100 overflow-hidden">
@@ -255,7 +256,7 @@
                     <div class="d-flex">
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2.optionSelect.signer_id"  />
+                                        :optionSelect="item2?.optionSelect?.signer_id"  />
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
@@ -281,7 +282,7 @@
             </div>
             <div class="group-input d-flex align-items-center mt-4">
               <div class="name">สิ่งที่แนบมาด้วย</div>
-              <button type="button" class="add-export-book" @click="data.attachments.push({ filename: '', file: []})">
+              <button type="button" class="add-booking-out" @click="data.attachments.push({ filename: '', file: []})">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มไฟล์
@@ -485,7 +486,7 @@ export default {
         book_type_id: '92',
         secret_id: '12',
         speed_id: '12',
-        booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
+        booking_refers: [{ receive_document_number: 'ท584/66', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         subject: '',
         booking_register_details: [],
         tag: [],
@@ -514,7 +515,7 @@ export default {
   methods: {
     keyupSendTo(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/department', {
+      this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value
         }
@@ -532,7 +533,7 @@ export default {
     },
     keyupDepartment(e, data) {
       data.optionSelect.department_dest_id = []
-      this.axios.get('/department', {
+      this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value
         }
@@ -740,7 +741,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'export-book',
+        name: 'booking-out',
       }).catch(()=>{});
     },
     onSubmit() {
@@ -795,7 +796,7 @@ export default {
               is_signed: false,
               optionSelect: {
                 signer_id: this.optionSelectDefault.signer_id,
-                department_dest_id: this.optionSelectDefault.department_dest_id
+                department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
               },
             })
           })
@@ -932,7 +933,7 @@ export default {
       })
       let dataSave = {
         create_type: parseInt(this.data.create_type),
-        creater_id: this.data.creater_id ? parseInt(this.data.creater_id) : '',
+        creater_id: this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')),
         book_category_id: parseInt(this.data.book_category_id),
         book_type_id: parseInt(this.data.book_type_id),
         secret_id: parseInt(this.data.secret_id),
@@ -943,7 +944,14 @@ export default {
         attachments: fileAttachments,
         booking_refers: this.data.booking_refers[0].book_refer_id ? this.data.booking_refers : [],
         booking_follows: booking_follows,
-        booking_register_details: this.data.booking_register_details,
+        booking_register_details: this.data.booking_register_details.filter(item => {
+          item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
+          item.booking_registers.filter(item2 => {
+            item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
+            return item2
+          })
+          return item
+        }),
         flag: this.flagSave == 1 ? "draft" : '',
       }
       if (this.edit) {
@@ -997,19 +1005,53 @@ export default {
       }
     },
     apiDetail() {
-      // this.showLoading = true
-      // this.axios.get(`/v1/master_data/department/${this.$route.params.id}`)
-      // .then((response) => { 
-      //   this.showLoading = false
-      //   this.data.short_name = response.data.data.short_name
-      //   this.data.name = response.data.data.name
-      //   this.data.department = response.data.data.department
-      //   this.data.user_id = response.data.data.user_id
-      // })
-      // .catch((error) => {
-      //   this.showLoading = false
-      //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      // })
+      this.showLoading = true
+      this.axios.get(`/booking-out/${this.$route.params.id}`)
+      .then((response) => { 
+        this.showLoading = false
+        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data.tag = []
+        response.data.data.tag?.split(',').filter(item => {
+          if (item) {
+            this.data.tag.push({value: '', name: item})
+          }
+        })
+        this.data.sendTo = []
+        response.data.data.booking_follows.filter(item => {
+          this.data.sendTo.push({value: item.department_id, name: item.department_name})
+          this.data.comment = item.comment
+          this.data.process_type_id = item.process_type_id
+          this.data.permission_id = item.permission_id
+        })
+        this.data.booking_refers = []
+        response.data.data.booking_refers.filter(item => {
+          this.axios.get(`/master-data/book-refer/${item.book_type}/${item.id}`)
+          .then((response2) => {
+            this.data.booking_refers.push({...item, ...response2.data.data})
+          })
+          .catch((error) => {
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        })
+        this.data.booking_register_details.filter(item=>{
+          item.optionSelect = {signer_id: this.optionSelectDefault.signer_id}
+          item.signer_id = ''
+          item.num = '1'
+          item.booking_registers.filter(item2 => {
+            item2.optionSelect = {signer_id: this.optionSelectDefault.signer_id, department_dest_id: this.optionSelectDefault.department_dest_id}
+            return item2
+          })
+          return item
+        })
+
+        if (this.data.main_docs.length < 1) this.data.main_docs = [{ filename: '', file: []}]
+        if (this.data.attachments.length < 1) this.data.attachments = [{ filename: '', file: []}]
+        
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     apiMaster() {
       this.showLoading = true
@@ -1021,7 +1063,7 @@ export default {
       const request6 = this.axios.get(`/user`)
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/register-type`)
-      const request9 = this.axios.get('/department')
+      const request9 = this.axios.get('/master-data/department')
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9])
       .then(this.axios.spread((...responses) => {
@@ -1118,7 +1160,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .export-book-detail {
+  .booking-out-detail {
     .group-overflow {
       overflow: auto;
     }
@@ -1234,7 +1276,7 @@ export default {
           margin-bottom: 7px;
         }
 
-        .add-export-book {
+        .add-booking-out {
           height: 36px;
           border: 0;
           border-radius: 5px;

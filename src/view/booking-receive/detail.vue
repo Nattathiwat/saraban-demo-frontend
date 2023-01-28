@@ -1,5 +1,5 @@
 <template>
-  <div class="import-book-detail">
+  <div class="booking-receive-detail">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -70,7 +70,7 @@
             </div>
             <div class="group-input d-flex align-items-center">
               <div class="name">อ้างอิงถึง</div>
-              <button type="button" class="add-import-book" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', receive_date: '', receive_document_number: '', desc: ''})">
+              <button type="button" class="add-booking-receive" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', receive_date: '', receive_document_number: '', desc: ''})">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มเอกสารอ้างอิง
@@ -215,7 +215,7 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-import-book" @click="data.attachments.push({ filename: '', file: []})">
+                  <button type="button" class="add-booking-receive" @click="data.attachments.push({ filename: '', file: []})">
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
@@ -313,7 +313,7 @@
 </template>
 <script>
 export default {
-  name: 'import-book-detail',
+  name: 'booking-receive-detail',
   data() {
     return {
       modalAlert: {
@@ -472,7 +472,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'import-book',
+        name: 'booking-receive',
       }).catch(()=>{});
     },
     onSubmit() {
@@ -774,7 +774,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .import-book-detail {
+  .booking-receive-detail {
     .group-overflow {
       overflow: auto;
     }
@@ -895,7 +895,7 @@ export default {
           margin-bottom: 7px;
         }
 
-        .add-import-book {
+        .add-booking-receive {
           height: 36px;
           border: 0;
           border-radius: 5px;

@@ -1,12 +1,12 @@
 <template>
-  <div class="import-book-inex">
+  <div class="booking-receive-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">หนังสือรับเข้า</div>
-            <button type="button" class="add-import-book" @click="addClick()">
+            <button type="button" class="add-booking-receive" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                 สร้างหนังสือรับเข้า
@@ -26,7 +26,7 @@
         </div>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-import-book-inex">
+          <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
@@ -90,7 +90,7 @@
 </template>
 <script>
 export default {
-  name: 'import-book-inex',
+  name: 'booking-receive-inex',
   data() {
     return {
       modalAlert: {
@@ -112,12 +112,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'import-book-create',
+        name: 'booking-receive-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'import-book-edit',
+        name: 'booking-receive-edit',
         params: {id: item.id}
       }).catch(()=>{});
     },
@@ -238,7 +238,7 @@ export default {
           // month_str: this.assetsUtils.year543(this.data.dateSt),
           // month_end: this.assetsUtils.year543(this.data.dateEn),
           // page: this.data.page,
-          // import-book: 'INTERNAL',
+          // booking-receive: 'INTERNAL',
           // page_size: this.data.pageSize
         }
       })
@@ -303,7 +303,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .import-book-inex {
+  .booking-receive-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -342,7 +342,7 @@ export default {
             font-size: 18px;
           }
 
-          .add-import-book {
+          .add-booking-receive {
             height: 46px;
             border: 0;
             border-radius: 5px;
@@ -405,7 +405,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-import-book-inex {
+        .table-booking-receive-inex {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
