@@ -710,15 +710,13 @@ export default {
       }]
     },
     async addDepartmentClick(item) {
-      console.log(item)
       for (let i = 0; i < item.num; i++) {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
-            await this.axios.get('/master-data/department')
+            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
             .then((response) => {
-              console.log('f', i)
               item.booking_registers.push({
-                book_out_num: '2566/xx'+i,
+                book_out_num: response.data.data.out_document_number,
                 greeting: '',
                 department_dest_id: '',
                 main_filename: '',
@@ -732,7 +730,6 @@ export default {
               })
             })
           } else {
-            console.log('e', i)
             item.booking_registers.push({
               book_out_num: item.booking_registers[0].book_out_num,
               greeting: '',
@@ -747,6 +744,23 @@ export default {
               },
             })
           }
+        } else {
+          await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+          .then((response) => {
+            item.booking_registers.push({
+              book_out_num: response.data.data.out_document_number,
+              greeting: '',
+              department_dest_id: '',
+              main_filename: '',
+              attach_filename: '',
+              signer_id: '',
+              is_signed: false,
+              optionSelect: {
+                signer_id: this.optionSelectDefault.signer_id,
+                department_dest_id: this.optionSelectDefault.department_dest_id
+              },
+            })
+          })
         }
       }
     },

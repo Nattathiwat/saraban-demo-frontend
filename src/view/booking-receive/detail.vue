@@ -153,10 +153,11 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">หน่วยงานที่เสนอเรื่อง <span class="required">*</span></div>
-                <cpn-select v-model="item.department_id"
-                            :name="`${index}department_id`"
-                            rules="required"
-                            :optionSelect="optionSelect.department_id" />
+                <cpn-autoComplete v-model="item.department_id"
+                                  :name="`${index}department_id`"
+                                  rules="required"
+                                  @keyup="keyupDepartment($event)"
+                                  :optionSelect="optionSelect.department_id" />
               </div>
               <div class="group-input">
                 <div class="name">ช่องทางการรับเอกสาร <span class="required">*</span></div>
@@ -166,7 +167,15 @@
                             :optionSelect="optionSelect.receive_type" />
               </div>
             </div>
-
+            <div class="group-between" v-if="item.department_id == 1860">
+              <div class="group-input left">
+                <div class="name">ระบุชื่อหน่วยงานอื่นๆ <span class="required">*</span></div>
+                <cpn-input v-model="item.department_other"
+                                  :name="`${index}department_other`"
+                                  :rules="item.department_id == 1860 ? 'required' : ''" />
+              </div>
+              <div class="group-input"></div>
+            </div>
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ผู้ติดต่อ</div>
@@ -339,6 +348,7 @@ export default {
         tag: [],
         contracts: [{
           department_id: '',
+          department_other: '',
           receive_type: '',
           contract_name: '',
           contract_phone: '',
@@ -368,9 +378,27 @@ export default {
     }
   },
   methods: {
+    keyupDepartment(e) {
+      this.optionSelect.department_id = []
+      this.axios.get('/master-data/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+          this.optionSelect.department_id = response.data.data
+        }
+      })
+    },
     keyupSendTo(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/department', {
+      this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value
         }
@@ -690,7 +718,7 @@ export default {
 
         if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: ''}]
         if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: ''}]
-        if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '',}]
+        if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: ''}]
         if (this.data.booking_refers?.length < 1 || !this.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}]
       })
       .catch((error) => {
@@ -706,7 +734,7 @@ export default {
       const request4 = this.axios.get('/master-data/speed')
       const request5 = this.axios.get('/master-data/process-type')
       const request6 = this.axios.get('/master-data/permission-type')
-      const request7 = this.axios.get('/department')
+      const request7 = this.axios.get('/master-data/department')
       const request8 = this.axios.get('/master-data/receive-type')
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8])
