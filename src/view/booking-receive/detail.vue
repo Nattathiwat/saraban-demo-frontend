@@ -351,6 +351,7 @@ export default {
         comment: '',
         process_type_id: '',
         permission_id: '',
+        book_type:'',
       },
       optionSelect: {
         receive_regis_id: [],
@@ -548,6 +549,7 @@ export default {
       }
     },
     callApiSave(fileMain_docs,fileAttachments) {
+      console.log('call')
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -563,6 +565,7 @@ export default {
           permission_id: parseInt(this.data.permission_id)
         })
       })
+      console.log('save')
       let dataSave = {
         original_flag: this.data.original_flag,
         receive_regis_id: parseInt(this.data.receive_regis_id),
@@ -585,6 +588,7 @@ export default {
         //"receive_document_number": "ท584/66",
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
+        book_type : this.$route.query.book_type 
       }
 
       if (this.edit) {
@@ -639,7 +643,11 @@ export default {
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/booking-receive/${this.$route.params.id}`)
+      this.axios.get(`/booking-receive/${this.$route.params.id}`, {
+        params:{
+          book_type : this.$route.query.book_type 
+        }
+      })
       .then((response) => { 
         this.showLoading = false
         this.data = JSON.parse(JSON.stringify(response.data.data))
@@ -655,6 +663,7 @@ export default {
           this.data.comment = item.comment
           this.data.process_type_id = item.process_type_id
           this.data.permission_id = item.permission_id
+          this.data.book_type = item.book_type
         })
 
         this.data.booking_refers = []

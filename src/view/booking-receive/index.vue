@@ -125,7 +125,12 @@ export default {
     editClick(item) {
       this.$router.push({ 
         name: 'booking-receive-edit',
-        params: {id: item.id}
+        params: {
+          id: item.id,
+        },
+        query:{
+          book_type:item.book_type   
+        }
       }).catch(()=>{});
     },
     pageChange(data) {
