@@ -17,7 +17,7 @@
             <div class="search">
               <cpn-input  v-model="data.search"
                           name="search"
-                          type="search"
+                          type="text"
                           :searchFlag="true"
                           @search="search()"
                           placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
