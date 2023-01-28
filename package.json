@@ -10,7 +10,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "@vee-validate/rules": "^4.7.3",
-    "@vuepic/vue-datepicker": "^3.6.4",
+    "@vuepic/vue-datepicker": "^3.6.5",
     "axios": "^1.2.4",
     "bootstrap": "^5.3.0-alpha1",
     "bootstrap-icons": "^1.10.3",

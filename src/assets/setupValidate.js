@@ -24,7 +24,7 @@ export function setupValidate (app) {
   });
 
   defineRule("email", (value) => {
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) && value) {
       return '*กรุณากรอกอีเมลที่ถูกต้อง';
     }
     return true;
