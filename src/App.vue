@@ -11,7 +11,7 @@
           <img src="@/assets/images/navbar/logo2.svg" class="icon-logo2" alt="logo" v-if="false">
           <div class="group-image-logo">
             <img class="image-logo" src="~@/assets/images/navbar/logo.png" alt="logo">
-            <div class="title">
+            <div class="title mt-3">
               ระบบสารบรรณ Demo
             </div>
             <div class="sub-title" v-if="false">
