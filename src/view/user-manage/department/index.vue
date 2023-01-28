@@ -53,7 +53,7 @@
             </tbody>
           </table>
         </div>
-        <div class="group-footer" v-if="false">
+        <div class="group-footer">
           <cpn-pagination :page="data.page"
                           :total="data.total"
                           :lastPage="data.lastPage"
@@ -114,13 +114,20 @@ export default {
     apiDepartment() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/department')
+      this.axios.get('/department', {
+        params:{
+          keyword: this.data.search,
+          page_size: this.data.perPage,
+          page: this.data.page,
+        }
+      })
       .then((response) => {
         this.showLoading = false
+        response.data.data.filter(row => {
+          this.data.total = row.total
+        })
         this.data.table = response.data.data
-        // this.data.lastPage = response.data.data.last_page
-        // this.data.total = response.data.data.total
-        // this.data.active = response.data.data.page
+        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
         this.showLoading = false
