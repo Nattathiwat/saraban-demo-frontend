@@ -30,7 +30,7 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขรับ สลค.</th>
+                <th class="col2">เลขรับ</th>
                 <th class="col3">เลขที่หนังสือ</th>
                 <th class="col4">ชื่อเรื่อง</th>
                 <th class="col5">ชนิด</th>
@@ -106,6 +106,7 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 50,
+        user_id: localStorage.getItem('user_id'),
         // desc:'',
         // receive_date_str:'',
         // receive_date_end:'',
@@ -164,6 +165,7 @@ export default {
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
+          id: this.data.user_id,
           // desc: this.data.desc,
           // receive_date_str: this.data.receive_date_str,
           // receive_date_end: this.data.receive_date_end,
@@ -180,7 +182,7 @@ export default {
           row.bookingNo = row.receive_document_number
           row.referBookno = row.document_number
           row.bookingSubject = row.subject
-          row.typename = row.receive_type_name
+          row.typename = row.book_type_name
           row.date = row.as_of_date
           row.response = row.response_name
           row.statusName = row.status

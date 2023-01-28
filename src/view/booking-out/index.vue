@@ -44,7 +44,7 @@
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNoN}}</td>
                 <td class="col3">{{item.bookingSubject}}</td>
-                <td class="col4">{{item.amtbook}}</td>
+                <td class="col4">{{item.department_name}}</td>
                 <td class="col5">{{item.date}}</td>
                 <td class="col6">{{item.typename}}</td>
                 <td class="col7">{{item.prepareBy}}</td>
@@ -88,6 +88,7 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 50,
+        user_id: localStorage.getItem('user_id'),
         // desc:'',
         // receive_date_str:'',
         // receive_date_end:'',
@@ -132,11 +133,13 @@ export default {
       this.data.table = []
       
       this.showLoading = true
+      console.log('wwww')
       this.axios.get('/booking-out', {
         params: {
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
+          user_id: this.data.user_id,
           // desc: this.data.desc,
           // receive_date_str: this.data.receive_date_str,
           // receive_date_end: this.data.receive_date_end,
@@ -152,7 +155,7 @@ export default {
           row.speedName = row.speed_name
           row.bookingNoN = row.book_out_num
           row.bookingSubject = row.subject
-          row.amtbook = row.department_name
+          row.department_name = row.department_name
           row.date = row.regis_date
           row.typename = row.book_type_name
           row.prepareBy = row.creater_name
@@ -161,6 +164,8 @@ export default {
         })
         this.data.table = response.data.data
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
+        // localStorage.getItem('user_id',response.data.data?.user_id || '')
+        this.data.user_id = JSON.parse(localStorage.getItem("user_id"))
       })
       .catch((error) => {
         this.showLoading = false
