@@ -20,12 +20,21 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
+                <div class="name">รหัสหน่วยงาน <span class="required">*</span></div>
+                <cpn-input  v-model="data.code"
+                            name="department_id"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
                 <div class="name">ชื่อย่อหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_short_name"
                             name="department_short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
+            </div>
+            <div class="group-between">
               <div class="group-input">
                 <div class="name">ชื่อหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_full_name"
@@ -70,6 +79,7 @@ export default {
       showLoading: false,
       edit: false,
       data: {
+        code: '',
         department_short_name: '',
         department_full_name: '',
       },
@@ -83,6 +93,7 @@ export default {
     },
     cancelClick() {
       this.back()
+      this.data.code = ''
       this.data.department_short_name = ''
       this.data.department_full_name = ''
     },
@@ -97,6 +108,7 @@ export default {
         afterPressAgree() {
           if (_this.edit) {
             let groupdata = {
+              code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
             }
@@ -112,6 +124,7 @@ export default {
             })
           } else {
             let groupdata = {
+              code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
             }
@@ -134,6 +147,7 @@ export default {
       this.axios.get(`/department/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
+        // this.data.department_id = response.data.data.department_id
         this.data.department_short_name = response.data.data.department_short_name
         this.data.department_full_name = response.data.data.department_full_name
       })
