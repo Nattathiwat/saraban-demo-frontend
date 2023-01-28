@@ -70,10 +70,10 @@
             </tbody>
           </table>
         </div>
-        <div class="group-footer" v-if="false">
+        <div class="group-footer">
           <cpn-pagination :page="data.page"
                           :total="data.total"
-                          :lastPage="data.lastPage"
+                          :lastPage="data.lastPage" 
                           :perPage="data.perPage"
                           @pageChange="pageChange"
                     />
@@ -138,7 +138,7 @@ export default {
       this.axios.get('/user' , {
         params: {
           keyword: this.data.search,
-          page_size: this.data.pageSize,
+          page_size: this.data.perPage,
           page: this.data.page, 
         }
       })
@@ -147,11 +147,10 @@ export default {
         response.data.data.filter(row => {
           row.permission_id = row.role_id
           row.permission_name = row.role_name
-
-          // row.roles.filter((row2, index) => {
-          //   row.levelDesc += (row2.role_name + (row.roles.length == (index+1) ? '' : ', '))  
+          this.data.total = row.total
         })
         this.data.table = response.data.data
+        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
         this.showLoading = false
