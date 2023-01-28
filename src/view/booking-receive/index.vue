@@ -181,7 +181,6 @@ export default {
           this.data.total = row.total
         })
         this.data.table = response.data.data
-        console.log('aaa')
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
