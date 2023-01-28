@@ -335,7 +335,7 @@ export default {
         subject: '',
         secret_id: '',
         speed_id: '',
-        send_to: '',
+        send_to: 'ลคร.',
         book_desc: '',
         tag: [],
         contracts: [{
