@@ -677,11 +677,10 @@ export default {
           })
         })
 
-        if (this.data.main_docs.length < 1) this.data.main_docs = [{ filename: '', file: []}]
-        if (this.data.attachments.length < 1) this.data.attachments = [{ filename: '', file: []}]
-        if (this.data.contracts.length < 1) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '',}]
-        if (this.data.booking_refers.length < 1) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}]
-        
+        if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', file: []}]
+        if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', file: []}]
+        if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '',}]
+        if (this.data.booking_refers?.length < 1 || !this.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}]
       })
       .catch((error) => {
         this.showLoading = false
