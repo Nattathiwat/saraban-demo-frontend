@@ -145,6 +145,7 @@
                     <div class="name">จำนวน :</div>
                     <cpn-input  v-model="item.num"
                                 :name="`num${index}`"
+                                type="number"
                                 class="size-input"/>
                   </div>
                   <button type="button" class="add-department" @click="addDepartmentClick(item)">
@@ -709,20 +710,44 @@ export default {
       }]
     },
     addDepartmentClick(item) {
+      console.log(item)
       for (let i = 0; i < item.num; i++) {
-        item.booking_registers.push({
-          book_out_num: '2566/63',
-          greeting: '',
-          department_dest_id: '',
-          main_filename: '',
-          attach_filename: '',
-          signer_id: '',
-          is_signed: false,
-          optionSelect: {
-            signer_id: this.optionSelectDefault.signer_id,
-            department_dest_id: this.optionSelectDefault.department_dest_id
-          },
-        })
+        if (item.book_out_num_type == 0) {
+          if (item.booking_registers.length < 1) {
+            this.axios.get('/master-data/department')
+            .then((response) => {
+              console.log('f', i)
+              item.booking_registers.push({
+                book_out_num: '2566/xx'+i,
+                greeting: '',
+                department_dest_id: '',
+                main_filename: '',
+                attach_filename: '',
+                signer_id: '',
+                is_signed: false,
+                optionSelect: {
+                  signer_id: this.optionSelectDefault.signer_id,
+                  department_dest_id: this.optionSelectDefault.department_dest_id
+                },
+              })
+            })
+          } else {
+            console.log('e', i)
+            item.booking_registers.push({
+              book_out_num: item.booking_registers[0].book_out_num,
+              greeting: '',
+              department_dest_id: '',
+              main_filename: '',
+              attach_filename: '',
+              signer_id: '',
+              is_signed: false,
+              optionSelect: {
+                signer_id: this.optionSelectDefault.signer_id,
+                department_dest_id: this.optionSelectDefault.department_dest_id
+              },
+            })
+          }
+        }
       }
     },
     addRegisterModal() {

@@ -508,6 +508,14 @@ export default {
           axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
         }
       });
+      this.data.attachments.filter((item) => {
+        if (item.filename) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray2.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      });
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
@@ -523,14 +531,6 @@ export default {
         })
       }
       if (axiosArray2.length>0) {
-        this.data.attachments.filter((item) => {
-          if (item.filename) {
-            let formDataFile = new FormData();
-            formDataFile.append('file', item.file);
-            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-            axiosArray2.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
-          }
-        });
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter(item => {
