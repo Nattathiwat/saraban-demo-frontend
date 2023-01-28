@@ -182,11 +182,10 @@
                               :name="`${index}contract_phone`" />
                 </div>
                 <div class="group-input">
-                  <div class="name">โทรสาร</div>
-                  <cpn-input  v-model="item.contract_fax"
-                              :isNumber="true"
-                              maxlength="10"
-                              :name="`${index}contract_fax`" />
+                  <div class="name">E-mail</div>
+                  <cpn-input  v-model="item.contract_mail"
+                              rules="required|email"
+                              :name="`${index}contract_mail`" />
                 </div>
               </div>
             </div>
@@ -335,7 +334,7 @@ export default {
         subject: '',
         secret_id: '',
         speed_id: '',
-        send_to: 'ลคร.',
+        send_to: 'หน่วยงาน A',
         book_desc: '',
         tag: [],
         contracts: [{
@@ -343,7 +342,7 @@ export default {
           receive_type: '',
           contract_name: '',
           contract_phone: '',
-          contract_fax: '',
+          contract_mail: '',
         }],
         main_docs: [{ filename: '', file: []}],
         attachments: [{ filename: '', file: []}],
