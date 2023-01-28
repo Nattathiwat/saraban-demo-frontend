@@ -55,22 +55,12 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">วัน เดือน ปีเกิด <span class="required">*</span></div>
-              <div>
-                <cpn-datepicker v-model="data.birthdate"
-                        name="birthdate "
-                         />
-              </div>
-              </div>
-              <div class="group-input">
                 <div class="name">Email <span class="required">*</span></div>
                 <cpn-input  v-model="data.email"
                             name="email"
                             rules="required|email"
                             placeholder="กรุณาระบุ" />
               </div>
-            </div>
-            <div class="group-between">
               <div class="group-input">
                 <div class="name">หน่วยงาน <span class="required">*</span></div>
                 <cpn-select v-model="data.department_id"
