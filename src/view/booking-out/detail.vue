@@ -213,8 +213,9 @@
                               :disabled="true" />
                 </div>
                 <div class="group-input">
-                  <div class="name">เรียน</div>
+                  <div class="name">เรียน <span class="required">*</span></div>
                   <cpn-input  v-model="item2.greeting"
+                              rules="required"
                               :name="`greeting${index}${index2}`"/>
                 </div>
               </div>
