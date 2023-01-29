@@ -175,45 +175,56 @@ export default {
         }
       }
     },
-      enter(element) {
-        element.style.position = 'absolute';
-        element.style.visibility = 'hidden';
-        element.style.width = 'auto';
+    enter(element) {
+      element.style.position = 'absolute';
+      element.style.visibility = 'hidden';
+      element.style.width = 'auto';
 
-        const width = getComputedStyle(element).width;
+      const width = getComputedStyle(element).width;
 
-        element.style.width = null;
-        element.style.position = null;
-        element.style.visibility = null;
-        element.style.width = 0;
+      element.style.width = null;
+      element.style.position = null;
+      element.style.visibility = null;
+      element.style.width = 0;
 
-        getComputedStyle(element).width;
+      getComputedStyle(element).width;
 
-        requestAnimationFrame(() => {
-          element.style.width = width;
-        });
-      },
-      afterEnter(element) {
-        element.style.width = 'auto';
-      },
-      leave(element) {
-        const width = getComputedStyle(element).width;
-        
+      requestAnimationFrame(() => {
         element.style.width = width;
+      });
+    },
+    afterEnter(element) {
+      element.style.width = 'auto';
+    },
+    leave(element) {
+      const width = getComputedStyle(element).width;
+      
+      element.style.width = width;
 
-        getComputedStyle(element).width;
+      getComputedStyle(element).width;
 
-        requestAnimationFrame(() => {
-          element.style.width = 0;
-        });
-      },
+      requestAnimationFrame(() => {
+        element.style.width = 0;
+      });
+    },
+  },
+  mounted() {
+    this.dataUser = {
+      name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
+      position: localStorage.getItem('department_name')
+    }
   },
   watch: {
     '$route.name'() {
+      this.dataUser = {
+        name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
+        position: localStorage.getItem('department_name')
+      }
       if (this.$route.name == 'user' || this.$route.name == 'user-create' || this.$route.name == 'user-edit' || this.$route.name == 'department' || this.$route.name == 'department-create' || this.$route.name == 'department-edit') {
         this.iconAngle.userManage = true
       }
-    }
+    },
+    
   }
 };
 </script>
