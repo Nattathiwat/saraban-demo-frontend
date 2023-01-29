@@ -308,10 +308,14 @@
           </div>
           <div class="line mt-4"></div>
           <div class="group-footer">
-            <div class="footer-left">
+            <div class="footer-left d-flex">
               <button type="button" class="button-danger" @click="back()">
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ปิด
+              </button>
+              <button type="button" class="button-danger ms-3" @click="deleteClick()" v-if="edit">
+                <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
+                ลบ
               </button>
             </div>
             <div class="footer-right">
@@ -391,6 +395,37 @@ export default {
     }
   },
   methods: {
+    deleteClick() {
+      let _this = this
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการลบ`,
+        message: `หนังสือรับเข้า ใช่หรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          _this.showLoading = true
+          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
+          .then(() => { 
+            _this.showLoading = false
+            _this.modalAlert = {
+              showModal: true,
+              type: 'success',
+              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              msgSuccess: true,
+              afterPressAgree() {
+                _this.back()
+              }
+            }
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        }
+      }
+    },
     keyupDepartment(e) {
       this.optionSelect.department_id = []
       this.axios.get('/master-data/department', {
