@@ -486,8 +486,8 @@ export default {
         creater_id: '',
         book_category_id: '',
         book_type_id: '',
-        secret_id: '',
-        speed_id: '',
+        secret_id: '12',
+        speed_id: '12',
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         subject: '',
         booking_register_details: [],
@@ -714,8 +714,10 @@ export default {
       for (let i = 0; i < item.num; i++) {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
+            this.showLoading = true
             await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
             .then((response) => {
+              this.showLoading = false
               item.booking_registers.push({
                 book_out_num: response.data.data.out_document_number,
                 greeting: '',
@@ -729,6 +731,9 @@ export default {
                   department_dest_id: this.optionSelectDefault.department_dest_id
                 },
               })
+            }).catch((error) => {
+              this.showLoading = false
+              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
             item.booking_registers.push({
@@ -746,8 +751,10 @@ export default {
             })
           }
         } else {
+          this.showLoading = true
           await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
           .then((response) => {
+            this.showLoading = false
             item.booking_registers.push({
               book_out_num: response.data.data.out_document_number,
               greeting: '',
@@ -761,6 +768,9 @@ export default {
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
             })
+          }).catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
           })
         }
       }
@@ -827,8 +837,10 @@ export default {
         }
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
+            this.showLoading = true
             await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
             .then((response) => {
+              this.showLoading = false
               item.department_dest_id.filter(item2 => {
                 data.booking_registers.push({
                   book_out_num: response.data.data.out_document_number,
@@ -844,12 +856,17 @@ export default {
                   },
                 })
               })
+            }).catch((error) => {
+              this.showLoading = false
+              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
             for (let i = 0; i < item.department_dest_id.length; i++) {
               let item2 = item.department_dest_id[i]
+              this.showLoading = true
               await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
               .then((response) => {
+                this.showLoading = false
                 data.booking_registers.push({
                   book_out_num: response.data.data.out_document_number,
                   greeting: '',
@@ -863,12 +880,17 @@ export default {
                     department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
                   },
                 })
+              }).catch((error) => {
+                this.showLoading = false
+                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
               })
             }
           }
         } else {
+          this.showLoading = true
           await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
           .then((response) => {
+            this.showLoading = false
             data.booking_registers.push({
               book_out_num: response.data.data.out_document_number,
               greeting: '',
