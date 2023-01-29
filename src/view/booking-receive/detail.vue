@@ -313,7 +313,7 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ปิด
               </button>
-              <button type="button" class="button-danger ms-3" @click="deleteClick()" v-if="edit">
+              <button type="button" class="button-danger ms-3" @click="deleteClick()" v-if="$route.params.id">
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ลบ
               </button>
