@@ -19,7 +19,7 @@
                           name="search"
                           type="text"
                           :searchFlag="true"
-                          @search="search()"
+                          @searchClick="search()"
                           placeholder="เลขที่หนังสือออก/ชื่อเรื่อง/Tag" />
             </div>
           </div>
