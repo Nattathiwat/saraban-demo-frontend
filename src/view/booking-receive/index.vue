@@ -106,7 +106,6 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 50,
-        user_id: localStorage.getItem('user_id'),
         // desc:'',
         // receive_date_str:'',
         // receive_date_end:'',
@@ -165,7 +164,7 @@ export default {
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
-          id: this.data.user_id,
+          id: localStorage.getItem('user_id'),
           // desc: this.data.desc,
           // receive_date_str: this.data.receive_date_str,
           // receive_date_end: this.data.receive_date_end,
@@ -177,19 +176,21 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(row => {
-          row.speedName = row.speed_name
-          row.bookingNo = row.receive_document_number
-          row.referBookno = row.document_number
-          row.bookingSubject = row.subject
-          row.typename = row.book_type_name
-          row.date = row.as_of_date
-          row.response = row.response_name
-          row.statusName = row.status
-          this.data.total = row.total
-        })
-        this.data.table = response.data.data
-        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
+        if (response.data.data) {
+            response.data.data.filter(row => {
+            row.speedName = row.speed_name
+            row.bookingNo = row.receive_document_number
+            row.referBookno = row.document_number
+            row.bookingSubject = row.subject
+            row.typename = row.book_type_name
+            row.date = row.as_of_date
+            row.response = row.response_name
+            row.statusName = row.status
+            this.data.total = row.total
+          })
+          this.data.table = response.data.data
+          this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
+        }
       })
       .catch((error) => {
         this.showLoading = false
