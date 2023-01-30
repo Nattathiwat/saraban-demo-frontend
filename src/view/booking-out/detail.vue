@@ -285,7 +285,7 @@
             </div>
             <div class="group-input d-flex align-items-center mt-4">
               <div class="name">สิ่งที่แนบมาด้วย</div>
-              <button type="button" class="add-booking-out" @click="data.attachments.push({ filename: '', file: []})">
+              <button type="button" class="add-booking-out" @click="data.attachments.push({ filename: ''})">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มไฟล์
@@ -497,7 +497,7 @@ export default {
         subject: '',
         booking_register_details: [],
         tag: [],
-        attachments: [{ filename: '', file: []}],
+        attachments: [{ filename: ''}],
         sendTo: [],
         comment: '',
         process_type_id: '',
@@ -592,40 +592,49 @@ export default {
     },
     booking_refersClick(item) {
       //ท584/66
-      this.showLoading = true
-      this.axios.get('/master-data/book-refer', {
-        params: {
-          keyword: item.receive_document_number
-        }
-      })
-      .then((response) => {
-        this.showLoading = false
-        if (response.data.data.length > 0) {
-          item.book_refer_id = response.data.data[0].id
-          item.original_refer_id = response.data.data[0].id
-          item.book_type = response.data.data[0].book_type
-          item.desc = response.data.data[0].desc
-          item.receive_date = response.data.data[0].receive_date
-        } else {
+      if (item.receive_document_number) {
+        this.showLoading = true
+        this.axios.get('/master-data/book-refer', {
+          params: {
+            keyword: item.receive_document_number
+          }
+        })
+        .then((response) => {
+          this.showLoading = false
+          if (response.data.data.length > 0) {
+            item.book_refer_id = response.data.data[0].id
+            item.original_refer_id = response.data.data[0].id
+            item.book_type = response.data.data[0].book_type
+            item.desc = response.data.data[0].desc
+            item.receive_date = response.data.data[0].receive_date
+          } else {
+            item.receive_document_number = ''
+            item.book_refer_id = ''
+            item.original_refer_id = ''
+            item.book_type = ''
+            item.desc = ''
+            item.receive_date = ''
+            this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
+          }
+        })
+        .catch((error) => {
           item.receive_document_number = ''
           item.book_refer_id = ''
           item.original_refer_id = ''
           item.book_type = ''
           item.desc = ''
           item.receive_date = ''
+          this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
-        }
-      })
-      .catch((error) => {
+        })
+      } else {
         item.receive_document_number = ''
         item.book_refer_id = ''
         item.original_refer_id = ''
         item.book_type = ''
         item.desc = ''
         item.receive_date = ''
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
-      })
+      }
     },
     downloadFile(data) {
       if (data.filename && data.type == 'pdf') {
@@ -1181,8 +1190,9 @@ export default {
           return item
         })
 
-        if (this.data.main_docs.length < 1) this.data.main_docs = [{ filename: '', file: []}]
-        if (this.data.attachments.length < 1) this.data.attachments = [{ filename: '', file: []}]
+        if (this.data.main_docs.length < 1) this.data.main_docs = [{ filename: ''}]
+        if (this.data.attachments.length < 1) this.data.attachments = [{ filename: ''}]
+        if (this.data.booking_refers?.length < 1 || !this.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}]
         
       })
       .catch((error) => {

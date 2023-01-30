@@ -373,6 +373,8 @@ export default {
         }],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
+        main_docs_del: [],
+        attachments_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [],
         comment: '',
@@ -635,6 +637,7 @@ export default {
       })
       tag = tag.slice(0, -1)
       let booking_follows = []
+      let booking_refers = []
       this.data.sendTo.filter(item => {
         booking_follows.push({
           department_id: parseInt(item.value),
@@ -642,6 +645,11 @@ export default {
           process_type_id: parseInt(this.data.process_type_id),
           permission_id: parseInt(this.data.permission_id)
         })
+      })
+      this.data.booking_refers.filter(item => {
+        if (item.book_refer_id) {
+          booking_refers.push(item)
+        }
       })
       let dataSave = {
         original_flag: this.data.original_flag,
@@ -660,7 +668,7 @@ export default {
         contracts: this.data.contracts,
         main_docs: [...fileMain_docs, ...this.data.main_docs_del],
         attachments: [...fileAttachments, ...this.data.attachments_del],
-        booking_refers: this.data.booking_refers[0].book_refer_id ? this.data.booking_refers : [],
+        booking_refers: booking_refers,
         booking_follows: booking_follows,
         //"receive_document_number": "ท584/66",
         user_id: parseInt(localStorage.getItem('user_id')),
