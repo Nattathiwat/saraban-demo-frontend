@@ -112,7 +112,7 @@ export default {
         // as_of_date_str:'',
         // as_of_date_end:'',
         // booktype:'',
-        // tag:'',
+        tag:'',
       },
     }
   },
@@ -149,7 +149,7 @@ export default {
       // this.data.as_of_date_str = ''
       // this.data.as_of_date_end = ''
       // this.data.booktype = ''
-      // this.data.tag = ''
+      this.data.tag = ''
       this.apigetimport()
     },
     apigetimport() {
@@ -164,14 +164,14 @@ export default {
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
-          id: localStorage.getItem('user_id'),
+          user_id: localStorage.getItem('user_id'),
           // desc: this.data.desc,
           // receive_date_str: this.data.receive_date_str,
           // receive_date_end: this.data.receive_date_end,
           // as_of_date_str: this.data.as_of_date_str,
           // as_of_date_end: this.data.as_of_date_end,
           // book_type_id: this.data.booktype,
-          // tag: this.data.tag,
+          tag: this.data.tag,
         }
       })
       .then((response) => {
