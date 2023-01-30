@@ -1,6 +1,6 @@
 <template>
   <div :style="this.style" :class="[this.class, 'component-date-range']">
-    <Field v-model="data" type="text" :name="name+'DateRange'" v-slot="{ field }" :rules="rules">
+    <Field v-model="data" type="text" :name="name" v-slot="{ field }" :rules="rules">
       <input v-bind="field"  v-show="false">
     </Field>
     <Datepicker :modelValue="date"
@@ -37,7 +37,7 @@
         </div>
       </template>
     </Datepicker>
-    <ErrorMessage :name="name+'DateRange'" v-slot="{ message }"> 
+    <ErrorMessage :name="name" v-slot="{ message }"> 
       <p class="message-error">{{this?.errorMessage || (message ? message : this.defaultMessageError)}}</p>
     </ErrorMessage>
   </div>

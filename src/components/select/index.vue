@@ -1,6 +1,6 @@
 <template>
   <div class="component-select" ref="dropdownSelect">
-    <Field v-model="data" type="text" :name="name+'Select'" v-slot="{ field }" :rules="rules">
+    <Field v-model="data" type="text" :name="name" v-slot="{ field }" :rules="rules">
       <input v-bind="field"  v-show="false">
     </Field>
     
@@ -14,7 +14,7 @@
       <div class="name-dropdown">{{data ? data : placeholder}}</div>
       <i class="bi bi-chevron-down" :class="[disabled? 'disabled' : 'pointer']"></i>
     </button>
-    <ErrorMessage :name="name+'Select'" v-slot="{ message }">
+    <ErrorMessage :name="name" v-slot="{ message }">
       <p class="message-error">{{this?.errorMessage || (message ? message : this.defaultMessageError)}}</p>
     </ErrorMessage>
     <div class="dropdown-content" :style="dropdown ? 'display: block; overflow: auto;' : 'display: none;'">

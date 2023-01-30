@@ -1,6 +1,6 @@
 <template>
   <div class="component-time">
-    <Field v-slot="{ field }" v-model="data" type="text" :name="name+'Time'" :rules="rules">
+    <Field v-slot="{ field }" v-model="data" type="text" :name="name" :rules="rules">
       <input v-show="false" v-bind="field">
     </Field>
     <Datepicker :model-value="time"
@@ -27,7 +27,7 @@
         </div>
       </template>
     </Datepicker>
-    <ErrorMessage :name="name+'Time'" v-slot="{ message }"> 
+    <ErrorMessage :name="name" v-slot="{ message }"> 
       <p class="message-error">{{this?.errorMessage || (message ? message : this.defaultMessageError)}}</p>
     </ErrorMessage>
   </div>
