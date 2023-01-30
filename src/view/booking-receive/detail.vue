@@ -360,7 +360,7 @@ export default {
         subject: '',
         secret_id: '',
         speed_id: '',
-        send_to: 'หน่วยงาน A',
+        send_to: '',
         book_desc: '',
         tag: [],
         contracts: [{

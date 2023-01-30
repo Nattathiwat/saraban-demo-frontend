@@ -20,7 +20,7 @@
                           type="text"
                           :searchFlag="true"
                           @searchClick="search()"
-                          placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
+                          placeholder="เลขรับสลค./เลขที่หนังสือ/ชื่อเรื่อง/Tag" />
             </div>
           </div>
         </div>
