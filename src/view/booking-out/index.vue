@@ -20,7 +20,7 @@
                           type="text"
                           :searchFlag="true"
                           @search="search()"
-                          placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
+                          placeholder="เลขที่หนังสือออก/ชื่อเรื่อง/Tag" />
             </div>
           </div>
         </div>
