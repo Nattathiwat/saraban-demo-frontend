@@ -7,10 +7,8 @@
     <div class="detail-index-page">
       <transition name="navigation-ham" @enter="enter" @after-enter="afterEnter" @leave="leave">
         <div v-if="!hamburger" class="navigation">
-          <img src="@/assets/images/navbar/triangle.png" class="icon-triangle" alt="logo" v-if="false">
-          <img src="@/assets/images/navbar/logo2.svg" class="icon-logo2" alt="logo" v-if="false">
           <div class="group-image-logo">
-            <img class="image-logo" src="~@/assets/images/navbar/logo.png" alt="logo">
+            <img class="image-logo" src="~@/assets/images/pkm_logo.svg" alt="logo">
             <div class="title mt-3">
               ระบบสารบรรณ Demo
             </div>
@@ -289,9 +287,6 @@ export default {
         align-items: center;
         margin-right: 10px;
 
-        .nav-lang{
-          margin-right: 50px;
-        }
 
         .group-user {
           display: flex;
@@ -299,11 +294,6 @@ export default {
           justify-content: center;
           margin-right: 15px;
           text-align: center;
-          
-          .image-user {
-            width: 56px;
-            border-radius: 50%;
-          }
           
           .group-name {
             margin-right: 10px;
@@ -322,10 +312,6 @@ export default {
           }
         }
 
-        .icon-search {
-          margin-right: 30px;
-        }
-
         .icon-exit {
           margin-right: 25px;
           font-size: 30px;
@@ -340,22 +326,6 @@ export default {
       background-color: #1a456b;
       z-index: 99;
 
-      .icon-triangle {
-        width: 150px;
-        position: absolute;
-        left: -15px;
-        top: -15px;
-        z-index: 1;
-      }
-
-      .icon-logo2 {
-        width: 45px;
-        position: absolute;
-        left: 11px;
-        top: 8px;
-        z-index: 2;
-      }
-
       .group-image-logo {
         text-align: center;
         background-color: #1a456b;
@@ -367,7 +337,10 @@ export default {
         border-bottom: 1px solid #446b8b;
 
         .image-logo {
-          width: 126px;
+          width: 280px;
+          background-color: #ffffff;
+          border-radius: 5px;
+          padding: 5px;
         }
 
         .title {
@@ -442,55 +415,6 @@ export default {
                 left: 15px;
                 top: 20px;
                 width: 20px;
-              }
-              
-              .icon-file-list, .icon-file-line {
-                position: absolute;
-                left: 17px;
-                top: 19px;
-                width: 18px;
-              }
-
-              .icon-user-clock{
-                position: absolute;
-                left: 16px;
-                top: 20px;
-                width: 25px;
-              }
-
-              .icon-clock{
-                position: absolute;
-                left: 16px;
-                top: 22px;
-                width: 22px;
-              }
-
-              .icon-chart{
-                position: absolute;
-                left: 15px;
-                top: 21px;
-                width: 21px;
-              }
-
-              .icon-chart-bar {
-                position: absolute;
-                left: 15px;
-                top: 21px;
-                width: 23px;
-              }
-
-              .icon-pencil {
-                position: absolute;
-                left: 15px;
-                top: 20px;
-                width: 26px;
-              }
-
-              .icon-users-cog {
-                position: absolute;
-                left: 13px;
-                top: 21px;
-                width: 27px;
               }
             }
 

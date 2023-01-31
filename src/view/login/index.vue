@@ -3,9 +3,8 @@
     <div class="login-false" v-show="loginFalse">{{data.message}} !</div>
     <div class="card-center">
       <div class="group-image">
-        <img class="image-logo" src="@/assets/images/logo.png" alt="logo">
-        <div class="title">สำนักเลขาธิการคณะรัฐมนตรี</div>
-        <div class="sub-title">ระบบสารบรรณ Demo</div>
+        <img class="image-logo" src="@/assets/images/pkm_logo.svg" alt="logo">
+        <div class="title">ระบบสารบรรณ Demo</div>
       </div>
       <Form @submit="onSubmit(false)" @invalid-submit="onInvalidSubmit">
         <div class="group-input">
@@ -170,17 +169,19 @@ export default {
       .group-image {
         display: block;
         text-align: center;
-        background-color: #1a456b;
         margin: auto;
         margin-top: 60px;
         margin-bottom: 40px;
         padding-top: 20px;
         padding-bottom: 20px;
-        width: 260px;
-        color: #ffffff;
+        color: #1a456b;
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 10px;
 
         .image-logo {
-          width: 160px;
+          width: 320px;
+          margin-top: 35px;
         }
 
         .title {
