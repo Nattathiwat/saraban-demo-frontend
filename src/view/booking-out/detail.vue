@@ -91,7 +91,7 @@
                             :name="`receive_document_number${index}`"
                             type="text"
                             :searchFlag="true"
-                            @searchClick="booking_refersClick(item)"
+                            @searchClick="booking_refers_click(item)"
                             placeholder="เลขที่หนังสืออ้างอิง" />
               </div>
               <div class="group-input left">
@@ -728,7 +728,8 @@ export default {
             process_type_id: parseInt(this.data.process_type_id),
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
-            permission_name: ''
+            permission_name: '',
+            flag: 'add'
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -743,8 +744,8 @@ export default {
         this.data.booking_follows.splice(index,1)
       }
     },
-    booking_refersClick(item) {
-      //ท584/66
+    booking_refers_click(item) {
+      //RA04/66
       if (item.receive_document_number) {
         this.showLoading = true
         this.axios.get('/master-data/book-refer', {
@@ -1167,7 +1168,8 @@ export default {
             process_type_id: parseInt(this.data.process_type_id),
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
-            permission_name: ''
+            permission_name: '',
+            flag: 'add'
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -1185,7 +1187,7 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id')),
         tag: tag,
         attachments: fileAttachments,
-        booking_refers: this.data.booking_refers[0].book_refer_id ? this.data.booking_refers : [],
+        booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         booking_register_details: this.data.booking_register_details.filter(item => {
           item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
@@ -1262,18 +1264,12 @@ export default {
           }
         })
         this.data.sendTo = []
-        // response.data.data.booking_follows.filter(item => {
-        //   this.data.sendTo.push({value: item.department_id, name: item.department_name})
-        //   this.data.comment = item.comment
-        //   this.data.process_type_id = item.process_type_id
-        //   this.data.permission_id = item.permission_id
-        // })
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
           item.flag = 'edit'
           this.axios.get(`/master-data/book-refer/${item.book_type}/${item.id}`)
           .then((response2) => {
-            this.data.booking_refers.push({...item, ...response2.data.data})
+            this.data.booking_refers.push({...response2.data.data, ...item})
           })
           .catch((error) => {
             this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -1299,7 +1295,7 @@ export default {
           item.flag = 'edit'
           return item
         })
-        if (this.data.booking_refers?.length < 1 || !this.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
+        if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
         if (this.data.attachments.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
       })
       .catch((error) => {
