@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="line"></div>
-        <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
+        <Form @submit="on_submit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-input">
               <cpn-checkbox v-model="data.original_flag"
@@ -73,20 +73,20 @@
             </div>
             <div class="group-input d-flex align-items-center">
               <div class="name">อ้างอิงถึง</div>
-              <button type="button" class="add-booking-receive" @click="data.booking_refers.push({ book_refer_id: '', original_refer_id: '', book_type: '', receive_date: '', receive_document_number: '', desc: ''})">
+              <button type="button" class="add-booking-receive" @click="add_booking_refers()">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มเอกสารอ้างอิง
                 </div>
               </button>
             </div>
-            <div class="group-between" v-for="(item, index) in data.booking_refers" :key="index">
+            <div class="group-between" v-for="(item, index) in data.booking_refers.filter(el => el.flag != 'delete')" :key="index">
               <div class="group-input left">
                 <cpn-input  v-model="item.receive_document_number"
                             :name="`codeRefers${index}`"
                             type="text"
                             :searchFlag="true"
-                            @searchClick="booking_refersClick(item)"
+                            @searchClick="booking_refers_click(item)"
                             placeholder="เลขที่หนังสืออ้างอิง" />
               </div>
               <div class="group-input left">
@@ -100,7 +100,7 @@
                                 :name="`dateRefers${index}`"
                                 :disabled="true"
                                 placeholder="วันที่รับหนังสือ" />
-                <button type="button" @click="data.booking_refers.length > 1 ? data.booking_refers.splice(index,1) : item.book_refer_id = '', item.original_refer_id = '', item.receive_document_number = '', item.desc = '', item.receive_date = ''" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
+                <button type="button" @click="delete_booking_refers(item, index)" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
               </div>
             </div>
             <div class="group-input">
@@ -164,7 +164,7 @@
                                   :name="`${index}department_id`"
                                   rules="required"
                                   :disabled="edit"
-                                  @keyup="keyupDepartment($event)"
+                                  @keyup="keyup_department($event)"
                                   :optionSelect="optionSelect.department_id" />
               </div>
               <div class="group-input">
@@ -217,45 +217,45 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">หนังสือต้นเรื่อง</div>
-                <div class="d-flex mb-3" v-for="(item, index) in data.main_docs" :key="index">
+                <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" class="button-file" @click="edit ? '' : uploadFile(`main_docs${index}`)" :disabled="edit" >
+                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'หนังสือต้นเรื่อง'}}
                       </span>
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : uploadFile(`main_docs${index}`)" >แนบเอกสาร</div>
-                    <input type="file" @change="fileSetChange(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
+                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                    <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
-                  <button type="button" @click="downloadFile(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
-                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
               </div>
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" @click="edit ? '' : data.attachments.push({ filename: ''})" >
+                  <button type="button" class="add-booking-receive" :disabled="edit" @click="data.attachments.push({ filename: ''})" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
                     </div>
                   </button>
                 </div>
-                <div class="d-flex mb-3" v-for="(item, index) in data.attachments" :key="index">
+                <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" class="button-file" @click="edit ? '' : uploadFile(`attachments${index}`)" :disabled="edit">
+                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
                       </span>
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : uploadFile(`attachments${index}`)">แนบเอกสาร</div>
-                    <input type="file" @change="fileSetChange(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                    <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
-                  <button type="button" @click="downloadFile(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" @click="data.attachments.length > 1 ? data.attachments.splice(index,1) : item.filename = ''">
-                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                  <button type="button" class="del-department-3" :disabled="edit" @click="data.attachments.length > 1 ? data.attachments.splice(index,1) : item.filename = ''">
+                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
               </div>
@@ -268,7 +268,7 @@
               <cpn-input-tags v-model="data.sendTo"
                               :flagSearch="true"
                               :optionSelect="optionSelect.sendTo"
-                              @keyup="keyupSendTo"
+                              @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
             <div class="group-input">
@@ -299,11 +299,24 @@
                 </button>
               </div>
               <div>
-                <button type="button" @click="sendToClick()" class="button button-success" v-if="false">
+                <button type="button" @click="add_booking_follows()" class="button button-success">
                   <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                   เพิ่มการส่งต่อ
                 </button>
               </div>
+            </div>
+            <div class="line mt-3" v-if="data.booking_follows.length>0"></div>
+            <div class="group-add" v-for="(item, index) in data.booking_follows.filter(el => el.flag != 'delete')" :key="index">
+              <div class="d-flex justify-content-between">
+                <div class="title">#{{index+1}}</div>
+                <img @click="delete_booking_follows(item, index)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+              </div>
+              <div class="d-flex ms-2 mt-2">
+                <div class="name">ส่งต่อ : {{item?.department_name || '-'}}</div>
+                <div class="name ms-5">รูปแบบการดำเนินการ : {{item?.process_type_name || '-'}}</div>
+                <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
+              </div>
+              <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -313,7 +326,7 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ปิด
               </button>
-              <button type="button" class="button-danger ms-3" @click="deleteClick()" v-if="$route.params.id">
+              <button type="button" class="button-danger ms-3" @click="delete_click()" v-if="$route.params.id">
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ลบ
               </button>
@@ -374,9 +387,9 @@ export default {
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
         main_docs_del: [],
-        attachments_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [],
+        booking_follows: [],
         comment: '',
         process_type_id: '',
         permission_id: '',
@@ -397,78 +410,29 @@ export default {
     }
   },
   methods: {
-    deleteClick() {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบ`,
-        message: `หนังสือรับเข้า ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          _this.showLoading = true
-          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
-          .then(() => { 
-            _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.back()
-              }
-            }
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
+    add_booking_refers() {
+      this.data.booking_refers.push({ 
+        book_refer_id: '', 
+        original_refer_id: '', 
+        book_type: '', 
+        receive_date: '', 
+        receive_document_number: '', 
+        desc: '', 
+        flag: 'add'
+      })
+    },
+    delete_booking_refers(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.booking_refers.splice(index,1)
+      }
+      if ((this.data.booking_refers.length - this.data.booking_refers.filter(item => item.flag == 'delete').length) < 1) {
+        this.add_booking_refers()
       }
     },
-    keyupDepartment(e) {
-      this.optionSelect.department_id = []
-      this.axios.get('/master-data/department', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.department_full_name
-            return item
-          })
-          this.optionSelect.department_id = response.data.data
-        }
-      })
-    },
-    keyupSendTo(e) {
-      this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.department_full_name
-            return item
-          })
-          this.optionSelect.sendTo = response.data.data
-        }
-      })
-    },
-    sendToClick() {
-      this.axios.get('/v1/login')
-    },
-    booking_refersClick(item) {
-      //ท584/66
+    booking_refers_click(item) {
+      //RA04/66
       this.showLoading = true
       this.axios.get('/master-data/book-refer', {
         params: {
@@ -504,7 +468,100 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: '', message: 'ไม่พบหนังสืออ้างอิง'}
       })
     },
-    downloadFile(data) {
+    delete_click() {
+      let _this = this
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการลบ`,
+        message: `หนังสือรับเข้า ใช่หรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          _this.showLoading = true
+          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
+          .then(() => { 
+            _this.showLoading = false
+            _this.modalAlert = {
+              showModal: true,
+              type: 'success',
+              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              msgSuccess: true,
+              afterPressAgree() {
+                _this.back()
+              }
+            }
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        }
+      }
+    },
+    keyup_department(e) {
+      this.optionSelect.department_id = []
+      this.axios.get('/master-data/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+          this.optionSelect.department_id = response.data.data
+        }
+      })
+    },
+    keyup_send_to(e) {
+      this.optionSelect.sendTo = []
+      this.axios.get('/master-data/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+          this.optionSelect.sendTo = response.data.data
+        }
+      })
+    },
+    add_booking_follows() {
+      this.data.sendTo.filter(item => {
+        if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
+          let data = {
+            department_id: parseInt(item.value),
+            department_name: item.name,
+            comment: this.data.comment,
+            process_type_id: parseInt(this.data.process_type_id),
+            process_type_name: '',
+            permission_id: parseInt(this.data.permission_id),
+            permission_name: '',
+            flag: 'add'
+          }
+          this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
+          this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
+          this.data.booking_follows.push(data)
+        }
+      })
+    },
+    delete_booking_follows(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.booking_follows.splice(index,1)
+      }
+    },
+    download_file(data) {
       if (data.filename && data.type == 'pdf') {
         this.axios({
           method:'get',
@@ -518,10 +575,10 @@ export default {
         })
       }
     },
-    uploadFile(data) {
+    upload_file(data) {
       document.querySelector(`[name="${data}"]` ).click()
     },
-    fileSetChange(data, index, name) {
+    file_set_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
         if (name == 'main_docs') {
@@ -533,7 +590,7 @@ export default {
               size: (file.size /1024 /1024).toFixed(2) + ' MB',
               file: file,
             }
-            this.data[name][index] = dataFile
+            this.data[name][index] = {...this.data[name][index], ...dataFile}
             document.querySelector(`[name="${data}"]`).value=null;
           }
         } else {
@@ -544,7 +601,7 @@ export default {
             size: (file.size /1024 /1024).toFixed(2) + ' MB',
             file: file,
           }
-          this.data[name][index] = dataFile
+          this.data[name][index] = {...this.data[name][index], ...dataFile}
           document.querySelector(`[name="${data}"]`).value=null;
         }
       }
@@ -554,7 +611,7 @@ export default {
         name: 'booking-receive',
       }).catch(()=>{});
     },
-    onSubmit() {
+    on_submit() {
       let _this = this
       this.modalAlert = {
         showModal: true,
@@ -564,18 +621,17 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.uploadFileAll()
+          _this.upload_file_all()
         }
       }
     },
-    uploadFileAll() {
+    upload_file_all() {
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
       let axiosArray2 = []
       let fileMain_docs = []
       let fileAttachments = []
       let fileMain_docs_old = []
-      let fileAttachments_old = []
 
       this.data.main_docs.filter((item) => {
         if (item.file) {
@@ -593,18 +649,16 @@ export default {
           formDataFile.append('file', item.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
           axiosArray2.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
-        } else if (item.id) {
-          fileAttachments_old.push({filename: item.filename, filepath: item.filepath})
         }
       });
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
-          responses.filter(item => {
-            fileMain_docs.push({...item.data.data, filepath: item.data.data.path})
+          responses.filter((item, index) => {
+            fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.callApiSave([...fileMain_docs, ...fileMain_docs_old],[...fileAttachments, ...fileAttachments_old])
+            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -614,11 +668,11 @@ export default {
       if (axiosArray2.length>0) {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
-          responses.filter(item => {
-            fileAttachments.push({...item.data.data, filepath: item.data.data.path})
+          responses.filter((item, index) => {
+            fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.callApiSave([...fileMain_docs, ...fileMain_docs_old],[...fileAttachments, ...fileAttachments_old])
+            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -626,29 +680,31 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.callApiSave([...fileMain_docs_old],[...fileAttachments_old])
+        this.call_api_save([...fileMain_docs_old],[])
       }
     },
-    callApiSave(fileMain_docs,fileAttachments) {
+    call_api_save(fileMain_docs,fileAttachments) {
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
         tag += item.name+','
       })
       tag = tag.slice(0, -1)
-      let booking_follows = []
-      let booking_refers = []
       this.data.sendTo.filter(item => {
-        booking_follows.push({
-          department_id: parseInt(item.value),
-          comment: this.data.comment,
-          process_type_id: parseInt(this.data.process_type_id),
-          permission_id: parseInt(this.data.permission_id)
-        })
-      })
-      this.data.booking_refers.filter(item => {
-        if (item.book_refer_id) {
-          booking_refers.push(item)
+        if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
+          let data = {
+            department_id: parseInt(item.value),
+            department_name: item.name,
+            comment: this.data.comment,
+            process_type_id: parseInt(this.data.process_type_id),
+            process_type_name: '',
+            permission_id: parseInt(this.data.permission_id),
+            permission_name: '',
+            flag: 'add'
+          }
+          this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
+          this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
+          this.data.booking_follows.push(data)
         }
       })
       let dataSave = {
@@ -667,10 +723,9 @@ export default {
         tag: tag,
         contracts: this.data.contracts,
         main_docs: [...fileMain_docs, ...this.data.main_docs_del],
-        attachments: [...fileAttachments, ...this.data.attachments_del],
-        booking_refers: booking_refers,
-        booking_follows: booking_follows,
-        //"receive_document_number": "ท584/66",
+        attachments: fileAttachments,
+        booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
+        booking_follows: this.data.booking_follows,
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
@@ -726,7 +781,7 @@ export default {
         }
       }
     },
-    apiDetail() {
+    api_detail() {
       this.showLoading = true
       this.axios.get(`/booking-receive/${this.$route.params.id}`, {
         params:{
@@ -737,14 +792,10 @@ export default {
       .then((response) => { 
         this.showLoading = false
         let main_docs_del = []
-        let attachments_del = []
         response.data.data.main_docs.filter(item => {
           main_docs_del.push({...item,flag: 'delete'})
         })
-        response.data.data.attachments.filter(item => {
-          attachments_del.push({...item,flag: 'delete'})
-        })
-        response.data.data = {...response.data.data, main_docs_del, attachments_del}
+        response.data.data = {...response.data.data, main_docs_del}
         this.data = JSON.parse(JSON.stringify(response.data.data))
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
@@ -753,36 +804,44 @@ export default {
           }
         })
         this.data.sendTo = []
-        response.data.data.booking_follows.filter(item => {
-          this.data.sendTo.push({value: item.department_id, name: item.department_name})
-          this.data.comment = item.comment
-          this.data.process_type_id = item.process_type_id
-          this.data.permission_id = item.permission_id
-          this.data.book_type = item.book_type
-        })
-
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
+          item.flag = 'edit'
           this.axios.get(`/master-data/book-refer/${item.book_type}/${item.id}`)
           .then((response2) => {
-            this.data.booking_refers.push({...item, ...response2.data.data})
+            this.data.booking_refers.push({...response2.data.data, ...item})
           })
           .catch((error) => {
             this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
           })
         })
-
-        if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: ''}]
-        if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: ''}]
-        if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: ''}]
-        if (this.data.booking_refers?.length < 1 || !this.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}]
+        this.data.main_docs.filter(item => {
+          item.flag = 'edit'
+          return item
+        })
+        this.data.attachments.filter(item => {
+          item.flag = 'edit'
+          return item
+        })
+        this.data.contracts.filter(item => {
+          item.flag = 'edit'
+          return item
+        })
+        this.data.booking_follows.filter(item => {
+          item.flag = 'edit'
+          return item
+        })
+        if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', flag: 'add'}]
+        if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
+        if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: '', flag: 'add'}]
+        if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
       })
       .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    apiMaster() {
+    api_master() {
       this.showLoading = true
       const request1 = this.axios.get('/master-data/register-type')
       const request2 = this.axios.get('/master-data/book-type')
@@ -856,7 +915,7 @@ export default {
 
         if (this.$route.params.id) {
           this.edit = true
-          this.apiDetail()
+          this.api_detail()
         } else {
           this.edit = false
         }
@@ -867,7 +926,7 @@ export default {
     }
   },
   mounted () {
-    this.apiMaster()
+    this.api_master()
   },
   watch: {
     'modalRegiter.showModal' () {
@@ -894,7 +953,6 @@ export default {
       min-width: 1550px;
       min-height: 200px;
       border-radius: 15px;
-      // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
       background-color: #fff;
       border: 0px;
       padding-bottom: 48px;
@@ -1316,6 +1374,25 @@ export default {
           width: 28px;
           height: 28px;
           margin-right: 10px;
+        }
+
+        .group-add {
+          font-size: 16px;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 7px;
+          background-color: #ffffff;
+          padding: 20px;
+          border-radius: 10px;
+          margin-top: 20px;
+
+          .title { 
+            font-size: 18px;
+          }
+
+          .image-trash {
+            width: 18px;
+          }
         }
       }
 

@@ -358,10 +358,12 @@
                 <div class="title">#{{index+1}}</div>
                 <img @click="delete_booking_follows(item, index)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
               </div>
-              <div class="name">ส่งต่อ: {{item.department_name}}</div>
-              <div class="name">ความเห็น / คำสั่ง: {{item.comment}}</div>
-              <div class="name">รูปแบบการดำเนินการ: {{item.process_type_name}}</div>
-              <div class="name">การมองเห็น: {{item.permission_name}}</div>
+              <div class="d-flex ms-2 mt-2">
+                <div class="name">ส่งต่อ : {{item?.department_name || '-'}}</div>
+                <div class="name ms-5">รูปแบบการดำเนินการ : {{item?.process_type_name || '-'}}</div>
+                <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
+              </div>
+              <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -1063,8 +1065,8 @@ export default {
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
-          responses.filter(item => {
-            fileAttachments.push({...item.data.data, filepath: item.data.data.path})
+          responses.filter((item, index) => {
+            fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileAttachments.length) {
             this.upload_file_all2(fileAttachments)
@@ -1421,7 +1423,6 @@ export default {
       min-width: 1550px;
       min-height: 200px;
       border-radius: 15px;
-      // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
       background-color: #fff;
       border: 0px;
       padding-bottom: 48px;
