@@ -1093,7 +1093,7 @@ export default {
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
             this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
             .then((responses) => {
-              item2.main_filepath = responses.data.data.filepath
+              item2.main_filepath = responses.data.data.path
               check_main = true
               if (check_main && check_attach) {
                 completeFile2.push(true)
@@ -1117,7 +1117,7 @@ export default {
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
             this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
             .then((responses) => {
-              item2.attach_filepath = responses.data.data.filepath
+              item2.attach_filepath = responses.data.data.path
               check_attach = true
               if (check_main && check_attach) {
                 completeFile2.push(true)

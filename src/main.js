@@ -98,6 +98,7 @@ axios.defaults.baseURL = baseURL;
 
 setupValidate(app) // Validate
 app.config.globalProperties.assetsUtils = assetsUtils //assetsUtils
+app.config.globalProperties.backendport = baseURL //backendport
 app.component('Datepicker', Datepicker); //Datepicker
 app.component('cpnLoading', loading); //loading
 app.component('cpnModal', modal); //modal

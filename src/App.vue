@@ -8,11 +8,8 @@
       <transition name="navigation-ham" @enter="enter" @after-enter="afterEnter" @leave="leave">
         <div v-if="!hamburger" class="navigation">
           <div class="group-image-logo">
-            <img class="image-logo" src="~@/assets/images/pkm_logo.svg" alt="logo">
+            <img class="image-logo" :src="data.logoImage" alt="logo" v-if="data.logoImage">
             <div class="title mt-3">
-              ระบบสารบรรณ Demo
-            </div>
-            <div class="sub-title" v-if="false">
               ระบบสารบรรณ Demo
             </div>
           </div>
@@ -103,8 +100,7 @@ export default {
       hamburger: false,
       showLoading: false,
       data:{
-        logoImage: ''
-      },
+        logoImage: ''      },
       iconAngle: {
         userManage: false
       },
@@ -206,14 +202,31 @@ export default {
       });
     },
   },
-  mounted() {
-    this.dataUser = {
-      name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
-      position: localStorage.getItem('department_name')
-    }
-  },
   watch: {
     '$route.name'() {
+      if (this.$router.options.history.state.back == '/login') {
+        this.showLoading = true
+        this.axios.get(`/department/${localStorage.getItem('department_id')}`)
+        .then((response) => { 
+          this.showLoading = false
+          this.data.logoImage = response.data.data.filepath ? this.backendport+'/'+response.data.data.filepath : new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else if (!this.data.logoImage) {
+        this.showLoading = true
+        this.axios.get(`/department/${localStorage.getItem('department_id')}`)
+        .then((response) => { 
+          this.showLoading = false
+          this.data.logoImage = response.data.data.filepath ? this.backendport+'/'+response.data.data.filepath : new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      }
       this.dataUser = {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
         position: localStorage.getItem('department_name')
@@ -221,8 +234,7 @@ export default {
       if (this.$route.name == 'user' || this.$route.name == 'user-create' || this.$route.name == 'user-edit' || this.$route.name == 'department' || this.$route.name == 'department-create' || this.$route.name == 'department-edit') {
         this.iconAngle.userManage = true
       }
-    },
-    
+    }
   }
 };
 </script>
@@ -337,10 +349,14 @@ export default {
         border-bottom: 1px solid #446b8b;
 
         .image-logo {
-          width: 280px;
+          max-height: 100px;
+          max-width: 280px;
+          height: 100%;
+          width: 100%;
           background-color: #ffffff;
           border-radius: 5px;
           padding: 5px;
+          object-fit: contain;
         }
 
         .title {

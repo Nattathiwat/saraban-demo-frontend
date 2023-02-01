@@ -43,6 +43,23 @@
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
+            <div class="group-input">
+              <div class="name">รูปหน่วยงาน <span class="required">*</span></div>
+              <div class="d-flex mb-3">
+                <div class="group-input-file">
+                  <button type="button" class="button-file" @click="upload_file('main_docs')" >
+                    <span :class="data.filename ? '' : 'no-data'">
+                      {{data.filename ? data.filename : 'รูปหน่วยงาน'}}
+                    </span>
+                  </button>
+                  <div class="text pointer" @click="upload_file('main_docs')" >แนบไฟล์</div>
+                  <input type="file" @change="file_change('main_docs')" :name="'main_docs'" style="display:none;" accept="image/*,">
+                </div>
+                <button type="button" class="del-department" @click="data.filename = ''">
+                  <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+                </button>
+              </div>
+            </div>
           </div>
           <div class="line"></div>
           <div class="group-footer">
@@ -53,7 +70,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success">
+              <button type="submit" class="button-success" :disabled="!data.filename">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 {{edit ? 'ยืนยันแก้ไขหน่วยงาน' : 'ยืนยันสร้างหน่วยงาน'}}
               </button>
@@ -82,10 +99,31 @@ export default {
         code: '',
         department_short_name: '',
         department_full_name: '',
+        filename: '',
+        filepath: '',
       },
     }
   },
   methods: {
+    upload_file(data) {
+      document.querySelector(`[name="${data}"]`).click()
+    },
+    file_change(data) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if (file.type.split('image').length > 1) {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data = {...this.data, ...dataFile}
+          document.querySelector(`[name="${data}"]`).value=null;
+        }
+      }
+    },
     back() {
       this.$router.push({ 
         name: 'department',
@@ -98,6 +136,7 @@ export default {
       this.data.department_full_name = ''
     },
     onSubmit() {
+      let currentDate = this.assetsUtils.currentDate()
       let _this = this
       this.modalAlert = {
         showModal: true,
@@ -106,38 +145,92 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.edit) {
-            let groupdata = {
-              code: _this.data.code,
-              department_full_name: _this.data.department_full_name,
-              department_short_name: _this.data.department_short_name,
-            }
-            _this.showLoading = true
-            _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
+          if (_this.data.file) {
+            let formDataFile = new FormData();
+            formDataFile.append('file', _this.data.file);
+            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+            _this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+            .then((responses) => {
+              _this.data.filepath = responses.data.data.path
+              if (_this.edit) {
+                let groupdata = {
+                  code: _this.data.code,
+                  department_full_name: _this.data.department_full_name,
+                  department_short_name: _this.data.department_short_name,
+                  filename: _this.data.filename,
+                  filepath: _this.data.filepath
+                }
+                _this.showLoading = true
+                _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+                .then(() => { 
+                  _this.showLoading = false
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                })
+                .catch((error) => {
+                  _this.showLoading = false
+                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+                })
+              } else {
+                let groupdata = {
+                  code: _this.data.code,
+                  department_full_name: _this.data.department_full_name,
+                  department_short_name: _this.data.department_short_name,
+                  filename: _this.data.filename,
+                  filepath: _this.data.filepath
+                }
+                _this.showLoading = true
+                _this.axios.post(`/department`, groupdata)
+                .then(() => { 
+                  _this.showLoading = false
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                })
+                .catch((error) => {
+                  _this.showLoading = false
+                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+                })
+              }
+            }).catch((error) => {
               _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
-            let groupdata = {
-              code: _this.data.code,
-              department_full_name: _this.data.department_full_name,
-              department_short_name: _this.data.department_short_name,
+            if (_this.edit) {
+              let groupdata = {
+                code: _this.data.code,
+                department_full_name: _this.data.department_full_name,
+                department_short_name: _this.data.department_short_name,
+                filename: _this.data.filename,
+                filepath: _this.data.filepath
+              }
+              _this.showLoading = true
+              _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+              .then(() => { 
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+              })
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+            } else {
+              let groupdata = {
+                code: _this.data.code,
+                department_full_name: _this.data.department_full_name,
+                department_short_name: _this.data.department_short_name,
+                filename: _this.data.filename,
+                filepath: _this.data.filepath
+              }
+              _this.showLoading = true
+              _this.axios.post(`/department`, groupdata)
+              .then(() => { 
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+              })
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
             }
-            _this.showLoading = true
-            _this.axios.post(`/department`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
           }
         }
       }
@@ -147,9 +240,11 @@ export default {
       this.axios.get(`/department/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        // this.data.department_id = response.data.data.department_id
+        this.data.code = response.data.data.code
         this.data.department_short_name = response.data.data.department_short_name
         this.data.department_full_name = response.data.data.department_full_name
+        this.data.filename = response.data.data.filename
+        this.data.filepath = response.data.data.filepath
       })
       .catch((error) => {
         this.showLoading = false
@@ -264,6 +359,69 @@ export default {
             font-weight: bold;
             color: #333;
             margin-bottom: 7px;
+          }
+        }
+
+        .group-input-file {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+
+          .no-data {
+            font-size: 16px;
+            color: #212529;
+            opacity: 0.7;
+            font-weight: 500;
+          }
+
+          .button-file {
+            border-radius: 5px;
+            border: solid 1px #ced4da;
+            background-color: #fff;
+            height: 45px;
+            width: 100%;
+            padding-left: 15px;
+            text-align: left;
+          }
+
+          span {
+            overflow: hidden;
+            white-space: nowrap;
+            display: block;
+            text-overflow: ellipsis;
+            padding-right: 110px;
+          }
+
+          .text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            background-color: #15466e;
+            width: 110px;
+            height: 45px;
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+
+        .del-department {
+          width: 45px;
+          height: 45px;
+          color: #212529;
+          background-color: #ffffff;
+          border-color: #f8f9fa;
+          border: 1px solid #ced4da;
+          border-radius: 5px;
+          margin-left: 15px;
+
+          .image-trash {
+            width: 18px;
           }
         }
       }

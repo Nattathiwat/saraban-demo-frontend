@@ -236,7 +236,7 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" :disabled="edit" @click="data.attachments.push({ filename: ''})" >
+                  <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
@@ -254,7 +254,7 @@
                     <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="data.attachments.length > 1 ? data.attachments.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -410,6 +410,22 @@ export default {
     }
   },
   methods: {
+    add_attachments() {
+      this.data.attachments.push({ 
+        filename: '',
+        flag: 'add'
+      })
+    },
+    delete_attachments(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.attachments.splice(index,1)
+      }
+      if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
+        this.add_attachments()
+      }
+    },
     add_booking_refers() {
       this.data.booking_refers.push({ 
         book_refer_id: '', 
