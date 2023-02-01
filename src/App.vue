@@ -88,7 +88,7 @@
       </div>
     </div>
     <div :style="hamburger ?'padding-left: 0px;':''" class="foot-index">
-      สงวนลิขสิทธิ์ © 2566 ระบบสารบรรณ Demo
+      สงวนลิขสิทธิ์  2566 พีเคเอ็ม คอนซัลติ้ง กรุ๊ป จำกัด
     </div>
     <cpn-modal-alert :modal-alert="modalAlert" />
     <cpn-loading :show="showLoading" />
