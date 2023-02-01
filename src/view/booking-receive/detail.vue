@@ -578,7 +578,7 @@ export default {
       }
     },
     download_file(data) {
-      if (data.filename && data.type == 'pdf') {
+      if (data.filename && data.link) {
         this.axios({
           method:'get',
           url: data.link,
@@ -586,7 +586,7 @@ export default {
           responseType: 'blob',
         })
         .then(response => {
-          const blob = new Blob([response.data], { type: 'application/pdf' })
+          const blob = new Blob([response.data], { type: this.assetsUtils.getTypeFile(data.filename) })
           window.open(URL.createObjectURL(blob))
         })
       }
@@ -601,7 +601,7 @@ export default {
           if (file.type == 'application/pdf') {
             let dataFile = {
               filename: file.name,
-              type: file.type == 'application/pdf' ? 'pdf' : '',
+              type: file.type,
               link: URL.createObjectURL(file),
               size: (file.size /1024 /1024).toFixed(2) + ' MB',
               file: file,
@@ -612,7 +612,7 @@ export default {
         } else {
           let dataFile = {
             filename: file.name,
-            type: file.type == 'application/pdf' ? 'pdf' : '',
+            type: file.type,
             link: URL.createObjectURL(file),
             size: (file.size /1024 /1024).toFixed(2) + ' MB',
             file: file,
@@ -833,10 +833,12 @@ export default {
         })
         this.data.main_docs.filter(item => {
           item.flag = 'edit'
+          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.attachments.filter(item => {
           item.flag = 'edit'
+          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.contracts.filter(item => {

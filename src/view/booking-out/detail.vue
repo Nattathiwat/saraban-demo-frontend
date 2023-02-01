@@ -300,7 +300,7 @@
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, index)" :name="`fileAttachment${index}`" style="display:none;" accept="application/pdf">
+                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, index)" :name="`fileAttachment${index}`" style="display:none;">
               </div>
               <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
               <button type="button" class="del-department-3" @click="delete_attachments(item, index)">
@@ -793,7 +793,7 @@ export default {
       }
     },
     download_file(data) {
-      if (data.filename && data.type == 'pdf') {
+      if (data.filename && data.link) {
         this.axios({
           method:'get',
           url: data.link,
@@ -801,7 +801,7 @@ export default {
           responseType: 'blob',
         })
         .then(response => {
-          const blob = new Blob([response.data], { type: 'application/pdf' })
+          const blob = new Blob([response.data], { type: this.assetsUtils.getTypeFile(data.filename) })
           window.open(URL.createObjectURL(blob))
         })
       }
@@ -822,17 +822,15 @@ export default {
     file_attachment_change(data, index) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type == 'application/pdf') {
-          let dataFile = {
-            filename: file.name,
-            type: file.type == 'application/pdf' ? 'pdf' : '',
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
-          }
-          this.data.attachments[index] = {...this.data.attachments[index], ...dataFile}
-          document.querySelector(`[name="${data}"]`).value=null;
+        let dataFile = {
+          filename: file.name,
+          type: file.type,
+          link: URL.createObjectURL(file),
+          size: (file.size /1024 /1024).toFixed(2) + ' MB',
+          file: file,
         }
+        this.data.attachments[index] = {...this.data.attachments[index], ...dataFile}
+        document.querySelector(`[name="${data}"]`).value=null;
       }
     },
     file_booking_register_details_change(data, index, name) {
@@ -842,7 +840,7 @@ export default {
           if (name == 'main_docs') {
             let dataFile = {
               main_filename: file.name,
-              main_type: file.type == 'application/pdf' ? 'pdf' : '',
+              main_type: file.type,
               main_link: URL.createObjectURL(file),
               main_size: (file.size /1024 /1024).toFixed(2) + ' MB',
               main_file: file,
@@ -854,7 +852,7 @@ export default {
           } else {
             let dataFile = {
               attach_filename: file.name,
-              attach_type: file.type == 'application/pdf' ? 'pdf' : '',
+              attach_type: file.type,
               attach_link: URL.createObjectURL(file),
               attach_size: (file.size /1024 /1024).toFixed(2) + ' MB',
               attach_file: file,
@@ -875,7 +873,7 @@ export default {
           if (name == 'main_docs') {
             let dataFile = {
               main_filename: file.name,
-              main_type: file.type == 'application/pdf' ? 'pdf' : '',
+              main_type: file.type,
               main_link: URL.createObjectURL(file),
               main_size: (file.size /1024 /1024).toFixed(2) + ' MB',
               main_file: file,
@@ -884,7 +882,7 @@ export default {
           } else {
             let dataFile = {
               attach_filename: file.name,
-              attach_type: file.type == 'application/pdf' ? 'pdf' : '',
+              attach_type: file.type,
               attach_link: URL.createObjectURL(file),
               attach_size: (file.size /1024 /1024).toFixed(2) + ' MB',
               attach_file: file,
@@ -1135,7 +1133,7 @@ export default {
           } else {
             check_attach = true
           }
-          if (!item2.main_filename && !item2.attach_filename) {
+          if (!item2.main_file && !item2.attach_file) {
             completeFile2.push(true)
             if (completeFile2.length == item.booking_registers.length) {
               completeFile.push(true)
@@ -1285,12 +1283,15 @@ export default {
           item.booking_registers.filter(item2 => {
             item2.optionSelect = {signer_id: this.optionSelectDefault.signer_id, department_dest_id: this.optionSelectDefault.department_dest_id}
             item2.flag = 'edit'
+            item2.main_link = item2.main_filepath? this.backendport+'/'+item2.main_filepath : ''
+            item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
             return item2
           })
           return item
         })
         this.data.attachments.filter(item => {
           item.flag = 'edit'
+          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.booking_follows.filter(item => {
