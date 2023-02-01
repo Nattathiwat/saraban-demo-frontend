@@ -1055,7 +1055,7 @@ export default {
       let axiosArray1 = []
       let fileAttachments = []
       this.data.attachments.filter(item=> {
-        if (item.filename) {
+        if (item.file) {
           let formDataFile = new FormData();
           formDataFile.append('file', item.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -1087,7 +1087,7 @@ export default {
         item.booking_registers.filter(item2 => {
           let check_main = false
           let check_attach = false
-          if (item2.main_filename) {
+          if (item2.main_file) {
             let formDataFile = new FormData();
             formDataFile.append('file', item2.main_file);
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -1111,7 +1111,7 @@ export default {
           } else {
             check_main = true
           }
-          if (item2.attach_filename) {
+          if (item2.attach_file) {
             let formDataFile = new FormData();
             formDataFile.append('file', item2.attach_file);
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
