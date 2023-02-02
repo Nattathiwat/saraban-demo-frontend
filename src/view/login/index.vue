@@ -111,16 +111,24 @@ export default {
         }
       })
       .then((response) => {    
-        this.showLoading = false
-        localStorage.setItem('user_id',response.data.data?.user_id || '')
-        localStorage.setItem('department_name',response.data.data?.department || '')
-        localStorage.setItem('department_id', response.data.data?.department_id || '')
-        localStorage.setItem('fname', response.data.data?.fname || '')
-        localStorage.setItem('lname', response.data.data?.lname || '')
-        localStorage.setItem('login', 'true')
-        this.$router.push({ 
-          name: 'booking-receive',
-        }).catch(()=>{});
+        this.axios.get(`/department/${response.data.data.department_id}`)
+        .then((response2) => { 
+          this.showLoading = false
+          localStorage.setItem('logo_department',response2.data.data.filepath ? this.backendport+'/'+response2.data.data.filepath : '')
+          localStorage.setItem('user_id',response.data.data?.user_id || '')
+          localStorage.setItem('department_name',response.data.data?.department || '')
+          localStorage.setItem('department_id', response.data.data?.department_id || '')
+          localStorage.setItem('fname', response.data.data?.fname || '')
+          localStorage.setItem('lname', response.data.data?.lname || '')
+          localStorage.setItem('login', 'true')
+          this.$router.push({ 
+            name: 'booking-receive',
+          }).catch(()=>{});
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
       })
       .catch((error) => {
         this.showLoading = false

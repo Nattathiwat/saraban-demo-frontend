@@ -96,7 +96,7 @@ export default {
   name: 'App',
   data() {
     return {
-      version: '1.0.0',
+      version: '1.0.1',
       hamburger: false,
       showLoading: false,
       data:{
@@ -204,33 +204,11 @@ export default {
   },
   watch: {
     '$route.name'() {
-      if (this.$router.options.history.state.back == '/login') {
-        this.showLoading = true
-        this.axios.get(`/department/${localStorage.getItem('department_id')}`)
-        .then((response) => { 
-          this.showLoading = false
-          this.data.logoImage = response.data.data.filepath ? this.backendport+'/'+response.data.data.filepath : new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
-        })
-        .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
-      } else if (!this.data.logoImage) {
-        this.showLoading = true
-        this.axios.get(`/department/${localStorage.getItem('department_id')}`)
-        .then((response) => { 
-          this.showLoading = false
-          this.data.logoImage = response.data.data.filepath ? this.backendport+'/'+response.data.data.filepath : new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
-        })
-        .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
-      }
       this.dataUser = {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
         position: localStorage.getItem('department_name')
       }
+      this.data.logoImage =  localStorage.getItem('logo_department') ? localStorage.getItem('logo_department') : new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
       if (this.$route.name == 'user' || this.$route.name == 'user-create' || this.$route.name == 'user-edit' || this.$route.name == 'department' || this.$route.name == 'department-create' || this.$route.name == 'department-edit') {
         this.iconAngle.userManage = true
       }
