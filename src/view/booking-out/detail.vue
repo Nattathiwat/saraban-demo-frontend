@@ -196,7 +196,7 @@
               <div class="group-input-file">
                 <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}`)">
                   <span :class="item.attach_filename ? '' : 'no-data'">
-                    {{item.attach_filename ? item.attach_filename : 'สำเนาคู่ฉลับ'}}
+                    {{item.attach_filename ? item.attach_filename : 'สำเนาคู่ฉบับ'}}
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`dupplicate_copy${index}`)">แนบเอกสาร</div>
@@ -244,7 +244,7 @@
                     <div class="group-input-file">
                       <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}${index2}`)">
                         <span :class="item2.attach_filename ? '' : 'no-data'">
-                          {{item2.attach_filename ? item2.attach_filename : 'สำเนาคู่ฉลับ'}}
+                          {{item2.attach_filename ? item2.attach_filename : 'สำเนาคู่ฉบับ'}}
                         </span>
                       </button>
                       <div class="text pointer" @click="upload_file(`dupplicate_copy${index}${index2}`)">แนบเอกสาร</div>
