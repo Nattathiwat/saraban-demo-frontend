@@ -114,24 +114,17 @@ export default {
         this.axios.get(`/department/${response.data.data.department_id}`)
         .then((response2) => { 
           this.showLoading = false
-          if (response2.data.data.filepath) {
-            this.axios({
-              method:'get',
-              url: this.backendport+'/'+response2.data.data.filepath,
-              baseURL: '',
-              responseType: 'blob',
-            })
-            .then(response3 => {
-              const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response2.data.data.filename) })
-              this.setItem({...response, logo_department: URL.createObjectURL(blob)})
-            })
-            .catch((error) => {
-              this.setItem({...response, logo_department: ''})
-            })
-          }
-          else {
-            this.setItem({...response, logo_department: ''})
-          }
+          localStorage.setItem('filename', response2.data.data?.filename || '')
+          localStorage.setItem('filepath', response2.data.data?.filepath || '')
+          localStorage.setItem('user_id', response.data.data?.user_id || '')
+          localStorage.setItem('department_name', response.data.data?.department || '')
+          localStorage.setItem('department_id', response.data.data?.department_id || '')
+          localStorage.setItem('fname', response.data.data?.fname || '')
+          localStorage.setItem('lname', response.data.data?.lname || '')
+          localStorage.setItem('login', 'true')
+          this.$router.push({ 
+            name: 'booking-receive',
+          }).catch(()=>{});
         })
         .catch((error) => {
           this.showLoading = false
@@ -145,18 +138,6 @@ export default {
         this.data.personNo = ''
         this.data.password = ''
       })
-    },
-    setItem(response) {
-      localStorage.setItem('logo_department', response.logo_department)
-      localStorage.setItem('user_id',response.data.data?.user_id || '')
-      localStorage.setItem('department_name',response.data.data?.department || '')
-      localStorage.setItem('department_id', response.data.data?.department_id || '')
-      localStorage.setItem('fname', response.data.data?.fname || '')
-      localStorage.setItem('lname', response.data.data?.lname || '')
-      localStorage.setItem('login', 'true')
-      this.$router.push({ 
-        name: 'booking-receive',
-      }).catch(()=>{});
     },
   },
   created() {

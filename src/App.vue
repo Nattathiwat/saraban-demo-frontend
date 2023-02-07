@@ -96,11 +96,12 @@ export default {
   name: 'App',
   data() {
     return {
-      version: '1.0.1',
+      version: '1.0.2',
       hamburger: false,
       showLoading: false,
       data:{
-        logoImage: ''      },
+        logoImage: ''
+      },
       iconAngle: {
         userManage: false
       },
@@ -148,6 +149,10 @@ export default {
     },
   },
   methods: {
+    clearData() {
+      localStorage.setItem('login', 'false')
+      this.data.logoImage = ''
+    },
     logoutClick() {
       let _this = this
       this.modalAlert = {
@@ -157,8 +162,8 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
+          _this.clearData()
           _this.$router.push({name: 'login'})
-          localStorage.setItem('login', 'false')
         }
       }
     },
@@ -201,14 +206,42 @@ export default {
         element.style.width = 0;
       });
     },
+    checkPathRoute() {
+      if (this.$route.name == 'login') {
+        this.clearData()
+      } else {
+        if (this.$router.options.history.state.back == '/login' || !this.data.logoImage) {
+          if (!(!localStorage.getItem('filename') && !localStorage.getItem('filepath'))) {
+            this.getLogoImage(localStorage.getItem('filename'), localStorage.getItem('filepath'))
+          } else {
+            this.data.logoImage = new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
+          }
+        }
+      }
+    },
+    getLogoImage(filename, filepath) {
+      this.axios({
+        method:'get',
+        url: this.backendport+'/'+filepath,
+        baseURL: '',
+        responseType: 'blob',
+      })
+      .then(response3 => {
+        const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(filename) })
+        this.data.logoImage = URL.createObjectURL(blob)
+      })
+      .catch((error) => {
+        this.data.logoImage = new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
+      })
+    }
   },
   watch: {
     '$route.name'() {
+      this.checkPathRoute()
       this.dataUser = {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
         position: localStorage.getItem('department_name')
       }
-      this.data.logoImage =  localStorage.getItem('logo_department') ? localStorage.getItem('logo_department') : new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
       if (this.$route.name == 'user' || this.$route.name == 'user-create' || this.$route.name == 'user-edit' || this.$route.name == 'department' || this.$route.name == 'department-create' || this.$route.name == 'department-edit') {
         this.iconAngle.userManage = true
       }
