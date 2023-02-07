@@ -364,7 +364,7 @@ export default {
           max-width: 280px;
           height: 100%;
           width: 100%;
-          background-color: #ffffff;
+          // background-color: #ffffff;
           border-radius: 5px;
           padding: 5px;
           object-fit: contain;
