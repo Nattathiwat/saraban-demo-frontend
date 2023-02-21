@@ -113,9 +113,9 @@
   </div>
 </template>
 <script>
-import date from '../../../components/date/index.vue'
+import date from '../../components/date/index.vue'
 export default {
-  name: 'user-detail',
+  name: 'user-manage-detail',
   data() {
     return {
       modalAlert: {
@@ -167,7 +167,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'user',
+        name: 'user-manage',
       }).catch(()=>{});
     },
     cancelClick() {

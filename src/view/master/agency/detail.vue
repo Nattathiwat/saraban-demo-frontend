@@ -85,7 +85,7 @@
 </template>
 <script>
 export default {
-  name: 'department-detail',
+  name: 'agency-detail',
   data() {
     return {
       modalAlert: {
@@ -126,7 +126,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'department',
+        name: 'agency',
       }).catch(()=>{});
     },
     cancelClick() {

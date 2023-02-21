@@ -33,22 +33,51 @@
               </div>
             </div>
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'department' || $route.name == 'department-create' || $route.name == 'department-edit' || $route.name == 'user' || $route.name == 'user-create' || $route.name == 'user-edit' ? 'active' : '' " @click="removeSelect('userManage'), iconAngle.userManage = !iconAngle.userManage">
+              <div class="list-navbar pointer" :class="$route.name == 'user-manage'|| $route.name == 'user-manage-create' || $route.name == 'user-manage-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'user-manage'})">
                 <div class="group-image">
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">
                   <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
                 </div>
                 จัดการผู้ใช้งาน
-                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.userManage"></i>
-                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.userManage"></i>
               </div>
-              <div v-show="iconAngle.userManage" class="list-navbar-sub pointer" :class="$route.name == 'department' || $route.name == 'department-create' || $route.name == 'department-edit' ? 'active2' : ''" @click="$router.push({name: 'department'})">
+            </div>
+            <div class="list-navbar-group">
+              <div class="list-navbar pointer" :class="$route.name == 'agency' || $route.name == 'agency-create' || $route.name == 'agency-edit' || $route.name == 'organization' || $route.name == 'organization-create' || $route.name == 'organization-edit' ? 'active' : '' " @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
+                <div class="group-image">
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
+                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
+                </div>
+                มาสเตอร์
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.master"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.master"></i>
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-type' || $route.name == 'book-type-create' || $route.name == 'book-type-edit' ? 'active2' : ''" @click="$router.push({name: 'book-type'})">
+                <div class="icon-circle" />
+                ชนิดหนังสือ
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'organization' || $route.name == 'organization-create' || $route.name == 'organization-edit' ? 'active2': ''" @click="$router.push({name: 'organization'})">
+                <div class="icon-circle" />
+                กระทรวง
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'agency' || $route.name == 'agency-create' || $route.name == 'agency-edit' ? 'active2': ''" @click="$router.push({name: 'agency'})">
                 <div class="icon-circle" />
                 หน่วยงาน
               </div>
-              <div v-show="iconAngle.userManage" class="list-navbar-sub pointer" :class="$route.name == 'user' || $route.name == 'user-create' || $route.name == 'user-edit' ? 'active2': ''" @click="$router.push({name: 'user'})">
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'subministry' || $route.name == 'subministry-create' || $route.name == 'subministry-edit' ? 'active2': ''" @click="$router.push({name: 'subministry'})">
                 <div class="icon-circle" />
-                ผู้ใช้งาน
+                กอง
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'group' || $route.name == 'group-create' || $route.name == 'group-edit' ? 'active2': ''" @click="$router.push({name: 'group'})">
+                <div class="icon-circle" />
+                กลุ่ม
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-method' || $route.name == 'book-method-create' || $route.name == 'book-method-edit' ? 'active2': ''" @click="$router.push({name: 'book-method'})">
+                <div class="icon-circle" />
+                รูปแบบการรับ-ส่งหนังสือ
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'file' || $route.name == 'file-create' || $route.name == 'file-edit' ? 'active2': ''" @click="$router.push({name: 'file'})">
+                <div class="icon-circle" />
+                ตั้งค่าประเภทไฟล์
               </div>
             </div>
           </div>
@@ -103,7 +132,7 @@ export default {
         logoImage: ''
       },
       iconAngle: {
-        userManage: false
+        master: false
       },
       dataUser: {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
@@ -119,18 +148,18 @@ export default {
   },
   computed: {
     breadcrumbs() {
-      if (this.$route.name == 'user') {
-        return 'การจัดการผู้ใช้งาน / ผู้ใช้งาน'
-      } else if (this.$route.name == 'user-edit') {
-        return 'การจัดการผู้ใช้งาน / ผู้ใช้งาน / แก้ไขผู้ใช้งาน'
-      } else if (this.$route.name == 'user-create') {
-        return 'การจัดการผู้ใช้งาน / ผู้ใช้งาน / เพิ่มผู้ใช้งาน'
-      } else if (this.$route.name == 'department') {
-        return 'การจัดการผู้ใช้งาน / หน่วยงาน'
-      } else if (this.$route.name == 'department-edit') {
-        return 'การจัดการผู้ใช้งาน / หน่วยงาน / แก้ไขหน่วยงาน'
-      } else if (this.$route.name == 'department-create') {
-        return 'การจัดการผู้ใช้งาน / หน่วยงาน / เพิ่มหน่วยงาน'
+      if (this.$route.name == 'user-manage') {
+        return 'การจัดการผู้ใช้งาน'
+      } else if (this.$route.name == 'user-manage-edit') {
+        return 'การจัดการผู้ใช้งาน / แก้ไขผู้ใช้งาน'
+      } else if (this.$route.name == 'user-manage-create') {
+        return 'การจัดการผู้ใช้งาน / เพิ่มผู้ใช้งาน'
+      } else if (this.$route.name == 'agency') {
+        return 'มาสเตอร์ / หน่วยงาน'
+      } else if (this.$route.name == 'agency-edit') {
+        return 'มาสเตอร์ / หน่วยงาน / แก้ไขหน่วยงาน'
+      } else if (this.$route.name == 'agency-create') {
+        return 'มาสเตอร์ / หน่วยงาน / เพิ่มหน่วยงาน'
       } else if (this.$route.name == 'booking-out') {
         return 'หนังสือส่งออก'
       } else if (this.$route.name == 'booking-out-create') {
