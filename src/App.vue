@@ -10,7 +10,7 @@
           <div class="group-image-logo">
             <img class="image-logo" :src="data.logoImage" alt="logo" v-if="data.logoImage">
             <div class="title mt-3">
-              ระบบสารบรรณ Demo
+              ระบบสารบรรณอิเล็กทรอนิกส์
             </div>
           </div>
           <div class="group-list-head">

@@ -3,8 +3,8 @@
     <div class="login-false" v-show="loginFalse">{{data.message}} !</div>
     <div class="card-center">
       <div class="group-image">
-        <img class="image-logo" src="@/assets/images/pkm_logo.svg" alt="logo">
-        <div class="title">ระบบสารบรรณ Demo</div>
+        <img class="image-logo" src="@/assets/images/pkm_logo.png" alt="logo">
+        <div class="title">ระบบสารบรรณอิเล็กทรอนิกส์</div>
       </div>
       <Form @submit="onSubmit(false)" @invalid-submit="onInvalidSubmit">
         <div class="group-input">
