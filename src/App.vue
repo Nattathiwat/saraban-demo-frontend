@@ -42,7 +42,13 @@
               </div>
             </div>
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'agency' || $route.name == 'agency-create' || $route.name == 'agency-edit' || $route.name == 'organization' || $route.name == 'organization-create' || $route.name == 'organization-edit' ? 'active' : '' " @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
+              <div class="list-navbar pointer" :class="$route.name == 'agency' || $route.name == 'agency-create' || $route.name == 'agency-edit' ||
+              $route.name == 'book-type' || $route.name == 'book-type-create' || $route.name == 'book-type-edit' ||
+              $route.name == 'subministry' || $route.name == 'subministry-create' || $route.name == 'subministry-edit' ||
+              $route.name == 'group' || $route.name == 'group-create' || $route.name == 'group-edit' ||
+              $route.name == 'book-method' || $route.name == 'book-method-create' || $route.name == 'book-method-edit' || 
+              $route.name == 'file' || $route.name == 'file-create' || $route.name == 'file-edit' ||
+              $route.name == 'organization' || $route.name == 'organization-create' || $route.name == 'organization-edit' ? 'active' : '' " @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
                 <div class="group-image">
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">
                   <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
@@ -154,12 +160,48 @@ export default {
         return 'การจัดการผู้ใช้งาน / แก้ไขผู้ใช้งาน'
       } else if (this.$route.name == 'user-manage-create') {
         return 'การจัดการผู้ใช้งาน / เพิ่มผู้ใช้งาน'
+      } else if (this.$route.name == 'book-type') {
+        return 'มาสเตอร์ / ชนิดหนังสือ'
+      } else if (this.$route.name == 'book-type-edit') {
+        return 'มาสเตอร์ / ชนิดหนังสือ / แก้ไขชนิดหนังสือ'
+      } else if (this.$route.name == 'book-type-create') {
+        return 'มาสเตอร์ / ชนิดหนังสือ / เพิ่มชนิดหนังสือ'
+      } else if (this.$route.name == 'organization') {
+        return 'มาสเตอร์ / กระทรวง'
+      } else if (this.$route.name == 'organization-edit') {
+        return 'มาสเตอร์ / กระทรวง / แก้ไขกระทรวง'
+      } else if (this.$route.name == 'organization-create') {
+        return 'มาสเตอร์ / กระทรวง / เพิ่มกระทรวง'
       } else if (this.$route.name == 'agency') {
         return 'มาสเตอร์ / หน่วยงาน'
       } else if (this.$route.name == 'agency-edit') {
         return 'มาสเตอร์ / หน่วยงาน / แก้ไขหน่วยงาน'
       } else if (this.$route.name == 'agency-create') {
         return 'มาสเตอร์ / หน่วยงาน / เพิ่มหน่วยงาน'
+      } else if (this.$route.name == 'subministry') {
+        return 'มาสเตอร์ / กอง'
+      } else if (this.$route.name == 'subministry-edit') {
+        return 'มาสเตอร์ / กอง / แก้ไขกอง'
+      } else if (this.$route.name == 'subministry-create') {
+        return 'มาสเตอร์ / กอง / เพิ่มกอง'
+      } else if (this.$route.name == 'group') {
+        return 'มาสเตอร์ / กลุ่ม'
+      } else if (this.$route.name == 'group-edit') {
+        return 'มาสเตอร์ / กลุ่ม / แก้ไขกลุ่ม'
+      } else if (this.$route.name == 'group-create') {
+        return 'มาสเตอร์ / กลุ่ม / เพิ่มกลุ่ม'
+      } else if (this.$route.name == 'book-method') {
+        return 'มาสเตอร์ / รูปแบบการรับ-ส่งหนังสือ'
+      } else if (this.$route.name == 'book-method-edit') {
+        return 'มาสเตอร์ / รูปแบบการรับ-ส่งหนังสือ / แก้ไขรูปแบบการรับ-ส่งหนังสือ'
+      } else if (this.$route.name == 'book-method-create') {
+        return 'มาสเตอร์ / รูปแบบการรับ-ส่งหนังสือ / เพิ่มรูปแบบการรับ-ส่งหนังสือ'
+      } else if (this.$route.name == 'file') {
+        return 'มาสเตอร์ / ตั้งค่าประเภทไฟล์'
+      } else if (this.$route.name == 'file-edit') {
+        return 'มาสเตอร์ / ตั้งค่าประเภทไฟล์ / แก้ไขตั้งค่าประเภทไฟล์'
+      } else if (this.$route.name == 'file-create') {
+        return 'มาสเตอร์ / ตั้งค่าประเภทไฟล์ / เพิ่มตั้งค่าประเภทไฟล์'
       } else if (this.$route.name == 'booking-out') {
         return 'หนังสือส่งออก'
       } else if (this.$route.name == 'booking-out-create') {
