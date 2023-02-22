@@ -107,12 +107,12 @@ export default {
     { 
       path: '/master/subministry', 
       name: 'subministry',
-      // component: () => import("./view/master/subministry/index.vue"),
+      component: () => import("./view/master/subministry/index.vue"),
     },
     { 
       path: '/master/subministry/create', 
       name: 'subministry-create',
-      // component: () => import("./view/master/subministry/detail.vue"),
+      component: () => import("./view/master/subministry/detail.vue"),
     },
     { 
       path: '/master/subministry/:id', 
@@ -122,12 +122,12 @@ export default {
     { 
       path: '/master/group', 
       name: 'group',
-      // component: () => import("./view/master/group/index.vue"),
+      component: () => import("./view/master/group/index.vue"),
     },
     { 
       path: '/master/group/create', 
       name: 'group-create',
-      // component: () => import("./view/master/group/detail.vue"),
+      component: () => import("./view/master/group/detail.vue"),
     },
     { 
       path: '/master/group/:id', 
