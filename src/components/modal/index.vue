@@ -117,7 +117,7 @@ export default {
           margin-left: 60px;
 
           .title-size {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: #0A1629;
             margin-top: 5px;
@@ -137,7 +137,7 @@ export default {
           .message {
             text-align: center;
             color: #333;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 500;
             margin-top: 30px;
           }
@@ -172,7 +172,7 @@ export default {
 
             .name {
               color: #ffffff;
-              font-size: 24px;
+              font-size: 16px;
               font-weight: 500;
             }
           }

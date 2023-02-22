@@ -108,28 +108,6 @@ export default {
 .component-auto-complete {
   width: 100%;
 
-  .data-select {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-
-    .content-data-select {
-      height: 25px;
-      background-color: #EAEAEE;
-      border-radius: 12.5px;
-      padding: 2px 10px;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      font-weight: 400;
-      font-size: 13px;
-
-      .icon {
-        width: 12px;
-        height: 12px;
-      }
-    }
-  }
-
   .component-input {
     position: relative;
     width: 100%;
@@ -203,7 +181,7 @@ export default {
       text-align: left;
       z-index: 2;
       color: #0A1629;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 400;
       border-radius: 10px;
       left: 0;
@@ -219,9 +197,9 @@ export default {
       .dropdown-list {
         padding-left: 22px;
         padding-right: 22px;
-        padding-top: 15px;
-        padding-bottom: 15px;
-        min-height: 58px;
+        display: flex;
+        align-items: center;
+        min-height: 45px;
         width: 100%;
         cursor: pointer;
       }

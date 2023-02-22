@@ -84,8 +84,7 @@
         </div>
       </div>
     </div>
-    <cpn-modal-alert :modalAlert="modalAlert"/>
-    <cpn-loading :show="showLoading"/>
+    <router-view></router-view>
   </div>
 </template>
 <script>

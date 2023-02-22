@@ -316,7 +316,7 @@ export default {
             background-color: transparent;
             display: flex;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #15466e;
             
@@ -359,7 +359,7 @@ export default {
           margin-bottom: 30px;
 
           .name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             margin-bottom: 7px;
@@ -439,7 +439,7 @@ export default {
 
         .footer-left {
           .button-danger {
-            width: 140px;
+            width: 120px;
           }
         }
 
@@ -447,16 +447,16 @@ export default {
           display: flex;
 
           .button-success {
-            width: 235px;
+            width: 210px;
           }
         }
 
         button {
-          height: 55px;
-          border-radius: 10px;
+          height: 45px;
+          border-radius: 5px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 500;
           color: #fff;
           display: flex;
@@ -465,14 +465,14 @@ export default {
         }
 
         .icon-times-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
         .icon-check-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
       }

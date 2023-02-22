@@ -136,7 +136,7 @@ export default {
     text-align: left;
     z-index: 2;
     color: #0A1629;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     border-radius: 10px;
     left: 0;
@@ -152,9 +152,9 @@ export default {
     .dropdown-List {
       padding-left: 22px;
       padding-right: 22px;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      min-height: 58px;
+      display: flex;
+      align-items: center;
+      min-height: 45px;
       width: 100%;
       cursor: pointer;
     }
@@ -169,7 +169,7 @@ export default {
   }
 
   .pointer {
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 5px;
   }
 }

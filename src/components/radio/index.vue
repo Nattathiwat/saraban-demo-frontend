@@ -66,7 +66,7 @@ export default {
       position: relative;
       padding-left: 35px;
       cursor: pointer;
-      font-size: 22px;
+      font-size: 16px;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;

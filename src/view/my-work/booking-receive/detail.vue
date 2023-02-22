@@ -965,8 +965,7 @@ export default {
     }
 
     .name-checkbox {
-      font-size: 20px;
-      margin-top: -2px !important;
+      font-size: 16px;
     }
 
     .detail {
@@ -1037,28 +1036,6 @@ export default {
         margin-bottom: 5px;
       }
 
-      .add-register {
-        height: 50px;
-        border-radius: 10px;
-        box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
-        border: 0;
-        font-size: 18px;
-        font-weight: 500;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #007773;
-        margin: 20px 23px 20px 0px;
-        padding: 0 18px;
-
-        .icon-plus {
-          width: 28px;
-          height: 28px;
-          margin-right: 10px;
-        }
-      }
-
       .group-between {
         display: flex;
         width: 100%;
@@ -1080,7 +1057,7 @@ export default {
         }
 
         .add-booking-receive {
-          height: 36px;
+          height: 40px;
           border: 0;
           border-radius: 5px;
           background-color: #007773;
@@ -1094,10 +1071,11 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0 10px;
 
             .icon-plus {
-              width: 24px;
-              height: 24px;
+              width: 22px;
+              height: 22px;
               margin-right: 7px;
             }
           }
@@ -1129,7 +1107,7 @@ export default {
         font-size: 16px;
         font-weight: bold;
         color: #333;
-        border-radius: 10px;
+        border-radius: 5px;
 
         .col-start {
           width: 10%;
@@ -1315,7 +1293,7 @@ export default {
         background: #ffffff;
         padding: 20px;
         margin-top: 20px;
-        border-radius: 10px;
+        border-radius: 5px;
 
         .w-200 {
           min-width: 200px;
@@ -1359,7 +1337,7 @@ export default {
         padding: 20px 23px;
         background-color: #eeeff4;
         margin: 35px;
-        border-radius: 10px;
+        border-radius: 5px;
 
         .align-items-center {
           padding: 0 10px;
@@ -1367,10 +1345,10 @@ export default {
 
         .button {
           height: 45px;
-          border-radius: 10px;
+          border-radius: 5px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 500;
           color: #fff;
           display: flex;
@@ -1387,14 +1365,14 @@ export default {
         }
 
         .icon-times-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
         .icon-check-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
@@ -1405,7 +1383,7 @@ export default {
           margin-bottom: 7px;
           background-color: #ffffff;
           padding: 20px;
-          border-radius: 10px;
+          border-radius: 5px;
           margin-top: 20px;
 
           .title { 
@@ -1427,7 +1405,7 @@ export default {
 
         .footer-left {
           .button-danger {
-            width: 120px;
+            width: 100px;
           }
         }
 
@@ -1435,21 +1413,21 @@ export default {
           display: flex;
 
           .button-success {
-            width: 185px;
+            width: 175px;
           }
 
           .button-primary {
-            width: 185px;
+            width: 170px;
             margin-right: 20px;
           }
         }
 
         button {
-          height: 55px;
-          border-radius: 10px;
+          height: 45px;
+          border-radius: 5px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 500;
           color: #fff;
           display: flex;
@@ -1458,14 +1436,14 @@ export default {
         }
 
         .icon-times-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
         .icon-check-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
       }

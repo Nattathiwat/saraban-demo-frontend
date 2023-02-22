@@ -24,16 +24,16 @@
             </button>
           </div>
           <div class="group-footer" v-show="modalAlert.confirm">
-            <button type="button" @click="confirmModal()" class="button-confirm button-success">
-              <div class="group-name">
-                <img src="@/assets/images/icon/check-circle-duotone.svg" alt="" class="image-times">
-                <div class="name">ยืนยัน</div>
-              </div>
-            </button>
             <button type="button" @click="closeModal()" class="button-confirm button-danger">
               <div class="group-name">
                 <img src="@/assets/images/icon/times-circle-duotone.svg" alt="" class="image-times">
                 <div class="name">ยกเลิก</div>
+              </div>
+            </button>
+            <button type="button" @click="confirmModal()" class="button-confirm button-success">
+              <div class="group-name">
+                <img src="@/assets/images/icon/check-circle-duotone.svg" alt="" class="image-times">
+                <div class="name">ยืนยัน</div>
               </div>
             </button>
           </div>
@@ -116,7 +116,7 @@ export default {
         width: 100%;
         pointer-events: auto;
         margin: auto;
-        max-width: 758px;
+        max-width: 650px;
         background-color: #ffffffff;
         border-radius: 15px;
 
@@ -169,7 +169,7 @@ export default {
           }
 
           .title-size {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: #333;
             text-align: center;
@@ -179,7 +179,7 @@ export default {
           .message {
             text-align: center;
             color: #333;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 500;
             margin-top: 30px;
           }
@@ -202,8 +202,8 @@ export default {
           }
 
           .button-confirm {
-            width: 130px;
-            height: 55px;
+            width: 120px;
+            height: 45px;
             border-radius: 10px;
             background-color: #007773;
             border: 0;
@@ -215,27 +215,16 @@ export default {
             justify-content: center;
 
             .image-times {
-              width: 28px;
-              height: 28px;
+              width: 25px;
+              height: 25px;
               margin-right: 14px;
             }
 
             .name {
               color: #ffffff;
-              font-size: 18px;
+              font-size: 16px;
               font-weight: 500;
             }
-          }
-          .button-ok {
-            width: 130px;
-            height: 48px;
-            border-radius: 14px;
-            background-color: #3B85DE;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 500;
-            border: 0;
-            margin-left: 10px;
           }
         }
 
