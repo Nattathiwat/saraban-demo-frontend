@@ -15,12 +15,12 @@
           </div>
           <div class="group-list-head">
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'booking-receive'|| $route.name == 'booking-receive-create' || $route.name == 'booking-receive-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'booking-receive'})">
+              <div class="list-navbar pointer" :class="$route.name == 'booking-receive'|| $route.name == 'booking-receive-create' || $route.name == 'booking-receive-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'my-work'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
                 </div>
-                หนังสือรับเข้า
+                งานรับ-ส่งหนังสือ
               </div>
             </div>
             <div class="list-navbar-group">
@@ -95,11 +95,12 @@
       <div :style="hamburger ?'padding-left: 0px;':''" class="header-index">
         <div class="header-index-left">
           <img src="@/assets/images/navbar/hamburger.svg" class="icon-hamburger pointer" alt="hamburger" @click="hamburger = !hamburger">
-          <div class="breadcrumbs">
-            <div class='active'>
-              {{ breadcrumbs }}
-            </div>
-          </div>
+          <ul class="breadcrumbs">
+            <li v-for="(item, index) in breadcrumbs" :key="index">
+              <span :class="[$route.name == item.path ? 'active' : '', item.path ? 'pointer' : 'none-pointer']" @click="$router.push({name: item.path})">{{item.name}}</span>
+              <span v-show="breadcrumbs.length>0 && index!=(breadcrumbs.length-1)" class="none-pointer space">/</span>
+            </li>
+          </ul>
         </div>
         <div class="header-index-right">
           <div class="group-user">
@@ -155,65 +156,65 @@ export default {
   computed: {
     breadcrumbs() {
       if (this.$route.name == 'user-manage') {
-        return 'การจัดการผู้ใช้งาน'
+        return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}]
       } else if (this.$route.name == 'user-manage-edit') {
-        return 'การจัดการผู้ใช้งาน / แก้ไขผู้ใช้งาน'
+        return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}, {name: 'แก้ไขผู้ใช้งาน', path: 'user-manage-edit'}]
       } else if (this.$route.name == 'user-manage-create') {
-        return 'การจัดการผู้ใช้งาน / เพิ่มผู้ใช้งาน'
+        return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}, {name: 'เพิ่มผู้ใช้งาน', path: 'user-manage-create'}]
       } else if (this.$route.name == 'book-type') {
-        return 'มาสเตอร์ / ชนิดหนังสือ'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}]
       } else if (this.$route.name == 'book-type-edit') {
-        return 'มาสเตอร์ / ชนิดหนังสือ / แก้ไขชนิดหนังสือ'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'แก้ไขชนิดหนังสือ', path: 'book-type-edit'}]
       } else if (this.$route.name == 'book-type-create') {
-        return 'มาสเตอร์ / ชนิดหนังสือ / เพิ่มชนิดหนังสือ'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'เพิ่มชนิดหนังสือ', path: 'book-type-create'}]
       } else if (this.$route.name == 'organization') {
-        return 'มาสเตอร์ / กระทรวง'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}]
       } else if (this.$route.name == 'organization-edit') {
-        return 'มาสเตอร์ / กระทรวง / แก้ไขกระทรวง'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}, {name: 'แก้ไขกระทรวง', path: 'organization-edit'}]
       } else if (this.$route.name == 'organization-create') {
-        return 'มาสเตอร์ / กระทรวง / เพิ่มกระทรวง'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}, {name: 'เพิ่มกระทรวง', path: 'organization-create'}]
       } else if (this.$route.name == 'agency') {
-        return 'มาสเตอร์ / หน่วยงาน'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}]
       } else if (this.$route.name == 'agency-edit') {
-        return 'มาสเตอร์ / หน่วยงาน / แก้ไขหน่วยงาน'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}, {name: 'แก้ไขหน่วยงาน', path: 'agency-edit'}]
       } else if (this.$route.name == 'agency-create') {
-        return 'มาสเตอร์ / หน่วยงาน / เพิ่มหน่วยงาน'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}, {name: 'เพิ่มหน่วยงาน', path: 'agency-create'}]
       } else if (this.$route.name == 'subministry') {
-        return 'มาสเตอร์ / กอง'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}]
       } else if (this.$route.name == 'subministry-edit') {
-        return 'มาสเตอร์ / กอง / แก้ไขกอง'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}, {name: 'แก้ไขกอง', path: 'subministry-edit'}]
       } else if (this.$route.name == 'subministry-create') {
-        return 'มาสเตอร์ / กอง / เพิ่มกอง'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}, {name: 'เพิ่มกอง', path: 'subministry-create'}]
       } else if (this.$route.name == 'group') {
-        return 'มาสเตอร์ / กลุ่ม'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}]
       } else if (this.$route.name == 'group-edit') {
-        return 'มาสเตอร์ / กลุ่ม / แก้ไขกลุ่ม'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}, {name: 'แก้ไขกลุ่ม', path: 'group-edit'}]
       } else if (this.$route.name == 'group-create') {
-        return 'มาสเตอร์ / กลุ่ม / เพิ่มกลุ่ม'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}, {name: 'เพิ่มกลุ่ม', path: 'group-create'}]
       } else if (this.$route.name == 'book-method') {
-        return 'มาสเตอร์ / รูปแบบการรับ-ส่งหนังสือ'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}]
       } else if (this.$route.name == 'book-method-edit') {
-        return 'มาสเตอร์ / รูปแบบการรับ-ส่งหนังสือ / แก้ไขรูปแบบการรับ-ส่งหนังสือ'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}, {name: 'แก้ไขรูปแบบการรับ-ส่งหนังสือ', path: 'book-method-edit'}]
       } else if (this.$route.name == 'book-method-create') {
-        return 'มาสเตอร์ / รูปแบบการรับ-ส่งหนังสือ / เพิ่มรูปแบบการรับ-ส่งหนังสือ'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}, {name: 'เพิ่มรูปแบบการรับ-ส่งหนังสือ', path: 'book-method-create'}]
       } else if (this.$route.name == 'file') {
-        return 'มาสเตอร์ / ตั้งค่าประเภทไฟล์'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}]
       } else if (this.$route.name == 'file-edit') {
-        return 'มาสเตอร์ / ตั้งค่าประเภทไฟล์ / แก้ไขตั้งค่าประเภทไฟล์'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}, {name: 'แก้ไขตั้งค่าประเภทไฟล์', path: 'file-edit'}]
       } else if (this.$route.name == 'file-create') {
-        return 'มาสเตอร์ / ตั้งค่าประเภทไฟล์ / เพิ่มตั้งค่าประเภทไฟล์'
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}, {name: 'เพิ่มตั้งค่าประเภทไฟล์', path: 'file-create'}]
       } else if (this.$route.name == 'booking-out') {
-        return 'หนังสือส่งออก'
+        return [{name: 'หนังสือส่งออก', path: 'booking-out'}]
       } else if (this.$route.name == 'booking-out-create') {
-        return 'หนังสือส่งออก / สร้างหนังสือส่งออก'
+        return [{name: 'หนังสือส่งออก', path: 'booking-out'}, {name: 'สร้างหนังสือส่งออก', path: 'booking-out-create'}]
       } else if (this.$route.name == 'booking-out-edit') {
-        return 'หนังสือส่งออก / แก้ไขหนังสือส่งออก'
+        return [{name: 'หนังสือส่งออก', path: 'booking-out'}, {name: 'แก้ไขหนังสือส่งออก', path: 'booking-out-edit'}]
       } else if (this.$route.name == 'booking-receive') {
-        return 'หนังสือรับเข้า'
+        return [{name: 'หนังสือรับเข้า', path: 'booking-receive'}]
       } else if (this.$route.name == 'booking-receive-create') {
-        return 'หนังสือรับเข้า / สร้างหนังสือรับเข้า'
+        return [{name: 'หนังสือรับเข้า', path: 'booking-receive'}, {name: 'สร้างหนังสือรับเข้า', path: 'booking-receive-create'}]
       } else if (this.$route.name == 'booking-receive-edit') {
-        return 'หนังสือรับเข้า / แก้ไขหนังสือรับเข้า'
+        return [{name: 'หนังสือรับเข้า', path: 'booking-receive'}, {name: 'แก้ไขหนังสือรับเข้า', path: 'booking-receive-edit'}]
       } else {
         return this.$route.name
       }
@@ -363,6 +364,9 @@ export default {
 
         .breadcrumbs {
           display: flex;
+          list-style: none;
+          margin: 0;
+          padding: 0;
 
           .breadcrumb-cut {
             margin: 0 26px;
@@ -372,6 +376,10 @@ export default {
             font-size: 18px;
             font-weight: bold;
             color: #0f3a64;
+          }
+
+          .space {
+            margin: 0 8px;
           }
         }
       }
