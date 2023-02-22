@@ -15,19 +15,29 @@ export default {
       component: () => import("./view/login/index.vue"),
     },
     { 
-      path: '/booking-receive', 
-      name: 'booking-receive',
-      component: () => import("./view/booking-receive/index.vue"),
-    },
-    { 
-      path: '/booking-receive/create', 
-      name: 'booking-receive-create',
-      component: () => import("./view/booking-receive/detail.vue"),
-    },
-    { 
-      path: '/booking-receive/:id', 
-      name: 'booking-receive-edit',
-      component: () => import("./view/booking-receive/detail.vue"),
+      path: '/my-work', 
+      name: 'my-work',
+      component: () => import("./view/my-work/index.vue"),
+      redirect: {
+        name: 'booking-receive'
+      },
+      children: [
+        { 
+          path: 'booking-receive', 
+          name: 'booking-receive',
+          component: () => import("./view/my-work/booking-receive/index.vue"),
+        },
+        { 
+          path: 'booking-receive/create', 
+          name: 'booking-receive-create',
+          component: () => import("./view/my-work/booking-receive/detail.vue"),
+        },
+        { 
+          path: 'booking-receive/:id', 
+          name: 'booking-receive-edit',
+          component: () => import("./view/my-work/booking-receive/detail.vue"),
+        },
+      ]
     },
     { 
       path: '/booking-out', 

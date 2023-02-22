@@ -34,7 +34,7 @@ export default {
       pageActive: this.page,
       pageSize: this.perPage,
 			totalArr: [],
-      pageSizeTotal: 50,
+      pageSizeTotal: 10,
     }
   },
   components: {
@@ -74,6 +74,8 @@ export default {
       this.$emit('pageChange', newData)
     },
     setPages() {
+      this.pageActive = this.page ? this.page : 1
+      this.pageSize = this.perPage ? this.perPage : 50
       this.totalArr = []
 			if (this.total < this.pageSizeTotal) {
 				this.totalArr.push(this.pageSizeTotal)

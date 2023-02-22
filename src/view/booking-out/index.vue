@@ -87,7 +87,7 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 50,
+        perPage: 10,
         // desc:'',
         // receive_date_str:'',
         // receive_date_end:'',
@@ -107,7 +107,11 @@ export default {
     editClick(item) {
       this.$router.push({ 
         name: 'booking-out-edit',
-        params: {id: item.id}
+        params: {id: item.id},
+        query: {
+          page: this.data.page,
+          perPage: this.data.perPage
+        }
       }).catch(()=>{});
     },
     pageChange(data) {
@@ -203,6 +207,8 @@ export default {
     },
   },
   mounted() {
+    this.data.page = this.$route.query?.page || this.data.page
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage
     this.apigetexport()
   },
 }

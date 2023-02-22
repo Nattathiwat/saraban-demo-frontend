@@ -127,6 +127,10 @@ export default {
     back() {
       this.$router.push({ 
         name: 'agency',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     cancelClick() {
