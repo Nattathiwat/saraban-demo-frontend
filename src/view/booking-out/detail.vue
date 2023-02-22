@@ -926,6 +926,10 @@ export default {
     back() {
       this.$router.push({ 
         name: 'booking-out',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     on_submit() {

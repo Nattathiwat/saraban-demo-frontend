@@ -105,7 +105,7 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 50,
+        perPage: 10,
         // desc:'',
         // receive_date_str:'',
         // receive_date_end:'',
@@ -131,6 +131,8 @@ export default {
         query:{
           book_type:item.book_type,   
           regis_id:item.regis_id,
+          page: this.data.page,
+          perPage: this.data.perPage
         }
       }).catch(()=>{});
     },
@@ -230,6 +232,8 @@ export default {
     },
   },
   mounted() {
+    this.data.page = this.$route.query?.page || this.data.page
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage
     this.apigetimport()
   },
 }
