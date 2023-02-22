@@ -72,7 +72,7 @@ export default {
     { 
       path: '/master/book-type', 
       name: 'book-type',
-      // component: () => import("./view/master/book-type/index.vue"),
+      component: () => import("./view/master/book-type/index.vue"),
     },
     { 
       path: '/master/book-type/create', 
@@ -162,7 +162,7 @@ export default {
     { 
       path: '/master/file', 
       name: 'file',
-      // component: () => import("./view/master/file/index.vue"),
+      component: () => import("./view/master/file/index.vue"),
     },
     { 
       path: '/master/file/create', 
