@@ -168,6 +168,10 @@ export default {
     back() {
       this.$router.push({ 
         name: 'user-manage',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     cancelClick() {

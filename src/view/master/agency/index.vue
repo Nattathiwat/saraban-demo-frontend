@@ -84,7 +84,7 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 2,
+        perPage: 10,
       },
     }
   },
