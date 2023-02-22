@@ -34,7 +34,7 @@ export default {
       pageActive: this.page,
       pageSize: this.perPage,
 			totalArr: [],
-      pageSizeTotal: 2,
+      pageSizeTotal: 10,
     }
   },
   components: {
