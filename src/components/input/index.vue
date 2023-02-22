@@ -87,11 +87,11 @@ export default {
 
   .button-search {
     background-color: #1a456b;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     color: #ffffff;
-    min-width: 118px;
-    max-width: 118px;
+    min-width: 100px;
+    max-width: 100px;
     height: 45px;
     border: 0;
     border-top-right-radius: 5px;
@@ -105,7 +105,7 @@ export default {
   .icon-search {
     width: 23px;
     height: 23px;
-    margin-right: 15px;
+    margin-right: 10px;
   }
 
   .form-control:disabled, .form-control[readonly] {

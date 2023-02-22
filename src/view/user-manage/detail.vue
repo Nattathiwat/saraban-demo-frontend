@@ -336,7 +336,7 @@ export default {
             background-color: transparent;
             display: flex;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #15466e;
             
@@ -379,7 +379,7 @@ export default {
           margin-bottom: 30px;
 
           .name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             margin-bottom: 7px;
@@ -404,7 +404,7 @@ export default {
           }
 
           .name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #333;
             margin-left: 15px;
@@ -436,26 +436,26 @@ export default {
           }
 
           .button-admin {
-            width: 173px;
+            width: 150px;
             height: 45px;
             border-radius: 5px;
             box-shadow: 2.9px 0.8px 9.6px 0.4px rgb(137 148 169 / 35%);
             border: solid 2px #e2ebf7;
             background-color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #f94859;
             margin-right: 24px;
           }
 
           .button-badge {
-            width: 180px;
+            width: 85px;
             height: 45px;
             border-radius: 5px;
             box-shadow: 2.9px 0.8px 9.6px 0.4px rgba(137, 148, 169, 0.35);
             border: solid 2px #e2ebf7;
             background-color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #007773;
             margin-right: 24px;
@@ -468,7 +468,7 @@ export default {
             box-shadow: 2.9px 0.8px 9.6px 0.4px rgb(137 148 169 / 35%);
             border: solid 2px #e2ebf7;
             background-color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #333;
           }
@@ -490,7 +490,7 @@ export default {
 
         .footer-left {
           .button-danger {
-            width: 140px;
+            width: 120px;
           }
         }
 
@@ -498,16 +498,16 @@ export default {
           display: flex;
 
           .button-success {
-            width: 225px;
+            width: 210px;
           }
         }
 
         button {
-          height: 55px;
+          height: 45px;
           border-radius: 10px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 500;
           color: #fff;
           display: flex;
@@ -516,14 +516,14 @@ export default {
         }
 
         .icon-times-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
         .icon-check-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
       }

@@ -77,7 +77,7 @@ export default {
       .thead {
         .thead-row {
           font-weight: bold;
-          font-size: 18px;
+          font-size: 16px;
           color: #333333;
           height: 71px;
 
@@ -97,7 +97,7 @@ export default {
           color: #333333;
           border-bottom: 0px;
           font-weight: 500;
-          font-size: 18px;
+          font-size: 16px;
 
           td {
             padding: 0 10px;

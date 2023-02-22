@@ -242,15 +242,15 @@ export default {
           }
 
           .add-user {
-            height: 46px;
+            height: 45px;
             border: 0;
             border-radius: 5px;
             background-color: #007773;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #ffffff;
             margin-left: 35px;
-            padding: 0 25px 0 21px;
+            padding: 0 20px 0 20px;
 
             .group-image {
               display: flex;
@@ -260,7 +260,7 @@ export default {
               .icon-plus {
                 width: 24px;
                 height: 24px;
-                margin-right: 17px;
+                margin-right: 10px;
               }
             }
           }
@@ -316,7 +316,7 @@ export default {
           .thead {
             .thead-row {
               font-weight: bold;
-              font-size: 18px;
+              font-size: 16px;
               color: #333333;
               height: 71px;
 
@@ -328,14 +328,14 @@ export default {
             }
 
             .col1 {
-              min-width: 250px;
+              min-width: 170px;
               width: 15%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 250px;
+              width: 20%;
             }
 
             .col3 {
@@ -377,7 +377,7 @@ export default {
               color: #333333;
               border-bottom: 0px;
               font-weight: 500;
-              font-size: 18px;
+              font-size: 16px;
 
               td {
                 padding: 0 10px;
@@ -455,7 +455,7 @@ export default {
                   padding: 8px 10px 8px 10px;
                   border-radius: 8px;
                   background-color: #fae4e7;
-                  font-size: 18px;
+                  font-size: 16px;
                   font-weight: 500;
                   color: #f94859;
                   display: flex;
@@ -467,11 +467,10 @@ export default {
                   padding: 8px 10px 8px 10px;
                   border-radius: 8px;
                   background-color: #d2eae9;
-                  font-size: 18px;
+                  font-size: 16px;
                   font-weight: 500;
                   color: #007773;
                   display: flex;
-                  align-items: center;
                 }
               }
 
