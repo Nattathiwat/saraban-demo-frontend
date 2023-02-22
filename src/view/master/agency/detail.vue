@@ -453,7 +453,7 @@ export default {
 
         button {
           height: 45px;
-          border-radius: 10px;
+          border-radius: 5px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
           font-size: 16px;

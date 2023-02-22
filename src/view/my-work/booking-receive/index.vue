@@ -280,15 +280,15 @@ export default {
           }
 
           .add-booking-receive {
-            height: 46px;
+            height: 45px;
             border: 0;
             border-radius: 5px;
             background-color: #007773;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #ffffff;
             margin-left: 35px;
-            padding: 0 25px 0 21px;
+            padding: 0 20px 0 20px;
 
             .group-image {
               display: flex;
@@ -298,7 +298,7 @@ export default {
               .icon-plus {
                 width: 24px;
                 height: 24px;
-                margin-right: 17px;
+                margin-right: 10px;
               }
             }
           }
@@ -354,7 +354,7 @@ export default {
           .thead {
             .thead-row {
               font-weight: bold;
-              font-size: 18px;
+              font-size: 16px;
               color: #333333;
               height: 71px;
 
@@ -421,7 +421,7 @@ export default {
               color: #333333;
               border-bottom: 0px;
               font-weight: 500;
-              font-size: 18px;
+              font-size: 16px;
 
               td {
                 padding: 0 10px;
