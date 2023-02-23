@@ -27,15 +27,6 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">รายละเอียด <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_short_name"
-                            name="department_short_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
-              </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input">
                 <div class="name">ประเภทหนังสือ <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_full_name"
                             name="department_full_name"
@@ -43,21 +34,13 @@
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
-            <div class="group-input">
-              <div class="name">รูปหน่วยงาน <span class="required">*</span></div>
-              <div class="d-flex mb-3">
-                <div class="group-input-file">
-                  <button type="button" class="button-file" @click="upload_file('main_docs')" >
-                    <span :class="data.filename ? '' : 'no-data'">
-                      {{data.filename ? data.filename : 'รูปหน่วยงาน'}}
-                    </span>
-                  </button>
-                  <div class="text pointer" @click="upload_file('main_docs')" >แนบไฟล์</div>
-                  <input type="file" @change="file_change('main_docs')" :name="'main_docs'" style="display:none;" accept="image/*,">
-                </div>
-                <button type="button" class="del-department" @click="data.filename = ''">
-                  <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
-                </button>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">รายละเอียด </div>
+                <cpn-textArea v-model="input4"
+                            name="input4"
+                            rows="4"
+                            placeholder="กรุณาระบุ"  />
               </div>
             </div>
           </div>
@@ -70,9 +53,9 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" :disabled="!data.filename">
+              <button type="submit" class="button-success">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขหน่วยงาน' : 'ยืนยันสร้างหน่วยงาน'}}
+                {{edit ? 'ยืนยันแก้ไขรูปแบบการรับ-ส่งหนังสือ' : 'ยืนยันสร้างรูปแบบการรับ-ส่งหนังสือ'}}
               </button>
             </div>
           </div>
@@ -85,7 +68,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-detail',
+  name: 'book-method-detail',
   data() {
     return {
       modalAlert: {
@@ -126,7 +109,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'agency',
+        name: 'book-method',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -447,7 +430,7 @@ export default {
           display: flex;
 
           .button-success {
-            width: 210px;
+            width: 300px;
           }
         }
 

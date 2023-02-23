@@ -12,6 +12,12 @@
                 เพิ่มชนิดหนังสือ
               </div>
             </button>
+            <!-- <button type="button" class="add-department" @click="historyClick()">
+              <div class="group-image">
+                <img src="@/assets/images/icon/file-pen-solid.svg" alt="" class="icon-plus">
+                ประวัติการแก้ไข
+              </div>
+            </button> -->
           </div>
           <div class="group-end">
             <div class="search" >
@@ -33,6 +39,7 @@
                 <th class="col2">ชื่อชนิดหนังสือ</th>
                 <th class="col3">รายละเอียด</th>
                 <th class="col4">ทะเบียน</th>
+                <th class="col5">วันที่สร้าง</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
@@ -41,6 +48,7 @@
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
+                <td class="col4">{{item.department_full_name}}</td>
                 <td class="col4">{{item.department_full_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
@@ -96,9 +104,14 @@ export default {
         name: 'book-type-create',
       }).catch(()=>{});
     },
+    // historyClick() {
+    //   this.$router.push({ 
+    //     name: 'book-type-history',
+    //   }).catch(()=>{});
+    // },
     editClick(item) {
       this.$router.push({ 
-        name: 'agency-edit',
+        name: 'book-type-edit',
         params: {id: item.id}
       }).catch(()=>{});
     },

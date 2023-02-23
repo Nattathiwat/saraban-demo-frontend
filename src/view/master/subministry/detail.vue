@@ -27,11 +27,13 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อย่อกอง <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_short_name"
-                            name="department_short_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
+                <div class="name">เปิด/ปิดการใช้งาน<span class="required">*</span></div>
+                <cpn-toggleSwitch v-model="input11"
+                        name="input11"
+                        class=""
+                        style=""
+                        :disabled="false"
+                        @change="change" />
               </div>
             </div>
             <div class="group-between">
@@ -41,6 +43,22 @@
                             name="department_full_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">ชื่อย่อกอง <span class="required">*</span></div>
+                <cpn-input  v-model="data.department_short_name"
+                            name="department_short_name"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">รายละเอียด</div>
+                <cpn-textArea v-model="subminist_description"
+                            name="subminist_description"
+                            rows="4"
+                            placeholder="กรุณาระบุ"  />
               </div>
             </div>
           </div>
@@ -53,7 +71,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" :disabled="!data.filename">
+              <button type="submit" class="button-success" >
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 {{edit ? 'ยืนยันแก้ไขกอง' : 'ยืนยันสร้างกอง'}}
               </button>
@@ -68,7 +86,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-detail',
+  name: 'subministry-detail',
   data() {
     return {
       modalAlert: {
@@ -124,7 +142,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขกอง' : 'สร้างกอง'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -147,7 +165,7 @@ export default {
                 _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกองสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -165,7 +183,7 @@ export default {
                 _this.axios.post(`/department`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกองสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -189,7 +207,7 @@ export default {
               _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกองสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
                 _this.showLoading = false
@@ -207,7 +225,7 @@ export default {
               _this.axios.post(`/department`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกองสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
                 _this.showLoading = false

@@ -5,12 +5,11 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">รูปแบบการรับ-ส่งหนังสือ</div>
-            <button type="button" class="add-department" @click="addClick()">
-              <div class="group-image">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                เพิ่มรูปแบบการรับ-ส่งหนังสือ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-              </div>
+            <div class="name">ประวัติกการแก้ไขชนิดหนังสือ</div>
+            <button type="button" class="button-back" @click="back()">
+                <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back">
+                <img src="@/assets/images/icon/line-up.svg" class="icon-line">
+                ย้อนกลับ
             </button>
           </div>
           <div class="group-end">
@@ -29,10 +28,13 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ชื่อรูปแบบการรับ-ส่งหนังสือ</th>
-                <th class="col2">รายละเอียด</th>
-                <th class="col3">ประเภทหนังสือ</th>
-                <th class="col7">เครื่องมือ</th>
+                <th class="col1">วันที่</th>
+                <th class="col2">สถานะ</th>
+                <th class="col3">เลขชนิดหนังสือใหม่</th>
+                <th class="col4">ชื่อชนิดหนังสือใหม่</th>
+                <th class="col5">เลขชนิดหนังสือเก่า</th>
+                <th class="col6">ชื่อชนิดหนังสือเก่า</th>
+                <th class="col7">สร้างโดย</th>
               </tr>
             </thead>
             <tbody class="tbody">
@@ -40,12 +42,10 @@
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
-                <td class="col7">
-                  <div class="group-icon">
-                    <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
-                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
-                  </div>
-                </td>
+                <td class="col4">{{item.department_full_name}}</td>
+                <td class="col5">{{item.department_full_name}}</td>
+                <td class="col6">{{item.department_short_name}}</td>
+                <td class="col7">{{item.department_short_name}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="4">ไม่มีข้อมูล</td>
@@ -69,7 +69,7 @@
 </template>
 <script>
 export default {
-  name: 'book-method-inex',
+  name: 'book-type-hist',
   data() {
     return {
       modalAlert: {
@@ -84,24 +84,14 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 10,
+        perPage: 50,
       },
     }
   },
   methods: {
-    addClick() {
+    back() {
       this.$router.push({ 
-        name: 'book-method-create',
-      }).catch(()=>{});
-    },
-    editClick(item) {
-      this.$router.push({ 
-        name: 'book-method-edit',
-        params: {id: item.id},
-        query: {
-          page: this.data.page,
-          perPage: this.data.perPage
-        }
+        name: 'book-type',
       }).catch(()=>{});
     },
     pageChange(data) {
@@ -138,41 +128,8 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    deleteClick(data) {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบรูปแบบการรับ-ส่งหนังสือ`,
-        message: `“${data.name}” ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          _this.showLoading = true
-          _this.axios.delete(`/department/${data.id}`)
-          .then(() => { 
-            _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apiDepartment()
-              }
-            }
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      }
-    },
   },
   mounted() {
-    this.data.page = this.$route.query?.page || this.data.page
-    this.data.perPage = this.$route.query?.perPage || this.data.perPage
     this.apiDepartment()
   },
 }
@@ -218,29 +175,30 @@ export default {
             font-size: 18px;
           }
 
-          .add-department {
+         .button-back {
+            width: 129px;
             height: 45px;
-            border: 0;
             border-radius: 5px;
-            background-color: #007773;
-            font-size: 16px;
+            border: solid 1px #c1cfe3;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
             font-weight: 500;
-            color: #ffffff;
+            color: #15466e;
             margin-left: 35px;
-            padding: 0 20px 0 20px;
-
-            .group-image {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              .icon-plus {
-                width: 24px;
-                height: 24px;
-                margin-right: 10px;
-              }
+            
+            .icon-back {
+              width: 23px;
+              margin-left: 3px;
             }
-          }
+
+            .icon-line {
+              height: 45px;
+              margin-left: 10px;
+              margin-right: 9px;
+            }
+          } 
         }
 
         .group-end {
@@ -293,7 +251,7 @@ export default {
           .thead {
             .thead-row {
               font-weight: bold;
-              font-size: 16px;
+              font-size: 18px;
               color: #333333;
               height: 71px;
 
@@ -354,7 +312,7 @@ export default {
               color: #333333;
               border-bottom: 0px;
               font-weight: 500;
-              font-size: 16px;
+              font-size: 18px;
 
               td {
                 padding: 0 10px;

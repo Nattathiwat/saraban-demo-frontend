@@ -29,9 +29,8 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">รหัสหน่วยงาน</th>
-                <th class="col2">ชื่อย่อหน่วยงาน</th>
-                <th class="col3">ชื่อหน่วยงาน</th>
+                <th class="col1">ชื่อกระทรวง</th>
+                <th class="col2">วันที่สร้าง</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
@@ -39,7 +38,6 @@
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
-                <td class="col3">{{item.department_full_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -69,7 +67,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-inex',
+  name: 'org-inex',
   data() {
     return {
       modalAlert: {
@@ -91,12 +89,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'agency-create',
+        name: 'organization-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'agency-edit',
+        name: 'organization-edit',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -143,7 +141,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหน่วยงาน`,
+        title: `คุณยืนยันการลบกระทรวง`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
@@ -155,7 +153,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหน่วยงานสำเร็จแล้ว',
+              title: 'ทำการลบกระทรวงสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.apiDepartment()

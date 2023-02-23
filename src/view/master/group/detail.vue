@@ -35,20 +35,22 @@
               </div>
             </div>
             <div class="group-between">
-              <div class="group-input">
+              <div class="group-input left">
                 <div class="name">ชื่อกลุ่ม <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_full_name"
                             name="department_full_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
-            </div>
-            <div class="group-input">
+              <div class="group-input">
               <div class="name">กอง<span class="required">*</span></div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />  
+                <cpn-autoComplete v-model="input3"
+                        name="input3"
+                        type="text"
+                        :optionSelect="optionSelect2"
+                        @change="change"
+                        placeholder="กรุณาระบุ" /> 
+            </div>
             </div>
           </div>
           <div class="line"></div>
@@ -75,7 +77,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-detail',
+  name: 'group-detail',
   data() {
     return {
       modalAlert: {
@@ -131,7 +133,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขกลุ่ม' : 'สร้างกลุ่ม'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -154,7 +156,7 @@ export default {
                 _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -172,7 +174,7 @@ export default {
                 _this.axios.post(`/department`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -196,7 +198,7 @@ export default {
               _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
                 _this.showLoading = false
@@ -214,7 +216,7 @@ export default {
               _this.axios.post(`/department`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
                 _this.showLoading = false

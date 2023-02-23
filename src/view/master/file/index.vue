@@ -34,8 +34,6 @@
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3"><cpn-toggleSwitch v-model="input11"
                                           name="input11"
-                                          class=""
-                                          style=""
                                           :disabled="false"
                                           @change="change" />
                 </td>

@@ -32,6 +32,8 @@
                 <th class="col1">รหัสกอง</th>
                 <th class="col2">ชื่อย่อกอง</th>
                 <th class="col3">ชื่อกอง</th>
+                <th class="col4">รายละเอียด</th>
+                <th class="col5">วันที่สร้าง</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
@@ -40,6 +42,8 @@
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
+                <td class="col4">{{item.department_full_name}}</td>
+                <td class="col5">{{item.department_full_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -96,7 +100,7 @@ export default {
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'agency-edit',
+        name: 'subministry-edit',
         params: {id: item.id}
       }).catch(()=>{});
     },

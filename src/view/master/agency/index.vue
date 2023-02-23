@@ -32,6 +32,8 @@
                 <th class="col1">รหัสหน่วยงาน</th>
                 <th class="col2">ชื่อย่อหน่วยงาน</th>
                 <th class="col3">ชื่อหน่วยงาน</th>
+                <th class="col4">รายละเอียด</th>
+                <th class="col5">กระทรวง</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
@@ -40,6 +42,8 @@
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
+                <td class="col4">{{item.department_short_name}}</td>
+                <td class="col5">{{item.department_full_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">

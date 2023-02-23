@@ -27,14 +27,21 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
+                <div class="name">เปิด/ปิด การใช้งาน<span class="required">*</span></div>
+                <cpn-toggleSwitch v-model="input11"
+                            name="input11"
+                            :disabled="false"
+                            @change="change" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
                 <div class="name">ชื่อชนิดหนังสือ<span class="required">*</span></div>
                 <cpn-input  v-model="data.department_short_name"
                             name="department_short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
-            </div>
-            <div class="group-between">
               <div class="group-input">
                 <div class="name">ทะเบียน <span class="required">*</span></div>
                 <cpn-autoComplete v-model="input3"
@@ -46,7 +53,7 @@
             </div>
             <div class="group-between">
               <div class="group-input">
-                <div class="name">รายละเอียด<span class="required">*</span></div>
+                <div class="name">รายละเอียด</div>
                 <cpn-textArea v-model="input4"
                     name="book-type_description"
                     class=""
@@ -124,7 +131,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'agency',
+        name: 'book-type',
       }).catch(()=>{});
     },
     cancelClick() {

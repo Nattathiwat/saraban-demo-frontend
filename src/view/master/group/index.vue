@@ -71,7 +71,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-inex',
+  name: 'group-inex',
   data() {
     return {
       modalAlert: {
@@ -98,7 +98,7 @@ export default {
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'agency-edit',
+        name: 'group-edit',
         params: {id: item.id}
       }).catch(()=>{});
     },
@@ -141,7 +141,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหน่วยงาน`,
+        title: `คุณยืนยันการลบกลุ่ม`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
@@ -153,7 +153,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหน่วยงานสำเร็จแล้ว',
+              title: 'ทำการลบกลุ่มสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.apiDepartment()

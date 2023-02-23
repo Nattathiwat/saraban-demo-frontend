@@ -164,10 +164,15 @@ export default {
       name: 'book-type-create',
       component: () => import("./view/master/book-type/detail.vue"),
     },
+    // { 
+    //   path: '/master/book-type/history', 
+    //   name: 'book-type-history',
+    //   component: () => import("./view/master/book-type/history.vue"),
+    // },
     { 
       path: '/master/book-type/:id', 
       name: 'book-type-edit',
-      // component: () => import("./view/master/book-type/detail.vue"),
+      component: () => import("./view/master/book-type/detail.vue"),
     },
     { 
       path: '/master/organization', 
@@ -177,12 +182,12 @@ export default {
     { 
       path: '/master/organization/create', 
       name: 'organization-create',
-      // component: () => import("./view/master/organization/detail.vue"),
+      component: () => import("./view/master/organization/detail.vue"),
     },
     { 
       path: '/master/organization/:id', 
       name: 'organization-edit',
-      // component: () => import("./view/master/organization/detail.vue"),
+      component: () => import("./view/master/organization/detail.vue"),
     },
     { 
       path: '/master/agency', 
@@ -212,7 +217,7 @@ export default {
     { 
       path: '/master/subministry/:id', 
       name: 'subministry-edit',
-      // component: () => import("./view/master/subministry/detail.vue"),
+      component: () => import("./view/master/subministry/detail.vue"),
     },
     { 
       path: '/master/group', 
@@ -227,7 +232,7 @@ export default {
     { 
       path: '/master/group/:id', 
       name: 'group-edit',
-      // component: () => import("./view/master/group/detail.vue"),
+      component: () => import("./view/master/group/detail.vue"),
     },
     { 
       path: '/master/book-method', 
@@ -242,7 +247,7 @@ export default {
     { 
       path: '/master/book-method/:id', 
       name: 'book-method-edit',
-      // component: () => import("./view/master/book-method/detail.vue"),
+      component: () => import("./view/master/book-method/detail.vue"),
     },
     { 
       path: '/master/file', 

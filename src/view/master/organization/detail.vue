@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}}</div>
+            <div class="name">{{edit ? 'แก้ไขกระทรวง' : 'สร้างกระทรวง '}}</div>
           </div>
           <div class="group-end">
             <button type="button" class="button-back" @click="back()" >
@@ -20,44 +20,11 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">รหัสหน่วยงาน <span class="required">*</span></div>
+                <div class="name">ชื่อกระทรวง <span class="required">*</span></div>
                 <cpn-input  v-model="data.code"
                             name="department_id"
                             rules="required"
                             placeholder="กรุณาระบุ" />
-              </div>
-              <div class="group-input">
-                <div class="name">ชื่อย่อหน่วยงาน <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_short_name"
-                            name="department_short_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
-              </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input">
-                <div class="name">ชื่อหน่วยงาน <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
-              </div>
-            </div>
-            <div class="group-input">
-              <div class="name">รูปหน่วยงาน <span class="required">*</span></div>
-              <div class="d-flex mb-3">
-                <div class="group-input-file">
-                  <button type="button" class="button-file" @click="upload_file('main_docs')" >
-                    <span :class="data.filename ? '' : 'no-data'">
-                      {{data.filename ? data.filename : 'รูปหน่วยงาน'}}
-                    </span>
-                  </button>
-                  <div class="text pointer" @click="upload_file('main_docs')" >แนบไฟล์</div>
-                  <input type="file" @change="file_change('main_docs')" :name="'main_docs'" style="display:none;" accept="image/*,">
-                </div>
-                <button type="button" class="del-department" @click="data.filename = ''">
-                  <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
-                </button>
               </div>
             </div>
           </div>
@@ -70,9 +37,9 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" :disabled="!data.filename">
+              <button type="submit" class="button-success">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขหน่วยงาน' : 'ยืนยันสร้างหน่วยงาน'}}
+                {{edit ? 'ยืนยันแก้ไขกระทรวง' : 'ยืนยันสร้างกระทรวง'}}
               </button>
             </div>
           </div>
@@ -85,7 +52,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-detail',
+  name: 'org-detail',
   data() {
     return {
       modalAlert: {
@@ -126,7 +93,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'agency',
+        name: 'organization',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -145,7 +112,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขกระทรวง' : 'สร้างกระทรวง'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -168,7 +135,7 @@ export default {
                 _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -186,7 +153,7 @@ export default {
                 _this.axios.post(`/department`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -210,7 +177,7 @@ export default {
               _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
                 _this.showLoading = false
@@ -228,7 +195,7 @@ export default {
               _this.axios.post(`/department`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
                 _this.showLoading = false
