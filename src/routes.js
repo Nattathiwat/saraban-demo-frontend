@@ -19,40 +19,125 @@ export default {
       name: 'my-work',
       component: () => import("./view/my-work/index.vue"),
       redirect: {
-        name: 'booking-receive'
+        name: 'my-work.waiting-booking-receive'
       },
       children: [
         { 
+          path: 'waiting-booking-receive', 
+          name: 'my-work.waiting-booking-receive',
+          component: () => import("./view/my-work/waiting-booking-receive/index.vue"),
+        },
+        { 
+          path: 'waiting-booking-receive/create', 
+          name: 'my-work.waiting-booking-receive-create',
+          component: () => import("./view/my-work/waiting-booking-receive/detail.vue"),
+        },
+        { 
+          path: 'waiting-booking-receive/:id', 
+          name: 'my-work.waiting-booking-receive-edit',
+          component: () => import("./view/my-work/waiting-booking-receive/detail.vue"),
+        },
+        { 
           path: 'booking-receive', 
-          name: 'booking-receive',
+          name: 'my-work.booking-receive',
           component: () => import("./view/my-work/booking-receive/index.vue"),
         },
         { 
           path: 'booking-receive/create', 
-          name: 'booking-receive-create',
+          name: 'my-work.booking-receive-create',
           component: () => import("./view/my-work/booking-receive/detail.vue"),
         },
         { 
           path: 'booking-receive/:id', 
-          name: 'booking-receive-edit',
+          name: 'my-work.booking-receive-edit',
           component: () => import("./view/my-work/booking-receive/detail.vue"),
         },
+        { 
+          path: 'booking-out', 
+          name: 'my-work.booking-out',
+          component: () => import("./view/my-work/booking-out/index.vue"),
+        },
+        { 
+          path: 'booking-out/create', 
+          name: 'my-work.booking-out-create',
+          component: () => import("./view/my-work/booking-out/detail.vue"),
+        },
+        { 
+          path: 'booking-out/:id', 
+          name: 'my-work.booking-out-edit',
+          component: () => import("./view/my-work/booking-out/detail.vue"),
+        }
       ]
     },
     { 
-      path: '/booking-out', 
-      name: 'booking-out',
-      component: () => import("./view/booking-out/index.vue"),
-    },
-    { 
-      path: '/booking-out/create', 
-      name: 'booking-out-create',
-      component: () => import("./view/booking-out/detail.vue"),
-    },
-    { 
-      path: '/booking-out/:id', 
-      name: 'booking-out-edit',
-      component: () => import("./view/booking-out/detail.vue"),
+      path: '/subministry-work', 
+      name: 'subministry-work',
+      component: () => import("./view/subministry-work/index.vue"),
+      redirect: {
+        name: 'subministry-work.booking-receive'
+      },
+      children: [
+        { 
+          path: 'booking-receive', 
+          name: 'subministry-work.booking-receive',
+          component: () => import("./view/subministry-work/booking-receive/index.vue"),
+        },
+        { 
+          path: 'booking-receive/create', 
+          name: 'subministry-work.booking-receive-create',
+          component: () => import("./view/subministry-work/booking-receive/detail.vue"),
+        },
+        { 
+          path: 'booking-receive/:id', 
+          name: 'subministry-work.booking-receive-edit',
+          component: () => import("./view/subministry-work/booking-receive/detail.vue"),
+        },
+        { 
+          path: 'record-receive', 
+          name: 'subministry-work.record-receive',
+          component: () => import("./view/subministry-work/record-receive/index.vue"),
+        },
+        { 
+          path: 'record-receive/create', 
+          name: 'subministry-work.record-receive-create',
+          component: () => import("./view/subministry-work/record-receive/detail.vue"),
+        },
+        { 
+          path: 'record-receive/:id', 
+          name: 'subministry-work.record-receive-edit',
+          component: () => import("./view/subministry-work/record-receive/detail.vue"),
+        },
+        { 
+          path: 'booking-out', 
+          name: 'subministry-work.booking-out',
+          component: () => import("./view/subministry-work/booking-out/index.vue"),
+        },
+        { 
+          path: 'booking-out/create', 
+          name: 'subministry-work.booking-out-create',
+          component: () => import("./view/subministry-work/booking-out/detail.vue"),
+        },
+        { 
+          path: 'booking-out/:id', 
+          name: 'subministry-work.booking-out-edit',
+          component: () => import("./view/subministry-work/booking-out/detail.vue"),
+        },
+        { 
+          path: 'record-out', 
+          name: 'subministry-work.record-out',
+          component: () => import("./view/subministry-work/record-out/index.vue"),
+        },
+        { 
+          path: 'record-out/create', 
+          name: 'subministry-work.record-out-create',
+          component: () => import("./view/subministry-work/record-out/detail.vue"),
+        },
+        { 
+          path: 'record-out/:id', 
+          name: 'subministry-work.record-out-edit',
+          component: () => import("./view/subministry-work/record-out/detail.vue"),
+        }
+      ]
     },
     { 
       path: '/user-manage', 
