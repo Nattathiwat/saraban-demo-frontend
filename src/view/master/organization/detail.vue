@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขกลุ่ม' : 'สร้างกลุ่ม'}}</div>
+            <div class="name">{{edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}}</div>
           </div>
           <div class="group-end">
             <button type="button" class="button-back" @click="back()" >
@@ -20,14 +20,14 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">รหัสกลุ่ม<span class="required">*</span></div>
+                <div class="name">รหัสหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.code"
                             name="department_id"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อย่อกลุ่ม <span class="required">*</span></div>
+                <div class="name">ชื่อย่อหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_short_name"
                             name="department_short_name"
                             rules="required"
@@ -36,7 +36,7 @@
             </div>
             <div class="group-between">
               <div class="group-input">
-                <div class="name">ชื่อกลุ่ม <span class="required">*</span></div>
+                <div class="name">ชื่อหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_full_name"
                             name="department_full_name"
                             rules="required"
@@ -44,11 +44,21 @@
               </div>
             </div>
             <div class="group-input">
-              <div class="name">กอง<span class="required">*</span></div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />  
+              <div class="name">รูปหน่วยงาน <span class="required">*</span></div>
+              <div class="d-flex mb-3">
+                <div class="group-input-file">
+                  <button type="button" class="button-file" @click="upload_file('main_docs')" >
+                    <span :class="data.filename ? '' : 'no-data'">
+                      {{data.filename ? data.filename : 'รูปหน่วยงาน'}}
+                    </span>
+                  </button>
+                  <div class="text pointer" @click="upload_file('main_docs')" >แนบไฟล์</div>
+                  <input type="file" @change="file_change('main_docs')" :name="'main_docs'" style="display:none;" accept="image/*,">
+                </div>
+                <button type="button" class="del-department" @click="data.filename = ''">
+                  <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+                </button>
+              </div>
             </div>
           </div>
           <div class="line"></div>
@@ -62,7 +72,7 @@
             <div class="footer-right">
               <button type="submit" class="button-success" :disabled="!data.filename">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขกลุ่ม' : 'ยืนยันสร้างกลุ่ม'}}
+                {{edit ? 'ยืนยันแก้ไขหน่วยงาน' : 'ยืนยันสร้างหน่วยงาน'}}
               </button>
             </div>
           </div>
@@ -116,7 +126,11 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'group',
+        name: 'agency',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     cancelClick() {
@@ -302,7 +316,7 @@ export default {
             background-color: transparent;
             display: flex;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #15466e;
             
@@ -345,7 +359,7 @@ export default {
           margin-bottom: 30px;
 
           .name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             margin-bottom: 7px;
@@ -425,7 +439,7 @@ export default {
 
         .footer-left {
           .button-danger {
-            width: 140px;
+            width: 120px;
           }
         }
 
@@ -433,16 +447,16 @@ export default {
           display: flex;
 
           .button-success {
-            width: 235px;
+            width: 210px;
           }
         }
 
         button {
-          height: 55px;
-          border-radius: 10px;
+          height: 45px;
+          border-radius: 5px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 500;
           color: #fff;
           display: flex;
@@ -451,14 +465,14 @@ export default {
         }
 
         .icon-times-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
         .icon-check-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
       }

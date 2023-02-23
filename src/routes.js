@@ -77,7 +77,7 @@ export default {
     { 
       path: '/master/book-type/create', 
       name: 'book-type-create',
-      // component: () => import("./view/master/book-type/detail.vue"),
+      component: () => import("./view/master/book-type/detail.vue"),
     },
     { 
       path: '/master/book-type/:id', 
@@ -87,7 +87,7 @@ export default {
     { 
       path: '/master/organization', 
       name: 'organization',
-      // component: () => import("./view/master/organization/index.vue"),
+      component: () => import("./view/master/organization/index.vue"),
     },
     { 
       path: '/master/organization/create', 
@@ -147,12 +147,12 @@ export default {
     { 
       path: '/master/book-method', 
       name: 'book-method',
-      // component: () => import("./view/master/book-method/index.vue"),
+      component: () => import("./view/master/book-method/index.vue"),
     },
     { 
       path: '/master/book-method/create', 
       name: 'book-method-create',
-      // component: () => import("./view/master/book-method/detail.vue"),
+      component: () => import("./view/master/book-method/detail.vue"),
     },
     { 
       path: '/master/book-method/:id', 

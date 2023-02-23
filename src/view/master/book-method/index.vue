@@ -5,7 +5,13 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">ตั้งค่าประเภทไฟล์</div>
+            <div class="name">รูปแบบการรับ-ส่งหนังสือ</div>
+            <button type="button" class="add-department" @click="addClick()">
+              <div class="group-image">
+                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
+                เพิ่มรูปแบบการรับ-ส่งหนังสือ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+              </div>
+            </button>
           </div>
           <div class="group-end">
             <div class="search" >
@@ -23,21 +29,22 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ชื่อไฟล์</th>
-                <th class="col2">นามสกุลไฟล์</th>
-                <th class="col3">เปิดใช้งาน</th>
+                <th class="col1">ชื่อรูปแบบการรับ-ส่งหนังสือ</th>
+                <th class="col2">รายละเอียด</th>
+                <th class="col3">ประเภทหนังสือ</th>
+                <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
-                <td class="col3"><cpn-toggleSwitch v-model="input11"
-                                          name="input11"
-                                          class=""
-                                          style=""
-                                          :disabled="false"
-                                          @change="change" />
+                <td class="col3">{{item.department_full_name}}</td>
+                <td class="col7">
+                  <div class="group-icon">
+                    <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
+                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                  </div>
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
@@ -77,11 +84,26 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 50,
+        perPage: 10,
       },
     }
   },
   methods: {
+    addClick() {
+      this.$router.push({ 
+        name: 'book-method-create',
+      }).catch(()=>{});
+    },
+    editClick(item) {
+      this.$router.push({ 
+        name: 'agency-edit',
+        params: {id: item.id},
+        query: {
+          page: this.data.page,
+          perPage: this.data.perPage
+        }
+      }).catch(()=>{});
+    },
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
@@ -149,6 +171,8 @@ export default {
     },
   },
   mounted() {
+    this.data.page = this.$route.query?.page || this.data.page
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage
     this.apiDepartment()
   },
 }
@@ -195,15 +219,15 @@ export default {
           }
 
           .add-department {
-            height: 46px;
+            height: 45px;
             border: 0;
             border-radius: 5px;
             background-color: #007773;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #ffffff;
             margin-left: 35px;
-            padding: 0 25px 0 21px;
+            padding: 0 20px 0 20px;
 
             .group-image {
               display: flex;
@@ -213,7 +237,7 @@ export default {
               .icon-plus {
                 width: 24px;
                 height: 24px;
-                margin-right: 17px;
+                margin-right: 10px;
               }
             }
           }
@@ -269,7 +293,7 @@ export default {
           .thead {
             .thead-row {
               font-weight: bold;
-              font-size: 18px;
+              font-size: 16px;
               color: #333333;
               height: 71px;
 
@@ -330,7 +354,7 @@ export default {
               color: #333333;
               border-bottom: 0px;
               font-weight: 500;
-              font-size: 18px;
+              font-size: 16px;
 
               td {
                 padding: 0 10px;

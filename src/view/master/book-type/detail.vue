@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขกอง' : 'สร้างกอง'}}</div>
+            <div class="name">{{edit ? 'แก้ไขชนิดหนังสือ' : 'สร้างชนิดหนังสือ'}}</div>
           </div>
           <div class="group-end">
             <button type="button" class="button-back" @click="back()" >
@@ -20,14 +20,14 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">รหัสกอง<span class="required">*</span></div>
+                <div class="name">เลขชนิดหนังสือ<span class="required">*</span></div>
                 <cpn-input  v-model="data.code"
                             name="department_id"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อย่อกอง <span class="required">*</span></div>
+                <div class="name">ชื่อชนิดหนังสือ<span class="required">*</span></div>
                 <cpn-input  v-model="data.department_short_name"
                             name="department_short_name"
                             rules="required"
@@ -36,11 +36,23 @@
             </div>
             <div class="group-between">
               <div class="group-input">
-                <div class="name">ชื่อกอง <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
-                            rules="required"
+                <div class="name">ทะเบียน <span class="required">*</span></div>
+                <cpn-autoComplete v-model="input3"
+                            name="book_type_record"
+                            :optionSelect="optionSelect2"
+                            @keyup="keyupDepartment($event)"
                             placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">รายละเอียด<span class="required">*</span></div>
+                <cpn-textArea v-model="input4"
+                    name="book-type_description"
+                    class=""
+                    style=""
+                    rows="4"
+                    placeholder="กรุณาระบุ"  />
               </div>
             </div>
           </div>
@@ -55,7 +67,7 @@
             <div class="footer-right">
               <button type="submit" class="button-success" :disabled="!data.filename">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขหน่วยงาน' : 'ยืนยันสร้างหน่วยงาน'}}
+                {{edit ? 'ยืนยันแก้ไขชนิดหนังสือ' : 'ยืนยันสร้างชนิดหนังสือ'}}
               </button>
             </div>
           </div>
@@ -84,6 +96,9 @@ export default {
         department_full_name: '',
         filename: '',
         filepath: '',
+        optionSelect: {
+          book_type_record: [{name:'สำนักงานเลขาธิการ', value: 'สำนักงานเลขาธิการ'}]
+        }
       },
     }
   },

@@ -55,7 +55,7 @@
             <div class="footer-right">
               <button type="submit" class="button-success" :disabled="!data.filename">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขหน่วยงาน' : 'ยืนยันสร้างหน่วยงาน'}}
+                {{edit ? 'ยืนยันแก้ไขกอง' : 'ยืนยันสร้างกอง'}}
               </button>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'agency',
+        name: 'subministry',
       }).catch(()=>{});
     },
     cancelClick() {

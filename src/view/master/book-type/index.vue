@@ -30,8 +30,9 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">เลขชนิดหนังสือ</th>
-                <th class="col2">ชื่อย่อกอง</th>
-                <th class="col3">ชื่อกอง</th>
+                <th class="col2">ชื่อชนิดหนังสือ</th>
+                <th class="col3">รายละเอียด</th>
+                <th class="col4">ทะเบียน</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
@@ -40,6 +41,7 @@
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
+                <td class="col4">{{item.department_full_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -91,7 +93,7 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'subministry-create',
+        name: 'book-type-create',
       }).catch(()=>{});
     },
     editClick(item) {
