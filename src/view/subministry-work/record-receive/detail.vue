@@ -624,7 +624,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'my-work.booking-receive',
+        name: 'subministry-work.booking-receive',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage

@@ -1,15 +1,15 @@
 <template>
-  <div class="booking-receive-inex">
+  <div class="booking-out-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">หนังสือรับเข้า</div>
-            <button type="button" class="add-booking-receive" @click="addClick()">
+            <div class="name">หนังสือส่งออก</div>
+            <button type="button" class="add-booking-out" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือรับเข้า
+                สร้างหนังสือส่งออก
               </div>
             </button>
           </div>
@@ -20,21 +20,21 @@
                           type="text"
                           :searchFlag="true"
                           @searchClick="search()"
-                          placeholder="เลขรับ/เลขที่หนังสือ/ชื่อเรื่อง/Tag" />
+                          placeholder="เลขที่หนังสือออก/ชื่อเรื่อง/Tag" />
             </div>
           </div>
         </div>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-booking-receive-inex">
+          <table class="table-booking-out-inex">
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขรับ</th>
-                <th class="col3">เลขที่หนังสือ</th>
-                <th class="col4">ชื่อเรื่อง</th>
-                <th class="col5">ชนิด</th>
-                <th class="col6">ลงวันที่</th>
+                <th class="col2">เลขที่หนังสือออก</th>
+                <th class="col3">ชื่อเรื่อง</th>
+                <th class="col4">หน่วยงานปลายทาง</th>
+                <th class="col5">ลงวันที่</th>
+                <th class="col6">ชนิด</th>
                 <th class="col7">ผู้รับผิดชอบ</th>
                 <th class="col8">สถานะ</th>
               </tr>
@@ -42,30 +42,12 @@
             <tbody class="tbody">
               <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
                 <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.referBookno}}</td>
-                <td class="col4">
-                  <div class="group-show none-bg">
-                    <span class="span">
-                      {{item.bookingSubject}}
-                    </span>
-                    <div class="show-detail">{{item.bookingSubject}}
-                      <div v-if="false" class="image-size"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="col5">{{item.typename}}</td>
-                <td class="col6">{{item.date}}</td>
-                <td class="col7">
-                  <div class="group-show">
-                    <span class="span">
-                      {{item.response}}
-                    </span>
-                    <div class="show-detail">{{item.response}}
-                      <div v-if="false" class="image-size"></div>
-                    </div>
-                  </div>
-                </td>
+                <td class="col2">{{item.bookingNoN}}</td>
+                <td class="col3">{{item.bookingSubject}}</td>
+                <td class="col4">{{item.department_name}}</td>
+                <td class="col5">{{item.date}}</td>
+                <td class="col6">{{item.typename}}</td>
+                <td class="col7">{{item.prepareBy}}</td>
                 <td class="col8">{{item.statusName}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
@@ -90,7 +72,7 @@
 </template>
 <script>
 export default {
-  name: 'booking-receive-inex',
+  name: 'booking-out-inex',
   data() {
     return {
       modalAlert: {
@@ -119,18 +101,14 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'my-work.booking-receive-create',
+        name: 'my-work.booking-out-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'my-work.booking-receive-edit',
-        params: {
-          id: item.id,
-        },
-        query:{
-          book_type:item.book_type,   
-          regis_id:item.regis_id,
+        name: 'my-work.booking-out-edit',
+        params: {id: item.id},
+        query: {
           page: this.data.page,
           perPage: this.data.perPage
         }
@@ -139,7 +117,7 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apigetimport()
+      this.apigetexport()      
     },
     search() {
       this.data.status = true
@@ -152,16 +130,13 @@ export default {
       // this.data.as_of_date_end = ''
       // this.data.booktype = ''
       this.data.tag = ''
-      this.apigetimport()
+      this.apigetexport()
     },
-    apigetimport() {
+    apigetexport() {
       this.data.table = []
-      // this.data.page = 1
-      // this.data.lastPage = 1
-      // // this.data.total = 1
       
       this.showLoading = true
-      this.axios.get('/booking-receive', {
+      this.axios.get('/booking-out', {
         params: {
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -178,16 +153,16 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
-        if (response.data.data) {
-            response.data.data.filter(row => {
+        if (response.data.data ) {
+          response.data.data.filter(row => {
             row.speedName = row.speed_name
-            row.bookingNo = row.receive_document_number
-            row.referBookno = row.document_number
+            row.bookingNoN = row.book_out_num
             row.bookingSubject = row.subject
+            row.department_name = row.department_name
+            row.date = row.regis_date
             row.typename = row.book_type_name
-            row.date = row.as_of_date
-            row.response = row.response_name
-            row.statusName = row.status
+            row.prepareBy = row.creater_name
+            row.statusName = row.status_name
             this.data.total = row.total
           })
           this.data.table = response.data.data
@@ -204,7 +179,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหนังสือรับเข้า`,
+        title: `คุณยืนยันการลบหนังสือส่งออก`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
@@ -216,10 +191,10 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              title: 'ทำการลบหนังสือส่งออกสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apigetimport()
+                _this.apigetexport()
               }
             }
           // })
@@ -234,13 +209,13 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apigetimport()
+    this.apigetexport()
   },
 }
 
 </script>
 <style lang="scss">
-  .booking-receive-inex {
+  .booking-out-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -279,7 +254,7 @@ export default {
             font-size: 18px;
           }
 
-          .add-booking-receive {
+          .add-booking-out {
             height: 45px;
             border: 0;
             border-radius: 5px;
@@ -342,7 +317,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-booking-receive-inex {
+        .table-booking-out-inex {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
@@ -377,18 +352,18 @@ export default {
             }
 
             .col3 {
-              min-width: 150px;
-              width: 15%;
+              min-width: 250px;
+              width: 25%;
             }
 
             .col4 {
-              min-width: 300px;
-              width: 30%;
+              min-width: 170px;
+              width: 15%;
             }
 
             .col5 {
-              min-width: 250px;
-              width: 25%;
+              min-width: 170px;
+              width: 15%;
             }
 
             .col6 {
@@ -398,7 +373,6 @@ export default {
 
             .col7 {
               min-width: 170px;
-              max-width: 170px;
               width: 15%;
             }
 
@@ -427,91 +401,12 @@ export default {
                 padding: 0 10px;
               }
 
-              .col4 {
+              .col3 {
                 text-align: left;
               }
 
               .col1 {
                 padding-left: 28px;
-              }
-
-              .none-bg {
-                background-color: transparent !important;
-              }
-
-              .group-show {
-                text-align: left;
-                position: relative;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                padding: 5px 10px;
-                border-radius: 5px;
-                background-color: #f8f9fa;
-
-
-                .span {
-                  display: -webkit-box;
-                  -webkit-line-clamp: 1;
-                  -webkit-box-orient: vertical;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  line-height: 40px;
-                }
-
-                .show-detail {
-                  width: 100%;
-                  overflow: auto;
-                  max-height: 85px;
-                  color: #fff;
-                  position: absolute;
-                  bottom: 45px;
-                  left: 50%;
-                  transform: translate(-50%, 0px);
-                  padding: 9px 13px 9px 13px;
-                  display: none;
-                  font-size: 16px;
-                  font-weight: 500;
-                  text-align: left;
-                  z-index: 1;
-                  background-color: #15466e;
-                  border-radius: 9px;
-
-                  .image-size {
-                    position: absolute;
-                    left: 50%;
-                    z-index: -1;
-                    bottom: -5px;
-                    width: 22px;
-                    height: 22px;
-                    background-color: #15466e;
-                    -ms-transform: rotate(45deg);
-                    transform: rotate(45deg);
-                    margin-left: -11px;
-                  }
-                }
-              }
-
-              .group-show {
-                float: left;
-
-                .icon-user-crown {
-                  width: 19px;
-                  height: 21px;
-                  margin-right: 8px;
-                }
-
-                .icon-badge-sheriff {
-                  width: 20px;
-                  height: 23px;
-                  margin-right: 7px;
-                }
-              }
-
-              .group-show:hover{
-                .show-detail{
-                  display: block;
-                }
               }
 
               .col8 {
