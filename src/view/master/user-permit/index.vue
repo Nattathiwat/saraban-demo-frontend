@@ -1,62 +1,58 @@
 <template>
-  <div class="booking-out-inex">
+  <div class="department-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">หนังสือส่งออก</div>
-            <button type="button" class="add-booking-out" @click="addClick()">
+            <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
+            <div class="name">กอง</div>
+            <button type="button" class="add-department" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือส่งออก
-              </div>
-            </button>
-            <button type="button" class="add-booking-out" @click="addClick()">
-              <div class="group-image">
-                ออกเลขบันทึกภายใน
+                เพิ่มกอง
               </div>
             </button>
           </div>
           <div class="group-end">
-            <div class="search">
+            <div class="search" >
               <cpn-input  v-model="data.search"
                           name="search"
                           type="text"
                           :searchFlag="true"
                           @searchClick="search()"
-                          placeholder="เลขที่หนังสือออก/ชื่อเรื่อง/Tag" />
+                          placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
             </div>
           </div>
         </div>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-booking-out-inex">
+          <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขบันทึกภายใน</th>
-                <th class="col3">ชื่อเรื่อง</th>
-                <th class="col4">หน่วยงานปลายทาง</th>
-                <th class="col5">ลงวันที่</th>
-                <th class="col6">ชนิด</th>
-                <th class="col7">ผู้รับผิดชอบ</th>
-                <th class="col8">สถานะ</th>
+                <th class="col1">รหัสกอง</th>
+                <th class="col2">ชื่อย่อกอง</th>
+                <th class="col3">ชื่อกอง</th>
+                <th class="col4">รายละเอียด</th>
+                <th class="col5">วันที่สร้าง</th>
+                <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNoN}}</td>
-                <td class="col3">{{item.bookingSubject}}</td>
-                <td class="col4">{{item.department_name}}</td>
-                <td class="col5">{{item.date}}</td>
-                <td class="col6">{{item.typename}}</td>
-                <td class="col7">{{item.prepareBy}}</td>
-                <td class="col8">{{item.statusName}}</td>
+              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+                <td class="col1">{{item.code}}</td>
+                <td class="col2">{{item.department_short_name}}</td>
+                <td class="col3">{{item.department_full_name}}</td>
+                <td class="col4">{{item.department_full_name}}</td>
+                <td class="col5">{{item.department_full_name}}</td>
+                <td class="col7">
+                  <div class="group-icon">
+                    <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
+                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                  </div>
+                </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="8">ไม่มีข้อมูล</td>
+                <td colspan="4">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -77,7 +73,7 @@
 </template>
 <script>
 export default {
-  name: 'booking-out-inex',
+  name: 'agency-inex',
   data() {
     return {
       modalAlert: {
@@ -92,87 +88,50 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 10,
-        // desc:'',
-        // receive_date_str:'',
-        // receive_date_end:'',
-        // as_of_date_str:'',
-        // as_of_date_end:'',
-        // booktype:'',
-        tag:'',
+        perPage: 50,
       },
     }
   },
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'subministry-work.record-out-create',
+        name: 'subministry-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'subministry-work.booking-out-edit',
-        params: {id: item.id},
-        query: {
-          page: this.data.page,
-          perPage: this.data.perPage
-        }
+        name: 'subministry-edit',
+        params: {id: item.id}
       }).catch(()=>{});
     },
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apigetexport()      
+      this.apiDepartment()
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      // this.data.desc = ''
-      // this.data.receive_date_str = ''
-      // this.data.receive_date_end = ''
-      // this.data.as_of_date_str = ''
-      // this.data.as_of_date_end = ''
-      // this.data.booktype = ''
-      this.data.tag = ''
-      this.apigetexport()
+      this.apiDepartment()
     },
-    apigetexport() {
+    apiDepartment() {
       this.data.table = []
-      
       this.showLoading = true
-      this.axios.get('/booking-out', {
-        params: {
+      this.axios.get('/department', {
+        params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
-          user_id: localStorage.getItem('user_id'),
-          // desc: this.data.desc,
-          // receive_date_str: this.data.receive_date_str,
-          // receive_date_end: this.data.receive_date_end,
-          // as_of_date_str: this.data.as_of_date_str,
-          // as_of_date_end: this.data.as_of_date_end,
-          // book_type_id: this.data.booktype,
-          tag: this.data.tag,
         }
       })
       .then((response) => {
         this.showLoading = false
-        if (response.data.data ) {
-          response.data.data.filter(row => {
-            row.speedName = row.speed_name
-            row.bookingNoN = row.book_out_num
-            row.bookingSubject = row.subject
-            row.department_name = row.department_name
-            row.date = row.regis_date
-            row.typename = row.book_type_name
-            row.prepareBy = row.creater_name
-            row.statusName = row.status_name
-            this.data.total = row.total
-          })
-          this.data.table = response.data.data
-          this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
-        }
+        response.data.data.filter(row => {
+          this.data.total = row.total
+        })
+        this.data.table = response.data.data
+        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
         this.showLoading = false
@@ -184,43 +143,41 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหนังสือส่งออก`,
+        title: `คุณยืนยันการลบหน่วยงาน`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          // _this.showLoading = true
-          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
-          // .then(() => { 
-          //   _this.showLoading = false
+          _this.showLoading = true
+          _this.axios.delete(`/department/${data.id}`)
+          .then(() => { 
+            _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือส่งออกสำเร็จแล้ว',
+              title: 'ทำการลบหน่วยงานสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apigetexport()
+                _this.apiDepartment()
               }
             }
-          // })
-          // .catch((error) => {
-          //   _this.showLoading = false
-          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          // })
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
         }
       }
     },
   },
   mounted() {
-    this.data.page = this.$route.query?.page || this.data.page
-    this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apigetexport()
+    this.apiDepartment()
   },
 }
 
 </script>
 <style lang="scss">
-  .booking-out-inex {
+  .department-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -259,16 +216,16 @@ export default {
             font-size: 18px;
           }
 
-          .add-booking-out {
-            height: 45px;
+          .add-department {
+            height: 46px;
             border: 0;
             border-radius: 5px;
             background-color: #007773;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             color: #ffffff;
             margin-left: 35px;
-            padding: 0 20px 0 20px;
+            padding: 0 25px 0 21px;
 
             .group-image {
               display: flex;
@@ -278,7 +235,7 @@ export default {
               .icon-plus {
                 width: 24px;
                 height: 24px;
-                margin-right: 10px;
+                margin-right: 17px;
               }
             }
           }
@@ -322,7 +279,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-booking-out-inex {
+        .table-department-inex {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
@@ -334,7 +291,7 @@ export default {
           .thead {
             .thead-row {
               font-weight: bold;
-              font-size: 16px;
+              font-size: 18px;
               color: #333333;
               height: 71px;
 
@@ -346,7 +303,7 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
+              min-width: 250px;
               width: 15%;
               padding-left: 28px !important;
             }
@@ -357,8 +314,8 @@ export default {
             }
 
             .col3 {
-              min-width: 250px;
-              width: 25%;
+              min-width: 170px;
+              width: 15%;
             }
 
             .col4 {
@@ -379,11 +336,6 @@ export default {
             .col7 {
               min-width: 170px;
               width: 15%;
-            }
-
-            .col8 {
-              min-width: 200px;
-              width: 20%;
               padding-right: 28px !important;
             }
           }
@@ -400,13 +352,13 @@ export default {
               color: #333333;
               border-bottom: 0px;
               font-weight: 500;
-              font-size: 16px;
+              font-size: 18px;
 
               td {
                 padding: 0 10px;
               }
 
-              .col3 {
+              .text-left {
                 text-align: left;
               }
 
@@ -414,8 +366,26 @@ export default {
                 padding-left: 28px;
               }
 
-              .col8 {
+              .col7 {
                 padding-right: 28px;
+
+                .group-icon {
+                  display: flex;
+                  height: 70px;
+                  align-items: center;
+                  justify-content: center;
+
+                  .image-pencil {
+                    width: 21px;
+                    height: 21px;
+                    margin-right: 28px;
+                  }
+
+                  .image-trash {
+                    width: 20px;
+                    height: 23px;
+                  }
+                }
               }
             }
           }

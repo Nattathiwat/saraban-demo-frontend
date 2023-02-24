@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขหนังสือส่งออก' : 'สร้างหนังสือส่งออก'}}</div>
+            <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}}</div>
           </div>
         </div>
         <div class="line"></div>
@@ -42,7 +42,7 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ประเภท <span class="required">*</span></div>
+                <div class="name">ทะเบียนบันทึกข้อความ<span class="required">*</span></div>
                 <cpn-select v-model="data.book_category_id"
                             name="book_category_id"
                             rules="required"
@@ -50,6 +50,16 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
+                <div class="name">ลงวันที่<span class="required">*</span></div>
+                <cpn-datepicker v-model="data.receive_date"
+                                  name="receive_date"
+                                  rules="required"
+                                  :disabled="edit"
+                                  placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
                 <cpn-select v-model="data.book_type_id"
                             name="book_type_id"
@@ -57,8 +67,6 @@
                             :optionSelect="optionSelect.book_type_id"
                             placeholder="กรุณาระบุ" />
               </div>
-            </div>
-            <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชั้นความลับ <span class="required">*</span></div>
                 <cpn-select v-model="data.secret_id"
@@ -74,6 +82,39 @@
                             rules="required"
                             :optionSelect="optionSelect.speed_id"
                             placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+              <div class="name">ชื่อเรื่อง <span class="required">*</span></div>
+              <cpn-textArea v-model="data.subject"
+                            name="subject"
+                            rules="required"
+                            rows="1" />
+            </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">เรียน</div>
+                <cpn-input  v-model="sendto"
+                            name="sendto"
+                            type="text"/>
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">รายละเอียด</div>
+                <cpn-textArea v-model="input4"
+                              name="input4"
+                              rows="1"  />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">Tag สำหรับค้นหา</div>
+              <cpn-input-tags v-model="data.tag"
+                              name="tag"
+                              placeholder="Enter a new tag"  />
               </div>
             </div>
             <div class="group-input d-flex align-items-center">
@@ -108,208 +149,58 @@
                 <button type="button" @click="delete_booking_refers(item, index)" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
               </div>
             </div>
-            <div class="group-input">
-              <div class="name">ชื่อเรื่อง <span class="required">*</span></div>
-              <cpn-textArea v-model="data.subject"
-                            name="subject"
-                            rules="required"
-                            rows="1" />
-            </div>
           </div>
           <div class="line"></div>
-          <div class="d-flex justify-content-end">
-            <button type="button" class="add-register" :disabled="(!data.book_category_id || !data.book_type_id || !data.secret_id || !data.speed_id)" @click="add_booking_register_details()">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                เพิ่มทะเบียน
-            </button>
-          </div>
-          <div class="group-detail-2" v-for="(item, index) in data.booking_register_details.filter(el => el.flag != 'delete')" :key="index">
-            <div class="d-flex">
-              <div class="col-start">ชุดที่ #{{index+1}}</div>
-              <div class="col-center">
-                <div class="row">
-                  <div class="col-lg-auto col-md-auto mb-3">
-                    <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
-                  </div>
-                  <div class="group-date col-lg-auto col-md-auto mb-3">
-                    <div class="name">ลงวันที่ :</div>
-                    <cpn-datepicker v-model="item.regis_date"
-                                    :name="`regis_dateAdd${index}`"
-                                    class="size-date" />
-                  </div>
-                </div>
-                <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
-              </div>
-              <div class="col-end">
-                <div class="d-flex justify-content-end">
-                  <div class="group-num">
-                    <div class="name">จำนวน :</div>
-                    <cpn-input  v-model="item.num"
-                                :name="`num${index}`"
-                                type="number"
-                                class="size-input"/>
-                  </div>
-                  <button type="button" class="add-department" @click="add_booking_registers(item)">
-                    <div class="group-image">
-                      <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="image-plus pointer">
-                      เพิ่มหน่วยงาน
-                    </div>
-                  </button>
-                  <button type="button" class="del-department" @click="delete_booking_register_details(item, index)">
-                    <div class="group-image">
-                      <i class="bi bi-trash-fill image-trash pointer"></i>
-                      ลบชุดที่ #{{index+1}}
-                    </div>
-                  </button>
-                </div>
-                <div class="group-input">
-                  <div class="name">ชื่อผู้เซ็น</div>
-                  <div class="d-flex">
-                    <cpn-autoComplete v-model="item.signer_id"
-                                      :name="`signer_id${index}`"
-                                      :optionSelect="item.optionSelect.signer_id"
-                                      @change="change_signer_id(index)" />
-
-                    <cpn-checkbox v-model="item.is_signed"
-                                  :name="`is_signed${index}`"
-                                  class="cpn-select"
-                                  label="ลายเซ็น"
-                                  @change="change_signature(index)" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="group-all-file">
-              <div class="name">
-                เอกสารใช้ร่วมกัน
-              </div>
-              <div class="group-input-file">
-                <button type="button" class="button-file" @click="upload_file(`main_docs${index}`)">
-                  <span :class="item.main_filename ? '' : 'no-data'">
-                    {{item.main_filename ? item.main_filename : 'หนังสือต้นเรื่อง'}}
-                  </span>
-                </button>
-                <div class="text pointer" @click="upload_file(`main_docs${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_booking_register_details_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
-              </div>
-              <button type="button" @click="download_file({filename: item.main_filename, type: item.main_type, filepath: item.main_filepath, link: item.main_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-              <div class="group-input-file">
-                <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}`)">
-                  <span :class="item.attach_filename ? '' : 'no-data'">
-                    {{item.attach_filename ? item.attach_filename : 'สำเนาคู่ฉบับ'}}
-                  </span>
-                </button>
-                <div class="text pointer" @click="upload_file(`dupplicate_copy${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_booking_register_details_change(`dupplicate_copy${index}`, index, 'dupplicate_copy')" :name="`dupplicate_copy${index}`" style="display:none;" accept="application/pdf">
-              </div>
-              <button type="button" @click="download_file({filename: item.attach_filename, type: item.attach_type, filepath: item.attach_filepath, link: item.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-            </div>
-            <div class="detail-sub" v-for="(item2, index2) in item.booking_registers.filter(el => el.flag != 'delete')" :key="index2">
+            <div class="group-detail">
               <div class="group-between">
-                <div class="group-input left w-200">
-                  <div class="name">เลข ส่งออก</div>
-                  <cpn-input  v-model="item2.book_out_num"
-                              :name="`book_out_num${index}${index2}`"
-                              :disabled="true" />
-                </div>
-                <div class="group-input">
-                  <div class="name">เรียน <span class="required">*</span></div>
-                  <cpn-input  v-model="item2.greeting"
-                              rules="required"
-                              :name="`greeting${index}${index2}`"/>
-                </div>
-              </div>
-              <div class="group-input">
-                <div class="name">หน่วยงานปลายทาง</div>
-                <cpn-autoComplete v-model="item2.department_dest_id"
-                                  :optionSelect="item2.optionSelect.department_dest_id"
-                                  @keyup="keyupDepartment($event, item2)"
-                                  :name="`department_dest_id${index}${index2}`" />
-              </div>
-              <div class="group-between">
-                <div class="w-100 overflow-hidden">
-                  <div class="d-flex">
+                <div class="group-input left">
+                  <div class="name">บันทึกต้นเรื่อง</div>
+                  <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                     <div class="group-input-file">
-                      <button type="button" class="button-file" @click="upload_file(`main_docs${index}${index2}`)">
-                        <span :class="item2.main_filename ? '' : 'no-data'">
-                          {{item2.main_filename ? item2.main_filename : 'หนังสือต้นเรื่อง'}}
+                      <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
+                        <span :class="item.filename ? '' : 'no-data'">
+                          {{item.filename ? item.filename : ''}}
                         </span>
                       </button>
-                      <div class="text pointer" @click="upload_file(`main_docs${index}${index2}`)">แนบเอกสาร</div>
-                      <input type="file" @change="file_booking_registers_change(`main_docs${index}${index2}`, index, index2, 'main_docs')" :name="`main_docs${index}${index2}`" style="display:none;" accept="application/pdf">
+                      <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                      <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                     </div>
-                    <button type="button" @click="download_file({filename: item2.main_filename, type: item2.main_type, filepath: item2.main_filepath, link: item2.main_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+                    </button>
                   </div>
-                  <div class="d-flex mt-3">
+                </div>
+                <div class="group-input">
+                  <div class="group-input d-flex align-items-center">
+                    <div class="name">สิ่งที่ส่งมาด้วย</div>
+                    <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
+                      <div class="group-image">
+                        <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
+                        เพิ่มไฟล์
+                      </div>
+                    </button>
+                  </div>
+                  <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                     <div class="group-input-file">
-                      <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}${index2}`)">
-                        <span :class="item2.attach_filename ? '' : 'no-data'">
-                          {{item2.attach_filename ? item2.attach_filename : 'สำเนาคู่ฉบับ'}}
+                      <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
+                        <span :class="item.filename ? '' : 'no-data'">
+                          {{item.filename ? item.filename : ''}}
                         </span>
                       </button>
-                      <div class="text pointer" @click="upload_file(`dupplicate_copy${index}${index2}`)">แนบเอกสาร</div>
-                      <input type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" accept="application/pdf">
+                      <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                      <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                     </div>
-                    <button type="button" @click="download_file({filename: item2.attach_filename, type: item2.attach_type, filepath: item2.attach_filepath, link: item2.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  </div>
-                </div>
-                <div class="w-100 ms-4 m-auto">
-                  <div class="group-input">
-                    <div class="name">ชื่อผู้เซ็น</div>
-                    <div class="d-flex">
-                      <cpn-autoComplete v-model="item2.signer_id"
-                                        :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2.optionSelect.signer_id"  />
-
-                      <cpn-checkbox v-model="item2.is_signed"
-                                    :name="`is_signed${index}${index2}`"
-                                    class="cpn-select"
-                                    label="ลายเซ็น" />
-                    </div>
+                    <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
+                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+                    </button>
                   </div>
                 </div>
               </div>
-              <div class="text-end"> 
-                <button type="button" class="del-department-2" @click="delete_booking_registers(item2, item, index2)">
-                  <i class="bi bi-trash-fill image-trash pointer"></i>
-                </button>
-              </div>
-            </div>
           </div>
-          <div v-if="data.booking_register_details.length>0" class="line"></div>
-          <div v-if="data.booking_register_details.length>0" class="tag">
-            <div class="group-input">
-              <div class="name">Tag สำหรับค้นหา (กรอกข้อมูลจบ 1 ประโยค ให้กด "Enter")</div>
-              <cpn-input-tags v-model="data.tag"
-                              name="tag" />
-            </div>
-            <div class="group-input d-flex align-items-center mt-4">
-              <div class="name">สิ่งที่แนบมาด้วย</div>
-              <button type="button" class="add-booking-out" @click="add_attachments()">
-                <div class="group-image">
-                  <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                  เพิ่มไฟล์
-                </div>
-              </button>
-            </div>
-            <div v-if="data.booking_register_details.length>0" class="d-flex mb-3 group-input-file-all" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
-              <div class="group-input-file">
-                <button type="button" class="button-file" @click="upload_file(`fileAttachment${index}`)">
-                  <span :class="item.filename ? '' : 'no-data'">
-                    {{item.filename ? item.filename : 'หนังสือต้นเรื่อง'}}
-                  </span>
-                </button>
-                <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, index)" :name="`fileAttachment${index}`" style="display:none;">
-              </div>
-              <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-              <button type="button" class="del-department-3" @click="delete_attachments(item, index)">
-                <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
-              </button>
-            </div>
-          </div>
-          <div class="line mt-4" v-if="data.booking_register_details.length>0"></div>
-          <div class="send-to" v-if="data.booking_register_details.length>0">
+          <div class="line"></div>
+          <div class="send-to">
             <div class="group-input">
               <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) <span class="required">*กรุณาใส่รายชื่อที่ต้องการส่งต่อ</span></div>
               <cpn-input-tags v-model="data.sendTo"
@@ -325,7 +216,7 @@
                             rows="3" />
             </div>
             <div class="group-between">
-              <div class="group-input">
+              <div class="group-input left">
                 <div class="name">รูปแบบการดำเนินการ</div>
                 <cpn-select v-model="data.process_type_id"
                             name="process_type_id"
@@ -373,12 +264,8 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ปิด
               </button>
-              <button type="button" class="button-danger ms-3" @click="delete_click()" v-if="$route.params.id">
-                <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
-                ลบ
-              </button>
             </div>
-            <div class="footer-right" v-show="data.booking_register_details.length>0">
+            <div class="footer-right">
               <button type="submit" class="button-primary" @click="flagSave=1">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
@@ -392,90 +279,6 @@
         </Form>
       </div>
     </div>
-    <div class="modal-register" v-show="modalRegiter.showModal">
-      <div class="modal-class">
-        <div class="modal-center">
-          <div class="modal-size" ref="modalRegiterref">
-            <Form @submit="on_submit_modal" @invalid-submit="onInvalidSubmit">
-              <div class="modal-title">
-                <div class="title-size">เพิ่มทะเบียน</div> 
-                <i class="bi bi-x-lg icon-close" @click="modalRegiter.showModal = false"></i>
-              </div>
-              <div class="line"></div>
-              <div class="modal-detail">
-                <div class="message" v-for="(item, index) in modalRegiter.booking_register_details" :key="index">
-                  <div class="d-flex justify-content-between">
-                    <div class="set">ชุดที่ #{{(index+1)+data.booking_register_details.length}}</div>
-                    <button type="button" @click="modalRegiter.booking_register_details.length > 1 ? modalRegiter.booking_register_details.splice(index,1) : ''" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
-                  </div>
-                  <div class="detail-sub">
-                    <div class="group-between">
-                      <div class="group-input">
-                        <div class="name">ทะเบียนส่ง <span class="required">*</span></div>
-                        <cpn-autoComplete v-model="item.regis_id"
-                                          rules="required"
-                                          :name="`addregis_id${index}`"
-                                          :optionSelect="item.optionSelect.regis_id"  />
-                      </div>
-                      <div class="group-input right-width">
-                        <div class="name">ลงวันที่ <span class="required">*</span></div>
-                        <cpn-datepicker v-model="item.regis_date"
-                                        rules="required"
-                                        :name="`addregis_date${index}`"/>
-                      </div>
-                      <div class="group-input right-width">
-                        <div class="name">การออกเลข <span class="required">*</span></div>
-                        <cpn-select v-model="item.book_out_num_type"
-                                    rules="required"
-                                    :optionSelect="item.optionSelect.book_out_num_type"
-                                    :name="`addbook_out_num_type${index}`"/>
-                      </div>
-                      <div class="group-input right-width">
-                        <div class="name">รูปแบบการส่ง <span class="required">*</span></div>
-                        <cpn-select v-model="item.send_method_id"
-                                    rules="required"
-                                    :optionSelect="item.optionSelect.send_method_id"
-                                    :name="`addsend_method_id${index}`"/>
-                      </div>
-                    </div>
-                    <div class="group-input">
-                      <div class="name">หน่วยงานปลายทาง</div>
-                      <cpn-input-tags v-model="item.department_dest_id"
-                                      :flagSearch="true"
-                                      :optionSelect="item.optionSelect.department_dest_id"
-                                      @keyup="keyupDepartment($event, item)"
-                                      :name="`adddepartment_dest_id${index}`"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                  <button type="button" class="add-register" @click="add_booking_register_details_modal()">
-                    <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                    เพิ่มทะเบียน
-                  </button>
-                </div>
-              </div>
-              <div class="line"></div>
-              <div class="group-footer">
-                <button type="button" @click="modalRegiter.showModal = false" class="btn button-danger">
-                  <div class="group-name">
-                    <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon"/>
-                    <div class="name">ยกเลิก</div>
-                  </div>
-                </button>
-                <button type="submit" class="btn button-success">
-                  <div class="group-name">
-                  <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
-                    <div class="name">ตกลง</div>
-                  </div>
-                </button>
-              </div>
-            </Form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <cpn-modal-alert  :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
   </div>
 </template>
@@ -510,6 +313,7 @@ export default {
         subject: '',
         booking_register_details: [],
         tag: [],
+        main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
         sendTo: [],
         booking_follows: [],
@@ -540,7 +344,7 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบ`,
-        message: `หนังสือส่งออก ใช่หรือไม่`,
+        message: `บันทึกส่งออก ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -551,7 +355,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือส่งออกสำเร็จแล้ว',
+              title: 'ทำการลบบันทึกส่งออกสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.back()
@@ -1504,6 +1308,31 @@ export default {
           font-weight: bold;
           color: #333;
           margin-bottom: 7px;
+        }
+
+        .add-booking-receive {
+          height: 40px;
+          border: 0;
+          border-radius: 5px;
+          background-color: #007773;
+          font-size: 16px;
+          font-weight: 500;
+          color: #ffffff;
+          margin-left: 15px;
+          padding: 0 8px 0 8px;
+
+          .group-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+
+            .icon-plus {
+              width: 22px;
+              height: 22px;
+              margin-right: 7px;
+            }
+          }
         }
 
         .add-booking-out {
