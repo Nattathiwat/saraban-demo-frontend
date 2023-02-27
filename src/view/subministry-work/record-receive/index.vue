@@ -5,13 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">หนังสือรับเข้า</div>
-            <button type="button" class="add-booking-receive" @click="addClick()">
-              <div class="group-image">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือรับเข้า
-              </div>
-            </button>
+            <div class="name">บันทึกรับเข้า</div>
           </div>
           <div class="group-end">
             <div class="search">
@@ -30,20 +24,21 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขรับ</th>
-                <th class="col3">เลขที่หนังสือ</th>
+                <th class="col2">เลขบันทึกภายใน</th>
+                <th class="col3">ลงวันที่</th>
                 <th class="col4">ชื่อเรื่อง</th>
-                <th class="col5">ชนิด</th>
-                <th class="col6">ลงวันที่</th>
-                <th class="col7">ผู้รับผิดชอบ</th>
-                <th class="col8">สถานะ</th>
+                <th class="col5">หน่วยงานที่ส่งมา</th>
+                <th class="col6">หน่วยงานที่รับ</th>
+                <th class="col7">ชนิด</th>
+                <th class="col8">ผู้รับผิดชอบ</th>
+                <th class="col9">สถานะ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.referBookno}}</td>
+                <td class="col3">{{item.date}}</td>
                 <td class="col4">
                   <div class="group-show none-bg">
                     <span class="span">
@@ -56,7 +51,8 @@
                 </td>
                 <td class="col5">{{item.typename}}</td>
                 <td class="col6">{{item.date}}</td>
-                <td class="col7">
+                <td class="col7">{{item.date}}</td>
+                <td class="col8">
                   <div class="group-show">
                     <span class="span">
                       {{item.response}}
@@ -66,7 +62,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="col8">{{item.statusName}}</td>
+                <td class="col9">{{item.statusName}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="8">ไม่มีข้อมูล</td>
@@ -119,12 +115,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'subministry-work.booking-receive-create',
+        name: 'subministry-work.record-receive-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'subministry-work.booking-receive-edit',
+        name: 'subministry-work.record-receive-edit',
         params: {
           id: item.id,
         },

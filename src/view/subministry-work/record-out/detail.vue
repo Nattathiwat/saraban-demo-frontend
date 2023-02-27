@@ -7,6 +7,11 @@
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
             <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}}</div>
           </div>
+          <button type="button" class="add-booking-out" @click="flagSave=2">
+              <div class="group-image">
+                ออกเลขบันทึกภายใน
+              </div>
+            </button>
         </div>
         <div class="line"></div>
         <Form @submit="on_submit" @invalid-submit="onInvalidSubmit">
@@ -729,7 +734,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'subministry-work.booking-out',
+        name: 'subministry-work.record-out',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -1256,6 +1261,30 @@ export default {
             color: #1a456b;
             font-weight: bold;
             font-size: 18px;
+          }
+        }
+          .add-booking-out {
+          height: 40px;
+          border: 0;
+          border-radius: 5px;
+          background-color: #007773;
+          font-size: 16px;
+          font-weight: 500;
+          color: #ffffff;
+          margin-left: 15px;
+          padding: 0 8px 0 8px;
+
+          .group-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+
+            .icon-plus {
+              width: 22px;
+              height: 22px;
+              margin-right: 7px;
+            }
           }
         }
       }

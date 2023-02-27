@@ -5,19 +5,14 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}}</div>
+            <div class="name">{{edit ? 'แก้ไขบันทึกรับเข้า' : 'สร้างบันทึกรับเข้า'}}</div>
           </div>
         </div>
         <div class="line"></div>
         <Form @submit="on_submit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
-            <div class="group-input">
-              <cpn-checkbox v-model="data.original_flag"
-                            name="original_flag"
-                            label="หนังสือต้นเรื่อง" />
-            </div>
             <div class="group-between">
-              <div class="group-input left">
+              <div class="group-input">
                 <div class="name">ทะเบียนรับ <span class="required">*</span></div>
                 <cpn-select v-model="data.receive_regis_id"
                             name="receive_regis_id"
@@ -25,8 +20,7 @@
                             :optionSelect="optionSelect.receive_regis_id"
                             placeholder="กรุณาระบุ" />
               </div>
-              <div class="group-between">
-                <div class="group-input left">
+              <div class="group-input right-width">
                   <div class="name">วันที่รับหนังสือ <span class="required">*</span></div>
                   <cpn-datepicker v-model="data.receive_date"
                                   name="receive_date"
@@ -34,14 +28,22 @@
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
-                <div class="group-input">
-                  <div class="name">เวลาที่รับหนังสือ <span class="required">*</span></div>
-                  <cpn-time v-model="data.receive_time"
-                            name="receive_time"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
+                <div class="group-input right-width">
+                  <div class="name">วันที่รับหนังสือ <span class="required">*</span></div>
+                  <cpn-datepicker v-model="data.receive_date"
+                                  name="receive_date"
+                                  rules="required"
+                                  :disabled="edit"
+                                  placeholder="กรุณาระบุ" />
                 </div>
-              </div>
+                <div class="group-input right-width">
+                  <div class="name">วันที่รับหนังสือ <span class="required">*</span></div>
+                  <cpn-datepicker v-model="data.receive_date"
+                                  name="receive_date"
+                                  rules="required"
+                                  :disabled="edit"
+                                  placeholder="กรุณาระบุ" />
+                </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
@@ -1038,11 +1040,16 @@ export default {
 
       .group-between {
         display: flex;
-        width: 100%;
+        // width: 100%;
 
         .left {
           margin-right: 30px;
         }
+
+        .right-width {
+          width: 50%;
+        }
+        
       }
 
       .group-input {

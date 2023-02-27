@@ -12,11 +12,11 @@
                 สร้างหนังสือส่งออก
               </div>
             </button>
-            <button type="button" class="add-booking-out" @click="addClick()">
-              <div class="group-image">
+            <div class="d-flex justify-content-end">
+            <button type="button" class="add-booking-out"  @click="add_booking_register_details()">
                 ออกเลขบันทึกภายใน
-              </div>
             </button>
+          </div>
           </div>
           <div class="group-end">
             <div class="search">
@@ -71,6 +71,60 @@
         </div>
       </div>
     </div>
+    
+    <div class="modal-register" v-show="modalRegiter.showModal">
+      <div class="modal-class">
+        <div class="modal-center">
+          <div class="modal-size" ref="modalRegiterref">
+            <Form @submit="on_submit_modal" @invalid-submit="onInvalidSubmit">
+              <div class="modal-title">
+                <div class="title-size">ออกเลขบันทึกภายใน</div> 
+                <i class="bi bi-x-lg icon-close" @click="modalRegiter.showModal = false"></i>
+              </div>
+              <div class="line"></div>
+              <div class="modal-detail">
+                <div class="message" v-for="(item, index) in modalRegiter.booking_register_details" :key="index">
+                  <div class="detail-sub">
+                    <div class="group-between">
+                      <div class="group-input">
+                        <div class="name">ทะเบียนส่ง <span class="required">*</span></div>
+                        <cpn-autoComplete v-model="item.regis_id"
+                                          rules="required"
+                                          :name="`addregis_id${index}`"
+                                          :optionSelect="item.optionSelect.regis_id"  />
+                      </div>
+                    </div>
+                    <div class="group-between">
+                      <div class="group-input">
+                        <div class="name">ลงวันที่ <span class="required">*</span></div>
+                        <cpn-datepicker v-model="item.regis_date"
+                                        rules="required"
+                                        :name="`addregis_date${index}`"/>
+                      </div>
+                    </div>
+                  </div> 
+                </div>
+              </div>
+              <div class="line"></div>
+              <div class="group-footer">
+                <button type="button" @click="modalRegiter.showModal = false" class="btn button-danger">
+                  <div class="group-name">
+                    <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                    <div class="name">ยกเลิก</div>
+                  </div>
+                </button>
+                <button type="submit" class="btn button-success">
+                  <div class="group-name">
+                  <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                    <div class="name">ตกลง</div>
+                  </div>
+                </button>
+              </div>
+            </Form>
+          </div>
+        </div>
+      </div>
+    </div>
     <cpn-modal-alert :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
   </div>
@@ -86,6 +140,9 @@ export default {
         message: ''
       },
       showLoading: false,
+      optionSelectDefault: {
+        regis_id: [],
+      },
       data: {
         search: '',
         table: [],
@@ -101,6 +158,10 @@ export default {
         // booktype:'',
         tag:'',
       },
+      modalRegiter: {
+        showModal: false,
+        booking_register_details: []
+      }
     }
   },
   methods: {
@@ -209,6 +270,128 @@ export default {
           // })
         }
       }
+    },
+    async on_submit_modal() {
+      for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
+        // let item = this.modalRegiter.booking_register_details[i]
+        // let regis_id_desc = ''
+        // let book_out_num_type_desc = ''
+        // let send_method_id_desc = ''
+        // item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_id_desc = item2.name}})
+        // item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_desc = item2.name}})
+        // item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_id_desc = item2.name}})
+        let data = {
+          optionSelect: {
+            signer_id: this.optionSelectDefault.signer_id
+          },
+          book_out_num_type: parseInt(item.book_out_num_type),
+          book_out_num_type_desc: book_out_num_type_desc,
+          send_method_id: parseInt(item.send_method_id),
+          send_method_id_desc: send_method_id_desc,
+          regis_date: item.regis_date,
+          regis_id: parseInt(item.regis_id),
+          regis_id_desc: regis_id_desc,
+          num: '1',
+          signer_id: '',
+          is_signed: false,
+          flag: 'add',
+          main_filename: '',
+          attach_filename: '',
+          booking_registers: []
+        }
+        if (item.department_dest_id.length > 0) {
+          if (item.book_out_num_type == 0) {
+            this.showLoading = true
+            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            .then((response) => {
+              this.showLoading = false
+              item.department_dest_id.filter(item2 => {
+                data.booking_registers.push({
+                  book_out_num: response.data.data.out_document_number,
+                  greeting: '',
+                  department_dest_id: item2.value,
+                  main_filename: '',
+                  attach_filename: '',
+                  signer_id: '',
+                  is_signed: false,
+                  flag: 'add',
+                  optionSelect: {
+                    signer_id: this.optionSelectDefault.signer_id,
+                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
+                  },
+                })
+              })
+            }).catch((error) => {
+              this.showLoading = false
+              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          } else {
+            for (let i = 0; i < item.department_dest_id.length; i++) {
+              let item2 = item.department_dest_id[i]
+              this.showLoading = true
+              await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+              .then((response) => {
+                this.showLoading = false
+                data.booking_registers.push({
+                  book_out_num: response.data.data.out_document_number,
+                  greeting: '',
+                  department_dest_id: item2.value,
+                  main_filename: '',
+                  attach_filename: '',
+                  signer_id: '',
+                  is_signed: false,
+                  flag: 'add',
+                  optionSelect: {
+                    signer_id: this.optionSelectDefault.signer_id,
+                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
+                  },
+                })
+              }).catch((error) => {
+                this.showLoading = false
+                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+            }
+          }
+        } else {
+          this.showLoading = true
+          await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+          .then((response) => {
+            this.showLoading = false
+            data.booking_registers.push({
+              book_out_num: response.data.data.out_document_number,
+              greeting: '',
+              department_dest_id: '',
+              main_filename: '',
+              attach_filename: '',
+              signer_id: '',
+              is_signed: false,
+              flag: 'add',
+              optionSelect: {
+                signer_id: this.optionSelectDefault.signer_id,
+                department_dest_id: this.optionSelectDefault.department_dest_id
+              },
+            })
+          })
+        }
+        // this.data.booking_register_details.push(data)
+      }
+      this.modalRegiter.showModal = false
+    },
+    add_booking_register_details() {
+      this.modalRegiter.showModal = true
+      this.modalRegiter.booking_register_details= [{
+        regis_id: '',
+        regis_date: this.assetsUtils.currentDate(),
+        book_out_num_type: '0',
+        send_method_id: '2',
+        department_dest_id: [],
+        optionSelect: {
+          regis_id: this.optionSelectDefault.regis_id,
+          book_out_num_type: this.optionSelectDefault.book_out_num_type,
+          send_method_id: this.optionSelectDefault.send_method_id,
+          department_dest_id: [],
+        },
+      }]
     },
   },
   mounted() {
@@ -427,4 +610,176 @@ export default {
       }
     }
   }
+  
+    .modal-register {
+      .modal-class {
+        position: fixed;
+        overflow-y: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background-color: rgba(33, 85, 163, 0.16);
+
+        .modal-center {
+          height: 85%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      
+
+          .modal-size {
+            width: 100%;
+            pointer-events: auto;
+            margin: auto;
+            max-width: 1100px;
+            background-color: #ffffffff;
+            border-radius: 15px;
+
+            .line {
+              height: 2px;
+              width: 100%;
+              background-color: #e2ebf7;
+              margin-top: 5px;
+              margin-bottom: 5px;
+            }
+
+            .modal-title {
+              display: flex;
+              justify-content: space-between;
+              padding-top: 25px;
+              margin-bottom: 16px;
+              margin-right: 30px;
+              margin-left: 30px;
+
+              .title-size {
+                font-size: 18px;
+                font-weight: 700;
+                color: #0A1629;
+                margin-top: 5px;
+              }
+
+              .icon-close {
+                font-size: 22px;
+                cursor: pointer;
+              }
+            }
+
+            .modal-detail {
+              padding-top: 20px;
+
+              .button-delete {
+                width: 45px;
+                height: 45px;
+                color: #212529;
+                background-color: #f8f9fa;
+                border-color: #f8f9fa;
+                border: 1px solid transparent;
+                border-radius: 5px;
+
+                .image-trash {
+                  width: 18px;
+                }
+              }
+
+              .message {
+                background-color: rgba(218, 229, 245, 0.84);
+                margin: 0px 23px 20px;
+                padding: 20px 15px;
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                border-radius: 5px;
+
+                .detail-sub {
+                  background-color: #ffffff;
+                  padding: 20px;
+                  border-radius: 5px;
+                  margin-top: 15px;
+
+                  .group-between {
+                    display: flex;
+
+                    .right-width {
+                      width: 50%;
+                    }
+                  }
+
+                  .group-input {
+                    width: 100%;
+                    padding: 0 10px;
+                    margin-bottom: 15px;
+
+                    .name {
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      margin-bottom: 7px;
+                    }
+                  }
+                }
+              }
+
+              .add-register {
+                height: 45px;
+                border-radius: 5px;
+                box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+                border: 0;
+                font-size: 16px;
+                font-weight: 500;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #007773;
+                margin: 20px 23px 20px 0px;
+                padding: 0 18px;
+
+                .icon-plus {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+              }
+            }
+
+            .group-footer {
+              margin-top: 13px;
+              margin-bottom: 15px;
+              text-align: center;
+              display: flex;
+              justify-content: flex-end;
+              padding: 0 30px;
+              
+              button {
+                margin-left: 20px;
+                width: 115px;
+                height: 45px;
+                border-radius: 5px;
+                border: 0;
+              }
+
+              .group-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .image-icon {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+
+                .name {
+                  color: #ffffff;
+                  font-size: 16px;
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 </style>
