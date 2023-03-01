@@ -1,5 +1,5 @@
 <template>
-  <div class="department-inex">
+  <div class="master-file-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -60,7 +60,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-inex',
+  name: 'file-inex',
   data() {
     return {
       modalAlert: {
@@ -75,7 +75,7 @@ export default {
         page: 1,
         total: 0,
         lastPage: 0,
-        perPage: 50,
+        perPage: 10,
       },
     }
   },
@@ -153,7 +153,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .department-inex {
+  .master-file-inex {
     .group-overflow {
       // overflow: auto;
     }

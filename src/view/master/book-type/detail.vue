@@ -1,5 +1,5 @@
 <template>
-  <div class="department-detail">
+  <div class="master-book-type-detail">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -87,7 +87,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-detail',
+  name: 'book-type-detail',
   data() {
     return {
       modalAlert: {
@@ -269,7 +269,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .department-detail {
+  .master-book-type-detail {
     .group-overflow {
       overflow: auto;
     }

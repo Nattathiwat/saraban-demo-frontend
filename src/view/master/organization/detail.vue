@@ -1,5 +1,5 @@
 <template>
-  <div class="department-detail">
+  <div class="master-org-detail">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -235,7 +235,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .department-detail {
+  .master-org-detail {
     .group-overflow {
       overflow: auto;
     }

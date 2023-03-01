@@ -1,5 +1,5 @@
 <template>
-  <div class="department-inex">
+  <div class="master-agency-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -183,7 +183,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .department-inex {
+  .master-agency-inex {
     .group-overflow {
       // overflow: auto;
     }
