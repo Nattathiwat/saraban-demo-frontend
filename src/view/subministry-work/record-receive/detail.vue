@@ -12,32 +12,33 @@
         <Form @submit="on_submit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
-              <div class="group-input">
+              <div class="group-input left">
                 <div class="name">ทะเบียนรับ <span class="required">*</span></div>
                 <cpn-select v-model="data.receive_regis_id"
                             name="receive_regis_id"
                             rules="required"
+                            :disabled="edit"
                             :optionSelect="optionSelect.receive_regis_id"
                             placeholder="กรุณาระบุ" />
               </div>
-              <div class="group-input right-width">
-                  <div class="name">วันที่รับหนังสือ <span class="required">*</span></div>
+              <div class="group-input left">
+                  <div class="name">ลงวันที่ <span class="required">*</span></div>
                   <cpn-datepicker v-model="data.receive_date"
                                   name="receive_date"
                                   rules="required"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
-                <div class="group-input right-width">
-                  <div class="name">วันที่รับหนังสือ <span class="required">*</span></div>
+                <div class="group-input left">
+                  <div class="name">วันที่ส่งมา <span class="required">*</span></div>
                   <cpn-datepicker v-model="data.receive_date"
                                   name="receive_date"
                                   rules="required"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
-                <div class="group-input right-width">
-                  <div class="name">วันที่รับหนังสือ <span class="required">*</span></div>
+                <div class="group-input ">
+                  <div class="name">วันที่กองรับเรื่อง <span class="required">*</span></div>
                   <cpn-datepicker v-model="data.receive_date"
                                   name="receive_date"
                                   rules="required"
@@ -51,70 +52,9 @@
                 <cpn-select v-model="data.book_type_id"
                             name="book_type_id"
                             rules="required"
+                            :disabled="edit"
                             :optionSelect="optionSelect.book_type_id"
                             placeholder="กรุณาระบุ" />
-              </div>
-              <div class="group-between">
-                <div class="group-input left">
-                  <div class="name">เลขที่หนังสือ <span class="required">*</span></div>
-                  <cpn-input v-model="data.document_number"
-                                  name="document_number"
-                                  rules="required"
-                                  :disabled="edit"
-                                  placeholder="กรุณาระบุ" />
-                </div>
-                <div class="group-input">
-                  <div class="name">ลงวันที่ <span class="required">*</span></div>
-                  <cpn-datepicker v-model="data.as_of_date"
-                                  name="as_of_date"
-                                  rules="required"
-                                  :disabled="edit"
-                                  placeholder="กรุณาระบุ" />
-                </div>
-              </div>
-            </div>
-            <div class="group-input d-flex align-items-center">
-              <div class="name">อ้างอิงถึง</div>
-              <button type="button" class="add-booking-receive" @click="add_booking_refers()">
-                <div class="group-image">
-                  <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                  เพิ่มเอกสารอ้างอิง
-                </div>
-              </button>
-            </div>
-            <div class="group-between" v-for="(item, index) in data.booking_refers.filter(el => el.flag != 'delete')" :key="index">
-              <div class="group-input left">
-                <cpn-input  v-model="item.receive_document_number"
-                            :name="`codeRefers${index}`"
-                            type="text"
-                            :searchFlag="true"
-                            @searchClick="booking_refers_click(item)"
-                            placeholder="เลขที่หนังสืออ้างอิง" />
-              </div>
-              <div class="group-input left">
-                <cpn-input  v-model="item.desc"
-                            :name="`nameRefers${index}`"
-                            :disabled="true"
-                            placeholder="ชื่อเรื่อง" />
-              </div>
-              <div class="group-input d-flex">
-                <cpn-datepicker v-model="item.receive_date"
-                                :name="`dateRefers${index}`"
-                                :disabled="true"
-                                placeholder="วันที่รับหนังสือ" />
-                <button type="button" @click="delete_booking_refers(item, index)" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
-              </div>
-            </div>
-            <div class="group-input">
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ชื่อเรื่อง <span class="required">*</span></div>
-                <cpn-textArea v-model="data.subject"
-                              name="subject"
-                              rules="required"
-                              :disabled="edit"
-                              rows="3" />
               </div>
               <div class="group-between">
                 <div class="group-input left">
@@ -137,6 +77,16 @@
                 </div>
               </div>
             </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">ชื่อเรื่อง <span class="required">*</span></div>
+                <cpn-textArea v-model="data.subject"
+                              name="subject"
+                              rules="required"
+                              :disabled="edit"
+                              rows="1" />
+              </div>
+            </div>
             <div class="group-input left">
               <div class="name">เรียน <span class="required">*</span></div>
               <cpn-textArea v-model="data.send_to"
@@ -149,6 +99,7 @@
               <div class="name">รายละเอียดหนังสือ</div>
               <cpn-textArea v-model="data.book_desc"
                             name="book_desc"
+                            :disabled="edit"
                             rows="1" />
             </div>
             <div class="group-input">
@@ -156,69 +107,47 @@
               <cpn-input-tags v-model="data.tag"
                               name="tag" />
             </div>
-          </div>
-          <div class="line"></div>
-          <div class="group-detail" v-for="(item, index) in data.contracts" :key="index">
-            <div class="group-between">
+            <div class="group-input d-flex align-items-center">
+              <div class="name">อ้างอิงถึง</div>
+              <button type="button" class="add-booking-receive" @click="add_booking_refers()" :disabled="edit">
+                <div class="group-image">
+                  <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
+                  เพิ่มเอกสารอ้างอิง
+                </div>
+              </button>
+            </div>
+            <div class="group-between" v-for="(item, index) in data.booking_refers.filter(el => el.flag != 'delete')" :key="index">
               <div class="group-input left">
-                <div class="name">หน่วยงานที่เสนอเรื่อง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="item.department_id"
-                                  :name="`${index}department_id`"
-                                  rules="required"
-                                  :disabled="edit"
-                                  @keyup="keyup_department($event)"
-                                  :optionSelect="optionSelect.department_id" />
-              </div>
-              <div class="group-input">
-                <div class="name">ช่องทางการรับเอกสาร <span class="required">*</span></div>
-                <cpn-select v-model="item.receive_type"
-                            :name="`${index}receive_type`"
-                            rules="required"
+                <cpn-input  v-model="item.receive_document_number"
+                            :name="`codeRefers${index}`"
+                            type="text"
+                            :searchFlag="true"
                             :disabled="edit"
-                            :optionSelect="optionSelect.receive_type" />
+                            @searchClick="booking_refers_click(item)"
+                            placeholder="เลขที่หนังสืออ้างอิง" />
+              </div>
+              <div class="group-input left">
+                <cpn-input  v-model="item.desc"
+                            :name="`nameRefers${index}`"
+                            :disabled="true"
+                            placeholder="ชื่อเรื่อง" />
+              </div>
+              <div class="group-input d-flex">
+                <cpn-datepicker v-model="item.receive_date"
+                                :name="`dateRefers${index}`"
+                                :disabled="true"
+                                placeholder="วันที่รับหนังสือ" />
+                <button type="button" @click="delete_booking_refers(item, index)" class="button-delete ms-3"><img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer"></button>
               </div>
             </div>
-            <div class="group-between" v-if="item.department_id == 1860 || false ">
-              <div class="group-input left">
-                <div class="name">ระบุชื่อหน่วยงานอื่นๆ <span class="required">*</span></div>
-                <cpn-input v-model="item.department_other"
-                                  :name="`${index}department_other`"
-                                  :rules="item.department_id == 1860 ? 'required' : ''"
-                                  :disabled="edit" />
-              </div>
-              <div class="group-input"></div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ผู้ติดต่อ</div>
-                <cpn-input  v-model="item.contract_name"
-                            :name="`${index}contract_name`"
-                            :disabled="edit" />
-              </div>
-              <div class="group-between">
-                <div class="group-input left">
-                  <div class="name">โทรศัพท์</div>
-                  <cpn-input  v-model="item.contract_phone"
-                              :isNumber="true"
-                              maxlength="10"
-                              :name="`${index}contract_phone`"
-                              :disabled="edit" />
-                </div>
-                <div class="group-input">
-                  <div class="name">E-mail</div>
-                  <cpn-input  v-model="item.contract_mail"
-                              rules="email"
-                              :name="`${index}contract_mail`"
-                              :disabled="edit" />
-                </div>
-              </div>
+            <div class="group-input">
             </div>
           </div>
           <div class="line"></div>
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">หนังสือต้นเรื่อง</div>
+                <div class="name">บันทึกต้นเรื่อง</div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
                     <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
@@ -353,7 +282,7 @@
 </template>
 <script>
 export default {
-  name: 'booking-receive-detail',
+  name: 'record-receive-detail',
   data() {
     return {
       modalAlert: {
@@ -492,18 +421,18 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบ`,
-        message: `หนังสือรับเข้า ใช่หรือไม่`,
+        message: `บันทึกรับเข้า ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
+          _this.axios.delete(`/booking-receive/receive-note/${_this.$route.params.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              title: 'ทำการลบบันทึกรับเข้าสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.back()
@@ -756,7 +685,7 @@ export default {
       if (this.edit) {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/receive-note/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -767,7 +696,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/receive-note/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -780,7 +709,7 @@ export default {
       } else {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.post(`/booking-receive`, dataSave)
+          this.axios.post(`/booking-receive/receive-note`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -791,7 +720,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.post(`/booking-receive`, dataSave)
+          this.axios.post(`/booking-receive/receive-note`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -805,7 +734,7 @@ export default {
     },
     api_detail() {
       this.showLoading = true
-      this.axios.get(`/booking-receive/${this.$route.params.id}`, {
+      this.axios.get(`/booking-receive/receive-note/${this.$route.params.id}`, {
         params:{
           book_type : this.$route.query.book_type ,
           regis_id: this.$route.query.regis_id,
@@ -1040,14 +969,10 @@ export default {
 
       .group-between {
         display: flex;
-        // width: 100%;
+        width: 100%;
 
         .left {
           margin-right: 30px;
-        }
-
-        .right-width {
-          width: 50%;
         }
         
       }

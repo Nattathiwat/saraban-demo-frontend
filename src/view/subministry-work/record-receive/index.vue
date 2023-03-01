@@ -49,9 +49,9 @@
                     </div>
                   </div>
                 </td>
-                <td class="col5">{{item.typename}}</td>
-                <td class="col6">{{item.date}}</td>
-                <td class="col7">{{item.date}}</td>
+                <td class="col5">{{item.send_dep}}</td>
+                <td class="col6">{{item.receive_dep}}</td>
+                <td class="col7">{{item.typename}}</td>
                 <td class="col8">
                   <div class="group-show">
                     <span class="span">
@@ -157,7 +157,7 @@ export default {
       // // this.data.total = 1
       
       this.showLoading = true
-      this.axios.get('/booking-receive', {
+      this.axios.get('/booking-receive/receive-note', {
         params: {
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -184,6 +184,8 @@ export default {
             row.date = row.as_of_date
             row.response = row.response_name
             row.statusName = row.status
+            row.send_dep = row.send_department_name
+            row.receive_dep = row.department_receive_name
             this.data.total = row.total
           })
           this.data.table = response.data.data
@@ -200,7 +202,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหนังสือรับเข้า`,
+        title: `คุณยืนยันการลบบันทึกรับเข้า`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
@@ -212,7 +214,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              title: 'ทำการลบบันทึกรับเข้าสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.apigetimport()
