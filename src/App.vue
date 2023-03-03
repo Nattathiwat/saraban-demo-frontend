@@ -14,7 +14,7 @@
             </div>
           </div>
           <div class="group-list-head">
-            <div class="list-navbar-group">
+            <div class="list-navbar-group" v-show="false">
               <div class="list-navbar pointer" :class="$route.name == 'my-work.booking-receive'|| $route.name == 'my-work.booking-receive-create' || $route.name == 'my-work.booking-receive-edit' ||
               $route.name == 'my-work.booking-out'|| $route.name == 'my-work.booking-out-create' || $route.name == 'my-work.booking-out-edit' ||
               $route.name == 'my-work.waiting-booking-receive'|| $route.name == 'my-work.waiting-booking-receive-create' || $route.name == 'my-work.waiting-booking-receive-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'my-work'})">
