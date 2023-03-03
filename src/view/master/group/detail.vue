@@ -49,7 +49,7 @@
                 <cpn-autoComplete v-model="data.submin_id"
                         name="submin_id"
                         type="text"
-                        :optionSelect="optionSelect"
+                        :optionSelect="optionSelect.submin_id"
                         @change="change"
                         placeholder="กรุณาระบุ" /> 
             </div>
@@ -93,10 +93,11 @@ export default {
         code: '',
         group_short_name: '',
         group_name: '',
-        optionSelect:{
-          submin_id:[{name:'1' , value:'1'}]
-        }
+        submin_id: ''
       },
+      optionSelect:{
+          submin_id:[]
+        }
     }
   },
   methods: {
@@ -126,6 +127,7 @@ export default {
                   desc: _this.data.description,
                   name: _this.data.group_name,
                   short_name: _this.data.group_short_name,
+                  submin_id: parseInt(this.data.submin_id),
                 }
                 _this.showLoading = true
                 _this.axios.put(`group/${_this.$route.params.id}`, groupdata)
@@ -142,6 +144,7 @@ export default {
                   desc: _this.data.description,
                   name: _this.data.group_name,
                   short_name: _this.data.group_short_name,
+                  submin_id: parseInt(this.data.submin_id),
                 }
                 _this.showLoading = true
                 _this.axios.post(`/group`, groupdata)
@@ -171,6 +174,31 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    api_master() {
+      this.showLoading = true
+
+      this.axios.get('/subministry')
+      .then((response1) =>  {
+        this.showLoading = false;
+        
+        response1.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.Name
+          return item
+        })
+        this.optionSelect.submin_id = response1.data.data
+
+        if (this.$route.params.id) {
+          this.edit = true
+          this.api_detail()
+        } else {
+          this.edit = false
+        }
+      }).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    }
   },
   mounted () {
     if (this.$route.params.id) {
@@ -179,6 +207,7 @@ export default {
     } else {
       this.edit = false
     }
+    this.api_master()
   }
 }
 

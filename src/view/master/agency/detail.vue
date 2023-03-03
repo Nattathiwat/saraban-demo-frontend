@@ -140,8 +140,7 @@ export default {
               code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
-              filename: _this.data.filename,
-              filepath: _this.data.filepath
+              org_id: parseInt(this.data.org_id),
             }
             _this.showLoading = true
             _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
@@ -182,8 +181,6 @@ export default {
         this.data.code = response.data.data.code
         this.data.department_short_name = response.data.data.department_short_name
         this.data.department_full_name = response.data.data.department_full_name
-        this.data.filename = response.data.data.filename
-        this.data.filepath = response.data.data.filepath
       })
       .catch((error) => {
         this.showLoading = false
@@ -223,7 +220,7 @@ export default {
     } else {
       this.edit = false
     }
-    // this.api_master()
+    this.api_master()
   }
 }
 

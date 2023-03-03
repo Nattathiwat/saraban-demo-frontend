@@ -30,12 +30,10 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.code}}</td>
-                <td class="col2">{{item.department_short_name}}</td>
-                <td class="col3"><cpn-toggleSwitch v-model="input11"
-                                          name="input11"
-                                          :disabled="false"
-                                          @change="change" />
+                <td class="col1">{{item.name}}</td>
+                <td class="col2">{{item.file_type}}</td>
+                <td class="col3"><cpn-toggleSwitch  v-model="data.activate"
+                                                    name="file_activate" />
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
@@ -76,6 +74,7 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 10,
+        activate: true
       },
     }
   },
@@ -94,7 +93,7 @@ export default {
     apiDepartment() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/department', {
+      this.axios.get('/filetype', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -113,37 +112,6 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    },
-    deleteClick(data) {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบหน่วยงาน`,
-        message: `“${data.name}” ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          _this.showLoading = true
-          _this.axios.delete(`/department/${data.id}`)
-          .then(() => { 
-            _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบหน่วยงานสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apiDepartment()
-              }
-            }
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      }
     },
   },
   mounted() {
