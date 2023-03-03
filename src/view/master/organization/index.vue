@@ -36,8 +36,8 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.code}}</td>
-                <td class="col2">{{item.department_short_name}}</td>
+                <td class="col1">{{item.name}}</td>
+                <td class="col2">{{item.created_at}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -116,7 +116,7 @@ export default {
     apiDepartment() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/department', {
+      this.axios.get('/organization', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -147,7 +147,7 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/department/${data.id}`)
+          _this.axios.delete(`/organization/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
@@ -177,7 +177,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .department-inex {
+   .master-org-inex{
     .master-org-overflow {
       // overflow: auto;
     }

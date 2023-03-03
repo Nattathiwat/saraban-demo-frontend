@@ -44,20 +44,20 @@
               </div>
               <div class="group-input">
                 <div class="name">กระทรวง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="department_short_nameinput3"
-                            name="department_short_name"
+                <cpn-autoComplete v-model="data.org_id"
+                            name="org_id"
                             rules="required"
                             placeholder="กรุณาระบุ"
                             type="text"
-                            :optionSelect="optionSelect2"
+                            :optionSelect="optionSelect.org_id"
                             @change="change"/>
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="input4"
-                            name="input4"
+                <cpn-textArea v-model="data.description"
+                            name="description"
                             rows="4"
                             placeholder="กรุณาระบุ"  />
               </div>
@@ -101,31 +101,15 @@ export default {
         code: '',
         department_short_name: '',
         department_full_name: '',
-        filename: '',
-        filepath: '',
+        description: '',
+        org_id:''
       },
+      optionSelect: {
+          org_id: []
+        }
     }
   },
   methods: {
-    upload_file(data) {
-      document.querySelector(`[name="${data}"]`).click()
-    },
-    file_change(data) {
-      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-        let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type.split('image').length > 1) {
-          let dataFile = {
-            filename: file.name,
-            type: file.type,
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
-          }
-          this.data = {...this.data, ...dataFile}
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
-      }
-    },
     back() {
       this.$router.push({ 
         name: 'agency',
@@ -151,92 +135,41 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.data.file) {
-            let formDataFile = new FormData();
-            formDataFile.append('file', _this.data.file);
-            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-            _this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-            .then((responses) => {
-              _this.data.filepath = responses.data.data.path
-              if (_this.edit) {
-                let groupdata = {
-                  code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
-                }
-                _this.showLoading = true
-                _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-                .then(() => { 
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-                })
-                .catch((error) => {
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-                })
-              } else {
-                let groupdata = {
-                  code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
-                }
-                _this.showLoading = true
-                _this.axios.post(`/department`, groupdata)
-                .then(() => { 
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-                })
-                .catch((error) => {
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-                })
-              }
-            }).catch((error) => {
+          if (_this.edit) {
+            let groupdata = {
+              code: _this.data.code,
+              department_full_name: _this.data.department_full_name,
+              department_short_name: _this.data.department_short_name,
+              filename: _this.data.filename,
+              filepath: _this.data.filepath
+            }
+            _this.showLoading = true
+            _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
               _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
-            if (_this.edit) {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            } else {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.post(`/department`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
+            let groupdata = {
+              code: _this.data.code,
+              department_full_name: _this.data.department_full_name,
+              department_short_name: _this.data.department_short_name,
+              org_id: parseInt(this.data.org_id),
             }
+            _this.showLoading = true
+            _this.axios.post(`/department`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           }
         }
       }
@@ -257,6 +190,31 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    api_master() {
+      this.showLoading = true
+
+      this.axios.get('/organization')
+      .then((response1) =>  {
+        this.showLoading = false;
+        
+        response1.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.name
+          return item
+        })
+        this.optionSelect.org_id = response1.data.data
+
+        if (this.$route.params.id) {
+          this.edit = true
+          this.api_detail()
+        } else {
+          this.edit = false
+        }
+      }).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    }
   },
   mounted () {
     if (this.$route.params.id) {
@@ -265,6 +223,7 @@ export default {
     } else {
       this.edit = false
     }
+    // this.api_master()
   }
 }
 

@@ -20,34 +20,36 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">รหัสกลุ่ม<span class="required">*</span></div>
-                <cpn-input  v-model="data.code"
-                            name="department_id"
+                <div class="name">ชื่อย่อกลุ่ม <span class="required">*</span></div>
+                <cpn-input  v-model="data.group_short_name"
+                            name="group_short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อย่อกลุ่ม <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_short_name"
-                            name="department_short_name"
+                <div class="name">ชื่อกลุ่ม <span class="required">*</span></div>
+                <cpn-input  v-model="data.group_name"
+                            name="group_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อกลุ่ม <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
+                <div class="name">รายละเอียด</div>
+                <cpn-textArea v-model="data.description"
+                    name="group_description"
+                    class=""
+                    style=""
+                    rows="4"
+                    placeholder="กรุณาระบุ"  />
               </div>
               <div class="group-input">
               <div class="name">กอง<span class="required">*</span></div>
-                <cpn-autoComplete v-model="input3"
-                        name="input3"
+                <cpn-autoComplete v-model="data.submin_id"
+                        name="submin_id"
                         type="text"
-                        :optionSelect="optionSelect2"
+                        :optionSelect="optionSelect"
                         @change="change"
                         placeholder="กรุณาระบุ" /> 
             </div>
@@ -62,7 +64,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" :disabled="!data.filename">
+              <button type="submit" class="button-success">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 {{edit ? 'ยืนยันแก้ไขกลุ่ม' : 'ยืนยันสร้างกลุ่ม'}}
               </button>
@@ -89,33 +91,15 @@ export default {
       edit: false,
       data: {
         code: '',
-        department_short_name: '',
-        department_full_name: '',
-        filename: '',
-        filepath: '',
+        group_short_name: '',
+        group_name: '',
+        optionSelect:{
+          submin_id:[{name:'1' , value:'1'}]
+        }
       },
     }
   },
   methods: {
-    upload_file(data) {
-      document.querySelector(`[name="${data}"]`).click()
-    },
-    file_change(data) {
-      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-        let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type.split('image').length > 1) {
-          let dataFile = {
-            filename: file.name,
-            type: file.type,
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
-          }
-          this.data = {...this.data, ...dataFile}
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
-      }
-    },
     back() {
       this.$router.push({ 
         name: 'group',
@@ -123,9 +107,9 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.code = ''
-      this.data.department_short_name = ''
-      this.data.department_full_name = ''
+      this.data.description = ''
+      this.data.group_short_name = ''
+      this.data.group_name = ''
     },
     onSubmit() {
       let currentDate = this.assetsUtils.currentDate()
@@ -137,23 +121,14 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.data.file) {
-            let formDataFile = new FormData();
-            formDataFile.append('file', _this.data.file);
-            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-            _this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-            .then((responses) => {
-              _this.data.filepath = responses.data.data.path
               if (_this.edit) {
                 let groupdata = {
-                  code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
+                  desc: _this.data.description,
+                  name: _this.data.group_name,
+                  short_name: _this.data.group_short_name,
                 }
                 _this.showLoading = true
-                _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+                _this.axios.put(`group/${_this.$route.params.id}`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
                   _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -164,14 +139,12 @@ export default {
                 })
               } else {
                 let groupdata = {
-                  code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
+                  desc: _this.data.description,
+                  name: _this.data.group_name,
+                  short_name: _this.data.group_short_name,
                 }
                 _this.showLoading = true
-                _this.axios.post(`/department`, groupdata)
+                _this.axios.post(`/group`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
                   _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -181,62 +154,17 @@ export default {
                   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
                 })
               }
-            }).catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            if (_this.edit) {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            } else {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.post(`/department`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            }
-          }
         }
       }
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/department/${this.$route.params.id}`)
+      this.axios.get(`/group/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.code = response.data.data.code
-        this.data.department_short_name = response.data.data.department_short_name
-        this.data.department_full_name = response.data.data.department_full_name
-        this.data.filename = response.data.data.filename
-        this.data.filepath = response.data.data.filepath
+        this.data.desc = response.data.data.description
+        this.data.group_short_name = response.data.data.group_short_name
+        this.data.name = response.data.data.group_name
       })
       .catch((error) => {
         this.showLoading = false

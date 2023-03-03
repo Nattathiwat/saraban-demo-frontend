@@ -27,9 +27,9 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">เปิด/ปิด การใช้งาน<span class="required">*</span></div>
-                <cpn-toggleSwitch v-model="input11"
-                            name="input11"
+                <div class="name">เปิด/ปิด การใช้งาน</div>
+                <cpn-toggleSwitch v-model="data.activate"
+                            name="activate"
                             :disabled="false"
                             @change="change" />
               </div>
@@ -37,24 +37,23 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อชนิดหนังสือ<span class="required">*</span></div>
-                <cpn-input  v-model="data.department_short_name"
-                            name="department_short_name"
+                <cpn-input  v-model="data.book_type_name"
+                            name="book_type_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ทะเบียน <span class="required">*</span></div>
-                <cpn-autoComplete v-model="input3"
+                <cpn-select v-model="data.book_type_record"
                             name="book_type_record"
-                            :optionSelect="optionSelect2"
-                            @keyup="keyupDepartment($event)"
+                            :optionSelect="data.optionSelect.book_type_record"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="input4"
+                <cpn-textArea v-model="data.description"
                     name="book-type_description"
                     class=""
                     style=""
@@ -72,7 +71,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" :disabled="!data.filename">
+              <button type="submit" class="button-success" >
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 {{edit ? 'ยืนยันแก้ไขชนิดหนังสือ' : 'ยืนยันสร้างชนิดหนังสือ'}}
               </button>
@@ -99,36 +98,15 @@ export default {
       edit: false,
       data: {
         code: '',
-        department_short_name: '',
-        department_full_name: '',
-        filename: '',
-        filepath: '',
+        book_type_name: '',
+        description: '',
         optionSelect: {
-          book_type_record: [{name:'สำนักงานเลขาธิการ', value: 'สำนักงานเลขาธิการ'}]
+          book_type_record: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
         }
       },
     }
   },
   methods: {
-    upload_file(data) {
-      document.querySelector(`[name="${data}"]`).click()
-    },
-    file_change(data) {
-      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-        let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type.split('image').length > 1) {
-          let dataFile = {
-            filename: file.name,
-            type: file.type,
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
-          }
-          this.data = {...this.data, ...dataFile}
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
-      }
-    },
     back() {
       this.$router.push({ 
         name: 'book-type',
@@ -137,8 +115,8 @@ export default {
     cancelClick() {
       this.back()
       this.data.code = ''
-      this.data.department_short_name = ''
-      this.data.department_full_name = ''
+      this.data.book_type_name = ''
+      this.data.description = ''
     },
     onSubmit() {
       let currentDate = this.assetsUtils.currentDate()
@@ -146,30 +124,22 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขชนิดหนังสือ' : 'สร้างชนิดหนังสือ'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.data.file) {
-            let formDataFile = new FormData();
-            formDataFile.append('file', _this.data.file);
-            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-            _this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-            .then((responses) => {
-              _this.data.filepath = responses.data.data.path
-              if (_this.edit) {
+          if (_this.edit) {
                 let groupdata = {
                   code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
+                  name: _this.data.book_type_name,
+                  desc: _this.data.description,
+                  type: _this.data.book_type_record
                 }
                 _this.showLoading = true
-                _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+                _this.axios.put(`/booktype/${_this.$route.params.id}`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขชนิดหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
@@ -178,78 +148,33 @@ export default {
               } else {
                 let groupdata = {
                   code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
+                  name: _this.data.book_type_name,
+                  desc: _this.data.description,
+                  type: _this.data.book_type_record
                 }
                 _this.showLoading = true
-                _this.axios.post(`/department`, groupdata)
+                _this.axios.post(`/booktype`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างชนิดหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
                 })
                 .catch((error) => {
                   _this.showLoading = false
                   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
                 })
               }
-            }).catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            if (_this.edit) {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            } else {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.post(`/department`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            }
-          }
         }
       }
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/department/${this.$route.params.id}`)
+      this.axios.get(`/booktype/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
         this.data.code = response.data.data.code
-        this.data.department_short_name = response.data.data.department_short_name
-        this.data.department_full_name = response.data.data.department_full_name
-        this.data.filename = response.data.data.filename
-        this.data.filepath = response.data.data.filepath
+        this.data.name = response.data.data.book_type_name
+        this.data.desc = response.data.data.description
+        this.data.type = response.data.book_type_record
       })
       .catch((error) => {
         this.showLoading = false

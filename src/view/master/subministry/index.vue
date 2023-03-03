@@ -40,10 +40,10 @@
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.code}}</td>
-                <td class="col2">{{item.department_short_name}}</td>
-                <td class="col3">{{item.department_full_name}}</td>
-                <td class="col4">{{item.department_full_name}}</td>
-                <td class="col5">{{item.department_full_name}}</td>
+                <td class="col2">{{item.short_name}}</td>
+                <td class="col3">{{item.Name}}</td>
+                <td class="col4">{{item.desc}}</td>
+                <td class="col5">{{item.created_at}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -118,7 +118,7 @@ export default {
     apiDepartment() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/department', {
+      this.axios.get('/subministry', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -143,19 +143,19 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหน่วยงาน`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        title: `คุณยืนยันการลบกอง`,
+        message: `“${data.Name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/department/${data.id}`)
+          _this.axios.delete(`/subministry/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหน่วยงานสำเร็จแล้ว',
+              title: 'ทำการลบกองสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.apiDepartment()

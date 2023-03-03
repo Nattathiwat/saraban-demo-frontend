@@ -43,7 +43,7 @@
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
                 <td class="col4">{{item.department_short_name}}</td>
-                <td class="col5">{{item.department_full_name}}</td>
+                <td class="col5">{{item.organization_name}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">

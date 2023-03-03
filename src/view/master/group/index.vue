@@ -29,19 +29,21 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">รหัสกลุ่ม</th>
-                <th class="col2">ชื่อย่อกลุ่ม</th>
-                <th class="col3">ชื่อกลุ่ม</th>
+                <th class="col1">ชื่อย่อกลุ่ม</th>
+                <th class="col2">ชื่อกลุ่ม</th>
+                <th class="col3">รายละเอียด</th>
                 <th class="col4">กอง</th>
+                <th class="col4">วันที่สร้าง</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.code}}</td>
-                <td class="col2">{{item.department_short_name}}</td>
-                <td class="col3">{{item.department_full_name}}</td>
-                <td class="col4">{{item.department_full_name}}</td>
+                <td class="col1">{{item.short_name}}</td>
+                <td class="col2">{{item.name}}</td>
+                <td class="col3">{{item.desc}}</td>
+                <td class="col4">{{item.subministry_name}}</td>
+                <td class="col5">{{item.created_at}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
@@ -116,7 +118,7 @@ export default {
     apiDepartment() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/department', {
+      this.axios.get('/group', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -147,7 +149,7 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/department/${data.id}`)
+          _this.axios.delete(`/group/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {

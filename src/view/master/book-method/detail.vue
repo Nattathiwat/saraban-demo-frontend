@@ -21,24 +21,24 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อรูปแบบการรับ-ส่งหนังสือ <span class="required">*</span></div>
-                <cpn-input  v-model="data.code"
-                            name="department_id"
+                <cpn-input  v-model="data.book_method_name"
+                            name="book_method_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
-              </div>
+              </div>              
               <div class="group-input">
-                <div class="name">ประเภทหนังสือ <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
-                            rules="required"
+                <div class="name">ประเภทหนังสือ<span class="required">*</span></div>
+                <cpn-select v-model="data.book_method_record"
+                            name="book_method_record"
+                            :optionSelect="data.optionSelect.book_method_record"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด </div>
-                <cpn-textArea v-model="input4"
-                            name="input4"
+                <cpn-textArea v-model="data.description"
+                            name="book_method_description"
                             rows="4"
                             placeholder="กรุณาระบุ"  />
               </div>
@@ -80,33 +80,15 @@ export default {
       edit: false,
       data: {
         code: '',
-        department_short_name: '',
-        department_full_name: '',
-        filename: '',
-        filepath: '',
+        book_method_name: '',
+        description: '',
+        optionSelect: {
+          book_method_record: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
+        }
       },
     }
   },
   methods: {
-    upload_file(data) {
-      document.querySelector(`[name="${data}"]`).click()
-    },
-    file_change(data) {
-      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-        let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type.split('image').length > 1) {
-          let dataFile = {
-            filename: file.name,
-            type: file.type,
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
-          }
-          this.data = {...this.data, ...dataFile}
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
-      }
-    },
     back() {
       this.$router.push({ 
         name: 'book-method',
@@ -118,9 +100,9 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.code = ''
-      this.data.department_short_name = ''
-      this.data.department_full_name = ''
+      this.data.book_method_name = ''
+      this.data.book_method_record = ''
+      this.data.description = ''
     },
     onSubmit() {
       let currentDate = this.assetsUtils.currentDate()
@@ -128,110 +110,54 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขหน่วยงาน' : 'สร้างหน่วยงาน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขรูปแบบการรับ-ส่งหนังสือ' : 'สร้างรูปแบบการรับ-ส่งหนังสือ'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.data.file) {
-            let formDataFile = new FormData();
-            formDataFile.append('file', _this.data.file);
-            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-            _this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-            .then((responses) => {
-              _this.data.filepath = responses.data.data.path
-              if (_this.edit) {
-                let groupdata = {
-                  code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
-                }
-                _this.showLoading = true
-                _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-                .then(() => { 
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-                })
-                .catch((error) => {
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-                })
-              } else {
-                let groupdata = {
-                  code: _this.data.code,
-                  department_full_name: _this.data.department_full_name,
-                  department_short_name: _this.data.department_short_name,
-                  filename: _this.data.filename,
-                  filepath: _this.data.filepath
-                }
-                _this.showLoading = true
-                _this.axios.post(`/department`, groupdata)
-                .then(() => { 
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-                })
-                .catch((error) => {
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-                })
-              }
-            }).catch((error) => {
+          if (_this.edit) {
+            let groupdata = {
+              name: _this.data.book_method_name,
+              type: _this.data.book_method_record,
+              desc: _this.data.description
+            }
+            _this.showLoading = true
+            _this.axios.put(`/bookmethod/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
               _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
-            if (_this.edit) {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            } else {
-              let groupdata = {
-                code: _this.data.code,
-                department_full_name: _this.data.department_full_name,
-                department_short_name: _this.data.department_short_name,
-                filename: _this.data.filename,
-                filepath: _this.data.filepath
-              }
-              _this.showLoading = true
-              _this.axios.post(`/department`, groupdata)
-              .then(() => { 
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-              })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
+            let groupdata = {
+              name: _this.data.book_method_name,
+              type: _this.data.book_method_record,
+              desc: _this.data.description
             }
+            _this.showLoading = true
+            _this.axios.post(`/bookmethod`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           }
         }
       }
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/department/${this.$route.params.id}`)
+      this.axios.get(`/bookmethod/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.code = response.data.data.code
-        this.data.department_short_name = response.data.data.department_short_name
-        this.data.department_full_name = response.data.data.department_full_name
-        this.data.filename = response.data.data.filename
-        this.data.filepath = response.data.data.filepath
+        this.data.name = response.data.data.book_method_name
+        this.data.type = response.data.data.book_method_record
+        this.data.desc = response.data.data.description
       })
       .catch((error) => {
         this.showLoading = false
