@@ -127,7 +127,7 @@ export default {
                   desc: _this.data.description,
                   name: _this.data.group_name,
                   short_name: _this.data.group_short_name,
-                  submin_id: parseInt(this.data.submin_id),
+                  subministry_id: _this.data.submin_id
                 }
                 _this.showLoading = true
                 _this.axios.put(`group/${_this.$route.params.id}`, groupdata)
@@ -144,7 +144,7 @@ export default {
                   desc: _this.data.description,
                   name: _this.data.group_name,
                   short_name: _this.data.group_short_name,
-                  submin_id: parseInt(this.data.submin_id),
+                  subministry_id: _this.data.submin_id
                 }
                 _this.showLoading = true
                 _this.axios.post(`/group`, groupdata)
@@ -168,6 +168,7 @@ export default {
         this.data.desc = response.data.data.description
         this.data.group_short_name = response.data.data.group_short_name
         this.data.name = response.data.data.group_name
+        this.data.subministry_id = response.data.data.submin_id
       })
       .catch((error) => {
         this.showLoading = false

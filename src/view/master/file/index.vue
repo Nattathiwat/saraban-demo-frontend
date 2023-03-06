@@ -32,7 +32,7 @@
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.name}}</td>
                 <td class="col2">{{item.file_type}}</td>
-                <td class="col3"><cpn-toggleSwitch  v-model="data.activate"
+                <td class="col3"><cpn-toggleSwitch  v-model="item.activate"
                                                     name="file_activate" />
                 </td>
               </tr>
@@ -104,6 +104,8 @@ export default {
         this.showLoading = false
         response.data.data.filter(row => {
           this.data.total = row.total
+          row.activate = row.activate == 1
+          return row
         })
         this.data.table = response.data.data
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)

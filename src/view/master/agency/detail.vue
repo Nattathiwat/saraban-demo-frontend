@@ -140,7 +140,7 @@ export default {
               code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
-              org_id: parseInt(this.data.org_id),
+              organization_id: _this.data.org_id
             }
             _this.showLoading = true
             _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
@@ -157,7 +157,7 @@ export default {
               code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
-              org_id: parseInt(this.data.org_id),
+              organization_id: _this.data.org_id
             }
             _this.showLoading = true
             _this.axios.post(`/department`, groupdata)
@@ -181,6 +181,7 @@ export default {
         this.data.code = response.data.data.code
         this.data.department_short_name = response.data.data.department_short_name
         this.data.department_full_name = response.data.data.department_full_name
+        this.data.organization_id = response.data.data.org_id
       })
       .catch((error) => {
         this.showLoading = false
