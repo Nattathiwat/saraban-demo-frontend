@@ -115,24 +115,24 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    // apiupdate() {
-    //   let groupdata = {
-    //           code: _this.data.code,
-    //           department_full_name: _this.data.department_full_name,
-    //           department_short_name: _this.data.department_short_name,
-    //           organization_id: _this.data.org_id
-    //         }
-    //         _this.showLoading = true
-    //         _this.axios.put(`/filetype/${_this.$route.params.id}`, groupdata)
-    //         .then(() => { 
-    //           _this.showLoading = false
-    //           _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-    //         })
-    //         .catch((error) => {
-    //           _this.showLoading = false
-    //           _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //         })
-    // }
+    apiupdate() {
+      // let groupdata = {
+      //         code: _this.data.code,
+      //         department_full_name: _this.data.department_full_name,
+      //         department_short_name: _this.data.department_short_name,
+      //         organization_id: _this.data.org_id
+      //       }
+            _this.showLoading = true
+            _this.axios.put(`/filetype`) 
+            .then(() => { 
+              _this.showLoading = false
+              // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+    }
   },
   mounted() {
     this.apiFileType()

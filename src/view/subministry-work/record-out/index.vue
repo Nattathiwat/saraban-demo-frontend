@@ -1,5 +1,5 @@
 <template>
-  <div class="booking-out-inex">
+  <div class="record-out-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -46,14 +46,14 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNoN}}</td>
-                <td class="col3">{{item.bookingSubject}}</td>
+                <td class="col1">{{item.speed_name}}</td>
+                <td class="col2">{{item.booking_note_number}}</td>
+                <td class="col3">{{item.subject}}</td>
                 <td class="col4">{{item.department_name}}</td>
-                <td class="col5">{{item.date}}</td>
-                <td class="col6">{{item.typename}}</td>
-                <td class="col7">{{item.prepareBy}}</td>
-                <td class="col8">{{item.statusName}}</td>
+                <td class="col5">{{item.created_at}}</td>
+                <td class="col6">{{item.book_type}}</td>
+                <td class="col7">{{item.creater_name}}</td>
+                <td class="col8">{{item.status_name}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="8">ไม่มีข้อมูล</td>
@@ -88,10 +88,10 @@
                     <div class="group-between">
                       <div class="group-input">
                         <div class="name">ทะเบียนส่ง <span class="required">*</span></div>
-                        <cpn-autoComplete v-model="item.regis_id"
-                                          rules="required"
-                                          :name="`addregis_id${index}`"
-                                          :optionSelect="item.optionSelect.regis_id"  />
+                        <cpn-select v-model="data.sending"
+                                    name="input2"
+                                    rules="required"
+                                    :optionSelect="data.optionSelect.sending" />
                       </div>
                     </div>
                     <div class="group-between">
@@ -157,6 +157,9 @@ export default {
         // as_of_date_end:'',
         // booktype:'',
         tag:'',
+        optionSelect:{
+          sending: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
+        },
       },
       modalRegiter: {
         showModal: false,
@@ -172,7 +175,7 @@ export default {
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'subministry-work.booking-out-edit',
+        name: 'subministry-work.record-out-edit',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -183,7 +186,7 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apigetexport()      
+      this.apirecordout()      
     },
     search() {
       this.data.status = true
@@ -198,15 +201,16 @@ export default {
       this.data.tag = ''
       this.apigetexport()
     },
-    apigetexport() {
+    apirecordout() {
       this.data.table = []
       
       this.showLoading = true
-      this.axios.get('/booking-out', {
+      this.axios.get('/booking-note', {
         params: {
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
+          // user_id: 2,
           user_id: localStorage.getItem('user_id'),
           // desc: this.data.desc,
           // receive_date_str: this.data.receive_date_str,
@@ -221,14 +225,6 @@ export default {
         this.showLoading = false
         if (response.data.data ) {
           response.data.data.filter(row => {
-            row.speedName = row.speed_name
-            row.bookingNoN = row.book_out_num
-            row.bookingSubject = row.subject
-            row.department_name = row.department_name
-            row.date = row.regis_date
-            row.typename = row.book_type_name
-            row.prepareBy = row.creater_name
-            row.statusName = row.status_name
             this.data.total = row.total
           })
           this.data.table = response.data.data
@@ -239,37 +235,6 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    },
-    deleteClick(data) {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบหนังสือส่งออก`,
-        message: `“${data.name}” ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          // _this.showLoading = true
-          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
-          // .then(() => { 
-          //   _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบหนังสือส่งออกสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apigetexport()
-              }
-            }
-          // })
-          // .catch((error) => {
-          //   _this.showLoading = false
-          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          // })
-        }
-      }
     },
     async on_submit_modal() {
       for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
@@ -302,7 +267,7 @@ export default {
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            await this.axios.post(`/booking-note`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
             .then((response) => {
               this.showLoading = false
               item.department_dest_id.filter(item2 => {
@@ -329,7 +294,7 @@ export default {
             for (let i = 0; i < item.department_dest_id.length; i++) {
               let item2 = item.department_dest_id[i]
               this.showLoading = true
-              await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+              await this.axios.post(`/booking-note`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
               .then((response) => {
                 this.showLoading = false
                 data.booking_registers.push({
@@ -354,7 +319,7 @@ export default {
           }
         } else {
           this.showLoading = true
-          await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+          await this.axios.post(`/booking-note`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
           .then((response) => {
             this.showLoading = false
             data.booking_registers.push({
@@ -397,13 +362,13 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apigetexport()
+    this.apirecordout()
   },
 }
 
 </script>
 <style lang="scss">
-  .booking-out-inex {
+  .record-out-inex {
     .group-overflow {
       // overflow: auto;
     }
