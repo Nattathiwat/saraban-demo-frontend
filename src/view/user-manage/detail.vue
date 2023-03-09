@@ -72,22 +72,24 @@
               </div>
             </div>
           </div>
-          <div class="group-level">
+          <div class="group-level" v-show="data.optionSelect.roles.length > 0">
             <div class="level-first">
               <img src="@/assets/images/icon/crown-duotone.svg" alt="" class="icon-crown">
               <div class="name">สิทธิ์ <span class="required">*</span></div>
             </div>
             <div class="level-button">
-              <button type="button" class="button-admin" v-bind:class="data.level == 1 ? 'active' : ''" @click="levelClick(1)">
-                <div class="group-user">
-                  <img v-show="data.level == 1" src="@/assets/images/icon/user-crown-duotoneffffff.svg" alt="" class="icon-user-crown">
-                  <img v-show="data.level != 1" src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
-                  User Admin
-                </div>
-              </button>
-              <button type="button" class="button-user" v-bind:class="data.level == 2 ? 'active' : ''" @click="levelClick(2)">
-                User
-              </button>
+              <div v-for="(item, index) in data.optionSelect.roles" :key="index">
+                <button v-if="item.id == 1" type="button" class="button-admin" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check">
+                  <div class="group-user">
+                    <img v-if="item.check" src="@/assets/images/icon/user-crown-duotoneffffff.svg" alt="" class="icon-user-crown">
+                    <img v-else src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
+                    {{item.desc}}
+                  </div>
+                </button>
+                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check">
+                  {{item.desc}}
+                </button>
+              </div>
             </div>
           </div>
           <div class="line"></div>
@@ -132,10 +134,11 @@ export default {
         password: '',
         email: '',
         department_id: '',
-        level:  2,
+        level: [],
         birthdate:'',
         optionSelect: {
-          department: [{name:'สำนักงานเลขาธิการ', value: 'สำนักงานเลขาธิการ'}]
+          department: [],
+          roles: []
         }
       },
     }
@@ -162,9 +165,6 @@ export default {
         }
       })
     },
-    levelClick(data) {
-      this.data.level = data
-    },
     back() {
       this.$router.push({ 
         name: 'user-manage',
@@ -180,7 +180,7 @@ export default {
       this.data.password = ''
       this.data.email = ''
       this.data.department_id = ''
-      this.data.level = 2
+      this.data.level = []
       this.data.birthdate = ''
     },
     onSubmit() {
@@ -192,6 +192,15 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
+          let roles = []
+          _this.data.level.filter(item => {
+            item.flag = 'delete'
+            roles.push(item)
+          })
+          _this.data.optionSelect.roles.filter(item => {
+            item.flag = 'add'
+            item.check ? roles.push(item) : ''
+          })
           if (_this.edit) {
             let groupdata = {
               "fname": _this.data.fname,
@@ -200,7 +209,7 @@ export default {
               "department_id": parseInt(_this.data.department_id),
               "username": _this.data.username,
               "password": _this.data.password,
-              "role_id":_this.data.level,
+              "roles": roles,
               "birthdate":_this.data.birthdate,
             }
             _this.showLoading = true
@@ -221,7 +230,7 @@ export default {
               "department_id": parseInt(_this.data.department_id),
               "username": _this.data.username,
               "password": _this.data.password,
-              "role_id": _this.data.level,
+              "roles": roles,
               "birthdate":_this.data.birthdate,
             }
             _this.showLoading = true
@@ -250,7 +259,16 @@ export default {
         this.data.email = response.data.data.email
         this.data.department_id = response.data.data.department_id
         this.data.birthdate = response.data.data.birthdate
-        this.data.level = response.data.data.role_id
+        this.data.level = response.data.data.roles
+
+        this.data.optionSelect.roles.filter(item2 => {
+          item2.check = false 
+          response.data.data.roles.filter(item => {
+            if (item.role_id == item2.role_id) {
+              item2.check = true 
+            }
+          })
+        })
       })
       .catch((error) => {
         this.showLoading = false
@@ -259,23 +277,36 @@ export default {
     },
     apiMaster() {
       this.showLoading = true
-      this.axios.get(`/master-data/department`)
-      .then((response) => { 
+      const request1 = this.axios.get(`/master-data/department`)
+      const request2 = this.axios.get(`/master-data/role`)
+
+      this.axios.all([request1, request2])
+      .then(this.axios.spread((...responses) => {
         this.showLoading = false
-        response.data.data.filter(row => {
+        const response1 = responses[0]
+        const response2 = responses[1]
+        
+        response1.data.data.filter(row => {
           row.value = row.id
           row.name = row.department_full_name
           return row
         })
-        this.data.optionSelect.department = response.data.data
+
+        response2.data.data.filter(row => {
+          row.role_id = row.id
+          return row
+        })
+
+        this.data.optionSelect.department = response1.data.data
+        this.data.optionSelect.roles = response2.data.data
+
         if (this.$route.params.id) {
           this.edit = true
           this.apiDetail()
         } else {
           this.edit = false
         }
-      })
-      .catch((error) => {
+      })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
@@ -415,17 +446,20 @@ export default {
         .level-button {
           display: flex;
           align-items: center;
-          padding: 0 28px 31px;
+          padding: 0 28px 20px;
+          flex-wrap: wrap;
 
           .group-user {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 5px;
 
             .icon-user-crown {
               width: 19px;
               height: 21px;
               margin-right: 9px;
+              margin-top: -5px;
             }
 
             .icon-badge-sheriff {
@@ -448,21 +482,8 @@ export default {
             margin-right: 24px;
           }
 
-          .button-badge {
-            width: 85px;
-            height: 45px;
-            border-radius: 5px;
-            box-shadow: 2.9px 0.8px 9.6px 0.4px rgba(137, 148, 169, 0.35);
-            border: solid 2px #e2ebf7;
-            background-color: #fff;
-            font-size: 16px;
-            font-weight: 500;
-            color: #007773;
-            margin-right: 24px;
-          }
-
-          .button-user {
-            width: 88px;
+          .button-roles {
+            min-width: 88px;
             height: 45px;
             border-radius: 5px;
             box-shadow: 2.9px 0.8px 9.6px 0.4px rgb(137 148 169 / 35%);
@@ -471,6 +492,12 @@ export default {
             font-size: 16px;
             font-weight: 500;
             color: #333;
+            padding: 5px 12px 0;
+            margin-right: 24px;
+          }
+
+          button {
+            margin-bottom: 15px;
           }
 
           .active {
