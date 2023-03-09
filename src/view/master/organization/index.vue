@@ -109,7 +109,7 @@ export default {
     },
     search() {
       this.data.status = true
-      this.data.perPage = 50
+      this.data.perPage = 10
       this.data.page = 1
       this.apiorg()
     },
