@@ -204,11 +204,11 @@ export default {
         afterPressAgree() {
             console.log('stp1')
             let groupdata = {
-              id: _this.data.id,
+              regis_id: _this.data.regis_id,
               typename: _this.data.book_type
             }
             _this.showLoading = true
-            _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
+            _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
             .then(() => { 
               _this.showLoading = false
               // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
