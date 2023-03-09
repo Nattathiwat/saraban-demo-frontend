@@ -115,7 +115,7 @@ export default {
     },
     search() {
       this.data.status = true
-      this.data.perPage = 50
+      this.data.perPage = 10
       this.data.page = 1
       this.apiDepartment()
     },
@@ -148,7 +148,7 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบหน่วยงาน`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        message: `“${data.department_short_name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {

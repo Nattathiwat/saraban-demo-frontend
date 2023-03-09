@@ -39,15 +39,15 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ชื่อกอง <span class="required">*</span></div>
-                <cpn-input  v-model="data.subminist_name"
-                            name="subminist_name"
+                <cpn-input  v-model="data.Name"
+                            name="Name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ชื่อย่อกอง <span class="required">*</span></div>
-                <cpn-input  v-model="data.subminist_short_name"
-                            name="subminist_short_name"
+                <cpn-input  v-model="data.short_name"
+                            name="short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
@@ -55,8 +55,8 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="data.subminist_description"
-                            name="subminist_description"
+                <cpn-textArea v-model="data.desc"
+                            name="desc"
                             rows="4"
                             placeholder="กรุณาระบุ"  />
               </div>
@@ -98,9 +98,9 @@ export default {
       edit: false,
       data: {
         code: '',
-        subminist_short_name: '',
-        subminist_name: '',
-        subminist_description: ''
+        short_name: '',
+        Name: '',
+        desc: ''
       },
     }
   },
@@ -113,8 +113,8 @@ export default {
     cancelClick() {
       this.back()
       this.data.code = ''
-      this.data.subminist_short_name = ''
-      this.data.subminist_name = ''
+      this.data.short_name = ''
+      this.data.Name = ''
     },
     onSubmit() {
       let _this = this
@@ -128,9 +128,9 @@ export default {
           if (_this.edit) {
             let groupdata = {
               code: _this.data.code,
-              Name: _this.data.subminist_name,
-              short_name: _this.data.subminist_short_name,
-              desc: _this.data.subminist_description
+              Name: _this.data.Name,
+              short_name: _this.data.short_name,
+              desc: _this.data.desc
             }
             _this.showLoading = true
             _this.axios.put(`/subministry/${_this.$route.params.id}`, groupdata)
@@ -145,9 +145,9 @@ export default {
           } else {
             let groupdata = {
               code: _this.data.code,
-              Name: _this.data.subminist_name,
-              short_name: _this.data.subminist_short_name,
-              desc: _this.data.subminist_description
+              Name: _this.data.Name,
+              short_name: _this.data.short_name,
+              desc: _this.data.desc
             }
             _this.showLoading = true
             _this.axios.post(`/subministry`, groupdata)
@@ -168,10 +168,7 @@ export default {
       this.axios.get(`/subministry/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.code = response.data.data.code
-        this.data.short_name = response.data.data.subministy_short_name
-        this.data.Name = response.data.data.subminist_name
-        this.data.desc = response.data.data.subminist_description
+        this.data = response.data.data
       })
       .catch((error) => {
         this.showLoading = false

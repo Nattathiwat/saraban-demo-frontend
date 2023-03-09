@@ -172,7 +172,7 @@ export default {
         }
       }
     },
-    apiDetail() {
+    api_detail() {
       this.showLoading = true
       this.axios.get(`/department/${this.$route.params.id}`)
       .then((response) => { 
@@ -214,12 +214,6 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.apiDetail()
-    } else {
-      this.edit = false
-    }
     this.api_master()
   }
 }
