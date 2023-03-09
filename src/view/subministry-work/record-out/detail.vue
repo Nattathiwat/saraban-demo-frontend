@@ -7,7 +7,7 @@
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
             <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}}</div>
           </div>
-          <button type="button" class="add-booking-out" @click="gennumber()">
+          <button type="button" class="add-booking-out" @click="gennumber()" v-show="false">
               <div class="group-image">
                 ออกเลขบันทึกภายใน
               </div>
@@ -52,12 +52,12 @@
                             name="book_category_id"
                             rules="required"
                             :optionSelect="optionSelect.book_category_id"
-                            placeholder="กรุณาระบุ" />
+                            placeholder="กรุณาระบุ" /> 
               </div>
               <div class="group-input">
                 <div class="name">ลงวันที่<span class="required">*</span></div>
-                <cpn-datepicker v-model="data.receive_date"
-                                  name="receive_date"
+                <cpn-datepicker v-model="data.regis_date"
+                                  name="regis_date"
                                   rules="required"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
@@ -316,7 +316,6 @@ export default {
         speed_id: '12',
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         subject: '',
-        // booking_register_details: [],
         tag: [],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
@@ -326,6 +325,7 @@ export default {
         process_type_id: '',
         permission_id: '',
         description: '',
+        regis_date: '',
       },
       optionSelect: {
         creater_id: [],
@@ -432,88 +432,6 @@ export default {
         this.add_booking_refers()
       }
     },
-    // delete_booking_register_details(item, index) {
-    //   if (item.flag == 'edit') {
-    //     item.flag = 'delete'
-    //   } else {
-    //     this.data.booking_register_details.splice(index,1)
-    //   }
-    // },
-    // async add_booking_registers(item) {
-    //   for (let i = 0; i < item.num; i++) {
-    //     if (item.book_out_num_type == 0) {
-    //       if (item.booking_registers.length < 1) {
-    //         this.showLoading = true
-    //         await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-    //         .then((response) => {
-    //           this.showLoading = false
-    //           item.booking_registers.push({
-    //             book_out_num: response.data.data.out_document_number,
-    //             greeting: '',
-    //             department_dest_id: '',
-    //             main_filename: '',
-    //             attach_filename: '',
-    //             signer_id: '',
-    //             is_signed: false,
-    //             flag: 'add',
-    //             optionSelect: {
-    //               signer_id: this.optionSelectDefault.signer_id,
-    //               department_dest_id: this.optionSelectDefault.department_dest_id
-    //             },
-    //           })
-    //         }).catch((error) => {
-    //           this.showLoading = false
-    //           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //         })
-    //       } else {
-    //         item.booking_registers.push({
-    //           book_out_num: item.booking_registers[0].book_out_num,
-    //           greeting: '',
-    //           department_dest_id: '',
-    //           main_filename: '',
-    //           attach_filename: '',
-    //           signer_id: '',
-    //           is_signed: false,
-    //           flag: 'add',
-    //           optionSelect: {
-    //             signer_id: this.optionSelectDefault.signer_id,
-    //             department_dest_id: this.optionSelectDefault.department_dest_id
-    //           },
-    //         })
-    //       }
-    //     } else {
-    //       this.showLoading = true
-    //       await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-    //       .then((response) => {
-    //         this.showLoading = false
-    //         item.booking_registers.push({
-    //           book_out_num: response.data.data.out_document_number,
-    //           greeting: '',
-    //           department_dest_id: '',
-    //           main_filename: '',
-    //           attach_filename: '',
-    //           signer_id: '',
-    //           is_signed: false,
-    //           flag: 'add',
-    //           optionSelect: {
-    //             signer_id: this.optionSelectDefault.signer_id,
-    //             department_dest_id: this.optionSelectDefault.department_dest_id
-    //           },
-    //         })
-    //       }).catch((error) => {
-    //         this.showLoading = false
-    //         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //       })
-    //     }
-    //   }
-    // },
-    // delete_booking_registers(item2, item, index2) {
-    //   if (item2.flag == 'edit') {
-    //     item2.flag = 'delete'
-    //   } else {
-    //     item.booking_registers.splice(index2,1)
-    //   }
-    // },
     add_attachments() {
       this.data.attachments.push({ 
         filename: '',
@@ -557,7 +475,6 @@ export default {
       }
     },
     booking_refers_click(item) {
-      //RA04/66
       if (item.receive_document_number) {
         this.showLoading = true
         this.axios.get('/master-data/book-refer', {
@@ -671,96 +588,6 @@ export default {
         document.querySelector(`[name="${data}"]`).value=null;
       }
     },
-    // file_booking_register_details_change(data, index, name) {
-    //   for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-    //     let file = document.querySelector(`[name="${data}"]`).files[i]
-    //     if (file.type == 'application/pdf') {
-    //       if (name == 'main_docs') {
-    //         let dataFile = {
-    //           main_filename: file.name,
-    //           main_type: file.type,
-    //           main_link: URL.createObjectURL(file),
-    //           main_size: (file.size /1024 /1024).toFixed(2) + ' MB',
-    //           main_file: file,
-    //         }
-    //         this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
-    //         this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
-    //           this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
-    //         })
-    //       } else {
-    //         let dataFile = {
-    //           attach_filename: file.name,
-    //           attach_type: file.type,
-    //           attach_link: URL.createObjectURL(file),
-    //           attach_size: (file.size /1024 /1024).toFixed(2) + ' MB',
-    //           attach_file: file,
-    //         }
-    //         this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
-    //         this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
-    //           this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
-    //         })
-    //       }
-    //       document.querySelector(`[name="${data}"]`).value=null;
-    //     }
-    //   }
-    // },
-    // file_booking_registers_change(data, index, index2, name) {
-    //   for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-    //     let file = document.querySelector(`[name="${data}"]`).files[i]
-    //     if (file.type == 'application/pdf') {
-    //       if (name == 'main_docs') {
-    //         let dataFile = {
-    //           main_filename: file.name,
-    //           main_type: file.type,
-    //           main_link: URL.createObjectURL(file),
-    //           main_size: (file.size /1024 /1024).toFixed(2) + ' MB',
-    //           main_file: file,
-    //         }
-    //         this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
-    //       } else {
-    //         let dataFile = {
-    //           attach_filename: file.name,
-    //           attach_type: file.type,
-    //           attach_link: URL.createObjectURL(file),
-    //           attach_size: (file.size /1024 /1024).toFixed(2) + ' MB',
-    //           attach_file: file,
-    //         }
-    //         this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
-    //       }
-    //       document.querySelector(`[name="${data}"]`).value=null;
-    //     }
-    //   }
-    // },
-    // add_booking_register_details() {
-    //   this.modalRegiter.showModal = true
-    //   this.modalRegiter.booking_register_details= [{
-    //     regis_id: '',
-    //     regis_date: this.assetsUtils.currentDate(),
-    //     book_out_num_type: '0',
-    //     send_method_id: '2',
-    //     department_dest_id: [],
-    //     optionSelect: {
-    //       regis_id: this.optionSelectDefault.regis_id,
-    //       book_out_num_type: this.optionSelectDefault.book_out_num_type,
-    //       send_method_id: this.optionSelectDefault.send_method_id,
-    //       department_dest_id: [],
-    //     },
-    //   }]
-    // },
-    // add_booking_register_details_modal() {
-    //   this.modalRegiter.booking_register_details.push({
-    //     regis_id: '',
-    //     regis_date: this.assetsUtils.currentDate(),
-    //     book_out_num_type: '0',
-    //     send_method_id: '2',
-    //     department_dest_id: [],
-    //     optionSelect: {
-    //       regis_id: this.optionSelectDefault.regis_id,
-    //       book_out_num_type: this.optionSelectDefault.book_out_num_type,
-    //       send_method_id: this.optionSelectDefault.send_method_id
-    //     },
-    //   })
-    // },
     back() {
       this.$router.push({ 
         name: 'subministry-work.record-out',
@@ -772,7 +599,6 @@ export default {
     },
     on_submit() {
       let _this = this
-      console.log('ccc')
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
@@ -785,114 +611,7 @@ export default {
         }
       }
     },
-    async on_submit_modal() {
-      for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
-        let item = this.modalRegiter.booking_register_details[i]
-        let regis_id_desc = ''
-        let book_out_num_type_desc = ''
-        let send_method_id_desc = ''
-        item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_id_desc = item2.name}})
-        item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_desc = item2.name}})
-        item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_id_desc = item2.name}})
-        let data = {
-          optionSelect: {
-            signer_id: this.optionSelectDefault.signer_id
-          },
-          book_out_num_type: parseInt(item.book_out_num_type),
-          book_out_num_type_desc: book_out_num_type_desc,
-          send_method_id: parseInt(item.send_method_id),
-          send_method_id_desc: send_method_id_desc,
-          regis_date: item.regis_date,
-          regis_id: parseInt(item.regis_id),
-          regis_id_desc: regis_id_desc,
-          num: '1',
-          signer_id: '',
-          is_signed: false,
-          flag: 'add',
-          main_filename: '',
-          attach_filename: '',
-          booking_registers: []
-        }
-        if (item.department_dest_id.length > 0) {
-          if (item.book_out_num_type == 0) {
-            this.showLoading = true
-            await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-            .then((response) => {
-              this.showLoading = false
-              item.department_dest_id.filter(item2 => {
-                data.booking_registers.push({
-                  book_out_num: response.data.data.out_document_number,
-                  greeting: '',
-                  department_dest_id: item2.value,
-                  main_filename: '',
-                  attach_filename: '',
-                  signer_id: '',
-                  is_signed: false,
-                  flag: 'add',
-                  optionSelect: {
-                    signer_id: this.optionSelectDefault.signer_id,
-                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
-                  },
-                })
-              })
-            }).catch((error) => {
-              this.showLoading = false
-              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            for (let i = 0; i < item.department_dest_id.length; i++) {
-              let item2 = item.department_dest_id[i]
-              this.showLoading = true
-              await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-              .then((response) => {
-                this.showLoading = false
-                data.booking_registers.push({
-                  book_out_num: response.data.data.out_document_number,
-                  greeting: '',
-                  department_dest_id: item2.value,
-                  main_filename: '',
-                  attach_filename: '',
-                  signer_id: '',
-                  is_signed: false,
-                  flag: 'add',
-                  optionSelect: {
-                    signer_id: this.optionSelectDefault.signer_id,
-                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
-                  },
-                })
-              }).catch((error) => {
-                this.showLoading = false
-                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            }
-          }
-        } else {
-          this.showLoading = true
-          await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-          .then((response) => {
-            this.showLoading = false
-            data.booking_registers.push({
-              book_out_num: response.data.data.out_document_number,
-              greeting: '',
-              department_dest_id: '',
-              main_filename: '',
-              attach_filename: '',
-              signer_id: '',
-              is_signed: false,
-              flag: 'add',
-              optionSelect: {
-                signer_id: this.optionSelectDefault.signer_id,
-                department_dest_id: this.optionSelectDefault.department_dest_id
-              },
-            })
-          })
-        }
-        this.data.booking_register_details.push(data)
-      }
-      this.modalRegiter.showModal = false
-    },
     upload_file_all() {
-      console.log('nnn')
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
       let fileAttachments = []
@@ -904,7 +623,6 @@ export default {
           axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
         }
       })
-      console.log('ppp')
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
@@ -923,7 +641,6 @@ export default {
       }
     },
     upload_file_all2() {
-      console.log('nnn')
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
       let fileAttachments = []
@@ -935,7 +652,6 @@ export default {
           axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
         }
       })
-      console.log('ppp')
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
@@ -953,85 +669,7 @@ export default {
         this.call_api_save(fileAttachments)
       }
     },
-    // upload_file_all2(data) {
-    //   console.log('iii')
-    //   let currentDate = this.assetsUtils.currentDate()
-    //   let completeFile = []
-    //   this.data.booking_register_details.filter(item => {
-    //     console.log(item)
-    //     let completeFile2 = []
-    //     item.booking_registers.filter(item2 => {
-    //       let check_main = false
-    //       let check_attach = false
-    //       if (item2.main_file) {
-    //         let formDataFile = new FormData();
-    //         formDataFile.append('file', item2.main_file);
-    //         formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-    //         this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-    //         .then((responses) => {
-    //           item2.main_filepath = responses.data.data.path
-    //           check_main = true
-    //           if (check_main && check_attach) {
-    //             completeFile2.push(true)
-    //             if (completeFile2.length == item.booking_registers.length) {
-    //               completeFile.push(true)
-    //             }
-    //             if (completeFile.length == this.data.booking_register_details.length) {
-    //               this.call_api_save(data)
-    //             }
-    //           }
-    //         }).catch((error) => {
-    //           this.showLoading = false
-    //           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //         })
-    //       } else {
-    //         check_main = true
-    //       }
-    //       if (item2.attach_file) {
-    //         let formDataFile = new FormData();
-    //         formDataFile.append('file', item2.attach_file);
-    //         formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-    //         this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-    //         .then((responses) => {
-    //           item2.attach_filepath = responses.data.data.path
-    //           check_attach = true
-    //           if (check_main && check_attach) {
-    //             completeFile2.push(true)
-    //             if (completeFile2.length == item.booking_registers.length) {
-    //               completeFile.push(true)
-    //             }
-    //             if (completeFile.length == this.data.booking_register_details.length) {
-    //               this.call_api_save(data)
-    //             }
-    //           }
-    //         }).catch((error) => {
-    //           this.showLoading = false
-    //           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //         })
-    //       } else {
-    //         check_attach = true
-    //       }
-    //       if (!item2.main_file && !item2.attach_file) {
-    //         completeFile2.push(true)
-    //         if (completeFile2.length == item.booking_registers.length) {
-    //           completeFile.push(true)
-    //         }
-    //         if (completeFile.length == this.data.booking_register_details.length) {
-    //           this.call_api_save(data)
-    //         }
-    //       }
-    //     })
-    //     if (item.booking_registers.length < 1) {
-    //       console.log(']]]')
-    //       completeFile.push(true)
-    //       if (completeFile.length == this.data.booking_register_details.length) {
-    //         this.call_api_save(data)
-    //       }
-    //     }
-    //   })
-    // },
     call_api_save(data) {
-      console.log('xxx')
       let fileAttachments = data
       let _this = this
       let tag = ''
@@ -1127,8 +765,8 @@ export default {
       this.axios.get(`/booking-note/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.regis_date = response.data.data.created_at
         this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data.regis_date = response.data.data.created_at
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -1146,12 +784,6 @@ export default {
           .catch((error) => {
             this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
           })
-        })
-        this.data.booking_register_details.filter(item=>{
-          item.optionSelect = {signer_id: this.optionSelectDefault.signer_id}
-          item.signer_id = ''
-          item.num = '1'
-          item.flag = 'edit'
         })
         this.data.attachments.filter(item => {
           item.flag = 'edit'
@@ -1264,20 +896,6 @@ export default {
       })
       
     },
-    // gennumber() {
-    //   this.showLoading = true
-    //   await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-
-    //   this.axios.post(`/booking-note/generate-number`,{department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-    //   .then(() => { 
-    //     this.showLoading = false
-    //     this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-    //   })
-    //   .catch((error) => {
-    //     this.showLoading = false
-    //     this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //   })
-    // }
   },
   mounted () {
     this.api_master()

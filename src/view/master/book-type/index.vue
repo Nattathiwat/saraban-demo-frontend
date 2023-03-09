@@ -118,15 +118,15 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiDepartment()
+      this.apibooktype()
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      this.apiDepartment()
+      this.apibooktype()
     },
-    apiDepartment() {
+    apibooktype() {
       this.data.table = []
       this.showLoading = true
       this.axios.get('/booktype', {
@@ -169,7 +169,7 @@ export default {
               title: 'ทำการลบชนิดหนังสือสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apiDepartment()
+                _this.apibooktype()
               }
             }
           })
@@ -182,7 +182,7 @@ export default {
     },
   },
   mounted() {
-    this.apiDepartment()
+    this.apibooktype()
   },
 }
 

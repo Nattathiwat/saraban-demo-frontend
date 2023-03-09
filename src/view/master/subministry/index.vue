@@ -107,15 +107,15 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiDepartment()
+      this.apisubminist()
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      this.apiDepartment()
+      this.apisubminist()
     },
-    apiDepartment() {
+    apisubminist() {
       this.data.table = []
       this.showLoading = true
       this.axios.get('/subministry', {
@@ -158,7 +158,7 @@ export default {
               title: 'ทำการลบกองสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apiDepartment()
+                _this.apisubminist()
               }
             }
           })
@@ -171,7 +171,7 @@ export default {
     },
   },
   mounted() {
-    this.apiDepartment()
+    this.apisubminist()
   },
 }
 

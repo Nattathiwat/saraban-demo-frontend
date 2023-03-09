@@ -107,15 +107,15 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiDepartment()
+      this.apigroup()
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      this.apiDepartment()
+      this.apigroup()
     },
-    apiDepartment() {
+    apigroup() {
       this.data.table = []
       this.showLoading = true
       this.axios.get('/group', {
@@ -158,7 +158,7 @@ export default {
               title: 'ทำการลบกลุ่มสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apiDepartment()
+                _this.apigroup()
               }
             }
           })
@@ -171,7 +171,7 @@ export default {
     },
   },
   mounted() {
-    this.apiDepartment()
+    this.apigroup()
   },
 }
 

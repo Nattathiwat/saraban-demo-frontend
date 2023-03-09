@@ -113,7 +113,6 @@ export default {
       this.data.group_name = ''
     },
     onSubmit() {
-      let currentDate = this.assetsUtils.currentDate()
       let _this = this
       this.modalAlert = {
         showModal: true,

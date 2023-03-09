@@ -13,7 +13,7 @@
               </div>
             </button>
             <div class="d-flex justify-content-end">
-            <button type="button" class="add-booking-out"  @click="add_booking_register_details()">
+            <button type="button" class="add-booking-out"  @click="gennum()" v-show="false">
                 ออกเลขบันทึกภายใน
             </button>
           </div>
@@ -52,7 +52,7 @@
                 <td class="col4">{{item.department_name}}</td>
                 <td class="col5">{{item.created_at}}</td>
                 <td class="col6">{{item.book_type}}</td>
-                <td class="col7">{{item.creater_name}}</td>
+                <td class="col7">{{item.department_name}}</td>
                 <td class="col8">{{item.status_name}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
@@ -88,10 +88,10 @@
                     <div class="group-between">
                       <div class="group-input">
                         <div class="name">ทะเบียนส่ง <span class="required">*</span></div>
-                        <cpn-select v-model="data.sending"
-                                    name="input2"
+                        <cpn-select v-model="data.send_method_id"
+                                    name="send_method_id"
                                     rules="required"
-                                    :optionSelect="data.optionSelect.sending" />
+                                    :optionSelect="data.optionSelect.send_method_id" />
                       </div>
                     </div>
                     <div class="group-between">
@@ -158,7 +158,7 @@ export default {
         // booktype:'',
         tag:'',
         optionSelect:{
-          sending: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
+          send_method_id: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
         },
       },
       modalRegiter: {
@@ -237,7 +237,7 @@ export default {
       })
     },
     async on_submit_modal() {
-      for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
+      // for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
         // let item = this.modalRegiter.booking_register_details[i]
         // let regis_id_desc = ''
         // let book_out_num_type_desc = ''
@@ -267,7 +267,7 @@ export default {
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
             this.showLoading = true
-            await this.axios.post(`/booking-note`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
             .then((response) => {
               this.showLoading = false
               item.department_dest_id.filter(item2 => {
@@ -339,11 +339,13 @@ export default {
           })
         }
         // this.data.booking_register_details.push(data)
-      }
+      
       this.modalRegiter.showModal = false
     },
-    add_booking_register_details() {
+    gennum() {
+      console.log('start')
       this.modalRegiter.showModal = true
+      console.log('uuu')
       this.modalRegiter.booking_register_details= [{
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),

@@ -105,15 +105,15 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiDepartment()
+      this.apiorg()
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      this.apiDepartment()
+      this.apiorg()
     },
-    apiDepartment() {
+    apiorg() {
       this.data.table = []
       this.showLoading = true
       this.axios.get('/organization', {
@@ -156,7 +156,7 @@ export default {
               title: 'ทำการลบกระทรวงสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apiDepartment()
+                _this.apiorg()
               }
             }
           })
@@ -171,7 +171,7 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apiDepartment()
+    this.apiorg()
   },
 }
 

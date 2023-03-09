@@ -13,26 +13,25 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ทะเบียนรับ <span class="required">*</span></div>
-                <cpn-select v-model="data.receive_regis_id"
-                            name="receive_regis_id"
+                <div class="name">ทะเบียนบันทึกข้อความ <span class="required">*</span></div>
+                <cpn-select v-model="data.book_category_id"
+                            name="book_category_id"
                             rules="required"
                             :disabled="edit"
-                            :optionSelect="optionSelect.receive_regis_id"
+                            :optionSelect="optionSelect.book_category_id"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input left">
                   <div class="name">ลงวันที่ <span class="required">*</span></div>
-                  <cpn-datepicker v-model="data.receive_date"
-                                  name="receive_date"
-                                  rules="required"
+                  <cpn-datepicker v-model="data.as_of_date"
+                                  name="as_of_date"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input left">
                   <div class="name">วันที่ส่งมา <span class="required">*</span></div>
-                  <cpn-datepicker v-model="data.receive_date"
-                                  name="receive_date"
+                  <cpn-datepicker v-model="data.create_date"
+                                  name="create_date"
                                   rules="required"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
@@ -91,7 +90,6 @@
               <div class="name">เรียน <span class="required">*</span></div>
               <cpn-textArea v-model="data.send_to"
                             name="send_to"
-                            rules="required"
                             rows="1"
                             :disabled="edit" />
             </div>
@@ -152,7 +150,7 @@
                   <div class="group-input-file">
                     <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
                       <span :class="item.filename ? '' : 'no-data'">
-                        {{item.filename ? item.filename : 'หนังสือต้นเรื่อง'}}
+                        {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
                       </span>
                     </button>
                     <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
@@ -257,16 +255,8 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ปิด
               </button>
-              <button type="button" class="button-danger ms-3" @click="delete_click()" v-if="$route.params.id">
-                <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
-                ลบ
-              </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-primary" @click="flagSave=1">
-                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                บันทึกแบบร่าง
-              </button>
               <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo?.length<1">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกและส่งต่อ
@@ -295,12 +285,12 @@ export default {
       flagSave: 1,
       data: {
         original_flag: false,
-        receive_regis_id: '',
+        book_category_id: '',
         book_type_id: '',
-        receive_date: this.assetsUtils.currentDate(),
+        receive_date: '',
         receive_time: this.assetsUtils.currentTime(),
         document_number: '',
-        as_of_date: this.assetsUtils.currentDate(),
+        as_of_date: '',
         subject: '',
         secret_id: '',
         speed_id: '',
@@ -328,7 +318,7 @@ export default {
         regis_id:'',
       },
       optionSelect: {
-        receive_regis_id: [],
+        book_category_id: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
         book_type_id: [],
         secret_id: [],
         speed_id: [],
@@ -379,7 +369,6 @@ export default {
       }
     },
     booking_refers_click(item) {
-      //RA04/66
       this.showLoading = true
       this.axios.get('/master-data/book-refer', {
         params: {
@@ -555,7 +544,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'subministry-work.booking-receive',
+        name: 'subministry-work.record-receive',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -564,6 +553,7 @@ export default {
     },
     on_submit() {
       let _this = this
+      console.log('start')
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
@@ -585,6 +575,7 @@ export default {
       let fileMain_docs_old = []
 
       this.data.main_docs.filter((item) => {
+        console.log('upload1')
         if (item.file) {
           let formDataFile = new FormData();
           formDataFile.append('file', item.file);
@@ -660,10 +651,9 @@ export default {
       })
       let dataSave = {
         original_flag: this.data.original_flag,
-        receive_regis_id: parseInt(this.data.receive_regis_id),
+        book_category_id: parseInt(this.data.book_category_id),
         book_type_id: parseInt(this.data.book_type_id),
         receive_date: this.assetsUtils.yearDel543(this.data.receive_date),
-        receive_time: this.data.receive_time,
         as_of_date: this.assetsUtils.yearDel543(this.data.as_of_date),
         document_number: this.data.document_number,
         subject: this.data.subject,
@@ -672,7 +662,6 @@ export default {
         send_to: this.data.send_to,
         book_desc: this.data.book_desc,
         tag: tag,
-        contracts: this.data.contracts,
         main_docs: [...fileMain_docs, ...this.data.main_docs_del],
         attachments: fileAttachments,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
@@ -685,7 +674,7 @@ export default {
       if (this.edit) {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.put(`/booking-receive/receive-note/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -696,7 +685,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.put(`/booking-receive/receive-note/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -706,31 +695,7 @@ export default {
             this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
           })
         }
-      } else {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.post(`/booking-receive/receive-note`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.post(`/booking-receive/receive-note`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      }
+      } 
     },
     api_detail() {
       this.showLoading = true
@@ -796,7 +761,6 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get('/master-data/register-type')
       const request2 = this.axios.get('/master-data/book-type')
       const request3 = this.axios.get('/master-data/secret')
       const request4 = this.axios.get('/master-data/speed')
@@ -805,23 +769,17 @@ export default {
       const request7 = this.axios.get('/master-data/department')
       const request8 = this.axios.get('/master-data/receive-type')
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8])
+      this.axios.all([request2, request3, request4, request5, request6, request7, request8])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false;
-        const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
-        const response4 = responses[3]
-        const response5 = responses[4]
-        const response6 = responses[5]
-        const response7 = responses[6]
-        const response8 = responses[7]
-        
-        response1.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.desc
-          return item
-        })
+        const response2 = responses[0]
+        const response3 = responses[1]
+        const response4 = responses[2]
+        const response5 = responses[3]
+        const response6 = responses[4]
+        const response7 = responses[5]
+        const response8 = responses[6]
+
         response2.data.data.filter(item => {
           item.value = item.id
           item.name = item.desc
@@ -857,7 +815,7 @@ export default {
           item.name = item.desc
           return item
         })
-        this.optionSelect.receive_regis_id = response1.data.data
+
         this.optionSelect.book_type_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data
         this.optionSelect.speed_id = response4.data.data
@@ -876,7 +834,49 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    }
+    },
+    submitClick(){
+      let _this = this
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการรับเข้าหรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          if (this.checkedList = this.data.table) {
+            let groupdata = {
+              name: _this.data.org_name,
+              book_type: _this.data.book_type
+            }
+            _this.showLoading = true
+            _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          } else {
+            let groupdata = {
+              name: _this.data.org_name,
+            }
+            _this.showLoading = true
+            _this.axios.post(`/organization`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          }
+        }
+      }
+    },
   },
   mounted () {
     this.api_master()
@@ -931,6 +931,30 @@ export default {
             font-size: 18px;
           }
         }
+
+        .add-booking-receive {
+            height: 45px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-left: 35px;
+            padding: 0 20px 0 20px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-check-circle {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+              }
+            }
+          }
 
         .group-end {
           .button-back {

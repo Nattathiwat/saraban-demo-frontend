@@ -105,7 +105,6 @@ export default {
       this.data.description = ''
     },
     onSubmit() {
-      let currentDate = this.assetsUtils.currentDate()
       let _this = this
       this.modalAlert = {
         showModal: true,

@@ -6,6 +6,12 @@
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">บันทึกรับเข้า</div>
+            <button type="button" class="add-booking-receive" @click="submitClick()">
+              <div class="group-image">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
+              </div>
+            </button>
           </div>
           <div class="group-end">
             <div class="search">
@@ -23,23 +29,28 @@
           <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขบันทึกภายใน</th>
-                <th class="col3">ลงวันที่</th>
-                <th class="col4">ชื่อเรื่อง</th>
-                <th class="col5">หน่วยงานที่ส่งมา</th>
-                <th class="col6">หน่วยงานที่รับ</th>
-                <th class="col7">ชนิด</th>
-                <th class="col8">ผู้รับผิดชอบ</th>
-                <th class="col9">สถานะ</th>
+                <th class="col1"></th>
+                <th class="col2">ความเร่งด่วน</th>
+                <th class="col3">เลขบันทึกภายใน</th>
+                <th class="col4">ลงวันที่</th>
+                <th class="col5">ชื่อเรื่อง</th>
+                <th class="col6">หน่วยงานที่ส่งมา</th>
+                <th class="col7">หน่วยงานที่รับ</th>
+                <th class="col8">ชนิด</th>
+                <th class="col9">ผู้รับผิดชอบ</th>
+                <th class="col10">สถานะ</th>
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.date}}</td>
-                <td class="col4">
+              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index">
+                <td class="col1"><cpn-checkbox  v-model="item.selected"
+                                                name="selected"
+                                                @change="selected($event, item)" />
+                  </td>
+                <td class="col2" @click="editClick(item)">{{item.speedName}}</td>
+                <td class="col3" @click="editClick(item)">{{item.document_number}}</td>
+                <td class="col4" @click="editClick(item)">{{item.date}}</td>
+                <td class="col5" @click="editClick(item)">
                   <div class="group-show none-bg">
                     <span class="span">
                       {{item.bookingSubject}}
@@ -49,20 +60,20 @@
                     </div>
                   </div>
                 </td>
-                <td class="col5">{{item.send_dep}}</td>
-                <td class="col6">{{item.receive_dep}}</td>
-                <td class="col7">{{item.typename}}</td>
-                <td class="col8">
+                <td class="col6">{{item.send_dep}}</td>
+                <td class="col7">{{item.receive_dep}}</td>
+                <td class="col8">{{item.typename}}</td>
+                <td class="col9">
                   <div class="group-show">
                     <span class="span">
-                      {{item.response}}
+                      {{item.response_name}}
                     </span>
-                    <div class="show-detail">{{item.response}}
+                    <div class="show-detail">{{item.response_name}}
                       <div v-if="false" class="image-size"></div>
                     </div>
                   </div>
                 </td>
-                <td class="col9">{{item.statusName}}</td>
+                <td class="col10">{{item.status_name}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="8">ไม่มีข้อมูล</td>
@@ -102,12 +113,6 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 10,
-        // desc:'',
-        // receive_date_str:'',
-        // receive_date_end:'',
-        // as_of_date_str:'',
-        // as_of_date_end:'',
-        // booktype:'',
         tag:'',
       },
     }
@@ -135,26 +140,17 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apigetimport()
+      this.apigetrecord()
     },
     search() {
       this.data.status = true
       this.data.perPage = 50
       this.data.page = 1
-      // this.data.desc = ''
-      // this.data.receive_date_str = ''
-      // this.data.receive_date_end = ''
-      // this.data.as_of_date_str = ''
-      // this.data.as_of_date_end = ''
-      // this.data.booktype = ''
       this.data.tag = ''
-      this.apigetimport()
+      this.apigetrecord()
     },
-    apigetimport() {
+    apigetrecord() {
       this.data.table = []
-      // this.data.page = 1
-      // this.data.lastPage = 1
-      // // this.data.total = 1
       
       this.showLoading = true
       this.axios.get('/booking-receive/receive-note', {
@@ -163,12 +159,6 @@ export default {
           page_size: this.data.perPage,
           page: this.data.page,
           user_id: localStorage.getItem('user_id'),
-          // desc: this.data.desc,
-          // receive_date_str: this.data.receive_date_str,
-          // receive_date_end: this.data.receive_date_end,
-          // as_of_date_str: this.data.as_of_date_str,
-          // as_of_date_end: this.data.as_of_date_end,
-          // book_type_id: this.data.booktype,
           tag: this.data.tag,
         }
       })
@@ -197,34 +187,36 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    deleteClick(data) {
+    selected() {
+      this.checkedList = this.data.table.filter((row) => {
+        return row.selected;
+      });
+    },
+    submitClick(){
       let _this = this
+      console.log('start')
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบบันทึกรับเข้า`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        title: `คุณยืนยันการรับเข้าหรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          // _this.showLoading = true
-          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
-          // .then(() => { 
-          //   _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบบันทึกรับเข้าสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apigetimport()
-              }
+            console.log('stp1')
+            let groupdata = {
+              id: _this.data.id,
+              typename: _this.data.book_type
             }
-          // })
-          // .catch((error) => {
-          //   _this.showLoading = false
-          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          // })
+            _this.showLoading = true
+            _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
         }
       }
     },
@@ -232,7 +224,10 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apigetimport()
+    this.apigetrecord()
+    if (this.$route.params.id){
+      this.submitClick()
+    }
   },
 }
 
@@ -293,7 +288,7 @@ export default {
               align-items: center;
               justify-content: center;
 
-              .icon-plus {
+              .icon-check-circle {
                 width: 24px;
                 height: 24px;
                 margin-right: 10px;
@@ -364,24 +359,24 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 50px;
+              width: 2%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 150px;
+              width: 10%;
             }
 
             .col3 {
               min-width: 150px;
-              width: 15%;
+              width: 10%;
             }
 
             .col4 {
-              min-width: 300px;
-              width: 30%;
+              min-width: 150px;
+              width: 10%;
             }
 
             .col5 {
@@ -390,19 +385,30 @@ export default {
             }
 
             .col6 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 150px;
+              width: 10%;
             }
 
             .col7 {
-              min-width: 170px;
-              max-width: 170px;
-              width: 15%;
+              min-width: 150px;
+              max-width: 150px;
+              width: 10%;
             }
 
             .col8 {
               min-width: 200px;
-              width: 20%;
+              width: 10%;
+              padding-right: 28px !important;
+            }
+            .col9 {
+              min-width: 150px;
+              max-width: 150px;
+              width: 10%;
+            }
+
+            .col10 {
+              min-width: 200px;
+              width: 10%;
               padding-right: 28px !important;
             }
           }
