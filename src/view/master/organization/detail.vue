@@ -21,8 +21,8 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อกระทรวง <span class="required">*</span></div>
-                <cpn-input  v-model="data.org_name"
-                            name="org_name"
+                <cpn-input  v-model="data.name"
+                            name="name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
@@ -83,7 +83,7 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.org_name = ''
+      this.data.name = ''
     },
     onSubmit() {
       let _this = this
@@ -96,7 +96,7 @@ export default {
         afterPressAgree() {
           if (_this.edit) {
             let groupdata = {
-              name: _this.data.org_name,
+              name: _this.data.name,
             }
             _this.showLoading = true
             _this.axios.put(`/organization/${_this.$route.params.id}`, groupdata)
@@ -110,7 +110,7 @@ export default {
             })
           } else {
             let groupdata = {
-              name: _this.data.org_name,
+              name: _this.data.name,
             }
             _this.showLoading = true
             _this.axios.post(`/organization`, groupdata)
@@ -132,7 +132,7 @@ export default {
       this.axios.get(`/organization/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.name = response.data.data.org_name
+        this.data = response.data.data
       })
       .catch((error) => {
         this.showLoading = false
