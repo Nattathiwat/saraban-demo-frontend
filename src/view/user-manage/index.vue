@@ -34,7 +34,7 @@
                 <th class="col3">หน่วยงาน</th>
                 <th class="col4">ชื่อผู้ใช้งาน</th>
                 <th class="col5">Email</th>
-                <th class="col6">สิทธิ์</th>
+                <th class="col6" v-show="false">สิทธิ์</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
@@ -45,7 +45,7 @@
                 <td class="col3">{{item.department_name}}</td>
                 <td class="col4">{{item.username}}</td>
                 <td class="col5">{{item.email}}</td>
-                <td class="col6">
+                <td class="col6" v-show="false">
                   <div class="group-col6">
                     <span class="span" v-bind:class="item.permission_id == 1 ? 'admin1' : item.permission_id == 2 ? 'admin2' : ''">
                       <img v-show="item.permission_id == 1" src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
@@ -128,7 +128,7 @@ export default {
     },
     search() {
       this.data.status = true
-      this.data.perPage = 50
+      this.data.perPage = 10
       this.data.page = 1
       this.apiUser()
     },
