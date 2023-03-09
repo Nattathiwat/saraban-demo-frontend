@@ -148,7 +148,7 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบหน่วยงาน`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        message: `“${data.department_short_name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
