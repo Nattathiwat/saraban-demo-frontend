@@ -37,24 +37,24 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อชนิดหนังสือ<span class="required">*</span></div>
-                <cpn-input  v-model="data.book_type_name"
-                            name="book_type_name"
+                <cpn-input  v-model="data.name"
+                            name="name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ทะเบียน <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_record"
-                            name="book_type_record"
-                            :optionSelect="data.optionSelect.book_type_record"
+                <cpn-select v-model="data.type"
+                            name="type"
+                            :optionSelect="data.optionSelect.type"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="data.description"
-                    name="book-type_description"
+                <cpn-textArea v-model="data.desc"
+                    name="book-type_desc"
                     class=""
                     style=""
                     rows="4"
@@ -98,10 +98,10 @@ export default {
       edit: false,
       data: {
         code: '',
-        book_type_name: '',
-        description: '',
+        name: '',
+        desc: '',
         optionSelect: {
-          book_type_record: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
+          type: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
         }
       },
     }
@@ -115,8 +115,8 @@ export default {
     cancelClick() {
       this.back()
       this.data.code = ''
-      this.data.book_type_name = ''
-      this.data.description = ''
+      this.data.name = ''
+      this.data.desc = ''
     },
     onSubmit() {
       let _this = this
@@ -130,9 +130,9 @@ export default {
           if (_this.edit) {
                 let groupdata = {
                   code: _this.data.code,
-                  name: _this.data.book_type_name,
-                  desc: _this.data.description,
-                  type: _this.data.book_type_record
+                  name: _this.data.name,
+                  desc: _this.data.desc,
+                  type: _this.data.type
                 }
                 _this.showLoading = true
                 _this.axios.put(`/booktype/${_this.$route.params.id}`, groupdata)
@@ -147,9 +147,9 @@ export default {
               } else {
                 let groupdata = {
                   code: _this.data.code,
-                  name: _this.data.book_type_name,
-                  desc: _this.data.description,
-                  type: _this.data.book_type_record
+                  name: _this.data.name,
+                  desc: _this.data.desc,
+                  type: _this.data.type
                 }
                 _this.showLoading = true
                 _this.axios.post(`/booktype`, groupdata)
@@ -170,10 +170,7 @@ export default {
       this.axios.get(`/booktype/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.code = response.data.data.code
-        this.data.name = response.data.data.book_type_name
-        this.data.desc = response.data.data.description
-        this.data.type = response.data.book_type_record
+        this.data = response.data.data
       })
       .catch((error) => {
         this.showLoading = false
