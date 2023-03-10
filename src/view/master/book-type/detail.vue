@@ -28,9 +28,8 @@
               </div>
               <div class="group-input">
                 <div class="name">เปิด/ปิด การใช้งาน</div>
-                <cpn-toggleSwitch v-model="data.activate"
-                            name="activate"
-                            :disabled="false"
+                <cpn-toggleSwitch v-model="data.active_flag"
+                            name="active_flag"
                             @change="change" />
               </div>
             </div>
@@ -100,6 +99,7 @@ export default {
         code: '',
         name: '',
         desc: '',
+        active_flag: true,
         optionSelect: {
           type: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
         }
@@ -136,7 +136,8 @@ export default {
                   code: _this.data.code,
                   name: _this.data.name,
                   desc: _this.data.desc,
-                  type: _this.data.type
+                  type: _this.data.type,
+                  active_flag: parseInt(_this.data.active_flag ? '1' : '0')
                 }
                 _this.showLoading = true
                 _this.axios.put(`/booktype/${_this.$route.params.id}`, groupdata)
@@ -153,7 +154,8 @@ export default {
                   code: _this.data.code,
                   name: _this.data.name,
                   desc: _this.data.desc,
-                  type: _this.data.type
+                  type: _this.data.type,
+                  active_flag: parseInt(_this.data.active_flag ? '1' : '0')
                 }
                 _this.showLoading = true
                 _this.axios.post(`/booktype`, groupdata)
@@ -175,6 +177,7 @@ export default {
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data,...response.data.data}
+        this.data.active_flag = response.data.data.active_flag == 1
       })
       .catch((error) => {
         this.showLoading = false

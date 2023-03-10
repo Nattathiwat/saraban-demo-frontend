@@ -62,7 +62,7 @@
                 </td>
                 <td class="col6">{{item.send_dep}}</td>
                 <td class="col7">{{item.receive_dep}}</td>
-                <td class="col8">{{item.typename}}</td>
+                <td class="col8">{{item.book_type}}</td>
                 <td class="col9">
                   <div class="group-show">
                     <span class="span">
@@ -171,7 +171,7 @@ export default {
             row.bookingNo = row.receive_document_number
             row.referBookno = row.document_number
             row.bookingSubject = row.subject
-            row.typename = row.book_type_name
+            row.book_type = row.book_type_name
             row.date = row.as_of_date
             row.response = row.response_name
             row.statusName = row.status
@@ -205,31 +205,24 @@ export default {
           msgSuccess: true,
           afterPressAgree() {
               console.log('stp1')
-              // let groupdata = {
-              //   regis_id: _this.data.regis_id,
-              //   typename: _this.data.book_type
-              // }
               _this.showLoading = true
-              let groupdata = {
-                regis_id: _this.data.regis_id,
-                typename: _this.data.book_type
-              };
               let axiosArray = []
               _this.data.table.filter((row) => {
                 if (_this.checkedList.length > 0) {
                   console.log('if1')
-                  if (row.selected)
-                  console.log('if2')
-                  axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
-                } else {
-                  console.log('if3')
-                  axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
+                  let groupdata = {
+                    regis_id: row.regis_id,
+                    book_type: parseInt(row.book_type)
+                  }
+                  if (row.selected) {
+                    console.log('if2')
+                    axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
+                  }
                 }
               });              
               // _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
-              console.log(axiosArray)
-              this.axios.all([...axiosArray])
-              console.log(axiosArray)
+              console.log('all')
+              _this.axios.all([...axiosArray])
               .then(_this.axios.spread (() => {
                 console.log('afterall')
                 _this.showLoading = false

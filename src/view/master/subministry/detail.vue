@@ -28,8 +28,8 @@
               </div>
               <div class="group-input">
                 <div class="name">เปิด/ปิดการใช้งาน<span class="required">*</span></div>
-                <cpn-toggleSwitch v-model="input11"
-                        name="input11"
+                <cpn-toggleSwitch v-model="data.active_flag"
+                        name="active_flag"
                         class=""
                         style=""
                         :disabled="false"
@@ -100,7 +100,8 @@ export default {
         code: '',
         short_name: '',
         Name: '',
-        desc: ''
+        desc: '',
+        active_flag: false
       },
     }
   },
@@ -134,7 +135,8 @@ export default {
               code: _this.data.code,
               Name: _this.data.Name,
               short_name: _this.data.short_name,
-              desc: _this.data.desc
+              desc: _this.data.desc,
+              active_flag: parseInt(_this.data.active_flag ? '1' : '0')
             }
             _this.showLoading = true
             _this.axios.put(`/subministry/${_this.$route.params.id}`, groupdata)
@@ -151,7 +153,8 @@ export default {
               code: _this.data.code,
               Name: _this.data.Name,
               short_name: _this.data.short_name,
-              desc: _this.data.desc
+              desc: _this.data.desc,
+              active_flag: parseInt(_this.data.active_flag ? '1' : '0')
             }
             _this.showLoading = true
             _this.axios.post(`/subministry`, groupdata)
@@ -173,6 +176,7 @@ export default {
       .then((response) => { 
         this.showLoading = false
         this.data = response.data.data
+        this.data.active_flag = response.data.data.active_flag == 1
       })
       .catch((error) => {
         this.showLoading = false
