@@ -21,24 +21,24 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อรูปแบบการรับ-ส่งหนังสือ <span class="required">*</span></div>
-                <cpn-input  v-model="data.book_method_name"
-                            name="book_method_name"
+                <cpn-input  v-model="data.name"
+                            name="name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>              
               <div class="group-input">
                 <div class="name">ประเภทหนังสือ<span class="required">*</span></div>
-                <cpn-select v-model="data.book_method_record"
-                            name="book_method_record"
-                            :optionSelect="data.optionSelect.book_method_record"
+                <cpn-select v-model="data.type"
+                            name="type"
+                            :optionSelect="data.optionSelect.type"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด </div>
-                <cpn-textArea v-model="data.description"
-                            name="book_method_description"
+                <cpn-textArea v-model="data.desc"
+                            name="book_method_desc"
                             rows="4"
                             placeholder="กรุณาระบุ"  />
               </div>
@@ -80,10 +80,10 @@ export default {
       edit: false,
       data: {
         code: '',
-        book_method_name: '',
-        description: '',
+        name: '',
+        desc: '',
         optionSelect: {
-          book_method_record: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
+          type: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
         }
       },
     }
@@ -100,9 +100,9 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.book_method_name = ''
-      this.data.book_method_record = ''
-      this.data.description = ''
+      this.data.name = ''
+      this.data.type = ''
+      this.data.desc = ''
     },
     onSubmit() {
       let _this = this
@@ -115,9 +115,9 @@ export default {
         afterPressAgree() {
           if (_this.edit) {
             let groupdata = {
-              name: _this.data.book_method_name,
-              type: _this.data.book_method_record,
-              desc: _this.data.description
+              name: _this.data.name,
+              type: _this.data.type,
+              desc: _this.data.desc
             }
             _this.showLoading = true
             _this.axios.put(`/bookmethod/${_this.$route.params.id}`, groupdata)
@@ -131,9 +131,9 @@ export default {
             })
           } else {
             let groupdata = {
-              name: _this.data.book_method_name,
-              type: _this.data.book_method_record,
-              desc: _this.data.description
+              name: _this.data.name,
+              type: _this.data.type,
+              desc: _this.data.desc
             }
             _this.showLoading = true
             _this.axios.post(`/bookmethod`, groupdata)
@@ -154,9 +154,9 @@ export default {
       this.axios.get(`/bookmethod/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.name = response.data.data.book_method_name
-        this.data.type = response.data.data.book_method_record
-        this.data.desc = response.data.data.description
+        this.data.name = response.data.data.name
+        this.data.type = response.data.data.type
+        this.data.desc = response.data.data.desc
       })
       .catch((error) => {
         this.showLoading = false

@@ -437,7 +437,7 @@ export default {
     },
     keyup_department(e) {
       this.optionSelect.department_id = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -446,7 +446,7 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
             return item
           })
           this.optionSelect.department_id = response.data.data
@@ -455,7 +455,7 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -464,7 +464,7 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
             return item
           })
           this.optionSelect.sendTo = response.data.data

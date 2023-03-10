@@ -108,6 +108,10 @@ export default {
     back() {
       this.$router.push({ 
         name: 'subministry',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     cancelClick() {

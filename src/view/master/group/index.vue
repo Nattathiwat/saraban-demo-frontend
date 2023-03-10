@@ -101,7 +101,11 @@ export default {
     editClick(item) {
       this.$router.push({ 
         name: 'group-edit',
-        params: {id: item.id}
+        params: {id: item.id},
+        query: {
+          page: this.data.page,
+          perPage: this.data.perPage
+        }
       }).catch(()=>{});
     },
     pageChange(data) {
@@ -171,6 +175,8 @@ export default {
     },
   },
   mounted() {
+    this.data.page = this.$route.query?.page || this.data.page
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage
     this.apigroup()
   },
 }

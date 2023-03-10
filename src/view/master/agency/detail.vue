@@ -44,20 +44,20 @@
               </div>
               <div class="group-input">
                 <div class="name">กระทรวง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.org_id"
-                            name="org_id"
+                <cpn-autoComplete v-model="data.organization_id"
+                            name="organization_id"
                             rules="required"
                             placeholder="กรุณาระบุ"
                             type="text"
-                            :optionSelect="optionSelect.org_id"
+                            :optionSelect="optionSelect.organization_id"
                             @change="change"/>
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="data.description"
-                            name="description"
+                <cpn-textArea v-model="data.desc"
+                            name="desc"
                             rows="4"
                             placeholder="กรุณาระบุ"  />
               </div>
@@ -101,11 +101,11 @@ export default {
         code: '',
         department_short_name: '',
         department_full_name: '',
-        description: '',
-        org_id:''
+        desc: '',
+        organization_id:''
       },
       optionSelect: {
-          org_id: []
+          organization_id: []
         }
     }
   },
@@ -124,6 +124,7 @@ export default {
       this.data.code = ''
       this.data.department_short_name = ''
       this.data.department_full_name = ''
+      this.data.desc = ''
     },
     onSubmit() {
       let _this = this
@@ -139,7 +140,8 @@ export default {
               code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
-              organization_id: _this.data.org_id
+              organization_id: _this.data.organization_id,
+              desc: _this.data.desc
             }
             _this.showLoading = true
             _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
@@ -156,7 +158,8 @@ export default {
               code: _this.data.code,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
-              organization_id: _this.data.org_id
+              organization_id: _this.data.organization_id,
+              desc: _this.data.desc
             }
             _this.showLoading = true
             _this.axios.post(`/department`, groupdata)
@@ -177,10 +180,11 @@ export default {
       this.axios.get(`/department/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.code = response.data.data.code
-        this.data.department_short_name = response.data.data.department_short_name
-        this.data.department_full_name = response.data.data.department_full_name
-        this.data.organization_id = response.data.data.org_id
+        // this.data.code = response.data.data.code
+        // this.data.department_short_name = response.data.data.department_short_name
+        // this.data.department_full_name = response.data.data.department_full_name
+        // this.data.organization_id = response.data.data.organization_id
+        this.data = {...this.data,...response.data.data}
       })
       .catch((error) => {
         this.showLoading = false
@@ -199,7 +203,7 @@ export default {
           item.name = item.name
           return item
         })
-        this.optionSelect.org_id = response1.data.data
+        this.optionSelect.organization_id = response1.data.data
 
         if (this.$route.params.id) {
           this.edit = true

@@ -110,6 +110,10 @@ export default {
     back() {
       this.$router.push({ 
         name: 'book-type',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     cancelClick() {
@@ -170,7 +174,7 @@ export default {
       this.axios.get(`/booktype/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data = response.data.data
+        this.data = {...this.data,...response.data.data}
       })
       .catch((error) => {
         this.showLoading = false

@@ -42,7 +42,7 @@
                 <td class="col1">{{item.code}}</td>
                 <td class="col2">{{item.department_short_name}}</td>
                 <td class="col3">{{item.department_full_name}}</td>
-                <td class="col4">{{item.department_short_name}}</td>
+                <td class="col4">{{item.desc}}</td>
                 <td class="col5">{{item.organization_name}}</td>
                 <td class="col7">
                   <div class="group-icon">

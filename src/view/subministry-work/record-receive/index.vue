@@ -114,6 +114,7 @@ export default {
         lastPage: 0,
         perPage: 10,
         tag:'',
+        selected: []
       },
     }
   },
@@ -194,29 +195,59 @@ export default {
     },
     submitClick(){
       let _this = this
-      console.log('start')
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการรับเข้าหรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-            console.log('stp1')
-            let groupdata = {
-              regis_id: _this.data.regis_id,
-              typename: _this.data.book_type
-            }
-            _this.showLoading = true
-            _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
+      if (this.data.table.length > 0) {
+        console.log('start')
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+              console.log('stp1')
+              // let groupdata = {
+              //   regis_id: _this.data.regis_id,
+              //   typename: _this.data.book_type
+              // }
+              _this.showLoading = true
+              let groupdata = {
+                regis_id: _this.data.regis_id,
+                typename: _this.data.book_type
+              };
+              let axiosArray = []
+              _this.data.table.filter((row) => {
+                if (_this.checkedList.length > 0) {
+                  console.log('if1')
+                  if (row.selected)
+                  console.log('if2')
+                  axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
+                } else {
+                  console.log('if3')
+                  axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
+                }
+              });              
+              // _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
+              console.log(axiosArray)
+              this.axios.all([...axiosArray])
+              console.log(axiosArray)
+              .then(_this.axios.spread (() => {
+                console.log('afterall')
+                _this.showLoading = false
+                _this.modalAlert = {
+                  showModal: true, 
+                  type: 'success', 
+                  title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+                  msgSuccess: true, 
+                  afterPressAgree() {
+                    _this.apigetrecord()
+                  }
+                }                
+              })) 
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+          }
         }
       }
     },

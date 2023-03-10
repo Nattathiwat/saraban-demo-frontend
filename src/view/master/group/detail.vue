@@ -21,15 +21,15 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อย่อกลุ่ม <span class="required">*</span></div>
-                <cpn-input  v-model="data.group_short_name"
-                            name="group_short_name"
+                <cpn-input  v-model="data.short_name"
+                            name="short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ชื่อกลุ่ม <span class="required">*</span></div>
-                <cpn-input  v-model="data.group_name"
-                            name="group_name"
+                <cpn-input  v-model="data.name"
+                            name="name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
@@ -37,8 +37,8 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="data.description"
-                    name="group_description"
+                <cpn-textArea v-model="data.desc"
+                    name="group_desc"
                     class=""
                     style=""
                     rows="4"
@@ -46,10 +46,10 @@
               </div>
               <div class="group-input">
               <div class="name">กอง<span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.submin_id"
-                        name="submin_id"
+                <cpn-autoComplete v-model="data.subministry_id"
+                        name="subministry_id"
                         type="text"
-                        :optionSelect="optionSelect.submin_id"
+                        :optionSelect="optionSelect.subministry_id"
                         @change="change"
                         placeholder="กรุณาระบุ" /> 
             </div>
@@ -91,12 +91,13 @@ export default {
       edit: false,
       data: {
         code: '',
-        group_short_name: '',
-        group_name: '',
-        submin_id: ''
+        short_name: '',
+        name: '',
+        subministry_id: '',
+        desc: ''
       },
       optionSelect:{
-          submin_id:[]
+          subministry_id:[]
         }
     }
   },
@@ -104,13 +105,17 @@ export default {
     back() {
       this.$router.push({ 
         name: 'group',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
       }).catch(()=>{});
     },
     cancelClick() {
       this.back()
-      this.data.description = ''
-      this.data.group_short_name = ''
-      this.data.group_name = ''
+      this.data.desc = ''
+      this.data.short_name = ''
+      this.data.name = ''
     },
     onSubmit() {
       let _this = this
@@ -123,10 +128,10 @@ export default {
         afterPressAgree() {
               if (_this.edit) {
                 let groupdata = {
-                  desc: _this.data.description,
-                  name: _this.data.group_name,
-                  short_name: _this.data.group_short_name,
-                  subministry_id: _this.data.submin_id
+                  desc: _this.data.desc,
+                  name: _this.data.name,
+                  short_name: _this.data.short_name,
+                  subministry_id: _this.data.subministry_id
                 }
                 _this.showLoading = true
                 _this.axios.put(`group/${_this.$route.params.id}`, groupdata)
@@ -140,10 +145,10 @@ export default {
                 })
               } else {
                 let groupdata = {
-                  desc: _this.data.description,
-                  name: _this.data.group_name,
-                  short_name: _this.data.group_short_name,
-                  subministry_id: _this.data.submin_id
+                  desc: _this.data.desc,
+                  name: _this.data.name,
+                  short_name: _this.data.short_name,
+                  subministry_id: _this.data.subministry_id
                 }
                 _this.showLoading = true
                 _this.axios.post(`/group`, groupdata)
@@ -164,10 +169,11 @@ export default {
       this.axios.get(`/group/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.desc = response.data.data.description
-        this.data.group_short_name = response.data.data.group_short_name
-        this.data.name = response.data.data.group_name
-        this.data.subministry_id = response.data.data.submin_id
+        // this.data.desc = response.data.desc
+        // this.data.short_name = response.data.short_name
+        // this.data.name = response.data.name
+        // this.data.subministry_id = response.data.subministry_id
+        this.data = {...this.data,...response.data.data}
       })
       .catch((error) => {
         this.showLoading = false
@@ -186,11 +192,11 @@ export default {
           item.name = item.Name
           return item
         })
-        this.optionSelect.submin_id = response1.data.data
+        this.optionSelect.subministry_id = response1.data.data
 
         if (this.$route.params.id) {
           this.edit = true
-          this.api_detail()
+          this.apiDetail()
         } else {
           this.edit = false
         }
@@ -201,12 +207,6 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.apiDetail()
-    } else {
-      this.edit = false
-    }
     this.api_master()
   }
 }
