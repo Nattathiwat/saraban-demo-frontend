@@ -387,6 +387,7 @@ export default {
           response.data.data.filter(item => {
             item.value = item.id
             item.name = item.desc
+            item.human_flag = item.human_flag
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -405,6 +406,7 @@ export default {
           response.data.data.filter(item => {
             item.value = item.id
             item.name = item.desc
+            item.human_flag = item.human_flag
             return item
           })
           data.optionSelect.department_dest_id = response.data.data

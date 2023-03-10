@@ -288,7 +288,7 @@ export default {
         book_category_id: '',
         book_type_id: '',
         receive_date: '',
-        receive_time: this.assetsUtils.currentTime(),
+        receive_time: '',
         document_number: '',
         as_of_date: '',
         subject: '',
@@ -447,6 +447,7 @@ export default {
           response.data.data.filter(item => {
             item.value = item.id
             item.name = item.desc
+            item.human_flag = item.human_flag
             return item
           })
           this.optionSelect.department_id = response.data.data
@@ -465,6 +466,7 @@ export default {
           response.data.data.filter(item => {
             item.value = item.id
             item.name = item.desc
+            item.human_flag = item.human_flag
             return item
           })
           this.optionSelect.sendTo = response.data.data
