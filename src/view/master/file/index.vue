@@ -33,7 +33,8 @@
                 <td class="col1">{{item.name}}</td>
                 <td class="col2" @click=apiupdate()>{{item.file_type}}</td>
                 <td class="col3"><cpn-toggleSwitch  v-model="item.active_flag"
-                                                    name="file_active_flag" />
+                                                    name="file_active_flag" 
+                                                    @change="change(item)"/>
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
@@ -115,20 +116,18 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    apiupdate() {
-      console.log('click')
+    change(item) {
+      this.showLoading = true
       let groupdata = {
-        active_flag: parseInt(_this.data.active_flag ? '1' : '0')
-        }
-      _this.showLoading = true
-      _this.axios.put(`/filetype`, groupdata) 
-      .then(() => { 
-        _this.showLoading = false
-        // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        active_flag: (item.active_flag ? 1 : 0)
+      }
+      this.axios.put('/filetype/'+ item.id,groupdata)
+      .then(() => {
+        this.showLoading = false
       })
       .catch((error) => {
-        _this.showLoading = false
-        _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     }
   },

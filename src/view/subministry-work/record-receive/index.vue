@@ -47,22 +47,22 @@
                                                 name="selected"
                                                 @change="selected($event, item)" />
                   </td>
-                <td class="col2" @click="editClick(item)">{{item.speedName}}</td>
+                <td class="col2" @click="editClick(item)">{{item.speed_name}}</td>
                 <td class="col3" @click="editClick(item)">{{item.document_number}}</td>
-                <td class="col4" @click="editClick(item)">{{item.date}}</td>
+                <td class="col4" @click="editClick(item)">{{item.as_of_date}}</td>
                 <td class="col5" @click="editClick(item)">
                   <div class="group-show none-bg">
                     <span class="span">
-                      {{item.bookingSubject}}
+                      {{item.subject}}
                     </span>
-                    <div class="show-detail">{{item.bookingSubject}}
+                    <div class="show-detail">{{item.subject}}
                       <div v-if="false" class="image-size"></div>
                     </div>
                   </div>
                 </td>
-                <td class="col6">{{item.send_dep}}</td>
-                <td class="col7">{{item.receive_dep}}</td>
-                <td class="col8">{{item.book_type}}</td>
+                <td class="col6">{{item.send_department_name}}</td>
+                <td class="col7">{{item.department_receive_name}}</td>
+                <td class="col8">{{item.book_type_name}}</td>
                 <td class="col9">
                   <div class="group-show">
                     <span class="span">
@@ -167,16 +167,15 @@ export default {
         this.showLoading = false
         if (response.data.data) {
             response.data.data.filter(row => {
-            row.speedName = row.speed_name
-            row.bookingNo = row.receive_document_number
-            row.referBookno = row.document_number
-            row.bookingSubject = row.subject
-            row.book_type = row.book_type_name
-            row.date = row.as_of_date
-            row.response = row.response_name
-            row.statusName = row.status
-            row.send_dep = row.send_department_name
-            row.receive_dep = row.department_receive_name
+            row.speed_name = row.speed_name
+            row.document_number = row.document_number
+            row.subject = row.subject
+            row.book_type_name = row.book_type_name
+            row.as_of_date = row.as_of_date
+            row.response_name = row.response_name
+            row.status_name = row.status_name
+            row.send_department_name = row.send_department_name
+            row.department_receive_name = row.department_receive_name
             this.data.total = row.total
           })
           this.data.table = response.data.data
@@ -196,7 +195,6 @@ export default {
     submitClick(){
       let _this = this
       if (this.data.table.length > 0) {
-        console.log('start')
         this.modalAlert = {
           showModal: true,
           type: 'confirm',
@@ -204,27 +202,21 @@ export default {
           confirm: true,
           msgSuccess: true,
           afterPressAgree() {
-              console.log('stp1')
               _this.showLoading = true
               let axiosArray = []
               _this.data.table.filter((row) => {
                 if (_this.checkedList.length > 0) {
-                  console.log('if1')
                   let groupdata = {
                     regis_id: row.regis_id,
                     book_type: parseInt(row.book_type)
                   }
                   if (row.selected) {
-                    console.log('if2')
                     axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
                   }
                 }
               });              
-              // _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
-              console.log('all')
               _this.axios.all([...axiosArray])
               .then(_this.axios.spread (() => {
-                console.log('afterall')
                 _this.showLoading = false
                 _this.modalAlert = {
                   showModal: true, 
