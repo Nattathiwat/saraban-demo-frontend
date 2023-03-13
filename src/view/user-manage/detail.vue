@@ -19,6 +19,22 @@
         <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
+              <div class="group-image left">
+                <div class="name">โปรไฟล์</div>
+                <div class="image-preview-wrapper" v-show="data.previewImage1" :style="{ 'background-image': `url(${data.previewImage1})` }"></div>
+                <input ref="fileInput1" type="file" @input="pickFile('fileInput1')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
+                <button name="fileInput1" type="button" @click="selectImage('fileInput1')" class="button-image">เลือกรูปภาพ</button>
+                <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
+              </div>
+              <div class="group-image">
+                <div class="name">ลายเซ็น</div>
+                <div class="image-preview-wrapper" v-show="data.previewImage2" :style="{ 'background-image': `url(${data.previewImage2})` }"></div>
+                <input ref="fileInput2" type="file" @input="pickFile('fileInput2')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
+                <button name="fileInput2" type="button" @click="selectImage('fileInput2')" class="button-image">เลือกรูปภาพ</button>
+                <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
+              </div>
+            </div>
+            <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อ<span class="required">*</span></div>
                 <cpn-input  v-model="data.fname"
@@ -61,21 +77,54 @@
                             rules="required|email"
                             placeholder="กรุณาระบุ" />
               </div>
+              <div class="group-input"></div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">กระทรวง</div>
+                <cpn-autoComplete v-model="data.organization_id"
+                                  name="organization"
+                                  placeholder="กรุณาระบุ"
+                                  :disabled="true"
+                                  @keyup="keyupOrganization($event)"
+                                  :optionSelect="data.optionSelect.organization" />
+              </div>
               <div class="group-input">
-                <div class="name">หน่วยงาน <span class="required">*</span></div>
+                <div class="name">หน่วยงาน</div>
                 <cpn-autoComplete v-model="data.department_id"
                                   name="department"
                                   placeholder="กรุณาระบุ"
-                                  rules="required"
+                                  :disabled="true"
                                   @keyup="keyupDepartment($event)"
                                   :optionSelect="data.optionSelect.department" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">กอง</div>
+                <cpn-autoComplete v-model="data.subministry_id"
+                                  name="subministry"
+                                  placeholder="กรุณาระบุ"
+                                  :disabled="true"
+                                  @keyup="keyupSubministry($event)"
+                                  :optionSelect="data.optionSelect.subministry" />
+              </div>
+              <div class="group-input">
+                <div class="name">กลุ่ม <span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.group_id"
+                                  name="group"
+                                  placeholder="กรุณาระบุ"
+                                  rules="required"
+                                  @keyup="keyupGroup($event)"
+                                  @change="changeGroup"
+                                  :optionSelect="data.optionSelect.group" />
               </div>
             </div>
           </div>
           <div class="group-level" v-show="data.optionSelect.roles.length > 0">
             <div class="level-first">
               <img src="@/assets/images/icon/crown-duotone.svg" alt="" class="icon-crown">
-              <div class="name">สิทธิ์ <span class="required">*</span></div>
+              <div class="name">สิทธิ์</div>
             </div>
             <div class="level-button">
               <div v-for="(item, index) in data.optionSelect.roles" :key="index">
@@ -128,18 +177,29 @@ export default {
       showLoading: false,
       edit: false,
       data: {
+        previewImage1: '',
+        previewImage2: '',
+        profile_img: '',
+        signature_img: '',
         fname: '',
         lname: '',
         username: '',
         password: '',
         email: '',
         department_id: '',
+        organization_id: '',
+        subministry_id: '',
+        group_id: '',
         level: [],
         birthdate:'',
         optionSelect: {
+          organization: [],
           department: [],
+          subministry: [],
+          group: [],
           roles: []
-        }
+        },
+        fileType: []
       },
     }
   },
@@ -147,6 +207,46 @@ export default {
     date
   },
   methods: {
+    selectImage (data) {
+      this.$refs[data].click()
+    },
+    pickFile (data) {
+      for (var i = 0; i < this.$refs[data].files.length; i++) {
+        let file = this.$refs[data].files[i]
+        if ((this.data.fileType.indexOf(file.type)==-1)) {
+          return false
+        }
+        if ((file.type == 'image/jpeg' || file.type == 'image/png') && (file.size < 500000)) {
+          if (data == 'fileInput1') {
+            this.data.previewImage1 = URL.createObjectURL(file)
+            this.data.profile_img = file
+          } else {
+            this.data.previewImage2 = URL.createObjectURL(file)
+            this.data.signature_img = file
+          }
+          this.$refs[data].value=null;
+        } else {
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: '*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB'}
+        }
+      }
+    },
+    keyupOrganization(e) {
+      this.data.optionSelect.organization = []
+      this.axios.get('/organization', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            return item
+          })
+          this.data.optionSelect.organization = response.data.data
+        }
+      })
+    },
     keyupDepartment(e) {
       this.data.optionSelect.department = []
       this.axios.get('/master-data/department', {
@@ -165,6 +265,53 @@ export default {
         }
       })
     },
+    keyupSubministry(e) {
+      this.data.optionSelect.subministry = []
+      this.axios.get('/subministry', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.Name
+            return item
+          })
+          this.data.optionSelect.subministry = response.data.data
+        }
+      })
+    },
+    keyupGroup(e) {
+      this.data.optionSelect.group = []
+      this.axios.get('/group', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            return item
+          })
+          this.data.optionSelect.group = response.data.data
+        }
+      })
+    },
+    changeGroup(data) {
+      this.data.optionSelect.group.filter(item => {
+        if (item.id == data) {
+          this.data.optionSelect.organization.push({value: item.organization_id, name: item.organization_name})
+          this.data.organization_id = item.organization_id
+          this.data.optionSelect.department.push({value: item.department_id, name: item.department_name})
+          this.data.department_id = item.department_id
+          this.data.optionSelect.subministry.push({value: item.subministry_id, name: item.subministry_name})
+          this.data.subministry_id = item.subministry_id
+        }
+      })
+    },
     back() {
       this.$router.push({ 
         name: 'user-manage',
@@ -176,68 +323,73 @@ export default {
     },
     cancelClick() {
       this.back()
+      this.data.previewImage1 = ''
+      this.data.previewImage2 = ''
+      this.data.profile_img = ''
+      this.data.signature_img = ''
       this.data.username = ''
       this.data.password = ''
       this.data.email = ''
+      this.data.organization_id = ''
       this.data.department_id = ''
+      this.data.subministry_id = ''
+      this.data.group_id = ''
       this.data.level = []
       this.data.birthdate = ''
+      this.data.fileType = []
     },
     onSubmit() {
       let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          let roles = []
-          _this.data.level.filter(item => {
-            item.flag = 'delete'
-            roles.push(item)
-          })
-          _this.data.optionSelect.roles.filter(item => {
-            item.flag = 'add'
-            item.check ? roles.push(item) : ''
-          })
-          if (_this.edit) {
-            let groupdata = {
-              "fname": _this.data.fname,
-              "lname": _this.data.lname,
-              "email": _this.data.email,
-              "department_id": parseInt(_this.data.department_id),
-              "username": _this.data.username,
-              "password": _this.data.password,
-              "roles": roles,
-              "birthdate":_this.data.birthdate,
-            }
+      if ((!this.data.profile_img || !this.data.signature_img) && !this.edit) {
+        document.querySelector(`[name="fileInput1"]`).scrollIntoView({block: "center"})
+      } else {
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการ${this.edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}หรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+            let roles = []
+            _this.data.level.filter(item => {
+              item.flag = 'delete'
+              roles.push(item)
+            })
+            _this.data.optionSelect.roles.filter(item => {
+              item.flag = 'add'
+              item.check ? roles.push(item) : ''
+            })
+
+            let formDataFile = new FormData();
+            formDataFile.append('fname', _this.data?.fname || '');
+            formDataFile.append('lname', _this.data?.lname || '');
+            formDataFile.append('email', _this.data?.email || '');
+            formDataFile.append('department_id', _this.data?.department_id || '');
+            formDataFile.append('organization_id', _this.data?.organization_id || '');
+            formDataFile.append('subministry_id', _this.data?.subministry_id || '');
+            formDataFile.append('group_id', _this.data?.group_id || '');
+            formDataFile.append('username', _this.data?.username || '');
+            formDataFile.append('password', _this.data?.password || '');
+            formDataFile.append('birthdate', _this.data?.birthdate || '');
+            formDataFile.append('profile_img', _this.data?.profile_img || '');
+            formDataFile.append('signature_img', _this.data?.signature_img || '');
+            formDataFile.append('total_role', roles?.length || 0);
+            roles.filter((item, index) => {
+              if (item.id) {
+              formDataFile.append(`roles[${index}][id]`, item.id)
+              }
+              if (item.role_id) {
+                formDataFile.append(`roles[${index}][role_id]`, item.role_id)
+              }
+              if (item.flag) {
+                formDataFile.append(`roles[${index}][flag]`, item.flag)
+              }
+            })
             _this.showLoading = true
-            _this.axios.put(`/user/${_this.$route.params.id}`, groupdata)
+            _this.axios[_this.edit ? 'put' : 'post'](`/user${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
             .then(() => { 
               _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            let groupdata = {
-              "fname": _this.data.fname,
-              "lname": _this.data.lname,
-              "email": _this.data.email,
-              "department_id": parseInt(_this.data.department_id),
-              "username": _this.data.username,
-              "password": _this.data.password,
-              "roles": roles,
-              "birthdate":_this.data.birthdate,
-            }
-            _this.showLoading = true
-            _this.axios.post(`/user`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+              _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว' : 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
             })
             .catch((error) => {
               _this.showLoading = false
@@ -258,8 +410,13 @@ export default {
         this.data.password = response.data.data.password
         this.data.email = response.data.data.email
         this.data.department_id = response.data.data.department_id
+        this.data.organization_id = response.data.data.organization_id
+        this.data.subministry_id = response.data.data.subministry_id
+        this.data.group_id = response.data.data.group_id
         this.data.birthdate = response.data.data.birthdate
         this.data.level = response.data.data.roles
+        this.data.previewImage1 = response.data.data.profile_img
+        this.data.previewImage2 = response.data.data.signature_img
 
         this.data.optionSelect.roles.filter(item2 => {
           item2.check = false 
@@ -279,26 +436,60 @@ export default {
       this.showLoading = true
       const request1 = this.axios.get(`/master-data/department`)
       const request2 = this.axios.get(`/master-data/role`)
+      const request3 = this.axios.get(`/organization?page_size=100`)
+      const request4 = this.axios.get(`/subministry?page_size=100`)
+      const request5 = this.axios.get(`/group?page_size=100`)
+      const request6 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request1, request2])
+      this.axios.all([request1, request2, request3, request4, request5, request6])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
         const response1 = responses[0]
         const response2 = responses[1]
+        const response3 = responses[2]
+        const response4 = responses[3]
+        const response5 = responses[4]
+        const response6 = responses[5]
         
-        response1.data.data.filter(row => {
-          row.value = row.id
-          row.name = row.department_full_name
-          return row
+        response1.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.department_full_name
+          return item
         })
 
-        response2.data.data.filter(row => {
-          row.role_id = row.id
-          return row
+        response2.data.data.filter(item => {
+          item.role_id = item.id
+          return item
+        })
+        
+        response3.data.data.filter(item => {
+          item.value = item.id
+          return item
+        })
+        
+        response4.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.Name
+          return item
+        })
+        
+        response5.data.data.filter(item => {
+          item.value = item.id
+          return item
         })
 
         this.data.optionSelect.department = response1.data.data
         this.data.optionSelect.roles = response2.data.data
+        this.data.optionSelect.organization = response3.data.data
+        this.data.optionSelect.subministry = response4.data.data
+        this.data.optionSelect.group = response5.data.data
+        this.data.fileType = []
+
+        response6.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.fileType.push(item.content_type)
+          }
+        })
 
         if (this.$route.params.id) {
           this.edit = true
@@ -401,6 +592,46 @@ export default {
 
           .left {
             margin-right: 30px;
+          }
+        }
+
+        .group-image {
+          width: 100%;
+          padding: 0 10px;
+          margin-bottom: 30px;
+          text-align: center;
+
+          .name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 7px;
+          }
+
+          .image-preview-wrapper {
+            background-repeat: no-repeat;
+            width: 250px;
+            height: 250px;
+            display: block;
+            margin: 0 auto 30px;
+            background-size: contain;
+            background-position: center center;
+          }
+
+          .button-image {
+            background-color: #15466e;
+            color: #fff;
+            padding: 5px 12px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 5px;
+          }
+
+          .warning-message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #9fa1a3;
           }
         }
 

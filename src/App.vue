@@ -349,8 +349,14 @@ export default {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
         position: localStorage.getItem('department_name')
       }
-      if (this.$route.name == 'user' || this.$route.name == 'user-create' || this.$route.name == 'user-edit' || this.$route.name == 'department' || this.$route.name == 'department-create' || this.$route.name == 'department-edit') {
-        this.iconAngle.userManage = true
+      if (this.$route.name == 'book-type' || this.$route.name == 'book-type-create' || this.$route.name == 'book-type-edit' || 
+      this.$route.name == 'organization' || this.$route.name == 'organization-create' || this.$route.name == 'organization-edit' || 
+      this.$route.name == 'agency' || this.$route.name == 'agency-create' || this.$route.name == 'agency-edit' || 
+      this.$route.name == 'subministry' || this.$route.name == 'subministry-create' || this.$route.name == 'subministry-edit' || 
+      this.$route.name == 'group' || this.$route.name == 'group-create' || this.$route.name == 'group-edit' || 
+      this.$route.name == 'book-method' || this.$route.name == 'book-method-create' || this.$route.name == 'book-method-edit' || 
+      this.$route.name == 'file' || this.$route.name == 'file-create' || this.$route.name == 'file-edit') {
+        this.iconAngle.master = true
       }
     }
   }
