@@ -22,7 +22,7 @@
               <div class="group-input left">
                 <div class="name">รหัสกอง<span class="required">*</span></div>
                 <cpn-input  v-model="data.code"
-                            name="department_id"
+                            name="subminist_id"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
@@ -32,8 +32,7 @@
                         name="active_flag"
                         class=""
                         style=""
-                        :disabled="false"
-                        @change="change" />
+                        :disabled="false"/>
               </div>
             </div>
             <div class="group-between">
@@ -50,6 +49,29 @@
                             name="short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">กระทรวง <span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.organization_id"
+                                  name="organization_id"
+                                  rules="required"
+                                  placeholder="กรุณาระบุ"
+                                  type="text"
+                                  :disabled="true"
+                                  :optionSelect="optionSelect.organization_id"
+                                  @change="change"/>
+              </div>
+              <div class="group-input">
+                <div class="name">หน่วยงาน <span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.department_id"
+                                  name="department_id"
+                                  rules="required"
+                                  placeholder="กรุณาระบุ"
+                                  type="text"
+                                  :optionSelect="optionSelect.department_id"
+                                  @change="change"/>
               </div>
             </div>
             <div class="group-between">
@@ -101,8 +123,14 @@ export default {
         short_name: '',
         Name: '',
         desc: '',
-        active_flag: false
+        active_flag: false,
+        organization_id:'',
+        department_id: '',
       },
+      optionSelect: {
+        organization_id: [],
+        department_id: []
+      }
     }
   },
   methods: {
@@ -136,7 +164,8 @@ export default {
               Name: _this.data.Name,
               short_name: _this.data.short_name,
               desc: _this.data.desc,
-              active_flag: parseInt(_this.data.active_flag ? '1' : '0')
+              department_id: _this.data.department_id,
+              active_flag: _this.data.active_flag ? 1 : 0
             }
             _this.showLoading = true
             _this.axios.put(`/subministry/${_this.$route.params.id}`, groupdata)
@@ -154,7 +183,8 @@ export default {
               Name: _this.data.Name,
               short_name: _this.data.short_name,
               desc: _this.data.desc,
-              active_flag: parseInt(_this.data.active_flag ? '1' : '0')
+              department_id: _this.data.department_id,
+              active_flag: _this.data.active_flag ? 1 : 0
             }
             _this.showLoading = true
             _this.axios.post(`/subministry`, groupdata)
@@ -175,7 +205,7 @@ export default {
       this.axios.get(`/subministry/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data = response.data.data
+        this.data = {...this.data,...response.data.data}
         this.data.active_flag = response.data.data.active_flag == 1
       })
       .catch((error) => {
@@ -183,6 +213,57 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    api_master() {
+      this.showLoading = true
+      const response1 = this.axios.get('/organization')
+      const response2 = this.axios.get('/department')
+
+      this.axios.all([response1, response2 ])
+      .then(this.axios.spread ((...responses) =>{
+        this.showLoading = false;
+        const response1 = responses[0]
+        const response2 = responses[1]
+
+        response1.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.name
+          return item
+        })
+
+        response2.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.department_full_name
+          return item
+        })
+
+        this.optionSelect.organization_id = response1.data.data
+        this.optionSelect.department_id = response2.data.data
+
+        if (this.$route.params.id) {
+          this.edit = true
+          this.api_detail()
+        } else {
+          this.edit = false
+        }
+
+      }
+      ))
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
+    change(dep){
+      this.optionSelect.department_id.filter(item => {
+          if(item.id == dep) {
+            this.optionSelect.organization_id.push({
+              value: item.organization_id,  
+              name: item.organization_name
+            })
+            this.data.organization_id = item.organization_id
+          }
+        })
+    }
   },
   mounted () {
     if (this.$route.params.id) {
@@ -191,6 +272,7 @@ export default {
     } else {
       this.edit = false
     }
+    this.api_master()
   }
 }
 

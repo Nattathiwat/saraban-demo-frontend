@@ -36,6 +36,40 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
+                <div class="name">กระทรวง <span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.organization_id"
+                                  name="organization_id"
+                                  rules="required"
+                                  placeholder="กรุณาระบุ"
+                                  type="text"
+                                  :disabled="true"
+                                  :optionSelect="optionSelect.organization_id"
+                                  @change="change"/>
+              </div>
+              <div class="group-input left">
+                <div class="name">หน่วยงาน <span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.department_id"
+                                  name="department_id"
+                                  rules="required"
+                                  placeholder="กรุณาระบุ"
+                                  type="text"
+                                  :disabled="true"
+                                  :optionSelect="optionSelect.department_id"
+                                  @change="change"/>
+              </div>
+              <div class="group-input">
+              <div class="name">กอง<span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.subministry_id"
+                                  name="subministry_id"
+                                  :optionSelect="optionSelect.subministry_id"
+                                  @change="change"
+                                  prules="required"
+                                  placeholder="กรุณาระบุ"
+                                  type="text" /> 
+            </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
                 <div class="name">รายละเอียด</div>
                 <cpn-textArea v-model="data.desc"
                     name="group_desc"
@@ -44,15 +78,6 @@
                     rows="4"
                     placeholder="กรุณาระบุ"  />
               </div>
-              <div class="group-input">
-              <div class="name">กอง<span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.subministry_id"
-                        name="subministry_id"
-                        type="text"
-                        :optionSelect="optionSelect.subministry_id"
-                        @change="change"
-                        placeholder="กรุณาระบุ" /> 
-            </div>
             </div>
           </div>
           <div class="line"></div>
@@ -94,10 +119,14 @@ export default {
         short_name: '',
         name: '',
         subministry_id: '',
+        organization_id:'',
+        department_id: '',
         desc: ''
       },
       optionSelect:{
-          subministry_id:[]
+          subministry_id:[],
+          organization_id: [],
+          department_id: []
         }
     }
   },
@@ -131,7 +160,9 @@ export default {
                   desc: _this.data.desc,
                   name: _this.data.name,
                   short_name: _this.data.short_name,
-                  subministry_id: _this.data.subministry_id
+                  subministry_id: _this.data.subministry_id,
+                  organization_id: _this.data.organization_id,
+                  department_id: _this.data.department_id
                 }
                 _this.showLoading = true
                 _this.axios.put(`group/${_this.$route.params.id}`, groupdata)
@@ -148,7 +179,9 @@ export default {
                   desc: _this.data.desc,
                   name: _this.data.name,
                   short_name: _this.data.short_name,
-                  subministry_id: _this.data.subministry_id
+                  subministry_id: _this.data.subministry_id,
+                  organization_id: _this.data.organization_id,
+                  department_id: _this.data.department_id
                 }
                 _this.showLoading = true
                 _this.axios.post(`/group`, groupdata)
@@ -169,10 +202,6 @@ export default {
       this.axios.get(`/group/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        // this.data.desc = response.data.desc
-        // this.data.short_name = response.data.short_name
-        // this.data.name = response.data.name
-        // this.data.subministry_id = response.data.subministry_id
         this.data = {...this.data,...response.data.data}
       })
       .catch((error) => {
@@ -182,17 +211,41 @@ export default {
     },
     api_master() {
       this.showLoading = true
+      const response1 = this.axios.get('/organization')
+      const response2 = this.axios.get('/department')
+      const response3 = this.axios.get('/subministry')
 
-      this.axios.get('/subministry')
-      .then((response1) =>  {
+      this.axios.all([response1, response2, response3])
+      .then(this.axios.spread ((...responses) =>{
         this.showLoading = false;
-        
+        const response1 = responses[0]
+        const response2 = responses[1]
+        const response3 = responses[2]
+
         response1.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.name
+          return item
+        })
+
+        response2.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.department_full_name
+          return item
+        })
+
+        response3.data.data.filter(item => {
           item.value = item.id
           item.name = item.Name
           return item
         })
-        this.optionSelect.subministry_id = response1.data.data
+
+        this.optionSelect.organization_id = response1.data.data
+        console.log('a')
+        this.optionSelect.department_id = response2.data.data
+        console.log('b')
+        this.optionSelect.subministry_id = response3.data.data
+        console.log('c')
 
         if (this.$route.params.id) {
           this.edit = true
@@ -200,10 +253,33 @@ export default {
         } else {
           this.edit = false
         }
-      }).catch((error) => {
+
+      }
+      ))
+      .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
+    },
+    change(dep){
+      this.optionSelect.subministry_id.filter(item => {
+          if(item.id == dep) {
+            this.optionSelect.organization_id.push({
+              value: item.organization_id,  
+              name: item.organization_name
+            })
+            this.data.organization_id = item.organization_id
+          }           
+        })
+        this.optionSelect.subministry_id.filter(item => {
+          if(item.id == dep) {
+            this.optionSelect.department_id.push({
+              value: item.department_id,  
+              name: item.department_name
+            })
+            this.data.department_id = item.department_id
+          }
+        })
     }
   },
   mounted () {
