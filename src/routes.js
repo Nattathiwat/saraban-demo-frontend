@@ -165,15 +165,25 @@ export default {
       name: 'book-type-create',
       component: () => import("./view/master/book-type/detail.vue"),
     },
-    // { 
-    //   path: '/master/book-type/history', 
-    //   name: 'book-type-history',
-    //   component: () => import("./view/master/book-type/history.vue"),
-    // },
     { 
       path: '/master/book-type/:id', 
       name: 'book-type-edit',
       component: () => import("./view/master/book-type/detail.vue"),
+    },
+    { 
+      path: '/master/book-record', 
+      name: 'book-record',
+      component: () => import("./view/master/book-record/index.vue"),
+    },
+    { 
+      path: '/master/book-record/create', 
+      name: 'book-record-create',
+      component: () => import("./view/master/book-record/detail.vue"),
+    },
+    { 
+      path: '/master/book-record/:id', 
+      name: 'book-record-edit',
+      component: () => import("./view/master/book-record/detail.vue"),
     },
     { 
       path: '/master/organization', 

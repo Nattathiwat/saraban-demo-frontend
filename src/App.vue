@@ -66,6 +66,10 @@
                 <div class="icon-circle" />
                 ชนิดหนังสือ
               </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-record' || $route.name == 'book-record-create' || $route.name == 'book-record-edit' ? 'active2' : ''" @click="$router.push({name: 'book-record'})">
+                <div class="icon-circle" />
+                ทะเบียนหนังสือ
+              </div>
               <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'organization' || $route.name == 'organization-create' || $route.name == 'organization-edit' ? 'active2': ''" @click="$router.push({name: 'organization'})">
                 <div class="icon-circle" />
                 กระทรวง
@@ -172,6 +176,12 @@ export default {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'แก้ไขชนิดหนังสือ', path: 'book-type-edit'}]
       } else if (this.$route.name == 'book-type-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'เพิ่มชนิดหนังสือ', path: 'book-type-create'}]
+      } else if (this.$route.name == 'book-record') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}]
+      } else if (this.$route.name == 'book-record-edit') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}, {name: 'แก้ไขทะเบียนหนังสือ', path: 'book-record-edit'}]
+      } else if (this.$route.name == 'book-record-create') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}, {name: 'เพิ่มทะเบียนหนังสือ', path: 'book-record-create'}]
       } else if (this.$route.name == 'organization') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}]
       } else if (this.$route.name == 'organization-edit') {
