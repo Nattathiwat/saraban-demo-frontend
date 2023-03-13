@@ -237,15 +237,16 @@ export default {
         })
 
         this.optionSelect.organization_id = response1.data.data
+        console.log('a')
         this.optionSelect.department_id = response2.data.data
+        console.log('b')
 
         if (this.$route.params.id) {
           this.edit = true
-          this.api_detail()
+          this.apiDetail()
         } else {
           this.edit = false
         }
-
       }
       ))
       .catch((error) => {
@@ -266,12 +267,6 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.id) {
-      this.edit = true
-      this.apiDetail()
-    } else {
-      this.edit = false
-    }
     this.api_master()
   }
 }

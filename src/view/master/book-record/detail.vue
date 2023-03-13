@@ -32,26 +32,25 @@
                         name="active_flag"
                         class=""
                         style=""
-                        :disabled="false"
-                        @change="change" />
+                        :disabled="false" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อทะเบียนหนังสือ <span class="required">*</span></div>
-                <cpn-input  v-model="data.department_short_name"
-                            name="department_short_name"
+                <cpn-input  v-model="data.name"
+                            name="book_record_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ทะเบียน <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.organization_id"
-                                  name="organization_id"
+                <cpn-select v-model="data.type"
+                                  name="book_record_type_id"
                                   rules="required"
                                   placeholder="กรุณาระบุ"
                                   type="text"
-                                  :optionSelect="optionSelect.organization_id"
+                                  :optionSelect="data.optionSelect.type"
                                   @change="change"/>
               </div>
             </div>
@@ -101,15 +100,18 @@ export default {
       edit: false,
       data: {
         code: '',
-        department_short_name: '',
-        department_full_name: '',
+        name: '',
         desc: '',
-        organization_id:'',
-        active_flag: false
-      },
-      optionSelect: {
-          organization_id: []
+        active_flag: false,
+        optionSelect: {
+          type: [
+            { name: 'ทะเบียนรับ',value: '0' },
+            { name: 'ทะเบียนส่ง(ภายใน)',value: '1' },
+            { name: 'ทะเบียนส่ง(ภายนอก)',value: '2' },
+            { name: 'บันทึกข้อความ',value: '3' }
+          ],
         }
+      },
     }
   },
   methods: {
@@ -125,8 +127,7 @@ export default {
     cancelClick() {
       this.back()
       this.data.code = ''
-      this.data.department_short_name = ''
-      this.data.department_full_name = ''
+      this.data.name = ''
       this.data.desc = ''
     },
     onSubmit() {
@@ -141,13 +142,13 @@ export default {
           if (_this.edit) {
             let groupdata = {
               code: _this.data.code,
-              department_full_name: _this.data.department_full_name,
-              department_short_name: _this.data.department_short_name,
-              organization_id: _this.data.organization_id,
+              name: _this.data.name,
+              active_flag: parseInt(_this.data.active_flag ? '1' : '0'),
+              type: _this.data.type,
               desc: _this.data.desc
             }
             _this.showLoading = true
-            _this.axios.put(`/department/${_this.$route.params.id}`, groupdata)
+            _this.axios.put(`/bookcategory/${_this.$route.params.id}`, groupdata)
             .then(() => { 
               _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขทะเบียนหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -159,14 +160,13 @@ export default {
           } else {
             let groupdata = {
               code: _this.data.code,
-              department_full_name: _this.data.department_full_name,
-              department_short_name: _this.data.department_short_name,
-              organization_id: _this.data.organization_id,
+              name: _this.data.name,
+              type: _this.data.type,
               desc: _this.data.desc,
               active_flag: parseInt(_this.data.active_flag ? '1' : '0')
             }
             _this.showLoading = true
-            _this.axios.post(`/department`, groupdata)
+            _this.axios.post(`/bookcategory`, groupdata)
             .then(() => { 
               _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างทะเบียนหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -181,48 +181,25 @@ export default {
     },
     api_detail() {
       this.showLoading = true
-      this.axios.get(`/department/${this.$route.params.id}`)
+      this.axios.get(`/bookcategory/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        // this.data.code = response.data.data.code
-        // this.data.department_short_name = response.data.data.department_short_name
-        // this.data.department_full_name = response.data.data.department_full_name
-        // this.data.organization_id = response.data.data.organization_id
         this.data = {...this.data,...response.data.data}
+        this.data.active_flag = response.data.data.active_flag == 1
       })
       .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    api_master() {
-      this.showLoading = true
-
-      this.axios.get('/organization')
-      .then((response1) =>  {
-        this.showLoading = false;
-        
-        response1.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.name
-          return item
-        })
-        this.optionSelect.organization_id = response1.data.data
-
-        if (this.$route.params.id) {
-          this.edit = true
-          this.api_detail()
-        } else {
-          this.edit = false
-        }
-      }).catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
-    }
   },
   mounted () {
-    this.api_master()
+    if (this.$route.params.id) {
+      this.edit = true
+      this.api_detail()
+    } else {
+      this.edit = false
+    }
   }
 }
 
