@@ -209,7 +209,9 @@ export default {
                 if (_this.checkedList.length > 0) {
                   let groupdata = {
                     regis_id: row.regis_id,
-                    book_type: parseInt(row.book_type)
+                    book_type: parseInt(row.book_type),
+                    human_flag: item.human_flag,
+                    response_id: row.response_id
                   }
                   if (row.selected) {
                     axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
