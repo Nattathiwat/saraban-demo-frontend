@@ -101,8 +101,8 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">เรียน</div>
-                <cpn-input  v-model="data.sendto"
-                            name="sendto"
+                <cpn-input  v-model="data.dear"
+                            name="dear" 
                             type="text"/>
               </div>
             </div>
@@ -326,6 +326,8 @@ export default {
         permission_id: '',
         description: '',
         regis_date: '',
+        human_flag:false,
+        response_id:''
       },
       optionSelect: {
         creater_id: [],
@@ -462,7 +464,8 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
-            human_flag: item.human_flag
+            human_flag: item.human_flag,
+            response_id: parseInt(this.data.response_id)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -691,7 +694,8 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
-            human_flag: item.human_flag
+            human_flag: item.human_flag,
+            response_id: parseInt(this.data.response_id)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -712,6 +716,7 @@ export default {
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         flag: this.flagSave == 1 ? "draft" : '',
+        response_id: parseInt(this.data.response_id)
       }
       this.showLoading = false
       if (this.edit) {

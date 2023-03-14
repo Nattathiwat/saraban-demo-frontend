@@ -192,14 +192,8 @@ export default {
       this.data.status = true
       this.data.perPage = 10
       this.data.page = 1
-      // this.data.desc = ''
-      // this.data.receive_date_str = ''
-      // this.data.receive_date_end = ''
-      // this.data.as_of_date_str = ''
-      // this.data.as_of_date_end = ''
-      // this.data.booktype = ''
       this.data.tag = ''
-      this.apigetexport()
+      this.apirecordout()
     },
     apirecordout() {
       this.data.table = []
@@ -210,14 +204,7 @@ export default {
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
-          // user_id: 2,
           user_id: localStorage.getItem('user_id'),
-          // desc: this.data.desc,
-          // receive_date_str: this.data.receive_date_str,
-          // receive_date_end: this.data.receive_date_end,
-          // as_of_date_str: this.data.as_of_date_str,
-          // as_of_date_end: this.data.as_of_date_end,
-          // book_type_id: this.data.booktype,
           tag: this.data.tag,
         }
       })
