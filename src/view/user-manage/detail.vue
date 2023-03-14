@@ -20,14 +20,14 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-image left">
-                <div class="name">โปรไฟล์</div>
+                <div class="name">โปรไฟล์ <span class="required">*</span></div>
                 <div class="image-preview-wrapper" v-show="data.previewImage1" :style="{ 'background-image': `url(${data.previewImage1})` }"></div>
                 <input ref="fileInput1" type="file" @input="pickFile('fileInput1')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
                 <button name="fileInput1" type="button" @click="selectImage('fileInput1')" class="button-image">เลือกรูปภาพ</button>
                 <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
               </div>
               <div class="group-image">
-                <div class="name">ลายเซ็น</div>
+                <div class="name">ลายเซ็น <span class="required">*</span></div>
                 <div class="image-preview-wrapper" v-show="data.previewImage2" :style="{ 'background-image': `url(${data.previewImage2})` }"></div>
                 <input ref="fileInput2" type="file" @input="pickFile('fileInput2')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
                 <button name="fileInput2" type="button" @click="selectImage('fileInput2')" class="button-image">เลือกรูปภาพ</button>
@@ -36,14 +36,14 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อ<span class="required">*</span></div>
+                <div class="name">ชื่อ <span class="required">*</span></div>
                 <cpn-input  v-model="data.fname"
                             name="fname"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">นามสกุล<span class="required">*</span></div>
+                <div class="name">นามสกุล <span class="required">*</span></div>
                 <cpn-input  v-model="data.lname"
                             name="lname"
                             rules="required"
