@@ -29,8 +29,7 @@
               <div class="group-input">
                 <div class="name">เปิด/ปิด การใช้งาน</div>
                 <cpn-toggleSwitch v-model="data.active_flag"
-                            name="active_flag"
-                            @change="change" />
+                            name="active_flag" />
               </div>
             </div>
             <div class="group-between">

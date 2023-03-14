@@ -1,11 +1,11 @@
 <template>
-  <div class="master-group-detail">
+  <div class="master-book-record-detail">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขกลุ่ม' : 'สร้างกลุ่ม'}}</div>
+            <div class="name">{{edit ? 'แก้ไขทะเบียนหนังสือ' : 'สร้างทะเบียนหนังสือ'}}</div>
           </div>
           <div class="group-end">
             <button type="button" class="button-back" @click="back()" >
@@ -20,63 +20,47 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อย่อกลุ่ม <span class="required">*</span></div>
-                <cpn-input  v-model="data.short_name"
-                            name="short_name"
+                <div class="name">เลขทะเบียนหนังสือ <span class="required">*</span></div>
+                <cpn-input  v-model="data.code"
+                            name="department_id"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อกลุ่ม <span class="required">*</span></div>
+                <div class="name">เปิด/ปิดการใช้งาน<span class="required">*</span></div>
+                <cpn-toggleSwitch v-model="data.active_flag"
+                        name="active_flag"
+                        class=""
+                        style=""
+                        :disabled="false" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">ชื่อทะเบียนหนังสือ <span class="required">*</span></div>
                 <cpn-input  v-model="data.name"
-                            name="name"
+                            name="book_record_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">กระทรวง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.organization_id"
-                                  name="organization_id"
-                                  rules="required"
-                                  placeholder="กรุณาระบุ"
-                                  type="text"
-                                  :disabled="true"
-                                  :optionSelect="optionSelect.organization_id"
-                                  @change="change"/>
-              </div>
-              <div class="group-input left">
-                <div class="name">หน่วยงาน <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.department_id"
-                                  name="department_id"
-                                  rules="required"
-                                  placeholder="กรุณาระบุ"
-                                  type="text"
-                                  :disabled="true"
-                                  :optionSelect="optionSelect.department_id"
-                                  @change="change"/>
-              </div>
               <div class="group-input">
-              <div class="name">กอง<span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.subministry_id"
-                                  name="subministry_id"
-                                  :optionSelect="optionSelect.subministry_id"
-                                  @change="change"
-                                  prules="required"
+                <div class="name">ทะเบียน <span class="required">*</span></div>
+                <cpn-select v-model="data.type"
+                                  name="book_record_type_id"
+                                  rules="required"
                                   placeholder="กรุณาระบุ"
-                                  type="text" /> 
-            </div>
+                                  type="text"
+                                  :optionSelect="data.optionSelect.type"
+                                  @change="change"/>
+              </div>
             </div>
             <div class="group-between">
-              <div class="group-input left">
+              <div class="group-input">
                 <div class="name">รายละเอียด</div>
                 <cpn-textArea v-model="data.desc"
-                    name="group_desc"
-                    class=""
-                    style=""
-                    rows="4"
-                    placeholder="กรุณาระบุ"  />
+                              name="desc"
+                              rows="4"
+                              placeholder="กรุณาระบุ"  />
               </div>
             </div>
           </div>
@@ -91,7 +75,7 @@
             <div class="footer-right">
               <button type="submit" class="button-success">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขกลุ่ม' : 'ยืนยันสร้างกลุ่ม'}}
+                {{edit ? 'ยืนยันแก้ไขทะเบียนหนังสือ' : 'ยืนยันสร้างทะเบียนหนังสือ'}}
               </button>
             </div>
           </div>
@@ -104,7 +88,7 @@
 </template>
 <script>
 export default {
-  name: 'group-detail',
+  name: 'book-record-detail',
   data() {
     return {
       modalAlert: {
@@ -116,24 +100,24 @@ export default {
       edit: false,
       data: {
         code: '',
-        short_name: '',
         name: '',
-        subministry_id: '',
-        organization_id:'',
-        department_id: '',
-        desc: ''
-      },
-      optionSelect:{
-          subministry_id:[],
-          organization_id: [],
-          department_id: []
+        desc: '',
+        active_flag: false,
+        optionSelect: {
+          type: [
+            { name: 'ทะเบียนรับ',value: '0' },
+            { name: 'ทะเบียนส่ง(ภายใน)',value: '1' },
+            { name: 'ทะเบียนส่ง(ภายนอก)',value: '2' },
+            { name: 'บันทึกข้อความ',value: '3' }
+          ],
         }
+      },
     }
   },
   methods: {
     back() {
       this.$router.push({ 
-        name: 'group',
+        name: 'book-record',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -142,154 +126,86 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.desc = ''
-      this.data.short_name = ''
+      this.data.code = ''
       this.data.name = ''
+      this.data.desc = ''
     },
     onSubmit() {
       let _this = this
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขกลุ่ม' : 'สร้างกลุ่ม'}หรือไม่`,
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขทะเบียนหนังสือ' : 'สร้างทะเบียนหนังสือ'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-              if (_this.edit) {
-                let groupdata = {
-                  desc: _this.data.desc,
-                  name: _this.data.name,
-                  short_name: _this.data.short_name,
-                  subministry_id: _this.data.subministry_id,
-                  organization_id: _this.data.organization_id,
-                  department_id: _this.data.department_id
-                }
-                _this.showLoading = true
-                _this.axios.put(`group/${_this.$route.params.id}`, groupdata)
-                .then(() => { 
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-                })
-                .catch((error) => {
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-                })
-              } else {
-                let groupdata = {
-                  desc: _this.data.desc,
-                  name: _this.data.name,
-                  short_name: _this.data.short_name,
-                  subministry_id: _this.data.subministry_id,
-                  organization_id: _this.data.organization_id,
-                  department_id: _this.data.department_id
-                }
-                _this.showLoading = true
-                _this.axios.post(`/group`, groupdata)
-                .then(() => { 
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกลุ่มสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-                })
-                .catch((error) => {
-                  _this.showLoading = false
-                  _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-                })
-              }
+          if (_this.edit) {
+            let groupdata = {
+              code: _this.data.code,
+              name: _this.data.name,
+              active_flag: parseInt(_this.data.active_flag ? '1' : '0'),
+              type: _this.data.type,
+              desc: _this.data.desc
+            }
+            _this.showLoading = true
+            _this.axios.put(`/bookcategory/${_this.$route.params.id}`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขทะเบียนหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          } else {
+            let groupdata = {
+              code: _this.data.code,
+              name: _this.data.name,
+              type: _this.data.type,
+              desc: _this.data.desc,
+              active_flag: parseInt(_this.data.active_flag ? '1' : '0')
+            }
+            _this.showLoading = true
+            _this.axios.post(`/bookcategory`, groupdata)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างทะเบียนหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          }
         }
       }
     },
-    apiDetail() {
+    api_detail() {
       this.showLoading = true
-      this.axios.get(`/group/${this.$route.params.id}`)
+      this.axios.get(`/bookcategory/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data,...response.data.data}
+        this.data.active_flag = response.data.data.active_flag == 1
       })
       .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    api_master() {
-      this.showLoading = true
-      const response1 = this.axios.get('/organization')
-      const response2 = this.axios.get('/department')
-      const response3 = this.axios.get('/subministry')
-
-      this.axios.all([response1, response2, response3])
-      .then(this.axios.spread ((...responses) =>{
-        this.showLoading = false;
-        const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
-
-        response1.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.name
-          return item
-        })
-
-        response2.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.department_full_name
-          return item
-        })
-
-        response3.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.Name
-          return item
-        })
-
-        this.optionSelect.organization_id = response1.data.data
-        console.log('a')
-        this.optionSelect.department_id = response2.data.data
-        console.log('b')
-        this.optionSelect.subministry_id = response3.data.data
-        console.log('c')
-
-        if (this.$route.params.id) {
-          this.edit = true
-          this.apiDetail()
-        } else {
-          this.edit = false
-        }
-
-      }
-      ))
-      .catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
-    },
-    change(dep){
-      this.optionSelect.subministry_id.filter(item => {
-          if(item.id == dep) {
-            this.optionSelect.organization_id.push({
-              value: item.organization_id,  
-              name: item.organization_name
-            })
-            this.data.organization_id = item.organization_id
-          }           
-        })
-        this.optionSelect.subministry_id.filter(item => {
-          if(item.id == dep) {
-            this.optionSelect.department_id.push({
-              value: item.department_id,  
-              name: item.department_name
-            })
-            this.data.department_id = item.department_id
-          }
-        })
-    }
   },
   mounted () {
-    this.api_master()
+    if (this.$route.params.id) {
+      this.edit = true
+      this.api_detail()
+    } else {
+      this.edit = false
+    }
   }
 }
 
 </script>
 <style lang="scss">
-  .master-group-detail {
+  .master-book-record-detail {
     .group-overflow {
       overflow: auto;
     }
@@ -337,7 +253,7 @@ export default {
             background-color: transparent;
             display: flex;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             color: #15466e;
             
@@ -380,7 +296,7 @@ export default {
           margin-bottom: 30px;
 
           .name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             margin-bottom: 7px;
@@ -460,7 +376,7 @@ export default {
 
         .footer-left {
           .button-danger {
-            width: 140px;
+            width: 120px;
           }
         }
 
@@ -468,16 +384,16 @@ export default {
           display: flex;
 
           .button-success {
-            width: 235px;
+            width: 250px;
           }
         }
 
         button {
-          height: 55px;
-          border-radius: 10px;
+          height: 45px;
+          border-radius: 5px;
           box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
           border: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 500;
           color: #fff;
           display: flex;
@@ -486,14 +402,14 @@ export default {
         }
 
         .icon-times-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
 
         .icon-check-circle {
-          width: 28px;
-          height: 28px;
+          width: 25px;
+          height: 25px;
           margin-right: 10px;
         }
       }

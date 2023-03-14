@@ -180,10 +180,6 @@ export default {
       this.axios.get(`/department/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        // this.data.code = response.data.data.code
-        // this.data.department_short_name = response.data.data.department_short_name
-        // this.data.department_full_name = response.data.data.department_full_name
-        // this.data.organization_id = response.data.data.organization_id
         this.data = {...this.data,...response.data.data}
       })
       .catch((error) => {
