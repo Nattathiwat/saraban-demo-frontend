@@ -214,6 +214,7 @@ export default {
       for (var i = 0; i < this.$refs[data].files.length; i++) {
         let file = this.$refs[data].files[i]
         if ((this.data.fileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: 'ไฟล์ไม่ตรงกับตั้งค่าประเภทไฟล์'}
           return false
         }
         if ((file.type == 'image/jpeg' || file.type == 'image/png') && (file.size < 500000)) {
