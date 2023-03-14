@@ -20,14 +20,14 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-image left">
-                <div class="name">โปรไฟล์</div>
+                <div class="name">โปรไฟล์ <span class="required">*</span></div>
                 <div class="image-preview-wrapper" v-show="data.previewImage1" :style="{ 'background-image': `url(${data.previewImage1})` }"></div>
                 <input ref="fileInput1" type="file" @input="pickFile('fileInput1')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
                 <button name="fileInput1" type="button" @click="selectImage('fileInput1')" class="button-image">เลือกรูปภาพ</button>
                 <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
               </div>
               <div class="group-image">
-                <div class="name">ลายเซ็น</div>
+                <div class="name">ลายเซ็น <span class="required">*</span></div>
                 <div class="image-preview-wrapper" v-show="data.previewImage2" :style="{ 'background-image': `url(${data.previewImage2})` }"></div>
                 <input ref="fileInput2" type="file" @input="pickFile('fileInput2')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
                 <button name="fileInput2" type="button" @click="selectImage('fileInput2')" class="button-image">เลือกรูปภาพ</button>
@@ -36,14 +36,14 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อ<span class="required">*</span></div>
+                <div class="name">ชื่อ <span class="required">*</span></div>
                 <cpn-input  v-model="data.fname"
                             name="fname"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">นามสกุล<span class="required">*</span></div>
+                <div class="name">นามสกุล <span class="required">*</span></div>
                 <cpn-input  v-model="data.lname"
                             name="lname"
                             rules="required"
@@ -214,6 +214,7 @@ export default {
       for (var i = 0; i < this.$refs[data].files.length; i++) {
         let file = this.$refs[data].files[i]
         if ((this.data.fileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: 'ไฟล์ไม่ตรงกับตั้งค่าประเภทไฟล์'}
           return false
         }
         if ((file.type == 'image/jpeg' || file.type == 'image/png') && (file.size < 500000)) {
@@ -415,9 +416,16 @@ export default {
         this.data.group_id = response.data.data.group_id
         this.data.birthdate = response.data.data.birthdate
         this.data.level = response.data.data.roles
-        this.data.previewImage1 = response.data.data.profile_img
-        this.data.previewImage2 = response.data.data.signature_img
-
+        this.axios({ method:'get', url: this.backendport+'/'+response.data.data.profile_img, baseURL: '', responseType: 'blob',})
+        .then(response3 => {
+          const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.profile_img) })
+          this.data.previewImage1 = URL.createObjectURL(blob)
+        })
+        this.axios({ method:'get', url: this.backendport+'/'+response.data.data.signature_img, baseURL: '', responseType: 'blob',})
+        .then(response3 => {
+          const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.signature_img) })
+          this.data.previewImage2 = URL.createObjectURL(blob)
+        })
         this.data.optionSelect.roles.filter(item2 => {
           item2.check = false 
           response.data.data.roles.filter(item => {
