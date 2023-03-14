@@ -51,7 +51,7 @@
                 <cpn-select v-model="data.book_category_id"
                             name="book_category_id"
                             rules="required"
-                            :optionSelect="optionSelect.book_category_id"
+                            :optionSelect="optionSelectDefault.book_category_id"
                             placeholder="กรุณาระบุ" /> 
               </div>
               <div class="group-input">
@@ -299,10 +299,7 @@ export default {
         message: ''
       },
       optionSelectDefault: {
-        signer_id: [],
-        department_dest_id: [],
-        regis_id: [],
-        send_method_id: [{name: 'ตอบรับ', value: '0'}, {name: 'แจ้งเพื่อทราบ', value: '1'}, {name: 'ไม่ระบุ', value: '2'}],
+        book_category_id: [],
       },
       showLoading: false,
       edit: false,
@@ -331,8 +328,8 @@ export default {
       },
       optionSelect: {
         creater_id: [],
-        book_category_id: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
-        book_type_id: [{ name: 'นร : บันทึกภายใน',value: '1' },{ name: 'นร : ทะเบียนบันทึกภายใน(มี Template)',value: '2' }],
+        book_category_id: [],
+        book_type_id: [],
         secret_id: [],
         speed_id: [],
         process_type_id: [],
@@ -465,7 +462,7 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            response_id: parseInt(this.data.response_id)
+            response_id: parseInt(item.value)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -695,7 +692,7 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            response_id: parseInt(this.data.response_id)
+            response_id: parseInt(item.value)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -716,7 +713,6 @@ export default {
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         flag: this.flagSave == 1 ? "draft" : '',
-        response_id: parseInt(this.data.response_id)
       }
       this.showLoading = false
       if (this.edit) {
@@ -889,7 +885,7 @@ export default {
         this.optionSelect.permission_id = response5.data.data
         this.optionSelect.creater_id = response6.data.data
         this.optionSelectDefault.signer_id = response7.data.data
-        this.optionSelectDefault.regis_id = response8.data.data
+        this.optionSelectDefault.book_category_id = response8.data.data
         this.optionSelectDefault.department_dest_id = response9.data.data
         
         if (this.$route.params.id) {
