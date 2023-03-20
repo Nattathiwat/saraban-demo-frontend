@@ -74,7 +74,6 @@ export default {
       name: 'subministry-work',
       component: () => import("./view/subministry-work/index.vue"),
       redirect: {
-        // name: 'subministry-work.booking-receive'
         name: 'subministry-work.record-receive'
       },
       children: [
@@ -169,6 +168,21 @@ export default {
       path: '/master/book-type/:id', 
       name: 'book-type-edit',
       component: () => import("./view/master/book-type/detail.vue"),
+    },
+    { 
+      path: '/master/record-type', 
+      name: 'record-type',
+      component: () => import("./view/master/record-type/index.vue"),
+    },
+    { 
+      path: '/master/record-type/create', 
+      name: 'record-type-create',
+      component: () => import("./view/master/record-type/detail.vue"),
+    },
+    { 
+      path: '/master/record-type/:id', 
+      name: 'record-type-edit',
+      component: () => import("./view/master/record-type/detail.vue"),
     },
     { 
       path: '/master/book-record', 

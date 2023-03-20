@@ -5,11 +5,11 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">หนังสือส่งออก</div>
+            <div class="name">บันทึกส่งออก</div>
             <button type="button" class="add-booking-out" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือส่งออก
+                สร้างบันทึกส่งออก
               </div>
             </button>
             <div class="d-flex justify-content-end">

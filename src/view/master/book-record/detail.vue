@@ -102,7 +102,7 @@ export default {
         code: '',
         name: '',
         desc: '',
-        active_flag: false,
+        active_flag: true,
         optionSelect: {
           type: [
             { name: 'ทะเบียนรับ',value: '0' },

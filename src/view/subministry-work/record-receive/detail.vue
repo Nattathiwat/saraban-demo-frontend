@@ -157,7 +157,7 @@
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_docs(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -349,6 +349,13 @@ export default {
       }
       if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
         this.add_attachments()
+      }
+    },
+    delete_main_docs(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.main_docs.splice(index,1)
       }
     },
     add_booking_refers() {
@@ -633,7 +640,36 @@ export default {
         this.call_api_save([...fileMain_docs_old],[])
       }
     },
-    call_api_save(fileMain_docs,fileAttachments) {
+    upload_file_all2(fileAttachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileMainDocs = []
+      this.data.main_docs.filter(item=> {
+        if (item.file) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            fileMainDocs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileMainDocs.length) {
+            this.call_api_save(fileMainDocs,fileAttachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(fileMainDocs,fileAttachments)
+      }
+    },
+    call_api_save([...fileMain_docs_old],[]) {
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {

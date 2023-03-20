@@ -46,6 +46,7 @@
                 <td class="col5">{{item.desc}}</td>
                 <td class="col7">
                   <div class="group-icon">
+                    <div  class="image-status" :class="item.active_flag == 1 ? 'active' : '' "></div>
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
                     <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
                   </div>
@@ -380,6 +381,18 @@ export default {
                   height: 70px;
                   align-items: center;
                   justify-content: center;
+
+                  .image-status{
+                    width: 21px;
+                    height: 21px;
+                    margin-right: 28px;
+                    border-radius: 50%;
+                    background-color: grey;
+                  }
+
+                  .active{
+                    background-color: green;
+                  }
 
                   .image-pencil {
                     width: 21px;
