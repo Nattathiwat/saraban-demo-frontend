@@ -180,12 +180,13 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
+                  <button type="button" class="add-booking-receive" :disabled="edit" @click="upload_file('addAttachments')" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
                     </div>
                   </button>
+                  <input multiple type="file" @change="add_attachments_change('addAttachments')" name="addAttachments" style="display:none;">
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
@@ -195,7 +196,7 @@
                       </span>
                     </button>
                     <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                    <input multiple type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
@@ -442,11 +443,24 @@ export default {
         this.add_booking_refers()
       }
     },
-    add_attachments() {
-      this.data.attachments.push({ 
-        filename: '',
-        flag: 'add'
-      })
+    add_attachments_change(data) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        let dataFile = {
+          filename: file.name,
+          type: file.type,
+          link: URL.createObjectURL(file),
+          size: (file.size /1024 /1024).toFixed(2) + ' MB',
+          file: file,
+          flag: 'add'
+        }
+        this.data.attachments.push(dataFile)
+      }
+      document.querySelector(`[name="${data}"]`).value=null;
     },
     delete_attachments(item, index) {
       if (item.flag == 'edit') {
