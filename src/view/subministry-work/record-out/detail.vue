@@ -65,11 +65,12 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
+                <div class="name">ชนิดของบันทึกข้อความ <span class="required">*</span></div>
                 <cpn-autoComplete v-model="data.book_type_id"
                             name="book_type_id"
                             rules="required"
                             :optionSelect="optionSelect.book_type_id"
+                            @keyup="keyup_record_type"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input left">
@@ -194,7 +195,7 @@
                       </span>
                     </button>
                     <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    <input multiple type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
@@ -927,42 +928,42 @@ export default {
       })
       
     },
-    // keyup_record_type(e) {
-    //   this.optionSelect.sendTo = []
-    //   this.axios.get('/master-data/book-type', {
-    //     params: {
-    //       keyword: e.target.value
-    //     }
-    //   })
-    //   .then((response) => {
-    //     if(response.data.data) {
-    //       response.data.data.filter(item => {
-    //         item.value = item.id
-    //         item.name = item.desc
-    //         return item
-    //       })
-    //       this.optionSelect.book_type_id = response.data.data
-    //     }
-    //   })
-    // },
-    // keyupRecordType(e, data) {
-    //   data.optionSelect.department_dest_id = []
-    //   this.axios.get('/master-data/book-type', {
-    //     params: {
-    //       keyword: e.target.value
-    //     }
-    //   })
-    //   .then((response) => {
-    //     if(response.data.data) {
-    //       response.data.data.filter(item => {
-    //         item.value = item.id
-    //         item.name = item.desc
-    //         return item
-    //       })
-    //       data.optionSelect.book_type_id = response.data.data
-    //     }
-    //   })
-    // },
+    keyup_record_type(e) {
+      this.optionSelect.sendTo = []
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
+    keyupRecordType(e, data) {
+      data.optionSelect.department_dest_id = []
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          data.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
   },
   mounted () {
     this.api_master()
