@@ -81,32 +81,35 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">กระทรวง</div>
+                <div class="name">กระทรวง <span class="required">*</span></div>
                 <cpn-autoComplete v-model="data.organization_id"
                                   name="organization"
                                   placeholder="กรุณาระบุ"
-                                  :disabled="true"
+                                  rules="required"
                                   @keyup="keyupOrganization($event)"
+                                  @change="changeOrganization"
                                   :optionSelect="data.optionSelect.organization" />
               </div>
               <div class="group-input">
-                <div class="name">หน่วยงาน</div>
+                <div class="name">หน่วยงาน <span class="required">*</span></div>
                 <cpn-autoComplete v-model="data.department_id"
                                   name="department"
                                   placeholder="กรุณาระบุ"
-                                  :disabled="true"
+                                  rules="required"
                                   @keyup="keyupDepartment($event)"
+                                  @change="changeDepartment"
                                   :optionSelect="data.optionSelect.department" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">กอง</div>
+                <div class="name">กอง <span class="required">*</span></div>
                 <cpn-autoComplete v-model="data.subministry_id"
                                   name="subministry"
                                   placeholder="กรุณาระบุ"
-                                  :disabled="true"
+                                  rules="required"
                                   @keyup="keyupSubministry($event)"
+                                  @change="changeSubministry"
                                   :optionSelect="data.optionSelect.subministry" />
               </div>
               <div class="group-input">
@@ -235,7 +238,10 @@ export default {
       this.data.optionSelect.organization = []
       this.axios.get('/organization', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          department_id: this.data.department_id,
+          subministry_id: this.data.subministry_id,
+          group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -252,7 +258,10 @@ export default {
       this.data.optionSelect.department = []
       this.axios.get('/master-data/department', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          organization_id: this.data.organization_id,
+          subministry_id: this.data.subministry_id,
+          group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -270,7 +279,10 @@ export default {
       this.data.optionSelect.subministry = []
       this.axios.get('/subministry', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          organization_id: this.data.organization_id,
+          department_id: this.data.department_id,
+          group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -288,7 +300,10 @@ export default {
       this.data.optionSelect.group = []
       this.axios.get('/group', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          organization_id: this.data.organization_id,
+          department_id: this.data.department_id,
+          subministry_id: this.data.subministry_id,
         }
       })
       .then((response) => {
@@ -301,17 +316,83 @@ export default {
         }
       })
     },
+    changeOrganization(data) {
+      if (this.data.organization_id) {
+        this.masterDropdown()
+      }
+    },
+    changeDepartment(data) {
+      if (this.data.department_id) {
+        this.masterDropdown()
+      }
+    },
+    changeSubministry(data) {
+      if (this.data.subministry_id) {
+        this.masterDropdown()
+      }
+    },
     changeGroup(data) {
-      this.data.optionSelect.group.filter(item => {
-        if (item.id == data) {
-          this.data.optionSelect.organization.push({value: item.organization_id, name: item.organization_name})
-          this.data.organization_id = item.organization_id
-          this.data.optionSelect.department.push({value: item.department_id, name: item.department_name})
-          this.data.department_id = item.department_id
-          this.data.optionSelect.subministry.push({value: item.subministry_id, name: item.subministry_name})
-          this.data.subministry_id = item.subministry_id
-        }
+      if (this.data.group_id) {
+        this.masterDropdown()
+      }
+      // this.data.optionSelect.group.filter(item => {
+      //   if (item.id == data) {
+      //     this.data.optionSelect.organization.push({value: item.organization_id, name: item.organization_name})
+      //     this.data.organization_id = item.organization_id
+      //     this.data.optionSelect.department.push({value: item.department_id, name: item.department_name})
+      //     this.data.department_id = item.department_id
+      //     this.data.optionSelect.subministry.push({value: item.subministry_id, name: item.subministry_name})
+      //     this.data.subministry_id = item.subministry_id
+      //   }
+      // })
+    },
+    masterDropdown(data) {
+      this.showLoading = true
+      const request1 = this.axios.get(`/organization?page_size=100&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
+      const request2 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
+      const request3 = this.axios.get(`/subministry?page_size=100&organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
+      const request4 = this.axios.get(`/group?page_size=100&organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+
+      this.axios.all([request1, request2, request3, request4])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response1 = responses[0]
+        const response2 = responses[1]
+        const response3 = responses[2]
+        const response4 = responses[3]
+
+        response1.data.data.filter(item => {
+          item.value = item.id
+          return item
+        })
+        
+        response2.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.department_full_name
+          return item
+        })
+        
+        response3.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.Name
+          return item
+        })
+        
+        response4.data.data.filter(item => {
+          item.value = item.id
+          return item
+        })
+
+        this.data.optionSelect.organization = response1.data.data
+        this.data.optionSelect.department = response2.data.data
+        this.data.optionSelect.subministry = response3.data.data
+        this.data.optionSelect.group = response4.data.data
+
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
+
     },
     back() {
       this.$router.push({ 
