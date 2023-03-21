@@ -2,19 +2,19 @@
   <div class="booking-out-detail">
     <div class="group-overflow">
       <div class="detail">
-        <div class="group-head">
-          <div class="group-first">
-            <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}}</div>
-          </div>
-          <button type="button" class="add-booking-out" @click="gennumber()" v-show="false">
-              <div class="group-image">
-                ออกเลขบันทึกภายใน
-              </div>
-            </button>
-        </div>
-        <div class="line"></div>
         <Form @submit="on_submit" @invalid-submit="onInvalidSubmit">
+          <div class="group-head">
+            <div class="group-first">
+              <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
+              <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}} <label>{{data.booking_note_number}}</label></div> 
+            </div>
+            <button type="submit" class="add-booking-out" @click="flagSave=3" v-show="!data.booking_note_number">
+                <div class="group-image">
+                  ออกเลขบันทึกภายใน
+                </div>
+              </button>
+          </div>
+        <div class="line"></div>
           <div class="group-detail">
             <div class="group-input">
               <div class="name">เจ้าของหนังสือ</div>
@@ -636,7 +636,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : 'บันทึกและส่งต่อ'}หรือไม่`,
+        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 2 ? 'บันทึกและส่งต่อ' : 'ออกเลขบันทึกภายใน'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -751,54 +751,39 @@ export default {
         regis_date: this.assetsUtils.currentDate(),
       }
       this.showLoading = false
-      if (this.edit) {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.put(`/booking-note/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.put(`/booking-note/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
+      if (this.flagSave == 1) {
+        this.showLoading = true
+        this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
+        .then(() => { 
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else if (this.flagSave == 2) {
+        this.showLoading = true
+        this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
+        .then(() => { 
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
       } else {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.post(`/booking-note`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.post(`/booking-note`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
+        this.showLoading = true
+        this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
+        .then(() => { 
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'success', title: 'ทำการออกเลขบันทึกภายในสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
       }
     },
     api_detail() {
@@ -1031,6 +1016,11 @@ export default {
             color: #1a456b;
             font-weight: bold;
             font-size: 18px;
+
+            label {
+              margin-left: 10px;
+              font-size: 22px;
+            }
           }
         }
           .add-booking-out {
