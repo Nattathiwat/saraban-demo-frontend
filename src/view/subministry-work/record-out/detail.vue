@@ -51,7 +51,7 @@
                 <cpn-select v-model="data.book_category_id"
                             name="book_category_id"
                             rules="required"
-                            :optionSelect="optionSelect.book_category_id"
+                            :optionSelect="optionSelectDefault.book_category_id"
                             placeholder="กรุณาระบุ" /> 
               </div>
               <div class="group-input">
@@ -65,11 +65,12 @@
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_id"
+                <div class="name">ชนิดของบันทึกข้อความ <span class="required">*</span></div>
+                <cpn-autoComplete v-model="data.book_type_id"
                             name="book_type_id"
                             rules="required"
                             :optionSelect="optionSelect.book_type_id"
+                            @keyup="keyup_record_type"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input left">
@@ -101,15 +102,15 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">เรียน</div>
-                <cpn-input  v-model="data.sendto"
-                            name="sendto"
+                <cpn-input  v-model="data.greeting"
+                            name="greeting" 
                             type="text"/>
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">รายละเอียด</div>
-                <cpn-textArea v-model="data.description"
+                <cpn-textArea v-model="data.desc"
                               name="record_out_description"
                               rows="1"  />
               </div>
@@ -156,53 +157,53 @@
             </div>
           </div>
           <div class="line"></div>
-            <div class="group-detail">
-              <div class="group-between">
-                <div class="group-input left">
-                  <div class="name">บันทึกต้นเรื่อง</div>
-                  <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
-                    <div class="group-input-file">
-                      <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
-                        <span :class="item.filename ? '' : 'no-data'">
-                          {{item.filename ? item.filename : ''}}
-                        </span>
-                      </button>
-                      <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
-                      <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
-                    </div>
-                    <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                    <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
-                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">บันทึกต้นเรื่อง</div>
+                <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
+                  <div class="group-input-file">
+                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
+                      <span :class="item.filename ? '' : 'no-data'">
+                        {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
+                      </span>
                     </button>
+                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                    <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
-                </div>
-                <div class="group-input">
-                  <div class="group-input d-flex align-items-center">
-                    <div class="name">สิ่งที่ส่งมาด้วย</div>
-                    <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
-                      <div class="group-image">
-                        <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                        เพิ่มไฟล์
-                      </div>
-                    </button>
-                  </div>
-                  <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
-                    <div class="group-input-file">
-                      <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
-                        <span :class="item.filename ? '' : 'no-data'">
-                          {{item.filename ? item.filename : ''}}
-                        </span>
-                      </button>
-                      <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                      <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
-                    </div>
-                    <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                    <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
-                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
-                    </button>
-                  </div>
+                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_docs(item, index)">
+                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+                  </button>
                 </div>
               </div>
+              <div class="group-input">
+                <div class="group-input d-flex align-items-center">
+                  <div class="name">สิ่งที่ส่งมาด้วย</div>
+                  <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
+                    <div class="group-image">
+                      <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
+                      เพิ่มไฟล์
+                    </div>
+                  </button>
+                </div>
+                <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
+                  <div class="group-input-file">
+                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
+                      <span :class="item.filename ? '' : 'no-data'">
+                        {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
+                      </span>
+                    </button>
+                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                    <input multiple type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                  </div>
+                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
+                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="line"></div>
           <div class="send-to">
@@ -214,8 +215,12 @@
                               @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
-            <div class="group-input">
-              <div class="name">ความเห็น / คำสั่ง</div>
+            <div class="group-input left">
+              <div class="name">ความเห็น / คำสั่ง
+                <button class="button-con pointer" @click="edit ? '' : upload_file(`attachments${index}`)">
+                <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip"> แนบเอกสาร
+              </button>
+              </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
                             rows="3" />
@@ -299,10 +304,7 @@ export default {
         message: ''
       },
       optionSelectDefault: {
-        signer_id: [],
-        department_dest_id: [],
-        regis_id: [],
-        send_method_id: [{name: 'ตอบรับ', value: '0'}, {name: 'แจ้งเพื่อทราบ', value: '1'}, {name: 'ไม่ระบุ', value: '2'}],
+        book_category_id: [],
       },
       showLoading: false,
       edit: false,
@@ -319,18 +321,22 @@ export default {
         tag: [],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
+        order: [{ filename: ''}],
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
-        description: '',
-        regis_date: '',
+        process_type_id: '12',
+        permission_id: '9',
+        desc: '',
+        regis_date: this.assetsUtils.currentDate(),
+        human_flag:false,
+        response_id:'',
+        greeting:''
       },
       optionSelect: {
         creater_id: [],
-        book_category_id: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
-        book_type_id: [{ name: 'นร : บันทึกภายใน',value: '1' },{ name: 'นร : ทะเบียนบันทึกภายใน(มี Template)',value: '2' }],
+        book_category_id: [],
+        book_type_id: [],
         secret_id: [],
         speed_id: [],
         process_type_id: [],
@@ -340,7 +346,8 @@ export default {
       modalRegiter: {
         showModal: false,
         booking_register_details: []
-      }
+      },
+      FileType: []
     }
   },
   methods: {
@@ -379,7 +386,8 @@ export default {
       this.optionSelect.sendTo = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          department_id: localStorage.getItem('department_id'),
         }
       })
       .then((response) => {
@@ -446,8 +454,12 @@ export default {
       } else {
         this.data.attachments.splice(index,1)
       }
-      if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
-        this.add_attachments()
+    },
+    delete_main_docs(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.main_docs.splice(index,1)
       }
     },
     add_booking_follows() {
@@ -462,7 +474,8 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
-            human_flag: item.human_flag
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -552,6 +565,10 @@ export default {
     file_set_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         if (name == 'main_docs') {
           if (file.type == 'application/pdf') {
             let dataFile = {
@@ -643,10 +660,10 @@ export default {
         this.upload_file_all2(fileAttachments)
       }
     },
-    upload_file_all2() {
+    upload_file_all2(fileAttachments) {
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
-      let fileAttachments = []
+      let fileMainDocs = []
       this.data.main_docs.filter(item=> {
         if (item.file) {
           let formDataFile = new FormData();
@@ -659,21 +676,22 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileAttachments.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+            fileMainDocs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileAttachments.length) {
-            this.call_api_save(fileAttachments)
+          if (axiosArray1.length == fileMainDocs.length) {
+            this.call_api_save(fileMainDocs,fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(fileAttachments)
+        this.call_api_save(fileMainDocs,fileAttachments)
       }
     },
-    call_api_save(data) {
-      let fileAttachments = data
+    call_api_save(filemain_docs,file_attachments) {
+      let fileAttachments = file_attachments
+      let fileMainDocs = filemain_docs
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -690,7 +708,9 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -708,9 +728,13 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id')),
         tag: tag,
         attachments: fileAttachments,
+        main_docs: filemain_docs,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         flag: this.flagSave == 1 ? "draft" : '',
+        greeting: this.data.greeting,
+        desc: this.data.desc,
+        regis_date: this.assetsUtils.currentDate(),
       }
       this.showLoading = false
       if (this.edit) {
@@ -807,7 +831,7 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/book-type`)
+      const request1 = this.axios.get(`/booktypenote`)
       const request2 = this.axios.get(`/master-data/speed`)
       const request3 = this.axios.get(`/master-data/secret`)
       const request4 = this.axios.get(`/master-data/process-type`)
@@ -816,8 +840,9 @@ export default {
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/register-type`)
       const request9 = this.axios.get('/master-data/department-user')
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9])
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
         const response1 = responses[0]
@@ -829,10 +854,11 @@ export default {
         const response7 = responses[6]
         const response8 = responses[7]
         const response9 = responses[8]
+        const response10 = responses[9]
         
         response1.data.data.filter(row => {
           row.value = row.id
-          row.name = row.desc
+          row.name = row.name
           return row
         })
         response2.data.data.filter(row => {
@@ -876,6 +902,14 @@ export default {
           return item
         })
 
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
+        })
+
         this.optionSelect.book_type_id = response1.data.data
         this.optionSelect.speed_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data
@@ -883,7 +917,7 @@ export default {
         this.optionSelect.permission_id = response5.data.data
         this.optionSelect.creater_id = response6.data.data
         this.optionSelectDefault.signer_id = response7.data.data
-        this.optionSelectDefault.regis_id = response8.data.data
+        this.optionSelectDefault.book_category_id = response8.data.data
         this.optionSelectDefault.department_dest_id = response9.data.data
         
         if (this.$route.params.id) {
@@ -898,6 +932,42 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
       
+    },
+    keyup_record_type(e) {
+      this.optionSelect.sendTo = []
+      this.axios.get('/booktypenote', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
+    keyupRecordType(e, data) {
+      data.optionSelect.department_dest_id = []
+      this.axios.get('/booktypenote', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          data.optionSelect.book_type_id = response.data.data
+        }
+      })
     },
   },
   mounted () {
@@ -1087,6 +1157,26 @@ export default {
           .image-trash {
             width: 18px;
           }
+        }
+
+        .icon-paperclip {
+          color: #8aa3b7;
+          // font-size: 14px;
+          margin-right: 2px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .button-con {
+          width: 112px;
+          height: 30px;
+          background-color: transparent;
+          color: #000;
+          font-size: 15px;
+          font-weight: 500;
+          border: 0;
+          border-radius: 5px;
+          margin-left: 500px;
         }
       }
 

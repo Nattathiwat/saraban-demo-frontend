@@ -1,15 +1,15 @@
 <template>
-  <div class="master-book-type-inex">
+  <div class="master-record-type-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">ชนิดหนังสือ</div>
+            <div class="name">ชนิดบันทึกข้อความ</div>
             <button type="button" class="add-department" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                เพิ่มชนิดหนังสือ
+                เพิ่มชนิดบันทึกข้อความ
               </div>
             </button>
           </div>
@@ -29,21 +29,17 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">เลขชนิดหนังสือ</th>
-                <th class="col2">ชื่อชนิดหนังสือ</th>
-                <th class="col3">รายละเอียด</th>
-                <th class="col4">ทะเบียน</th>
-                <th class="col5">วันที่สร้าง</th>
+                <th class="col1">ชื่อชนิดบันทึกข้อความ</th>
+                <th class="col2">รายละเอียด</th>
+                <th class="col3">วันที่สร้าง</th>
                 <th class="col7">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.code}}</td>
-                <td class="col2">{{item.name}}</td>
-                <td class="col3">{{item.desc}}</td>
-                <td class="col4">{{item.type_desc}}</td>
-                <td class="col5">{{item.created_at}}</td>
+                <td class="col1">{{item.name}}</td>
+                <td class="col2">{{item.desc}}</td>
+                <td class="col3">{{item.created_at}}</td>
                 <td class="col7">
                   <div class="group-icon">
                     <div  class="image-status" :class="item.active_flag == 1 ? 'active' : '' "></div>
@@ -74,7 +70,7 @@
 </template>
 <script>
 export default {
-  name: 'book-type-inex',
+  name: 'record-type-inex',
   data() {
     return {
       modalAlert: {
@@ -96,17 +92,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'book-type-create',
+        name: 'record-type-create',
       }).catch(()=>{});
     },
-    // historyClick() {
-    //   this.$router.push({ 
-    //     name: 'book-type-history',
-    //   }).catch(()=>{});
-    // },
     editClick(item) {
       this.$router.push({ 
-        name: 'book-type-edit',
+        name: 'record-type-edit',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -128,7 +119,7 @@ export default {
     apibooktype() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/booktype', {
+      this.axios.get('/booktypenote', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -153,7 +144,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบชนิดหนังสือ`,
+        title: `คุณยืนยันการลบชนิดบันทึกข้อความ`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
@@ -165,7 +156,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบชนิดหนังสือสำเร็จแล้ว',
+              title: 'ทำการลบชนิดบันทึกข้อความสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.apibooktype()
@@ -189,7 +180,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .master-book-type-inex {
+  .master-record-type-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -321,7 +312,7 @@ export default {
             }
 
             .col2 {
-              min-width: 170px;
+              min-width: 250px;
               width: 15%;
             }
 
@@ -365,6 +356,7 @@ export default {
               border-bottom: 0px;
               font-weight: 500;
               font-size: 18px;
+
 
               td {
                 padding: 0 10px;

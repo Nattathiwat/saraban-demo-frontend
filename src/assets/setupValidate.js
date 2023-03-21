@@ -38,6 +38,8 @@ export function setupValidate (app) {
   });
 
   app.config.globalProperties.defaultMessageError = messageError
+  app.config.globalProperties.defaultMessageErrorFile = "ไฟล์ไม่ตรงกับตั้งค่าประเภทไฟล์"
+
   app.config.globalProperties.onInvalidSubmit = ({errors}) => {
     const firstError = Object.keys(errors)[0];
     document.querySelector(`[name="${firstError}"]`).focus()

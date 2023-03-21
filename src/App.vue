@@ -14,7 +14,7 @@
             </div>
           </div>
           <div class="group-list-head">
-            <div class="list-navbar-group" >
+            <div v-show="false" class="list-navbar-group" >
               <div class="list-navbar pointer" :class="$route.name == 'my-work.booking-receive'|| $route.name == 'my-work.booking-receive-create' || $route.name == 'my-work.booking-receive-edit' ||
               $route.name == 'my-work.booking-out'|| $route.name == 'my-work.booking-out-create' || $route.name == 'my-work.booking-out-edit' ||
               $route.name == 'my-work.waiting-booking-receive'|| $route.name == 'my-work.waiting-booking-receive-create' || $route.name == 'my-work.waiting-booking-receive-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'my-work'})">
@@ -49,6 +49,8 @@
             <div class="list-navbar-group">
               <div class="list-navbar pointer" :class="$route.name == 'agency' || $route.name == 'agency-create' || $route.name == 'agency-edit' ||
               $route.name == 'book-type' || $route.name == 'book-type-create' || $route.name == 'book-type-edit' ||
+              $route.name == 'record-type' || $route.name == 'record-type-create' || $route.name == 'record-type-edit' ||
+              $route.name == 'book-record' || $route.name == 'book-record-create' || $route.name == 'book-record-edit' ||
               $route.name == 'subministry' || $route.name == 'subministry-create' || $route.name == 'subministry-edit' ||
               $route.name == 'group' || $route.name == 'group-create' || $route.name == 'group-edit' ||
               $route.name == 'book-method' || $route.name == 'book-method-create' || $route.name == 'book-method-edit' || 
@@ -65,6 +67,10 @@
               <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-type' || $route.name == 'book-type-create' || $route.name == 'book-type-edit' ? 'active2' : ''" @click="$router.push({name: 'book-type'})">
                 <div class="icon-circle" />
                 ชนิดหนังสือ
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'record-type' || $route.name == 'record-type-create' || $route.name == 'record-type-edit' ? 'active2' : ''" @click="$router.push({name: 'record-type'})">
+                <div class="icon-circle" />
+                  ชนิดบันทึกข้อความ
               </div>
               <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-record' || $route.name == 'book-record-create' || $route.name == 'book-record-edit' ? 'active2' : ''" @click="$router.push({name: 'book-record'})">
                 <div class="icon-circle" />
@@ -176,6 +182,12 @@ export default {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'แก้ไขชนิดหนังสือ', path: 'book-type-edit'}]
       } else if (this.$route.name == 'book-type-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'เพิ่มชนิดหนังสือ', path: 'book-type-create'}]
+      } else if (this.$route.name == 'record-type') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}]
+      } else if (this.$route.name == 'record-type-edit') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'แก้ไขชนิดบันทึกข้อความ', path: 'record-type-edit'}]
+      } else if (this.$route.name == 'record-type-create') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'เพิ่มชนิดบันทึกข้อความ', path: 'record-type-create'}]
       } else if (this.$route.name == 'book-record') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}]
       } else if (this.$route.name == 'book-record-edit') {

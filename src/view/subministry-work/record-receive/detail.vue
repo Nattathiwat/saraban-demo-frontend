@@ -18,7 +18,7 @@
                             name="book_category_id"
                             rules="required"
                             :disabled="edit"
-                            :optionSelect="optionSelect.book_category_id"
+                            :optionSelect="optionSelectDefault.book_category_id"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input left">
@@ -157,7 +157,7 @@
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_docs(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -315,10 +315,11 @@ export default {
         process_type_id: '',
         permission_id: '',
         book_type:'',
-        regis_id:'',
+        human_flag: false,
+        response_id: ''
       },
       optionSelect: {
-        book_category_id: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
+        book_category_id: [],
         book_type_id: [],
         secret_id: [],
         speed_id: [],
@@ -327,6 +328,9 @@ export default {
         process_type_id: [],
         permission_id: [],
         sendTo: [],
+      },
+      optionSelectDefault: {
+        book_category_id: [],
       },
     }
   },
@@ -345,6 +349,13 @@ export default {
       }
       if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
         this.add_attachments()
+      }
+    },
+    delete_main_docs(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.main_docs.splice(index,1)
       }
     },
     add_booking_refers() {
@@ -485,7 +496,8 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
-            human_flag: item.human_flag
+            human_flag: item.human_flag,
+            // response_id: parseInt(item.value)
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -628,7 +640,36 @@ export default {
         this.call_api_save([...fileMain_docs_old],[])
       }
     },
-    call_api_save(fileMain_docs,fileAttachments) {
+    upload_file_all2(fileAttachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileMainDocs = []
+      this.data.main_docs.filter(item=> {
+        if (item.file) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            fileMainDocs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileMainDocs.length) {
+            this.call_api_save(fileMainDocs,fileAttachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(fileMainDocs,fileAttachments)
+      }
+    },
+    call_api_save([...fileMain_docs_old],[]) {
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -645,8 +686,11 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            // response_id: parseInt(item.value)
           }
+          console.log(item)
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
           this.data.booking_follows.push(data)
@@ -654,7 +698,7 @@ export default {
       })
       let dataSave = {
         original_flag: this.data.original_flag,
-        book_category_id: parseInt(this.data.book_category_id),
+        regis_id: parseInt(this.data.book_category_id),
         book_type_id: parseInt(this.data.book_type_id),
         receive_date: this.assetsUtils.yearDel543(this.data.receive_date),
         as_of_date: this.assetsUtils.yearDel543(this.data.as_of_date),
@@ -672,7 +716,6 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
-        regis_id : parseInt(this.$route.query.regis_id ),
       }
       if (this.edit) {
         if (this.flagSave == 1) {
@@ -764,13 +807,13 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request2 = this.axios.get('/master-data/book-type')
+      const request2 = this.axios.get('/booktypenote')
       const request3 = this.axios.get('/master-data/secret')
       const request4 = this.axios.get('/master-data/speed')
       const request5 = this.axios.get('/master-data/process-type')
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department')
-      const request8 = this.axios.get('/master-data/receive-type')
+      const request8 = this.axios.get(`/master-data/register-type`)
 
       this.axios.all([request2, request3, request4, request5, request6, request7, request8])
       .then(this.axios.spread((...responses) => {
@@ -825,7 +868,7 @@ export default {
         this.optionSelect.process_type_id = response5.data.data
         this.optionSelect.permission_id = response6.data.data
         this.optionSelect.department_id = response7.data.data
-        this.optionSelect.receive_type = response8.data.data
+        this.optionSelectDefault.book_category_id = response8.data.data
 
         if (this.$route.params.id) {
           this.edit = true

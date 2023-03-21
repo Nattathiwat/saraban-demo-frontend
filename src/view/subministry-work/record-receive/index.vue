@@ -134,6 +134,8 @@ export default {
         query:{
           book_type:item.book_type,   
           regis_id:item.regis_id,
+          human_flag:item.human_flag,
+          response_id:item.response,
           page: this.data.page,
           perPage: this.data.perPage
         }
@@ -209,7 +211,9 @@ export default {
                 if (_this.checkedList.length > 0) {
                   let groupdata = {
                     regis_id: row.regis_id,
-                    book_type: parseInt(row.book_type)
+                    book_type: parseInt(row.book_type),
+                    human_flag: row.human_flag,
+                    response_id: parseInt(row.response)
                   }
                   if (row.selected) {
                     axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
