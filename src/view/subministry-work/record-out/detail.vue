@@ -215,8 +215,12 @@
                               @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
-            <div class="group-input">
-              <div class="name">ความเห็น / คำสั่ง</div>
+            <div class="group-input left">
+              <div class="name">ความเห็น / คำสั่ง
+                <button class="button-con pointer" @click="edit ? '' : upload_file(`attachments${index}`)">
+                <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip"> แนบเอกสาร
+              </button>
+              </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
                             rows="3" />
@@ -317,6 +321,7 @@ export default {
         tag: [],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
+        order: [{ filename: ''}],
         sendTo: [],
         booking_follows: [],
         comment: '',
@@ -826,7 +831,7 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/book-type`)
+      const request1 = this.axios.get(`/booktypenote`)
       const request2 = this.axios.get(`/master-data/speed`)
       const request3 = this.axios.get(`/master-data/secret`)
       const request4 = this.axios.get(`/master-data/process-type`)
@@ -853,7 +858,7 @@ export default {
         
         response1.data.data.filter(row => {
           row.value = row.id
-          row.name = row.desc
+          row.name = row.name
           return row
         })
         response2.data.data.filter(row => {
@@ -930,7 +935,7 @@ export default {
     },
     keyup_record_type(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/book-type', {
+      this.axios.get('/booktypenote', {
         params: {
           keyword: e.target.value
         }
@@ -948,7 +953,7 @@ export default {
     },
     keyupRecordType(e, data) {
       data.optionSelect.department_dest_id = []
-      this.axios.get('/master-data/book-type', {
+      this.axios.get('/booktypenote', {
         params: {
           keyword: e.target.value
         }
@@ -1152,6 +1157,26 @@ export default {
           .image-trash {
             width: 18px;
           }
+        }
+
+        .icon-paperclip {
+          color: #8aa3b7;
+          // font-size: 14px;
+          margin-right: 2px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .button-con {
+          width: 112px;
+          height: 30px;
+          background-color: transparent;
+          color: #000;
+          font-size: 15px;
+          font-weight: 500;
+          border: 0;
+          border-radius: 5px;
+          margin-left: 500px;
         }
       }
 

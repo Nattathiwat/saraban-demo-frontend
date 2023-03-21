@@ -119,7 +119,7 @@ export default {
     apibooktype() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/booktype', {
+      this.axios.get('/booktypenote', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,

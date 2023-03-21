@@ -182,6 +182,12 @@ export default {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'แก้ไขชนิดหนังสือ', path: 'book-type-edit'}]
       } else if (this.$route.name == 'book-type-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'เพิ่มชนิดหนังสือ', path: 'book-type-create'}]
+      } else if (this.$route.name == 'record-type') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}]
+      } else if (this.$route.name == 'record-type-edit') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'แก้ไขชนิดบันทึกข้อความ', path: 'record-type-edit'}]
+      } else if (this.$route.name == 'record-type-create') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'เพิ่มชนิดบันทึกข้อความ', path: 'record-type-create'}]
       } else if (this.$route.name == 'book-record') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}]
       } else if (this.$route.name == 'book-record-edit') {

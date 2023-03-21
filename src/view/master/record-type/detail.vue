@@ -26,10 +26,15 @@
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
-              <div class="group-input">
+              <div class="group-input left">
                 <div class="name">เปิด/ปิด การใช้งาน</div>
                 <cpn-toggleSwitch v-model="data.active_flag"
-                            name="active_flag" />
+                                  name="active_flag" />
+              </div>
+              <div class="group-input left">
+                <div class="name">เปิด/ปิด การใช้งาน Template</div>
+                <cpn-toggleSwitch v-model="data.template_flag"
+                                  name="template_flag" />
               </div>
             </div>
             <div class="group-between">
@@ -79,13 +84,10 @@ export default {
       showLoading: false,
       edit: false,
       data: {
-        code: '',
         name: '',
         desc: '',
         active_flag: true,
-        optionSelect: {
-          type: [{ name: 'บันทึกข้อความรับเข้า',value: '0' },{ name: 'บันทึกข้อความส่งออก',value: '1' }],
-        }
+        template_flag: true,
       },
     }
   },
@@ -116,14 +118,13 @@ export default {
         afterPressAgree() {
           if (_this.edit) {
                 let groupdata = {
-                  code: _this.data.code,
                   name: _this.data.name,
                   desc: _this.data.desc,
-                  type: _this.data.type,
-                  active_flag: parseInt(_this.data.active_flag ? '1' : '0')
+                  active_flag: _this.data.active_flag ? 1 : 0,
+                  template_flag: _this.data.template_flag ? 1 : 0
                 }
                 _this.showLoading = true
-                _this.axios.put(`/booktype/${_this.$route.params.id}`, groupdata)
+                _this.axios.put(`/booktypenote/${_this.$route.params.id}`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
                   _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขชนิดบันทึกข้อความสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -134,14 +135,13 @@ export default {
                 })
               } else {
                 let groupdata = {
-                  code: _this.data.code,
                   name: _this.data.name,
                   desc: _this.data.desc,
-                  type: _this.data.type,
-                  active_flag: parseInt(_this.data.active_flag ? '1' : '0')
+                  active_flag: _this.data.active_flag ? 1 : 0,
+                  template_flag: _this.data.template_flag ? 1 : 0
                 }
                 _this.showLoading = true
-                _this.axios.post(`/booktype`, groupdata)
+                _this.axios.post(`/booktypenote`, groupdata)
                 .then(() => { 
                   _this.showLoading = false
                   _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างชนิดบันทึกข้อความสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -156,11 +156,12 @@ export default {
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/booktype/${this.$route.params.id}`)
+      this.axios.get(`/booktypenote/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data,...response.data.data}
         this.data.active_flag = response.data.data.active_flag == 1
+        this.data.template_flag = response.data.data.template_flag == 1
       })
       .catch((error) => {
         this.showLoading = false
