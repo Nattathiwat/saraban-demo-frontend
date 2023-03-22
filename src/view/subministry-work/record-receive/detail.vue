@@ -257,6 +257,12 @@
               </button>
             </div>
             <div class="footer-right">
+              <button type="button" class="confirm-receive" >
+              <div class="group-image" @click="submitClick()">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
+              </div>
+            </button>
               <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo?.length<1">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกและส่งต่อ
@@ -807,7 +813,7 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request2 = this.axios.get('/booktypenote')
+      const request2 = this.axios.get('/master-data/book-type-note')
       const request3 = this.axios.get('/master-data/secret')
       const request4 = this.axios.get('/master-data/speed')
       const request5 = this.axios.get('/master-data/process-type')
@@ -881,48 +887,43 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    submitClick(){
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการรับเข้าหรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          if (this.checkedList = this.data.table) {
-            let groupdata = {
-              name: _this.data.org_name,
-              book_type: _this.data.book_type
-            }
-            _this.showLoading = true
-            _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              // _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            let groupdata = {
-              name: _this.data.org_name,
-            }
-            _this.showLoading = true
-            _this.axios.post(`/organization`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างกระทรวงสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          }
-        }
-      }
-    },
+    // submitClick(){
+    //   let _this = this
+    //     this.modalAlert = {
+    //       showModal: true,
+    //       type: 'confirm',
+    //       title: `คุณยืนยันการรับเข้าหรือไม่`,
+    //       confirm: true,
+    //       msgSuccess: true,
+    //       afterPressAgree() {
+    //           _this.showLoading = true
+    //           console.log('after')
+    //               let groupdata = {
+    //                 regis_id: this.data.book_category_id,
+    //                 book_type: parseInt(this.data.book_type),
+    //                 human_flag: this.data.human_flag,
+    //                 response_id: parseInt(this.data.response)
+    //               }
+    //           .then(_this.axios.spread (() => {
+    //             _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
+    //             _this.showLoading = false
+    //             _this.modalAlert = {
+    //               showModal: true, 
+    //               type: 'success', 
+    //               title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+    //               msgSuccess: true, 
+    //               afterPressAgree() {
+    //                 _this.apigetrecord()
+    //               }
+    //             }                
+    //           })) 
+    //           .catch((error) => {
+    //             _this.showLoading = false
+    //             _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+    //           })
+    //       }
+    //     }
+    // },
   },
   mounted () {
     this.api_master()
@@ -1421,6 +1422,30 @@ export default {
           .button-primary {
             width: 170px;
             margin-right: 20px;
+          }
+
+          .confirm-receive {
+            height: 45px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-right: 25px;
+            padding: 0 20px 0 20px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-check-circle {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+              }
+            }
           }
         }
 

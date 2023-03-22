@@ -50,7 +50,7 @@
                 <td class="col2">{{item.booking_note_number}}</td>
                 <td class="col3">{{item.subject}}</td>
                 <td class="col4">{{item.department_name}}</td>
-                <td class="col5">{{item.created_at}}</td>
+                <td class="col5">{{item.as_of_date}}</td>
                 <td class="col6">{{item.book_type}}</td>
                 <td class="col7">{{item.department_name}}</td>
                 <td class="col8">{{item.status_name}}</td>
