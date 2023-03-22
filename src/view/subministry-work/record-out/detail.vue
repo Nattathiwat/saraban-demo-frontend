@@ -640,8 +640,19 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          _this.showLoading = true
-          _this.upload_file_all()
+          if (_this.flagSave == 3) {
+            _this.showLoading = true
+            _this.axios.post(`/booking-note/generate-number`, {book_category_id: parseInt(_this.data.book_category_id), year: _this.data.data.regis_date.split('/')[2]-543})
+            .then((response) => {
+              _this.upload_file_all()
+            }).catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          } else {
+            _this.showLoading = true
+            _this.upload_file_all()
+          }
         }
       }
     },
@@ -749,42 +760,19 @@ export default {
         greeting: this.data.greeting,
         desc: this.data.desc,
         regis_date: this.assetsUtils.currentDate(),
+        is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
+        as_of_date: this.data.regis_date
       }
-      this.showLoading = false
-      if (this.flagSave == 1) {
-        this.showLoading = true
-        this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
-        .then(() => { 
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-        })
-        .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
-      } else if (this.flagSave == 2) {
-        this.showLoading = true
-        this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
-        .then(() => { 
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-        })
-        .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
-      } else {
-        this.showLoading = true
-        this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
-        .then(() => { 
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'success', title: 'ทำการออกเลขบันทึกภายในสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-        })
-        .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
-      }
+      this.showLoading = true
+      this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
+      .then(() => { 
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     api_detail() {
       this.showLoading = true
