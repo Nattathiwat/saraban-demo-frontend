@@ -341,7 +341,8 @@ export default {
         regis_date: this.assetsUtils.currentDate(),
         human_flag:false,
         response_id:'',
-        greeting:''
+        greeting:'',
+        as_of_date:''
       },
       optionSelect: {
         creater_id: [],
@@ -808,13 +809,14 @@ export default {
         greeting: this.data.greeting,
         desc: this.data.desc,
         regis_date: this.assetsUtils.currentDate(),
+        as_of_date: this.data.as_of_date,
         is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then(() => { 
         this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
       })
       .catch((error) => {
         this.showLoading = false
