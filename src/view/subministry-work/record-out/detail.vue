@@ -816,7 +816,7 @@ export default {
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then(() => { 
         this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 || this.flagSave == 3 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
       })
       .catch((error) => {
         this.showLoading = false
