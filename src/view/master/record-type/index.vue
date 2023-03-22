@@ -150,7 +150,7 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/booktype/${data.id}`)
+          _this.axios.delete(`/booktypenote/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {

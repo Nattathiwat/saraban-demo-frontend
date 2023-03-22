@@ -658,7 +658,7 @@ export default {
         afterPressAgree() {
           if (_this.flagSave == 3) {
             _this.showLoading = true
-            _this.axios.post(`/booking-note/generate-number`, {book_category_id: parseInt(_this.data.book_category_id), year: _this.data.data.as_of_date.split('/')[2]-543})
+            _this.axios.post(`/booking-note/generate-number`, {book_category_id: parseInt(_this.data.book_category_id), year: _this.data.as_of_date.split('/')[2]-543})
             .then((response) => {
               _this.upload_file_all()
             }).catch((error) => {
