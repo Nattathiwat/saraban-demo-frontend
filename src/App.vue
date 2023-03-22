@@ -8,7 +8,7 @@
       <transition name="navigation-ham" @enter="enter" @after-enter="afterEnter" @leave="leave">
         <div v-if="!hamburger" class="navigation">
           <div class="group-image-logo">
-            <img class="image-logo" :src="data.logoImage" alt="logo" v-if="data.logoImage">
+            <img class="image-logo" src="@/assets/images/pkm_logo.png" alt="logo" v-if="data.logoImage">
             <div class="title mt-3">
               ระบบสารบรรณอิเล็กทรอนิกส์
             </div>

@@ -39,7 +39,7 @@
                 <div class="group-input ">
                   <div class="name">วันที่กองรับเรื่อง <span class="required">*</span></div>
                   <cpn-datepicker v-model="data.receive_date"
-                                  name="receive_date"
+                                  name="receive_date"                                                                                                                                                                                                                                                                                                                                                                                                                                         
                                   rules="required"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
@@ -257,7 +257,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="button" class="confirm-receive" >
+              <button type="button" class="confirm-receive" v-show="false" >
               <div class="group-image" @click="submitClick()">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
