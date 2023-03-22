@@ -65,7 +65,6 @@
                             name="passw"
                             type="password"
                             :rules="edit ? '' : 'required'"
-                            :disabled="edit"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
