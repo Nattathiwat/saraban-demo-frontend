@@ -87,7 +87,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupOrganization($event)"
-                                  @change="changeOrganization"
                                   :optionSelect="data.optionSelect.organization" />
               </div>
               <div class="group-input">
@@ -97,7 +96,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupDepartment($event)"
-                                  @change="changeDepartment"
                                   :optionSelect="data.optionSelect.department" />
               </div>
             </div>
@@ -109,7 +107,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupSubministry($event)"
-                                  @change="changeSubministry"
                                   :optionSelect="data.optionSelect.subministry" />
               </div>
               <div class="group-input">
@@ -119,7 +116,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupGroup($event)"
-                                  @change="changeGroup"
                                   :optionSelect="data.optionSelect.group" />
               </div>
             </div>
@@ -316,42 +312,12 @@ export default {
         }
       })
     },
-    changeOrganization(data) {
-      if (this.data.organization_id) {
-        this.masterDropdown()
-      }
-    },
-    changeDepartment(data) {
-      if (this.data.department_id) {
-        this.masterDropdown()
-      }
-    },
-    changeSubministry(data) {
-      if (this.data.subministry_id) {
-        this.masterDropdown()
-      }
-    },
-    changeGroup(data) {
-      if (this.data.group_id) {
-        this.masterDropdown()
-      }
-      // this.data.optionSelect.group.filter(item => {
-      //   if (item.id == data) {
-      //     this.data.optionSelect.organization.push({value: item.organization_id, name: item.organization_name})
-      //     this.data.organization_id = item.organization_id
-      //     this.data.optionSelect.department.push({value: item.department_id, name: item.department_name})
-      //     this.data.department_id = item.department_id
-      //     this.data.optionSelect.subministry.push({value: item.subministry_id, name: item.subministry_name})
-      //     this.data.subministry_id = item.subministry_id
-      //   }
-      // })
-    },
     masterDropdown(data) {
       this.showLoading = true
-      const request1 = this.axios.get(`/organization?page_size=100&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
+      const request1 = this.axios.get(`/master-data/organization?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
       const request2 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request3 = this.axios.get(`/subministry?page_size=100&organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
-      const request4 = this.axios.get(`/group?page_size=100&organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+      const request3 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
+      const request4 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
 
       this.axios.all([request1, request2, request3, request4])
       .then(this.axios.spread((...responses) => {
@@ -374,7 +340,6 @@ export default {
         
         response3.data.data.filter(item => {
           item.value = item.id
-          item.name = item.Name
           return item
         })
         
@@ -525,9 +490,9 @@ export default {
       this.showLoading = true
       const request1 = this.axios.get(`/master-data/department`)
       const request2 = this.axios.get(`/master-data/role`)
-      const request3 = this.axios.get(`/organization?page_size=100`)
-      const request4 = this.axios.get(`/subministry?page_size=100`)
-      const request5 = this.axios.get(`/group?page_size=100`)
+      const request3 = this.axios.get(`/master-data/organization`)
+      const request4 = this.axios.get(`/master-data/subministry`)
+      const request5 = this.axios.get(`/master-data/group`)
       const request6 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6])
@@ -558,7 +523,6 @@ export default {
         
         response4.data.data.filter(item => {
           item.value = item.id
-          item.name = item.Name
           return item
         })
         
@@ -594,6 +558,20 @@ export default {
   },
   mounted () {
     this.apiMaster()
+  },
+  watch: {
+    'data.organization_id'() {
+      this.masterDropdown()
+    },
+    'data.department_id'() {
+      this.masterDropdown()
+    },
+    'data.subministry_id'() {
+      this.masterDropdown()
+    },
+    'data.group_id'() {
+      this.masterDropdown()
+    },
   }
 }
 
