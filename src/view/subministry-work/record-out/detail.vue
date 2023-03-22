@@ -808,6 +808,7 @@ export default {
         greeting: this.data.greeting,
         desc: this.data.desc,
         regis_date: this.assetsUtils.currentDate(),
+        is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
