@@ -71,7 +71,8 @@
                                   placeholder="กรุณาระบุ"
                                   type="text"
                                   :optionSelect="optionSelect.department_id"
-                                  @change="change"/>
+                                  @change="change"
+                                  @keyup="keyup_dep"/>
               </div>
             </div>
             <div class="group-between">
@@ -237,9 +238,7 @@ export default {
         })
 
         this.optionSelect.organization_id = response1.data.data
-        console.log('a')
         this.optionSelect.department_id = response2.data.data
-        console.log('b')
 
         if (this.$route.params.id) {
           this.edit = true
@@ -264,7 +263,41 @@ export default {
             this.data.organization_id = item.organization_id
           }
         })
-    }
+    },
+    keyup_dep(e) {
+      this.axios.get('/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.name
+            return item
+          })
+          this.optionSelect.department_id = response.data.data
+        }
+      })
+    },
+    keyupDep(e, data) {
+      this.axios.get('/department', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.name
+            return item
+          })
+          data.optionSelect.department_id = response.data.data
+        }
+      })
+    },
   },
   mounted () {
     this.api_master()

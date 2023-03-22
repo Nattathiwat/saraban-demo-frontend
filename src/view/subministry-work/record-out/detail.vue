@@ -163,7 +163,7 @@
                 <div class="name">บันทึกต้นเรื่อง</div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
+                    <button type="button"  class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
                       </span>
@@ -172,7 +172,7 @@
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_docs(item, index)">
+                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -217,10 +217,19 @@
                               name="sendTo" />
             </div>
             <div class="group-input left">
-              <div class="name">ความเห็น / คำสั่ง
-                <button class="button-con pointer" @click="edit ? '' : upload_file(`attachments${index}`)">
-                <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip"> แนบเอกสาร
-              </button>
+              <div class="name d-flex justify-content-between">
+                <div>ความเห็น / คำสั่ง</div>
+                <div>
+                  <button type="button" class="button-con pointer" @click="upload_file(`order${index}`)" :class="item.filename ? '' : 'no-data'" 
+                  v-for="(item, index) in data.order" :key="index">
+                  <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip"> 
+                  {{item.filename ? item.filename : 'แนบเอกสาร'}}
+                    <input type="file" @change="file_set_change(`order${index}`, index, 'order')" :name="`order${index}`" style="display:none;">
+                  </button>
+                  <button type="button" class="del-comment pointer" @click="data.order[0].filename = ''" >
+                        <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
+                  </button>
+               </div>
               </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
@@ -329,7 +338,7 @@ export default {
         process_type_id: '12',
         permission_id: '9',
         desc: '',
-        as_of_date: this.assetsUtils.currentDate(),
+        regis_date: this.assetsUtils.currentDate(),
         human_flag:false,
         response_id:'',
         greeting:''
@@ -474,6 +483,13 @@ export default {
         item.flag = 'delete'
       } else {
         this.data.main_docs.splice(index,1)
+      }
+    },
+    delete_order(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.order.splice(index,1)
       }
     },
     add_booking_follows() {
@@ -711,12 +727,42 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(fileMainDocs,fileAttachments)
+        this.upload_file_all3(fileMainDocs,fileAttachments)
       }
     },
-    call_api_save(filemain_docs,file_attachments) {
+    upload_file_all3(fileAttachments,fileMainDocs) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileOrder = ''
+      this.data.order.filter(item=> {
+        if (item.file) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            fileOrder.push({...this.data.order[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileOrder.length) {
+            this.call_api_save(fileMainDocs,fileAttachments,fileOrder)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(fileMainDocs,fileAttachments,fileOrder)
+      }
+    },
+    call_api_save(filemain_docs,file_attachments,file_order) {
       let fileAttachments = file_attachments
       let fileMainDocs = filemain_docs
+      let fileOrder = file_order
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -735,8 +781,10 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            response_id: parseInt(item.value)
+            response_id: parseInt(item.value),
+            attach_filepath: file_order,
           }
+          console.log(file_order)
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
           this.data.booking_follows.push(data)
@@ -760,9 +808,6 @@ export default {
         greeting: this.data.greeting,
         desc: this.data.desc,
         regis_date: this.assetsUtils.currentDate(),
-        is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
-        as_of_date: this.data.as_of_date,
-        booking_note_number: this.data.booking_note_number
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
@@ -781,6 +826,7 @@ export default {
       .then((response) => { 
         this.showLoading = false
         this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data.regis_date = response.data.data.created_at
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -788,6 +834,9 @@ export default {
           }
         })
         this.data.sendTo = []
+        this.data.order=[{
+          filename: ''
+        }]
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
           item.flag = 'edit'
@@ -819,7 +868,7 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/booktypenote`)
+      const request1 = this.axios.get(`/master-data/book-type-note`)
       const request2 = this.axios.get(`/master-data/speed`)
       const request3 = this.axios.get(`/master-data/secret`)
       const request4 = this.axios.get(`/master-data/process-type`)
@@ -923,7 +972,7 @@ export default {
     },
     keyup_record_type(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/booktypenote', {
+      this.axios.get('/master-data/book-type-note', {
         params: {
           keyword: e.target.value
         }
@@ -932,7 +981,7 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.desc
+            item.name = item.name
             return item
           })
           this.optionSelect.book_type_id = response.data.data
@@ -940,8 +989,8 @@ export default {
       })
     },
     keyupRecordType(e, data) {
-      data.optionSelect.department_dest_id = []
-      this.axios.get('/booktypenote', {
+      data.optionSelect.book_type_id = []
+      this.axios.get('/master-data/book-type-note', {
         params: {
           keyword: e.target.value
         }
@@ -950,7 +999,7 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.desc
+            item.name = item.name
             return item
           })
           data.optionSelect.book_type_id = response.data.data
@@ -1161,7 +1210,7 @@ export default {
         }
 
         .button-con {
-          width: 112px;
+          width: auto;
           height: 30px;
           background-color: transparent;
           color: #000;
@@ -1169,8 +1218,26 @@ export default {
           font-weight: 500;
           border: 0;
           border-radius: 5px;
-          margin-left: 500px;
+          
+          .right{
+            margin-left: 500px;
+          }
         }
+
+        .del-comment {
+        // width: 45px;
+        // height: 45px;
+        color: #212529;
+        background-color: transparent;
+        // border-color: #f8f9fa;
+        border: none;
+        border-radius: 5px;
+        margin-left: 15px;
+
+        .image-x {
+          width: 14px;
+        }
+      }
       }
 
       .group-detail {

@@ -6,7 +6,7 @@
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">บันทึกรับเข้า</div>
-            <button type="button" class="add-booking-receive" @click="submitClick()" :disabled="checkedList.length < 1" >
+            <button type="button" class="confirm-receive" @click="submitClick()" :disabled="checkedList.length < 1" >
               <div class="group-image">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
@@ -293,7 +293,7 @@ export default {
             font-size: 18px;
           }
 
-          .add-booking-receive {
+          .confirm-receive {
             height: 45px;
             border: 0;
             border-radius: 5px;
