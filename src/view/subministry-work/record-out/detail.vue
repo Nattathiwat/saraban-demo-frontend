@@ -863,6 +863,7 @@ export default {
         // this.data.booking_follows = []
         if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
         if (this.data.attachments.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
+        if (this.data.main_docs.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', flag: 'add'}]
       })
       .catch((error) => {
         this.showLoading = false
