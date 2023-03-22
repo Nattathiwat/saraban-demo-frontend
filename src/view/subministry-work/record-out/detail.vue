@@ -219,7 +219,7 @@
             <div class="group-input left">
               <div class="name d-flex justify-content-between">
                 <div>ความเห็น / คำสั่ง</div>
-                <div>
+                <div v-show="false">
                   <button type="button" class="button-con pointer" @click="upload_file(`order${index}`)" :class="item.filename ? '' : 'no-data'" 
                   v-for="(item, index) in data.order" :key="index">
                   <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip"> 
