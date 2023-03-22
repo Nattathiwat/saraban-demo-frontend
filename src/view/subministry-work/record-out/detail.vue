@@ -2,19 +2,19 @@
   <div class="booking-out-detail">
     <div class="group-overflow">
       <div class="detail">
-        <div class="group-head">
-          <div class="group-first">
-            <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}}</div>
-          </div>
-          <button type="button" class="add-booking-out" @click="gennumber()" v-show="false">
-              <div class="group-image">
-                ออกเลขบันทึกภายใน
-              </div>
-            </button>
-        </div>
-        <div class="line"></div>
         <Form @submit="on_submit" @invalid-submit="onInvalidSubmit">
+          <div class="group-head">
+            <div class="group-first">
+              <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
+              <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}} <label>{{data.booking_note_number}}</label></div> 
+            </div>
+            <button type="submit" class="add-booking-out" @click="flagSave=3" v-show="!data.booking_note_number">
+                <div class="group-image">
+                  ออกเลขบันทึกภายใน
+                </div>
+              </button>
+          </div>
+        <div class="line"></div>
           <div class="group-detail">
             <div class="group-input">
               <div class="name">เจ้าของหนังสือ</div>
@@ -180,12 +180,13 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
+                  <button type="button" class="add-booking-receive" :disabled="edit" @click="upload_file('addAttachments')" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
                     </div>
                   </button>
+                  <input multiple type="file" @change="add_attachments_change('addAttachments')" name="addAttachments" style="display:none;">
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
@@ -195,7 +196,7 @@
                       </span>
                     </button>
                     <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                    <input multiple type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
@@ -337,7 +338,7 @@ export default {
         process_type_id: '12',
         permission_id: '9',
         desc: '',
-        as_of_date: '',
+        regis_date: this.assetsUtils.currentDate(),
         human_flag:false,
         response_id:'',
         greeting:''
@@ -451,11 +452,24 @@ export default {
         this.add_booking_refers()
       }
     },
-    add_attachments() {
-      this.data.attachments.push({ 
-        filename: '',
-        flag: 'add'
-      })
+    add_attachments_change(data) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        let dataFile = {
+          filename: file.name,
+          type: file.type,
+          link: URL.createObjectURL(file),
+          size: (file.size /1024 /1024).toFixed(2) + ' MB',
+          file: file,
+          flag: 'add'
+        }
+        this.data.attachments.push(dataFile)
+      }
+      document.querySelector(`[name="${data}"]`).value=null;
     },
     delete_attachments(item, index) {
       if (item.flag == 'edit') {
@@ -638,12 +652,23 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : 'บันทึกและส่งต่อ'}หรือไม่`,
+        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 2 ? 'บันทึกและส่งต่อ' : 'ออกเลขบันทึกภายใน'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          _this.showLoading = true
-          _this.upload_file_all()
+          if (_this.flagSave == 3) {
+            _this.showLoading = true
+            _this.axios.post(`/booking-note/generate-number`, {book_category_id: parseInt(_this.data.book_category_id), year: _this.data.data.as_of_date.split('/')[2]-543})
+            .then((response) => {
+              _this.upload_file_all()
+            }).catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          } else {
+            _this.showLoading = true
+            _this.upload_file_all()
+          }
         }
       }
     },
@@ -782,66 +807,26 @@ export default {
         flag: this.flagSave == 1 ? "draft" : '',
         greeting: this.data.greeting,
         desc: this.data.desc,
-        as_of_date: this.data.as_of_date,
+        regis_date: this.assetsUtils.currentDate(),
       }
-      this.showLoading = false
-      if (this.edit) {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.put(`/booking-note/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.put(`/booking-note/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      } else {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.post(`/booking-note`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.post(`/booking-note`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      }
+      this.showLoading = true
+      this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
+      .then(() => { 
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     api_detail() {
       this.showLoading = true
       this.axios.get(`/booking-note/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data = {...this.data,...JSON.parse(JSON.stringify(response.data.data))}
-        this.data.as_of_date = response.data.data.as_of_date
+        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data.regis_date = response.data.data.created_at
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -872,6 +857,7 @@ export default {
           item.flag = 'edit'
           return item
         })
+        // this.data.booking_follows = []
         if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
         if (this.data.attachments.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
       })
@@ -1068,6 +1054,11 @@ export default {
             color: #1a456b;
             font-weight: bold;
             font-size: 18px;
+
+            label {
+              margin-left: 10px;
+              font-size: 22px;
+            }
           }
         }
           .add-booking-out {
