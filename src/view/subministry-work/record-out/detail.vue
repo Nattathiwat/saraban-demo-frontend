@@ -56,8 +56,8 @@
               </div>
               <div class="group-input">
                 <div class="name">ลงวันที่<span class="required">*</span></div>
-                <cpn-datepicker v-model="data.regis_date"
-                                  name="regis_date"
+                <cpn-datepicker v-model="data.as_of_date"
+                                  name="as_of_date"
                                   rules="required"
                                   :disabled="edit"
                                   placeholder="กรุณาระบุ" />
@@ -329,7 +329,7 @@ export default {
         process_type_id: '12',
         permission_id: '9',
         desc: '',
-        regis_date: this.assetsUtils.currentDate(),
+        as_of_date: this.assetsUtils.currentDate(),
         human_flag:false,
         response_id:'',
         greeting:''
@@ -642,7 +642,7 @@ export default {
         afterPressAgree() {
           if (_this.flagSave == 3) {
             _this.showLoading = true
-            _this.axios.post(`/booking-note/generate-number`, {book_category_id: parseInt(_this.data.book_category_id), year: _this.data.data.regis_date.split('/')[2]-543})
+            _this.axios.post(`/booking-note/generate-number`, {book_category_id: parseInt(_this.data.book_category_id), year: _this.data.data.as_of_date.split('/')[2]-543})
             .then((response) => {
               _this.upload_file_all()
             }).catch((error) => {
@@ -761,7 +761,8 @@ export default {
         desc: this.data.desc,
         regis_date: this.assetsUtils.currentDate(),
         is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
-        as_of_date: this.data.regis_date
+        as_of_date: this.data.as_of_date,
+        booking_note_number: this.data.booking_note_number
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
@@ -780,7 +781,6 @@ export default {
       .then((response) => { 
         this.showLoading = false
         this.data = JSON.parse(JSON.stringify(response.data.data))
-        this.data.regis_date = response.data.data.created_at
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
