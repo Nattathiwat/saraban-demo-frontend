@@ -659,8 +659,9 @@ export default {
         afterPressAgree() {
           if (_this.flagSave == 3) {
             _this.showLoading = true
-            _this.axios.post(`/booking-note/generate-number`,{department_id: parseInt(localStorage.getItem('department_id')) ,book_category_id: parseInt(_this.data.book_category_id), year: _this.data.as_of_date.split('/')[2]-543})
+            _this.axios.post(`/booking-note/generate-number`,{department_id: parseInt(localStorage.getItem('department_id')),creater_id: _this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')), book_category_id: parseInt(_this.data.book_category_id), year: _this.data.as_of_date.split('/')[2]-543})
             .then((response) => {
+              _this.data.booking_note_number = response.data.data.out_document_number
               _this.upload_file_all()
             }).catch((error) => {
               _this.showLoading = false
@@ -817,7 +818,7 @@ export default {
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then(() => { 
         this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1 || this.flagSave == 3 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3 ? 'ทำการออกเลขบันทึกภายในสำเร็จ' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
       })
       .catch((error) => {
         this.showLoading = false
