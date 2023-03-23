@@ -219,16 +219,16 @@
             <div class="group-input left">
               <div class="name d-flex justify-content-between">
                 <div>ความเห็น / คำสั่ง</div>
-                <div v-show="false">
-                  <button type="button" class="button-con pointer" @click="upload_file(`order${index}`)" :class="item.filename ? '' : 'no-data'" 
-                  v-for="(item, index) in data.order" :key="index">
-                  <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip"> 
-                  {{item.filename ? item.filename : 'แนบเอกสาร'}}
-                    <input type="file" @change="file_set_change(`order${index}`, index, 'order')" :name="`order${index}`" style="display:none;">
+                <div>
+                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
+                    <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
+                    แนบเอกสาร
                   </button>
-                  <button type="button" class="del-comment pointer" @click="data.order[0].filename = ''" >
-                        <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
-                  </button>
+                  <div v-else class="del-comment pointer" @click="data.sendToFile.filename = ''" >
+                    {{data.sendToFile?.filename}}
+                    <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
+                  </div>
                </div>
               </div>
               <cpn-textArea v-model="data.comment"
@@ -275,6 +275,7 @@
                 <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
               </div>
               <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
+              <div class="name ms-2 mt-1">เอกสารแนบ : {{item?.sendToFile.filename || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -506,7 +507,11 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            response_id: parseInt(item.value)
+            response_id: parseInt(item.value),
+            sendToFile: {
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile.filename))
+            }
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -612,6 +617,15 @@ export default {
             this.data[name][index] = {...this.data[name][index], ...dataFile}
             document.querySelector(`[name="${data}"]`).value=null;
           }
+        } else if (name == 'sendTo') {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data.sendToFile = dataFile
         } else {
           let dataFile = {
             filename: file.name,
@@ -722,7 +736,7 @@ export default {
             fileMainDocs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMainDocs.length) {
-            this.call_api_save(fileMainDocs,fileAttachments)
+            this.upload_file_all3(fileMainDocs,fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -732,33 +746,57 @@ export default {
         this.upload_file_all3(fileMainDocs,fileAttachments)
       }
     },
-    upload_file_all3(fileAttachments,fileMainDocs) {
+    upload_file_all3(fileMainDocs,fileAttachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      let fileSendTo = ''
+      if (this.data.sendToFile.filename) {
+        let formDataFile = new FormData();
+        formDataFile.append('file', this.data.sendToFile.file);
+        formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+        this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+        .then((response) => {
+          this.data.attach_filename = response.data.data.filename
+          this.data.attach_filepath = response.data.data.path
+          this.upload_file_all4(fileMainDocs,fileAttachments)
+        }).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.upload_file_all4(fileMainDocs,fileAttachments)
+      }
+    },
+    upload_file_all4(fileAttachments) {
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
-      let fileOrder = ''
-      this.data.order.filter(item=> {
-        if (item.file) {
+      let fileSendTo = []
+      this.data.booking_follows.filter(item=> {
+        console.log('xx', item)
+        if (item.sendToFile?.filename) {
           let formDataFile = new FormData();
-          formDataFile.append('file', item.file);
+          formDataFile.append('file', item.sendToFile.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
           axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
         }
       })
+      console.log('bb')
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileOrder.push({...this.data.order[index], ...item.data.data, filepath: item.data.data.path})
+            this.data.booking_follows[index].attach_filepath = item.data.data.path
+            this.data.booking_follows[index].attach_filename = item.data.data.filename
+            fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileOrder.length) {
-            this.call_api_save(fileMainDocs,fileAttachments,fileOrder)
+          if (axiosArray1.length == fileSendTo.length) {
+            this.call_api_save(fileSendTo,fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(fileMainDocs,fileAttachments,fileOrder)
+        this.call_api_save(fileMainDocs,fileAttachments)
       }
     },
     call_api_save(filemain_docs,file_attachments,file_order) {
@@ -784,9 +822,9 @@ export default {
             flag: 'add',
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
-            attach_filepath: file_order,
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename
           }
-          console.log(file_order)
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
           this.data.booking_follows.push(data)
@@ -830,7 +868,7 @@ export default {
       this.axios.get(`/booking-note/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
         this.data.regis_date = response.data.data.created_at
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
@@ -1242,6 +1280,7 @@ export default {
 
         .image-x {
           width: 14px;
+          margin-left: 5px;
         }
       }
       }
