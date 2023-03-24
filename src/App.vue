@@ -132,7 +132,7 @@
         </div>
       </div>
       <div :style="hamburger ?'padding-left: 30px;':''" class="detail-index">
-        <router-view></router-view>
+        <router-view @getLogoImage="getLogoImage"></router-view>
       </div>
     </div>
     <div :style="hamburger ?'padding-left: 0px;':''" class="foot-index">

@@ -40,24 +40,25 @@ export default {
   components: {
     Paginate
   },
-  props: {
-    page: {
-      type: Number,
-      default: () => 1,
-    },
-    total: {
-      type: Number,
-      default: () => 0,
-    },
-    perPage: {
-      type: Number,
-      default: () => 0,
-    },
-    lastPage: {
-      type: Number,
-      default: () => 0,
-    }
-  },
+  props: ['page', 'total', 'perPage', 'lastPage'],
+  // props: {
+  //   page: {
+  //     type: Number,
+  //     default: () => 1,
+  //   },
+  //   total: {
+  //     type: Number,
+  //     default: () => 0,
+  //   },
+  //   perPage: {
+  //     type: Number,
+  //     default: () => 0,
+  //   },
+  //   lastPage: {
+  //     type: Number,
+  //     default: () => 0,
+  //   }
+  // },
   methods: {
     pageSizeHandleBlur() {
 			let newData = {
@@ -74,8 +75,8 @@ export default {
       this.$emit('pageChange', newData)
     },
     setPages() {
-      this.pageActive = this.page ? this.page : 1
-      this.pageSize = this.perPage ? this.perPage : 50
+      this.pageActive = this.page ? parseInt(this.page) : 1
+      this.pageSize = this.perPage ? parseInt(this.perPage) : 50
       this.totalArr = []
 			if (this.total < this.pageSizeTotal) {
 				this.totalArr.push(this.pageSizeTotal)
