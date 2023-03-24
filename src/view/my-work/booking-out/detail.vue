@@ -726,6 +726,8 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
+            response_id:item.id,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -733,7 +735,7 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -1168,6 +1170,8 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
+            response_id: item.id,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -1200,6 +1204,11 @@ export default {
           item.booking_registers.filter(item2 => {
             item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
             item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
+            item2.optionSelect.department_dest_id.find(item3 => {
+              if(item3.value == item2.department_dest_id) {
+                item2.human_flag = item3.human_flag 
+                item2.response_id = item3.id}
+              })
             return item2
           })
           return item
@@ -1379,7 +1388,7 @@ export default {
         })
         response9.data.data.filter(item => {
           item.value = item.id
-          item.name = item.department_full_name
+          item.name = item.desc
           return item
         })
 
