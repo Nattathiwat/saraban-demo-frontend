@@ -567,7 +567,7 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -576,7 +576,8 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -585,7 +586,7 @@ export default {
     },
     keyupDepartment(e, data) {
       data.optionSelect.department_dest_id = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -594,7 +595,8 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
             return item
           })
           data.optionSelect.department_dest_id = response.data.data
@@ -1320,7 +1322,7 @@ export default {
       const request6 = this.axios.get(`/user`)
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/register-type`)
-      const request9 = this.axios.get('/master-data/department')
+      const request9 = this.axios.get('/master-data/department-user')
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9])
       .then(this.axios.spread((...responses) => {
