@@ -749,7 +749,7 @@ export default {
     upload_file_all3(fileMainDocs,fileAttachments) {
       let currentDate = this.assetsUtils.currentDate()
       let fileSendTo = ''
-      if (this.data.sendToFile.filename) {
+      if (this.data.sendToFile?.filename) {
         let formDataFile = new FormData();
         formDataFile.append('file', this.data.sendToFile.file);
         formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -771,7 +771,6 @@ export default {
       let axiosArray1 = []
       let fileSendTo = []
       this.data.booking_follows.filter(item=> {
-        console.log('xx', item)
         if (item.sendToFile?.filename) {
           let formDataFile = new FormData();
           formDataFile.append('file', item.sendToFile.file);
@@ -779,7 +778,6 @@ export default {
           axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
         }
       })
-      console.log('bb')
       if (axiosArray1.length>0) {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
