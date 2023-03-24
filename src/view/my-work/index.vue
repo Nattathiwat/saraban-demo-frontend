@@ -1,7 +1,7 @@
 <template>
   <div class="my-work-inex">
     <div class="topnav">
-      <div @click="$router.push({name: 'my-work.waiting-booking-receive'})" :class="$route.name == 'my-work.waiting-booking-receive' || $route.name == 'my-work.waiting-booking-receive-edit' || $route.name == 'my-work.waiting-booking-receive-create' ? 'active' : ''">หนังสือรอรับเข้า</div>
+      <div v-show="false" @click="$router.push({name: 'my-work.waiting-booking-receive'})" :class="$route.name == 'my-work.waiting-booking-receive' || $route.name == 'my-work.waiting-booking-receive-edit' || $route.name == 'my-work.waiting-booking-receive-create' ? 'active' : ''">หนังสือรอรับเข้า</div>
       <div @click="$router.push({name: 'my-work.booking-receive'})" :class="$route.name == 'my-work.booking-receive' || $route.name == 'my-work.booking-receive-edit' || $route.name == 'my-work.booking-receive-create' ? 'active' : ''">หนังสือรับเข้า</div>
       <div @click="$router.push({name: 'my-work.booking-out'})" :class="$route.name == 'my-work.booking-out' || $route.name == 'my-work.booking-out-edit' || $route.name == 'my-work.booking-out-create' ? 'active' : ''">หนังสือส่งออก</div>
     </div>
