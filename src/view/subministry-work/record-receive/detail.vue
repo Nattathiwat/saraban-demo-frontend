@@ -50,8 +50,8 @@
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
                 <cpn-select v-model="data.book_type_id"
                             name="book_type_id"
-                            rules="required"
                             :disabled="edit"
+                            rules="required"
                             :optionSelect="optionSelect.book_type_id"
                             placeholder="กรุณาระบุ" />
               </div>
@@ -157,7 +157,7 @@
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_docs(item, index)">
+                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -200,8 +200,21 @@
                               @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
-            <div class="group-input">
-              <div class="name">ความเห็น / คำสั่ง</div>
+            <div class="group-input left">
+              <div class="name d-flex justify-content-between">
+                <div>ความเห็น / คำสั่ง</div>
+                <div>
+                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
+                    <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
+                    แนบเอกสาร
+                  </button>
+                  <div v-else class="del-comment pointer" @click="data.sendToFile.filename = ''" >
+                    {{data.sendToFile?.filename}}
+                    <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
+                  </div>
+               </div>
+              </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
                             rows="3" />
@@ -246,6 +259,7 @@
                 <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
               </div>
               <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
+              <div class="name ms-2 mt-1">เอกสารแนบ : {{item?.sendToFile.filename || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -318,8 +332,8 @@ export default {
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
+        process_type_id: '12',
+        permission_id: '8',
         book_type:'',
         human_flag: false,
         response_id: ''
@@ -503,7 +517,10 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            // response_id: parseInt(item.value)
+            sendToFile: {
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile.filename))
+            }
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -550,6 +567,15 @@ export default {
             this.data[name][index] = {...this.data[name][index], ...dataFile}
             document.querySelector(`[name="${data}"]`).value=null;
           }
+        } else if (name == 'sendTo') {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data.sendToFile = dataFile
         } else {
           let dataFile = {
             filename: file.name,
@@ -574,7 +600,6 @@ export default {
     },
     on_submit() {
       let _this = this
-      console.log('start')
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
@@ -592,7 +617,7 @@ export default {
       let axiosArray1 = []
       let axiosArray2 = []
       let fileMain_docs = []
-      let fileAttachments = []
+      let file_attachments = []
       let fileMain_docs_old = []
 
       this.data.main_docs.filter((item) => {
@@ -620,8 +645,8 @@ export default {
           responses.filter((item, index) => {
             fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -632,10 +657,10 @@ export default {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
+            file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -646,10 +671,10 @@ export default {
         this.call_api_save([...fileMain_docs_old],[])
       }
     },
-    upload_file_all2(fileAttachments) {
+    upload_file_all2(file_attachments) {
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
-      let fileMainDocs = []
+      let filemain_docs = []
       this.data.main_docs.filter(item=> {
         if (item.file) {
           let formDataFile = new FormData();
@@ -662,20 +687,76 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileMainDocs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+            filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMainDocs.length) {
-            this.call_api_save(fileMainDocs,fileAttachments)
+          if (axiosArray1.length == filemain_docs.length) {
+            this.call_api_save(filemain_docs,file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(fileMainDocs,fileAttachments)
+        this.call_api_save(filemain_docs,file_attachments)
       }
     },
-    call_api_save([...fileMain_docs_old],[]) {
+    upload_file_all3(filemain_docs,file_attachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      if (this.data.sendToFile?.filename) {
+        let formDataFile = new FormData();
+        formDataFile.append('file', this.data.sendToFile.file);
+        formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+        this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+        .then((response) => {
+          this.data.attach_filename = response.data.data.filename
+          this.data.attach_filepath = response.data.data.path
+          this.upload_file_all4(filemain_docs,file_attachments)
+        }).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        console.log('elseup3')
+        this.upload_file_all4(filemain_docs,file_attachments)
+      }
+    },
+    upload_file_all4(filemain_docs,file_attachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileSendTo = []
+      this.data.booking_follows.filter(item=> {
+        if (item.sendToFile?.filename) {
+          console.log('up4')
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.sendToFile.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        console.log('arr3')
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          console.log('then4')
+          responses.filter((item, index) => {
+            this.data.booking_follows[index].attach_filepath = item.data.data.path
+            this.data.booking_follows[index].attach_filename = item.data.data.filename
+            fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileSendTo.length) {
+            console.log('call')
+            this.call_api_save(filemain_docs,file_attachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        console.log('elseup4')
+        this.call_api_save(filemain_docs,file_attachments)
+      }
+    },
+    call_api_save([...fileMain_docs_old],[],file_attachments) {
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -695,6 +776,9 @@ export default {
             flag: 'add',
             human_flag: item.human_flag,
             // response_id: parseInt(item.value)
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename,
+            sendToFile :{filename : this.data.attach_filename}
           }
           console.log(item)
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
@@ -715,8 +799,8 @@ export default {
         send_to: this.data.send_to,
         book_desc: this.data.book_desc,
         tag: tag,
-        main_docs: [...fileMain_docs, ...this.data.main_docs_del],
-        attachments: fileAttachments,
+        main_docs: [...fileMain_docs_old, ...this.data.main_docs_del],
+        attachments: file_attachments,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         user_id: parseInt(localStorage.getItem('user_id')),
@@ -772,6 +856,9 @@ export default {
           }
         })
         this.data.sendTo = []
+        this.data.order=[{
+          filename: ''
+        }]
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
           item.flag = 'edit'
@@ -801,6 +888,7 @@ export default {
           item.flag = 'edit'
           return item
         })
+        this.data.booking_follows = []
         if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', flag: 'add'}]
         if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
         if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: '', flag: 'add'}]
@@ -834,7 +922,7 @@ export default {
 
         response2.data.data.filter(item => {
           item.value = item.id
-          item.name = item.desc
+          item.name = item.name
           return item
         })
         response3.data.data.filter(item => {
@@ -1097,6 +1185,44 @@ export default {
             width: 18px;
           }
         }
+        .icon-paperclip {
+          color: #8aa3b7;
+          // font-size: 14px;
+          margin-right: 2px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .button-con {
+          width: auto;
+          height: 30px;
+          background-color: transparent;
+          color: #000;
+          font-size: 15px;
+          font-weight: 500;
+          border: 0;
+          border-radius: 5px;
+          
+          .right{
+            margin-left: 500px;
+          }
+        }
+
+        .del-comment {
+        // width: 45px;
+        // height: 45px;
+        color: #212529;
+        background-color: transparent;
+        // border-color: #f8f9fa;
+        border: none;
+        border-radius: 5px;
+        margin-left: 15px;
+
+        .image-x {
+          width: 14px;
+          margin-left: 5px;
+        }
+      }
       }
 
       .group-detail {

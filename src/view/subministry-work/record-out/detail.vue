@@ -337,7 +337,7 @@ export default {
         booking_follows: [],
         comment: '',
         process_type_id: '12',
-        permission_id: '9',
+        permission_id: '8',
         desc: '',
         regis_date: this.assetsUtils.currentDate(),
         human_flag:false,
@@ -408,6 +408,7 @@ export default {
             item.value = item.id
             item.name = item.desc
             item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -427,6 +428,7 @@ export default {
             item.value = item.id
             item.name = item.desc
             item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           data.optionSelect.department_dest_id = response.data.data
@@ -511,7 +513,8 @@ export default {
             sendToFile: {
               ...this.data.sendToFile,
               filename: JSON.parse(JSON.stringify(this.data.sendToFile.filename))
-            }
+            },
+            response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -749,13 +752,11 @@ export default {
     upload_file_all3(filemain_docs,file_attachments) {
       let currentDate = this.assetsUtils.currentDate()
       if (this.data.sendToFile?.filename) {
-        console.log('up3')
         let formDataFile = new FormData();
         formDataFile.append('file', this.data.sendToFile.file);
         formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
         this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
         .then((response) => {
-          console.log('then3')
           this.data.attach_filename = response.data.data.filename
           this.data.attach_filepath = response.data.data.path
           this.upload_file_all4(filemain_docs,file_attachments)
@@ -764,7 +765,6 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        console.log('elseup3')
         this.upload_file_all4(filemain_docs,file_attachments)
       }
     },
@@ -774,7 +774,6 @@ export default {
       let fileSendTo = []
       this.data.booking_follows.filter(item=> {
         if (item.sendToFile?.filename) {
-          console.log('up4')
           let formDataFile = new FormData();
           formDataFile.append('file', item.sendToFile.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -782,17 +781,14 @@ export default {
         }
       })
       if (axiosArray1.length>0) {
-        console.log('arr3')
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
-          console.log('then4')
           responses.filter((item, index) => {
             this.data.booking_follows[index].attach_filepath = item.data.data.path
             this.data.booking_follows[index].attach_filename = item.data.data.filename
             fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileSendTo.length) {
-            console.log('call')
             this.call_api_save(filemain_docs,file_attachments)
           }
         })).catch((error) => {
@@ -800,12 +796,10 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        console.log('elseup4')
         this.call_api_save(filemain_docs,file_attachments)
       }
     },
     call_api_save(filemain_docs,file_attachments) {
-      console.log('fncall')
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -825,6 +819,7 @@ export default {
             flag: 'add',
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
+            response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
             sendToFile :{filename : this.data.attach_filename}
@@ -834,7 +829,6 @@ export default {
           this.data.booking_follows.push(data)
         }
       })
-      console.log('datasave')
       let dataSave = {
         create_type: parseInt(this.data.create_type),
         creater_id: this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')),
@@ -898,6 +892,10 @@ export default {
         })
         this.data.attachments.filter(item => {
           item.flag = 'edit'
+          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
+          return item
+        })
+        this.data.main_docs.filter(item => {
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })

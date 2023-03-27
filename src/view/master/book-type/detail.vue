@@ -100,7 +100,7 @@ export default {
         desc: '',
         active_flag: true,
         optionSelect: {
-          type: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
+          type: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' },{ name: 'หนังสือรับเข้าและส่งออก',value: '2' }],
         }
       },
     }

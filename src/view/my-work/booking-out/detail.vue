@@ -1214,6 +1214,7 @@ export default {
           return item
         }),
         flag: this.flagSave == 1 ? "draft" : '',
+        is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
       }
       this.showLoading = false
       if (this.edit) {
@@ -1222,7 +1223,7 @@ export default {
           this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : '', msgSuccess: true, afterPressAgree() { _this.back() }}
           })
           .catch((error) => {
             this.showLoading = false
