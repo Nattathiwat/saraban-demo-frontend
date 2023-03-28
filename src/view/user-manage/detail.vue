@@ -461,16 +461,20 @@ export default {
         this.data.group_id = response.data.data.group_id
         this.data.birthdate = response.data.data.birthdate
         this.data.level = response.data.data.roles
-        this.axios({ method:'get', url: this.backendport+'/'+response.data.data.profile_img, baseURL: '', responseType: 'blob',})
-        .then(response3 => {
-          const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.profile_img) })
-          this.data.previewImage1 = URL.createObjectURL(blob)
-        })
-        this.axios({ method:'get', url: this.backendport+'/'+response.data.data.signature_img, baseURL: '', responseType: 'blob',})
-        .then(response3 => {
-          const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.signature_img) })
-          this.data.previewImage2 = URL.createObjectURL(blob)
-        })
+        if (response.data.data.profile_img) {
+          this.axios({ method:'get', url: this.backendport+'/'+response.data.data.profile_img, baseURL: '', responseType: 'blob',})
+          .then(response3 => {
+            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.profile_img) })
+            this.data.previewImage1 = URL.createObjectURL(blob)
+          })
+        }
+        if (response.data.data.signature_img) {
+          this.axios({ method:'get', url: this.backendport+'/'+response.data.data.signature_img, baseURL: '', responseType: 'blob',})
+          .then(response3 => {
+            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.signature_img) })
+            this.data.previewImage2 = URL.createObjectURL(blob)
+          })
+        }
         this.data.optionSelect.roles.filter(item2 => {
           item2.check = false 
           response.data.data.roles.filter(item => {

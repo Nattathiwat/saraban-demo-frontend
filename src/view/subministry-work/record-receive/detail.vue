@@ -479,6 +479,7 @@ export default {
             item.value = item.id
             item.name = item.desc
             item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.department_id = response.data.data
@@ -498,6 +499,7 @@ export default {
             item.value = item.id
             item.name = item.desc
             item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -517,10 +519,12 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
+            response_id: parseInt(item.value),
             sendToFile: {
               ...this.data.sendToFile,
               filename: JSON.parse(JSON.stringify(this.data.sendToFile.filename))
-            }
+            },
+            response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})

@@ -578,6 +578,7 @@ export default {
             item.value = item.id
             item.name = item.desc
             item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -597,6 +598,7 @@ export default {
             item.value = item.id
             item.name = item.desc
             item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           data.optionSelect.department_dest_id = response.data.data
@@ -736,6 +738,9 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -976,7 +981,7 @@ export default {
           flag: 'add',
           main_filename: '',
           attach_filename: '',
-          booking_registers: []
+          booking_registers: [],
         }
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
@@ -1179,7 +1184,10 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
