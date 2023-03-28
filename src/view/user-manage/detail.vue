@@ -238,7 +238,7 @@ export default {
     },
     keyupOrganization(e) {
       this.data.optionSelect.organization = []
-      this.axios.get('/organization', {
+      this.axios.get('/master-data/organization', {
         params: {
           keyword: e.target.value,
           department_id: this.data.department_id,
@@ -279,7 +279,7 @@ export default {
     },
     keyupSubministry(e) {
       this.data.optionSelect.subministry = []
-      this.axios.get('/subministry', {
+      this.axios.get('/master-data/subministry', {
         params: {
           keyword: e.target.value,
           organization_id: this.data.organization_id,
@@ -300,7 +300,7 @@ export default {
     },
     keyupGroup(e) {
       this.data.optionSelect.group = []
-      this.axios.get('/group', {
+      this.axios.get('/master-data/group', {
         params: {
           keyword: e.target.value,
           organization_id: this.data.organization_id,
