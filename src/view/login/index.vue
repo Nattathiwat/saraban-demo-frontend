@@ -10,23 +10,23 @@
         <div class="group-input">
           <div :class="['input-name', !data.personNo && !focusPersonNo ? 'show-text' : '']">ชื่อผู้ใช้งาน หรือ Email</div>
           <cpn-input  v-model="data.personNo"
-                  name="personNo"
-                  type="text"
-                  classN="input-login"
-                  rules="required"
-                  @focusin="focusPersonNo = true"
-                  @focusout="focusPersonNo = false" />
+                      name="personNo"
+                      type="text"
+                      classN="input-login"
+                      rules="required"
+                      @focusin="focusPersonNo = true"
+                      @focusout="focusPersonNo = false" />
         </div>
         <div class="group-input">
           <div :class="['input-name', !data.password && !focusPassword? 'show-text' : '']">รหัสผ่าน</div>
           <cpn-input  v-model="data.password"
-                  name="password"
-                  type="password"
-                  classN="input-login"
-                  rules="required"
-                  iconN="eye"
-                  @focusin="focusPassword = true"
-                  @focusout="focusPassword = false"  />
+                      name="password"
+                      type="password"
+                      classN="input-login"
+                      rules="required"
+                      iconN="eye"
+                      @focusin="focusPassword = true"
+                      @focusout="focusPassword = false"  />
 
         </div>
         <div class="re-password pointer" @click="repasswordClick()">ลืมรหัสผ่าน?</div>
@@ -110,10 +110,16 @@ export default {
           'Content-Type': "application/json"
         }
       })
-      .then((response) => {    
-        this.axios.get(`/department/${response.data.data.department_id}`)
-        .then((response2) => { 
+      .then((response) => {
+        const request1 = this.axios.get(`/department/${response.data.data.department_id}`)
+        const request2 = this.axios.get(`/user/${response.data.data.user_id}`)
+        this.axios.all([request1, request2])
+        .then(this.axios.spread((...responses) => {
           this.showLoading = false
+          const response2 = responses[0]
+          const response3 = responses[1]
+          localStorage.setItem('profile_img', response3.data.data?.profile_img || '')
+          localStorage.setItem('filename', response2.data.data?.filename || '')
           localStorage.setItem('filename', response2.data.data?.filename || '')
           localStorage.setItem('filepath', response2.data.data?.filepath || '')
           localStorage.setItem('user_id', response.data.data?.user_id || '')
@@ -125,7 +131,7 @@ export default {
           this.$router.push({ 
             name: 'my-work.booking-receive',
           }).catch(()=>{});
-        })
+        }))
         .catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}

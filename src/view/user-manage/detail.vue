@@ -20,14 +20,14 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-image left">
-                <div class="name">โปรไฟล์ <span class="required">*</span></div>
+                <div class="name">โปรไฟล์</div>
                 <div class="image-preview-wrapper" v-show="data.previewImage1" :style="{ 'background-image': `url(${data.previewImage1})` }"></div>
                 <input ref="fileInput1" type="file" @input="pickFile('fileInput1')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
                 <button name="fileInput1" type="button" @click="selectImage('fileInput1')" class="button-image">เลือกรูปภาพ</button>
                 <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
               </div>
               <div class="group-image">
-                <div class="name">ลายเซ็น <span class="required">*</span></div>
+                <div class="name">ลายเซ็น</div>
                 <div class="image-preview-wrapper" v-show="data.previewImage2" :style="{ 'background-image': `url(${data.previewImage2})` }"></div>
                 <input ref="fileInput2" type="file" @input="pickFile('fileInput2')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
                 <button name="fileInput2" type="button" @click="selectImage('fileInput2')" class="button-image">เลือกรูปภาพ</button>
@@ -229,9 +229,16 @@ export default {
         }
       }
     },
+    callApiUser() {
+      this.axios.get(`/user/${localStorage.getItem('user_id')}`)
+      .then((response) => { 
+        localStorage.setItem('profile_img', response.data.data?.profile_img || '')
+        this.$emit('getUserImage', localStorage.getItem('profile_img'), localStorage.getItem('profile_img'))
+      })
+    },
     keyupOrganization(e) {
       this.data.optionSelect.organization = []
-      this.axios.get('/organization', {
+      this.axios.get('/master-data/organization', {
         params: {
           keyword: e.target.value,
           department_id: this.data.department_id,
@@ -272,7 +279,7 @@ export default {
     },
     keyupSubministry(e) {
       this.data.optionSelect.subministry = []
-      this.axios.get('/subministry', {
+      this.axios.get('/master-data/subministry', {
         params: {
           keyword: e.target.value,
           organization_id: this.data.organization_id,
@@ -293,7 +300,7 @@ export default {
     },
     keyupGroup(e) {
       this.data.optionSelect.group = []
-      this.axios.get('/group', {
+      this.axios.get('/master-data/group', {
         params: {
           keyword: e.target.value,
           organization_id: this.data.organization_id,
@@ -351,7 +358,6 @@ export default {
         this.data.optionSelect.department = response2.data.data
         this.data.optionSelect.subministry = response3.data.data
         this.data.optionSelect.group = response4.data.data
-
       })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -386,64 +392,65 @@ export default {
     },
     onSubmit() {
       let _this = this
-      if ((!this.data.profile_img || !this.data.signature_img) && !this.edit) {
-        document.querySelector(`[name="fileInput1"]`).scrollIntoView({block: "center"})
-      } else {
-        this.modalAlert = {
-          showModal: true,
-          type: 'confirm',
-          title: `คุณยืนยันการ${this.edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}หรือไม่`,
-          confirm: true,
-          msgSuccess: true,
-          afterPressAgree() {
-            let roles = []
-            _this.data.level.filter(item => {
-              item.flag = 'delete'
-              roles.push(item)
-            })
-            _this.data.optionSelect.roles.filter(item => {
-              item.flag = 'add'
-              item.check ? roles.push(item) : ''
-            })
+      // if ((!this.data.profile_img || !this.data.signature_img) && !this.edit) {
+      //   document.querySelector(`[name="fileInput1"]`).scrollIntoView({block: "center"})
+      // } else {
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการ${this.edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}หรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          let roles = []
+          _this.data.level.filter(item => {
+            item.flag = 'delete'
+            roles.push(item)
+          })
+          _this.data.optionSelect.roles.filter(item => {
+            item.flag = 'add'
+            item.check ? roles.push(item) : ''
+          })
 
-            let formDataFile = new FormData();
-            formDataFile.append('fname', _this.data?.fname || '');
-            formDataFile.append('lname', _this.data?.lname || '');
-            formDataFile.append('email', _this.data?.email || '');
-            formDataFile.append('department_id', _this.data?.department_id || '');
-            formDataFile.append('organization_id', _this.data?.organization_id || '');
-            formDataFile.append('subministry_id', _this.data?.subministry_id || '');
-            formDataFile.append('group_id', _this.data?.group_id || '');
-            formDataFile.append('username', _this.data?.username || '');
-            formDataFile.append('password', _this.data?.password || '');
-            formDataFile.append('birthdate', _this.data?.birthdate || '');
-            formDataFile.append('profile_img', _this.data?.profile_img || '');
-            formDataFile.append('signature_img', _this.data?.signature_img || '');
-            formDataFile.append('total_role', roles?.length || 0);
-            roles.filter((item, index) => {
-              if (item.id) {
-              formDataFile.append(`roles[${index}][id]`, item.id)
-              }
-              if (item.role_id) {
-                formDataFile.append(`roles[${index}][role_id]`, item.role_id)
-              }
-              if (item.flag) {
-                formDataFile.append(`roles[${index}][flag]`, item.flag)
-              }
-            })
-            _this.showLoading = true
-            _this.axios[_this.edit ? 'put' : 'post'](`/user${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว' : 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          }
+          let formDataFile = new FormData();
+          formDataFile.append('fname', _this.data?.fname || '');
+          formDataFile.append('lname', _this.data?.lname || '');
+          formDataFile.append('email', _this.data?.email || '');
+          formDataFile.append('department_id', _this.data?.department_id || '');
+          formDataFile.append('organization_id', _this.data?.organization_id || '');
+          formDataFile.append('subministry_id', _this.data?.subministry_id || '');
+          formDataFile.append('group_id', _this.data?.group_id || '');
+          formDataFile.append('username', _this.data?.username || '');
+          formDataFile.append('password', _this.data?.password || '');
+          formDataFile.append('birthdate', _this.data?.birthdate || '');
+          formDataFile.append('profile_img', _this.data?.profile_img || '');
+          formDataFile.append('signature_img', _this.data?.signature_img || '');
+          formDataFile.append('total_role', roles?.length || 0);
+          roles.filter((item, index) => {
+            if (item.id) {
+            formDataFile.append(`roles[${index}][id]`, item.id)
+            }
+            if (item.role_id) {
+              formDataFile.append(`roles[${index}][role_id]`, item.role_id)
+            }
+            if (item.flag) {
+              formDataFile.append(`roles[${index}][flag]`, item.flag)
+            }
+          })
+          _this.showLoading = true
+          _this.axios[_this.edit ? 'put' : 'post'](`/user${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+          .then(() => { 
+            _this.showLoading = false
+            _this.callApiUser()
+            _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว' : 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
         }
       }
+      // }
     },
     apiDetail() {
       this.showLoading = true
@@ -467,6 +474,11 @@ export default {
             const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.profile_img) })
             this.data.previewImage1 = URL.createObjectURL(blob)
           })
+          .catch((error) => {
+            this.data.previewImage1 = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
+          })
+        } else {
+          this.data.previewImage1 = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
         }
         if (response.data.data.signature_img) {
           this.axios({ method:'get', url: this.backendport+'/'+response.data.data.signature_img, baseURL: '', responseType: 'blob',})
@@ -474,6 +486,11 @@ export default {
             const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.signature_img) })
             this.data.previewImage2 = URL.createObjectURL(blob)
           })
+          .catch((error) => {
+            this.data.previewImage2 = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+          })
+        } else {
+          this.data.previewImage2 = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
         }
         this.data.optionSelect.roles.filter(item2 => {
           item2.check = false 
