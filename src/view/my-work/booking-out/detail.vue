@@ -569,7 +569,8 @@ export default {
       this.optionSelect.sendTo = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          type: 1
         }
       })
       .then((response) => {
@@ -589,7 +590,8 @@ export default {
       data.optionSelect.department_dest_id = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          type: 1
         }
       })
       .then((response) => {
@@ -738,8 +740,6 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
-            human_flag: item.human_flag,
-            response_id: parseInt(item.value),
             response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
@@ -904,6 +904,7 @@ export default {
     },
     add_booking_register_details() {
       this.modalRegiter.showModal = true
+      // console.log(item.type,'3')
       this.modalRegiter.booking_register_details= [{
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),
@@ -917,9 +918,12 @@ export default {
           department_dest_id: [],
         },
       }]
+      // console.log(item.type,'v')
     },
     add_booking_register_details_modal() {
+      console.log(item.type,'2')
       this.modalRegiter.booking_register_details.push({
+        ...item,
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),
         book_out_num_type: '0',
@@ -930,7 +934,10 @@ export default {
           book_out_num_type: this.optionSelectDefault.book_out_num_type,
           send_method_id: this.optionSelectDefault.send_method_id
         },
+        response_id: item.id,
+        response_type:item.type
       })
+      console.log(item.type,'a')
     },
     back() {
       this.$router.push({ 
@@ -981,7 +988,7 @@ export default {
           flag: 'add',
           main_filename: '',
           attach_filename: '',
-          booking_registers: [],
+          booking_registers: []
         }
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
@@ -1003,7 +1010,10 @@ export default {
                     signer_id: this.optionSelectDefault.signer_id,
                     department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
                   },
+                  response_type: item2.type,
+                  response_id: item2.id
                 })
+                  console.log(item2.type,'3')
               })
             }).catch((error) => {
               this.showLoading = false
@@ -1185,8 +1195,6 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
-            human_flag: item.human_flag,
-            response_id: parseInt(item.value),
             response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
