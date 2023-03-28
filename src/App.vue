@@ -119,6 +119,7 @@
         </div>
         <div class="header-index-right">
           <div class="group-user">
+            <img class="image-user" :src="dataUser.image" alt="user-image" v-if="dataUser.image">
             <div class="group-name">
               <div class="name">
                 {{ dataUser.name }}
@@ -132,7 +133,8 @@
         </div>
       </div>
       <div :style="hamburger ?'padding-left: 30px;':''" class="detail-index">
-        <router-view @getLogoImage="getLogoImage"></router-view>
+        <router-view  @getLogoImage="getLogoImage"
+                      @getUserImage="getUserImage" />
       </div>
     </div>
     <div :style="hamburger ?'padding-left: 0px;':''" class="foot-index">
@@ -147,7 +149,7 @@ export default {
   name: 'App',
   data() {
     return {
-      version: '1.0.2',
+      version: '1.0.3',
       hamburger: false,
       showLoading: false,
       data:{
@@ -158,7 +160,8 @@ export default {
       },
       dataUser: {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
-        position: localStorage.getItem('department_name')
+        position: localStorage.getItem('department_name'),
+        image: ''
       },
       modalAlert: {
         showModal: false,
@@ -281,6 +284,7 @@ export default {
     clearData() {
       localStorage.setItem('login', 'false')
       this.data.logoImage = ''
+      this.dataUser.image = ''
     },
     logoutClick() {
       let _this = this
@@ -343,7 +347,14 @@ export default {
           if (!(!localStorage.getItem('filename') && !localStorage.getItem('filepath'))) {
             this.getLogoImage(localStorage.getItem('filename'), localStorage.getItem('filepath'))
           } else {
-            this.data.logoImage = new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
+            this.data.logoImage = new URL(`@/assets/images/default/department.png`, import.meta.url).href
+          }
+          if (!(!localStorage.getItem('profile_img'))) {
+            this.getUserImage(localStorage.getItem('profile_img'), localStorage.getItem('profile_img'))
+          } else {
+            this.dataUser.name = localStorage.getItem('fname') + ' ' + localStorage.getItem('lname')
+            this.dataUser.position = localStorage.getItem('department_name')
+            this.dataUser.image = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
           }
         }
       }
@@ -360,17 +371,34 @@ export default {
         this.data.logoImage = URL.createObjectURL(blob)
       })
       .catch((error) => {
-        this.data.logoImage = new URL(`./assets/images/pkm_logo.svg`, import.meta.url).href
+        this.data.logoImage = new URL(`@/assets/images/default/department.png`, import.meta.url).href
       })
+    },
+    getUserImage(filename, filepath) {
+      this.dataUser.name = localStorage.getItem('fname') + ' ' + localStorage.getItem('lname')
+      this.dataUser.position = localStorage.getItem('department_name')
+      if (filepath) {
+        this.axios({
+          method:'get',
+          url: this.backendport+'/'+filepath,
+          baseURL: '',
+          responseType: 'blob',
+        })
+        .then(response3 => {
+          const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(filename) })
+          this.dataUser.image = URL.createObjectURL(blob)
+        })
+        .catch((error) => {
+          this.dataUser.image = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
+        })
+      } else {
+        this.dataUser.image = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
+      }
     }
   },
   watch: {
     '$route.name'() {
       this.checkPathRoute()
-      this.dataUser = {
-        name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
-        position: localStorage.getItem('department_name')
-      }
       if (this.$route.name == 'book-type' || this.$route.name == 'book-type-create' || this.$route.name == 'book-type-edit' || 
       this.$route.name == 'organization' || this.$route.name == 'organization-create' || this.$route.name == 'organization-edit' || 
       this.$route.name == 'agency' || this.$route.name == 'agency-create' || this.$route.name == 'agency-edit' || 
@@ -452,6 +480,13 @@ export default {
         align-items: center;
         margin-right: 10px;
 
+        .image-user {
+          height: 50px;
+          width: 50px;
+          border-radius: 50%;
+          margin: auto 15px;
+          object-fit: cover;
+        }
 
         .group-user {
           display: flex;

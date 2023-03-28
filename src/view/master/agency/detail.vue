@@ -164,17 +164,12 @@ export default {
       this.data.department_full_name = ''
       this.data.desc = ''
     },
-    callApiUser() {
+    callApiDepartment() {
       this.axios.get(`/department/${localStorage.getItem('department_id')}`)
       .then((response2) => { 
-        this.showLoading = false
         localStorage.setItem('filename', response2.data.data?.filename || '')
         localStorage.setItem('filepath', response2.data.data?.filepath || '')
         this.$emit('getLogoImage', localStorage.getItem('filename'), localStorage.getItem('filepath'))
-      })
-      .catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
     onSubmit() {
@@ -207,7 +202,7 @@ export default {
               _this.axios[_this.edit ? 'put' : 'post'](`/department${_this.edit ? '/' + _this.$route.params.id : ''}`, groupdata)
               .then(() => { 
                 _this.showLoading = false
-                _this.callApiUser()
+                _this.callApiDepartment()
                 _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว' : 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
               })
               .catch((error) => {
@@ -232,7 +227,7 @@ export default {
             _this.axios[_this.edit ? 'put' : 'post'](`/department${_this.edit ? '/' + _this.$route.params.id : ''}`, groupdata)
             .then(() => { 
               _this.showLoading = false
-              _this.callApiUser()
+              _this.callApiDepartment()
               _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว' : 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
             })
             .catch((error) => {
