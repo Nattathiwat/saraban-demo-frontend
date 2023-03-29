@@ -51,11 +51,12 @@
               </div>
               <div class="group-input">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_id"
-                            name="book_type_id"
-                            rules="required"
-                            :optionSelect="optionSelect.book_type_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-autoComplete v-model="data.book_type_id"
+                                  name="book_type_id"
+                                  rules="required"
+                                  :optionSelect="optionSelect.book_type_id"
+                                  placeholder="กรุณาระบุ" 
+                                  @keyup="keyup_book_type"/>
               </div>
             </div>
             <div class="group-between">
@@ -1431,6 +1432,40 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
       
+    },
+    keyup_book_type(e) {
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
+    keyupBookTypes(e, data) {
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          data.optionSelect.book_type_id = response.data.data
+        }
+      })
     },
   },
   mounted () {

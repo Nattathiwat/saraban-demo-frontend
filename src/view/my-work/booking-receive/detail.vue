@@ -46,11 +46,12 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_id"
-                            name="book_type_id"
-                            rules="required"
-                            :optionSelect="optionSelect.book_type_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-autoComplete v-model="data.book_type_id"
+                                  name="book_type_id"
+                                  rules="required"
+                                  :optionSelect="optionSelect.book_type_id"
+                                  placeholder="กรุณาระบุ" 
+                                  @keyup="keyup_book_type"/>
               </div>
               <div class="group-between">
                 <div class="group-input left">
@@ -955,7 +956,44 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    }
+    },
+    keyup_book_type(e) {
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
+    // keyup_send_to(e) {
+    //   this.optionSelect.sendTo = []
+    //   this.axios.get('/master-data/department-user', {
+    //     params: {
+    //       keyword: e.target.value
+    //     }
+    //   })
+    //   .then((response) => {
+    //     if(response.data.data) {
+    //       response.data.data.filter(item => {
+    //         item.value = item.id
+    //         item.name = item.desc
+    //         item.human_flag = item.human_flag
+    //         item.response_type = item.type
+    //         return item
+    //       })
+    //       this.optionSelect.sendTo = response.data.data
+    //     }
+    //   })
+    // },
   },
   mounted () {
     this.api_master()

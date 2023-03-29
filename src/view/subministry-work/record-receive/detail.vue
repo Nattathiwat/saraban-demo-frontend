@@ -779,7 +779,8 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            // response_id: parseInt(item.value)
+            response_id: parseInt(item.value),
+            response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
             sendToFile :{filename : this.data.attach_filename}
@@ -810,6 +811,7 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
+        receive_regis_id : parseInt(this.$route.query.regis_id)
       }
       if (this.edit) {
         if (this.flagSave == 1) {
