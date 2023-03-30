@@ -299,7 +299,7 @@
           </div>
         </Form>
       </div>
-      <!-- <div class="line"></div>
+      <div class="line"></div>
       <div class="detail2">
         <div class="history" @click="data.history.hide">
           <div class="header">
@@ -310,7 +310,7 @@
 
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
     <cpn-modal-alert  :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
@@ -1816,31 +1816,28 @@ export default {
       }
     }
 
-    // .line {
-    //     height: 2px;
-    //     width: 100%;
-    //     background-color: #e2ebf7;
-    //     margin-top: 5px;
-    //     margin-bottom: 5px;
-    //   }
+    .line {
+        height: 2px;
+        width: 100%;
+        background-color: #e2ebf7;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
 
-    // .detail2{
-    //   width: 100%;
-    //   height: 100%;
-    //   min-width: 1550px;
-    //   min-height: 200px;
-    //   border-radius: 15px;
-    //   background-color: #fff;
-    //   border: 0px;
-    //   padding-bottom: 48px;
+    .detail2{
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      min-height: 200px;
+      border-radius: 15px;
+      background-color: #fff;
+      border: 0px;
+      padding-bottom: 48px;
 
-    //   .history{
-    //     margin-top: 30px;
-    //     // width: 100%;
-    //     // height: 200px;
-    //     // background: greenyellow;
-    //     border-radius: 10px;
-    //   }
-    // }
+      .history{
+        margin-top: 30px;
+        border-radius: 10px;
+      }
+    }
   }
 </style>

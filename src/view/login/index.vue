@@ -129,7 +129,7 @@ export default {
           localStorage.setItem('lname', response.data.data?.lname || '')
           localStorage.setItem('login', 'true')
           this.$router.push({ 
-            name: 'my-work.booking-receive',
+            name: 'my-work.waiting-booking-receive',
           }).catch(()=>{});
         }))
         .catch((error) => {
