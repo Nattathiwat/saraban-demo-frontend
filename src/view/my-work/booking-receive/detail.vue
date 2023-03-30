@@ -392,8 +392,8 @@ export default {
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
+        process_type_id: '12',
+        permission_id: '9',
         book_type:'',
         regis_id:'',
       },
@@ -974,26 +974,6 @@ export default {
         }
       })
     },
-    // keyup_send_to(e) {
-    //   this.optionSelect.sendTo = []
-    //   this.axios.get('/master-data/department-user', {
-    //     params: {
-    //       keyword: e.target.value
-    //     }
-    //   })
-    //   .then((response) => {
-    //     if(response.data.data) {
-    //       response.data.data.filter(item => {
-    //         item.value = item.id
-    //         item.name = item.desc
-    //         item.human_flag = item.human_flag
-    //         item.response_type = item.type
-    //         return item
-    //       })
-    //       this.optionSelect.sendTo = response.data.data
-    //     }
-    //   })
-    // },
   },
   mounted () {
     this.api_master()
