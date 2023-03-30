@@ -241,9 +241,9 @@ export default {
       this.axios.get('/master-data/organization', {
         params: {
           keyword: e.target.value,
-          department_id: this.data.department_id,
-          subministry_id: this.data.subministry_id,
-          group_id: this.data.group_id,
+          // department_id: this.data.department_id,
+          // subministry_id: this.data.subministry_id,
+          // group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -261,7 +261,7 @@ export default {
       this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value,
-          organization_id: this.data.organization_id,
+          // organization_id: this.data.organization_id,
           subministry_id: this.data.subministry_id,
           group_id: this.data.group_id,
         }
@@ -282,7 +282,7 @@ export default {
       this.axios.get('/master-data/subministry', {
         params: {
           keyword: e.target.value,
-          organization_id: this.data.organization_id,
+          // organization_id: this.data.organization_id,
           department_id: this.data.department_id,
           group_id: this.data.group_id,
         }
@@ -303,7 +303,7 @@ export default {
       this.axios.get('/master-data/group', {
         params: {
           keyword: e.target.value,
-          organization_id: this.data.organization_id,
+          // organization_id: this.data.organization_id,
           department_id: this.data.department_id,
           subministry_id: this.data.subministry_id,
         }
@@ -320,23 +320,23 @@ export default {
     },
     masterDropdown(data) {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/organization?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request2 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request3 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
-      const request4 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+      // const request1 = this.axios.get(`/master-data/organization?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
+      const request2 = this.axios.get(`/master-data/department?subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
+      const request3 = this.axios.get(`/master-data/subministry?department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
+      const request4 = this.axios.get(`/master-data/group?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
 
-      this.axios.all([request1, request2, request3, request4])
+      this.axios.all([request2, request3, request4])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
-        const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
-        const response4 = responses[3]
+        // const response1 = responses[0]
+        const response2 = responses[0]
+        const response3 = responses[1]
+        const response4 = responses[2]
 
-        response1.data.data.filter(item => {
-          item.value = item.id
-          return item
-        })
+        // response1.data.data.filter(item => {
+        //   item.value = item.id
+        //   return item
+        // })
         
         response2.data.data.filter(item => {
           item.value = item.id
@@ -354,7 +354,7 @@ export default {
           return item
         })
 
-        this.data.optionSelect.organization = response1.data.data
+        // this.data.optionSelect.organization = response1.data.data
         this.data.optionSelect.department = response2.data.data
         this.data.optionSelect.subministry = response3.data.data
         this.data.optionSelect.group = response4.data.data
@@ -581,7 +581,7 @@ export default {
   },
   watch: {
     'data.organization_id'() {
-      this.masterDropdown()
+      // this.masterDropdown()
     },
     'data.department_id'() {
       this.masterDropdown()
