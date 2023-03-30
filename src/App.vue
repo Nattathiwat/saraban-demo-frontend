@@ -149,7 +149,7 @@ export default {
   name: 'App',
   data() {
     return {
-      version: '1.0.3',
+      version: '1.0.4',
       hamburger: false,
       showLoading: false,
       data:{

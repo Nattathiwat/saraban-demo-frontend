@@ -352,6 +352,7 @@ export default {
       optionSelectDefault: {
         book_category_id: [],
       },
+      FileType: []
     }
   },
   methods: {
@@ -779,7 +780,8 @@ export default {
             permission_name: '',
             flag: 'add',
             human_flag: item.human_flag,
-            // response_id: parseInt(item.value)
+            response_id: parseInt(item.value),
+            response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
             sendToFile :{filename : this.data.attach_filename}
@@ -810,6 +812,7 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
+        receive_regis_id : parseInt(this.$route.query.regis_id)
       }
       if (this.edit) {
         if (this.flagSave == 1) {
@@ -892,7 +895,7 @@ export default {
           item.flag = 'edit'
           return item
         })
-        this.data.booking_follows = []
+        // this.data.booking_follows = []
         if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', flag: 'add'}]
         if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
         if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: '', flag: 'add'}]
@@ -912,8 +915,9 @@ export default {
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department')
       const request8 = this.axios.get(`/master-data/register-type`)
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request2, request3, request4, request5, request6, request7, request8])
+      this.axios.all([request2, request3, request4, request5, request6, request7, request8, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false;
         const response2 = responses[0]
@@ -923,6 +927,7 @@ export default {
         const response6 = responses[4]
         const response7 = responses[5]
         const response8 = responses[6]
+        const response10 = responses[7]
 
         response2.data.data.filter(item => {
           item.value = item.id
@@ -958,6 +963,14 @@ export default {
           item.value = item.id
           item.name = item.desc
           return item
+        })
+
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
         })
 
         this.optionSelect.book_type_id = response2.data.data

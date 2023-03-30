@@ -299,6 +299,18 @@
           </div>
         </Form>
       </div>
+      <!-- <div class="line"></div>
+      <div class="detail2">
+        <div class="history" @click="data.history.hide">
+          <div class="header">
+            ประวัติการแก้ไข
+          </div>
+          <div class="line"></div>
+          <div class="content">
+
+          </div>
+        </div>
+      </div> -->
     </div>
     <cpn-modal-alert  :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
@@ -332,7 +344,7 @@ export default {
         tag: [],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
-        order: [{ filename: ''}],
+        sendToFile: [{ filename: ''}],
         sendTo: [],
         booking_follows: [],
         comment: '',
@@ -343,7 +355,11 @@ export default {
         human_flag:false,
         response_id:'',
         greeting:'',
-        as_of_date:''
+        as_of_date:'',
+        history: {
+          hide: false,
+          data: []
+        }
       },
       optionSelect: {
         creater_id: [],
@@ -511,8 +527,8 @@ export default {
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
             sendToFile: {
-              ...this.data.sendToFile,
-              filename: JSON.parse(JSON.stringify(this.data.sendToFile.filename))
+              ...this.data.sendToFile?.filename,
+              filename: this.data.sendToFile?.filename ? JSON.parse(JSON.stringify(this.data.sendToFile?.filename)) : ''
             },
             response_type: item.type,
           }
@@ -675,8 +691,13 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           if (_this.flagSave == 3) {
+            console.log('if')
             _this.showLoading = true
-            _this.axios.post(`/booking-note/generate-number`,{department_id: parseInt(localStorage.getItem('department_id')),creater_id: _this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')), book_category_id: parseInt(_this.data.book_category_id), year: _this.data.as_of_date.split('/')[2]-543})
+            _this.axios.post(`/booking-note/generate-number`,{
+              department_id: parseInt(localStorage.getItem('department_id')),
+              creater_id: _this.data.creater_id ? parseInt(_this.data.creater_id) : parseInt(localStorage.getItem('user_id')), 
+              book_category_id: parseInt(_this.data.book_category_id), year: _this.data.as_of_date.split('/')[2]-543
+            })
             .then((response) => {
               _this.data.booking_note_number = response.data.data.out_document_number
               _this.upload_file_all()
@@ -1032,24 +1053,6 @@ export default {
             return item
           })
           this.optionSelect.book_type_id = response.data.data
-        }
-      })
-    },
-    keyupRecordType(e, data) {
-      data.optionSelect.book_type_id = []
-      this.axios.get('/master-data/book-type-note', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.name
-            return item
-          })
-          data.optionSelect.book_type_id = response.data.data
         }
       })
     },
@@ -1812,5 +1815,32 @@ export default {
         }
       }
     }
+
+    // .line {
+    //     height: 2px;
+    //     width: 100%;
+    //     background-color: #e2ebf7;
+    //     margin-top: 5px;
+    //     margin-bottom: 5px;
+    //   }
+
+    // .detail2{
+    //   width: 100%;
+    //   height: 100%;
+    //   min-width: 1550px;
+    //   min-height: 200px;
+    //   border-radius: 15px;
+    //   background-color: #fff;
+    //   border: 0px;
+    //   padding-bottom: 48px;
+
+    //   .history{
+    //     margin-top: 30px;
+    //     // width: 100%;
+    //     // height: 200px;
+    //     // background: greenyellow;
+    //     border-radius: 10px;
+    //   }
+    // }
   }
 </style>

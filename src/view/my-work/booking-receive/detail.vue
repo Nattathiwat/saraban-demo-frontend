@@ -46,11 +46,12 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_id"
-                            name="book_type_id"
-                            rules="required"
-                            :optionSelect="optionSelect.book_type_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-autoComplete v-model="data.book_type_id"
+                                  name="book_type_id"
+                                  rules="required"
+                                  :optionSelect="optionSelect.book_type_id"
+                                  placeholder="กรุณาระบุ" 
+                                  @keyup="keyup_book_type"/>
               </div>
               <div class="group-between">
                 <div class="group-input left">
@@ -391,8 +392,8 @@ export default {
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
+        process_type_id: '12',
+        permission_id: '9',
         book_type:'',
         regis_id:'',
       },
@@ -517,7 +518,7 @@ export default {
     },
     keyup_department(e) {
       this.optionSelect.department_id = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -526,7 +527,9 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.department_id = response.data.data
@@ -535,7 +538,7 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -544,7 +547,9 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -555,6 +560,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -562,7 +568,9 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            response_type: item.type,
+            response_id: item.id
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -713,6 +721,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -720,7 +729,9 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            response_type: item.type,
+            response_id: item.id
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -871,7 +882,7 @@ export default {
       const request4 = this.axios.get('/master-data/speed')
       const request5 = this.axios.get('/master-data/process-type')
       const request6 = this.axios.get('/master-data/permission-type')
-      const request7 = this.axios.get('/master-data/department')
+      const request7 = this.axios.get('/master-data/department-user')
       const request8 = this.axios.get('/master-data/receive-type')
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8])
@@ -918,7 +929,7 @@ export default {
         })
         response7.data.data.filter(item => {
           item.value = item.id
-          item.name = item.department_full_name
+          item.name = item.desc
           return item
         })
         response8.data.data.filter(item => {
@@ -945,7 +956,24 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    }
+    },
+    keyup_book_type(e) {
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
   },
   mounted () {
     this.api_master()
