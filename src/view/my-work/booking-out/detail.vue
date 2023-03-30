@@ -260,12 +260,14 @@
                     <div class="d-flex">
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2.optionSelect.signer_id"  />
+                                        :optionSelect="item2.optionSelect.signer_id"  
+                                        @change="change_signer_id(index)(index2)"/>
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
                                     class="cpn-select"
-                                    label="ลายเซ็น" />
+                                    label="ลายเซ็น"
+                                    @change="change_signer_id(index)(index2)" />
                     </div>
                   </div>
                 </div>
@@ -319,8 +321,21 @@
                               @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
-            <div class="group-input">
-              <div class="name">ความเห็น / คำสั่ง</div>
+            <div class="group-input left">
+              <div class="name d-flex justify-content-between">
+                <div>ความเห็น / คำสั่ง</div>
+                <div>
+                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
+                    <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
+                    แนบเอกสาร
+                  </button>
+                  <div v-else class="del-comment pointer" @click="data.sendToFile.filename = ''" >
+                    {{data.sendToFile?.filename}}
+                    <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
+                  </div>
+               </div>
+              </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
                             rows="3" />
@@ -515,8 +530,8 @@ export default {
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
+        process_type_id: '12',
+        permission_id: '8',
       },
       optionSelect: {
         creater_id: [],
@@ -531,7 +546,8 @@ export default {
       modalRegiter: {
         showModal: false,
         booking_register_details: []
-      }
+      },
+      FileType: []
     }
   },
   methods: {
@@ -731,8 +747,6 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
-            ...item,
-            response_id:item.id,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -741,6 +755,12 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            sendToFile: {
+              ...this.data.sendToFile?.filename,
+              filename: this.data.sendToFile?.filename ? JSON.parse(JSON.stringify(this.data.sendToFile?.filename)) : ''
+            },
             response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
@@ -828,6 +848,47 @@ export default {
     },
     upload_file(data) {
       document.querySelector(`[name="${data}"]`).click()
+    },
+    file_set_change(data, index, name) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
+            let dataFile = {
+              filename: file.name,
+              type: file.type,
+              link: URL.createObjectURL(file),
+              size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              file: file,
+            }
+            this.data[name][index] = {...this.data[name][index], ...dataFile}
+            document.querySelector(`[name="${data}"]`).value=null;
+          }
+        } else if (name == 'sendTo') {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data.sendToFile = dataFile
+        } else {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data[name][index] = {...this.data[name][index], ...dataFile}
+          document.querySelector(`[name="${data}"]`).value=null;
+        }
+      }
     },
     file_attachment_change(data, index) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
@@ -1289,7 +1350,7 @@ export default {
       this.axios.get(`/booking-out/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -1318,6 +1379,7 @@ export default {
             item2.flag = 'edit'
             item2.main_link = item2.main_filepath? this.backendport+'/'+item2.main_filepath : ''
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
+            item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id 
             return item2
           })
           return item
@@ -1350,8 +1412,9 @@ export default {
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/register-type`)
       const request9 = this.axios.get('/master-data/department-user')
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9])
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
         const response1 = responses[0]
@@ -1363,6 +1426,7 @@ export default {
         const response7 = responses[6]
         const response8 = responses[7]
         const response9 = responses[8]
+        const response10 = responses[9]
         
         response1.data.data.filter(row => {
           row.value = row.id
@@ -1410,6 +1474,14 @@ export default {
           return item
         })
 
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
+        })
+
         this.optionSelect.book_type_id = response1.data.data
         this.optionSelect.speed_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data
@@ -1447,23 +1519,6 @@ export default {
             return item
           })
           this.optionSelect.book_type_id = response.data.data
-        }
-      })
-    },
-    keyupBookTypes(e, data) {
-      this.axios.get('/master-data/book-type', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.desc
-            return item
-          })
-          data.optionSelect.book_type_id = response.data.data
         }
       })
     },
@@ -1593,6 +1648,45 @@ export default {
             }
           }
         }
+
+        .icon-paperclip {
+          color: #8aa3b7;
+          // font-size: 14px;
+          margin-right: 2px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .button-con {
+          width: auto;
+          height: 30px;
+          background-color: transparent;
+          color: #000;
+          font-size: 15px;
+          font-weight: 500;
+          border: 0;
+          border-radius: 5px;
+          
+          .right{
+            margin-left: 500px;
+          }
+        }
+
+        .del-comment {
+        // width: 45px;
+        // height: 45px;
+        color: #212529;
+        background-color: transparent;
+        // border-color: #f8f9fa;
+        border: none;
+        border-radius: 5px;
+        margin-left: 15px;
+
+        .image-x {
+          width: 14px;
+          margin-left: 5px;
+        }
+      }
 
         .button-delete {
           width: 45px;

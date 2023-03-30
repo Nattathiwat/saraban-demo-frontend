@@ -352,6 +352,7 @@ export default {
       optionSelectDefault: {
         book_category_id: [],
       },
+      FileType: []
     }
   },
   methods: {
@@ -914,8 +915,9 @@ export default {
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department')
       const request8 = this.axios.get(`/master-data/register-type`)
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request2, request3, request4, request5, request6, request7, request8])
+      this.axios.all([request2, request3, request4, request5, request6, request7, request8, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false;
         const response2 = responses[0]
@@ -925,6 +927,7 @@ export default {
         const response6 = responses[4]
         const response7 = responses[5]
         const response8 = responses[6]
+        const response10 = responses[7]
 
         response2.data.data.filter(item => {
           item.value = item.id
@@ -960,6 +963,14 @@ export default {
           item.value = item.id
           item.name = item.desc
           return item
+        })
+
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
         })
 
         this.optionSelect.book_type_id = response2.data.data
