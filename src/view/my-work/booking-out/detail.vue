@@ -587,7 +587,6 @@ export default {
       this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value,
-          type: 1
         }
       })
       .then((response) => {
@@ -1248,7 +1247,6 @@ export default {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
             ...item,
-            response_id: item.id,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -1257,7 +1255,12 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
             response_type: item.type,
+            // attach_filepath: this.data.attach_filepath,
+            // attach_filename: this.data.attach_filename,
+            // sendToFile :{filename : this.data.attach_filename}
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -1393,7 +1396,16 @@ export default {
           item.flag = 'edit'
           return item
         })
-        if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
+        if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) 
+        this.data.booking_refers = [{ 
+          receive_document_number: '', 
+          desc: '', 
+          receive_date: '', 
+          book_refer_id: '', 
+          original_refer_id: '', 
+          book_type: '', 
+          flag: 'add'
+        }]
         if (this.data.attachments.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
       })
       .catch((error) => {
