@@ -2091,7 +2091,7 @@ export default {
               .date {
                 color: #15466e;
                 padding: 5px 10px;
-                margin-left: 20px;
+                margin-left: 10px;
                 font-size: 18px;
 
                 .icon-size {
@@ -2102,7 +2102,6 @@ export default {
               .time {
                 color: #15466e;
                 padding: 5px 10px;
-                margin-left: 20px;
                 font-size: 18px;
 
                 .icon-size {
