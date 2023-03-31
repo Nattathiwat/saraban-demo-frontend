@@ -2001,6 +2001,7 @@ export default {
 
           .content-head {
             display: flex;
+            margin-left: 20px;
 
             .icon-size {
               font-size: 18px;
@@ -2028,12 +2029,14 @@ export default {
 
           .content-detail.first {
             border-top: 2px solid #e2ebf7;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
           }
 
           .content-detail.end {
             border-bottom: 2px solid #e2ebf7;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
           }
 
           .content-detail {
