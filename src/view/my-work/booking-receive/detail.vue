@@ -569,8 +569,13 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            // sendToFile: {
+            //   ...this.data.sendToFile?.filename,
+            //   filename: this.data.sendToFile?.filename ? JSON.parse(JSON.stringify(this.data.sendToFile?.filename)) : ''
+            // },
             response_type: item.type,
-            response_id: item.id
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -730,8 +735,12 @@ export default {
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
             flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
             response_type: item.type,
-            response_id: item.id
+            // attach_filepath: this.data.attach_filepath,
+            // attach_filename: this.data.attach_filename,
+            // sendToFile :{filename : this.data.attach_filename}
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})

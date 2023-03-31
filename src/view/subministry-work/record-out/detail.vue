@@ -299,11 +299,13 @@
           </div>
         </Form>
       </div>
-      <div class="line"></div>
-      <div class="detail2">
+      <div v-show="false" class="line"></div>
+      <div v-show="false" class="detail2">
         <div class="history" @click="data.history.hide">
-          <div class="header">
+          <div class="name">
+            <img  src="@/assets/images/icon/clock-regular.svg" alt="" class="icon-clock">
             ประวัติการแก้ไข
+            <img src="@/assets/images/icon/angle-down-solid.svg" alt="" class="icon-angle">
           </div>
           <div class="line"></div>
           <div class="content">
@@ -1837,6 +1839,40 @@ export default {
       .history{
         margin-top: 30px;
         border-radius: 10px;
+
+        .name {
+          color: #1a456b;
+          font-weight: bold;
+          font-size: 18px;
+          margin-left: 28px;
+          // display: flex;
+          // justify-content: space-between;
+
+          .icon-clock{
+            color: #1a456b;
+            font-weight: bold;
+            font-size: 18px; 
+            width: 20px;
+            height: 20px;
+            margin-right: 21px;
+          }
+
+          .icon-angle{
+            width: 20px;
+            height: 20px;
+            margin-right: 40px;
+          }
+
+          label {
+            margin-left: 10px;
+            font-size: 22px;
+          }
+        }
+        .content{
+          width: 80%;
+          height: 300px;
+          border: #000 1px solid;
+        }
       }
     }
   }
