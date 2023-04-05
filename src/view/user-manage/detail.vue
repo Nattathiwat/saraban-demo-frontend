@@ -333,23 +333,22 @@ export default {
         const response3 = responses[2]
         const response4 = responses[3]
 
-        response1.data.data.filter(item => {
+        response1.data.data?.filter(item => {
           item.value = item.id
           return item
         })
-        
-        response2.data.data.filter(item => {
+        response2.data.data?.filter(item => {
           item.value = item.id
           item.name = item.department_full_name
           return item
         })
         
-        response3.data.data.filter(item => {
+        response3.data.data?.filter(item => {
           item.value = item.id
           return item
         })
         
-        response4.data.data.filter(item => {
+        response4.data.data?.filter(item => {
           item.value = item.id
           return item
         })
