@@ -68,7 +68,7 @@
                     <span class="span">
                       {{item.response_name}}
                     </span>
-                    <div class="show-detail">{{item.test}}
+                    <div class="show-detail">{{item.response_name}}
                       <div v-if="false" class="image-size"></div>
                     </div>
                   </div>

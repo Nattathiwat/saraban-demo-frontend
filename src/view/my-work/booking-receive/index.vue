@@ -61,7 +61,7 @@
                     <span class="span">
                       {{item.response}}
                     </span>
-                    <div class="show-detail">{{item.response}}
+                    <div class="show-detail">{{item.person}}
                       <div v-if="false" class="image-size"></div>
                     </div>
                   </div>
@@ -156,9 +156,6 @@ export default {
     },
     apigetimport() {
       this.data.table = []
-      // this.data.page = 1
-      // this.data.lastPage = 1
-      // // this.data.total = 1
       
       this.showLoading = true
       this.axios.get('/booking-receive', {
@@ -167,18 +164,17 @@ export default {
           page_size: this.data.perPage,
           page: this.data.page,
           user_id: localStorage.getItem('user_id'),
-          // desc: this.data.desc,
-          // receive_date_str: this.data.receive_date_str,
-          // receive_date_end: this.data.receive_date_end,
-          // as_of_date_str: this.data.as_of_date_str,
-          // as_of_date_end: this.data.as_of_date_end,
-          // book_type_id: this.data.booktype,
           tag: this.data.tag,
         }
       })
       .then((response) => {
         this.showLoading = false
         if (response.data.data) {
+          let loop = [this.data.response_name]
+          let detail = ''
+          loop.filter(arr => {
+            detail += (arr + ',')
+          })
             response.data.data.filter(row => {
             row.speedName = row.speed_name
             row.bookingNo = row.receive_document_number
@@ -188,6 +184,7 @@ export default {
             row.date = row.as_of_date
             row.response = row.response_name
             row.statusName = row.status
+            row.person = detail
             this.data.total = row.total
           })
           this.data.table = response.data.data

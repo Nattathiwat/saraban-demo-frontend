@@ -1194,7 +1194,7 @@ export default {
     },
   },
   mounted () {
-    // this.api_master()
+    this.api_master()
   },
   watch: {
     'modalRegiter.showModal' () {

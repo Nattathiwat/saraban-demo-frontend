@@ -113,7 +113,6 @@
                 <cpn-autoComplete v-model="data.group_id"
                                   name="group"
                                   placeholder="กรุณาระบุ"
-                                  rules="required"
                                   @keyup="keyupGroup($event)"
                                   :optionSelect="data.optionSelect.group" />
               </div>
