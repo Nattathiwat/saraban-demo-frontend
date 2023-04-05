@@ -321,9 +321,9 @@ export default {
     masterDropdown(data) {
       this.showLoading = true
       const request1 = this.axios.get(`/master-data/organization?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request2 = this.axios.get(`/master-data/department?subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request3 = this.axios.get(`/master-data/subministry?department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
-      const request4 = this.axios.get(`/master-data/group?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+      const request2 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
+      const request3 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
+      const request4 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
 
       this.axios.all([request1, request2, request3, request4])
       .then(this.axios.spread((...responses) => {
