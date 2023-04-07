@@ -201,7 +201,7 @@
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`dupplicate_copy${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_booking_register_details_change(`dupplicate_copy${index}`, index, 'dupplicate_copy')" :name="`dupplicate_copy${index}`" style="display:none;" accept="application/pdf">
+                <input type="file" @change="file_booking_register_details_change(`dupplicate_copy${index}`, index, 'dupplicate_copy')" :name="`dupplicate_copy${index}`" style="display:none;">
               </div>
               <button type="button" @click="download_file({filename: item.attach_filename, type: item.attach_type, filepath: item.attach_filepath, link: item.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
             </div>
@@ -249,7 +249,7 @@
                         </span>
                       </button>
                       <div class="text pointer" @click="upload_file(`dupplicate_copy${index}${index2}`)">แนบเอกสาร</div>
-                      <input type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" accept="application/pdf">
+                      <input type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" >
                     </div>
                     <button type="button" @click="download_file({filename: item2.attach_filename, type: item2.attach_type, filepath: item2.attach_filepath, link: item2.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   </div>
@@ -949,7 +949,9 @@ export default {
               main_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
-          } else {
+          } 
+          document.querySelector(`[name="${data}"]`).value=null;
+        } else {
             let dataFile = {
               attach_filename: file.name,
               attach_type: file.type,
@@ -959,8 +961,6 @@ export default {
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
           }
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
       }
     },
     add_booking_register_details() {

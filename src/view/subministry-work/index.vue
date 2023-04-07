@@ -1,9 +1,9 @@
 <template>
   <div class="subministry-work-inex">
     <div class="topnav">
-      <div v-show="false" @click="$router.push({name: 'subministry-work.booking-receive'})" :class="$route.name == 'subministry-work.booking-receive' || $route.name == 'subministry-work.booking-receive-edit' || $route.name == 'subministry-work.booking-receive-create' ? 'active' : ''">หนังสือรับเข้า</div>
+      <div @click="$router.push({name: 'subministry-work.booking-receive'})" :class="$route.name == 'subministry-work.booking-receive' || $route.name == 'subministry-work.booking-receive-edit' || $route.name == 'subministry-work.booking-receive-create' ? 'active' : ''">หนังสือรับเข้า</div>
       <div @click="$router.push({name: 'subministry-work.record-receive'})" :class="$route.name == 'subministry-work.record-receive' || $route.name == 'subministry-work.record-receive-edit' || $route.name == 'subministry-work.record-receive-create' ? 'active' : ''">บันทึกรับเข้า</div>
-      <div v-show="false" @click="$router.push({name: 'subministry-work.booking-out'})" :class="$route.name == 'subministry-work.booking-out' || $route.name == 'subministry-work.booking-out-edit' || $route.name == 'subministry-work.booking-out-create' ? 'active' : ''">หนังสือส่งออก</div>
+      <div @click="$router.push({name: 'subministry-work.booking-out'})" :class="$route.name == 'subministry-work.booking-out' || $route.name == 'subministry-work.booking-out-edit' || $route.name == 'subministry-work.booking-out-create' ? 'active' : ''">หนังสือส่งออก</div>
       <div @click="$router.push({name: 'subministry-work.record-out'})" :class="$route.name == 'subministry-work.record-out' || $route.name == 'subministry-work.record-out-edit' || $route.name == 'subministry-work.record-out-create' ? 'active' : ''">บันทึกส่งออก</div>
     </div>
     <div class="detail" :class="$route.name == 'subministry-work.booking-receive' ? 'active' : ''">
