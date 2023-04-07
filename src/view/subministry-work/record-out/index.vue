@@ -330,9 +330,7 @@ export default {
       this.modalRegiter.showModal = false
     },
     gennum() {
-      console.log('start')
       this.modalRegiter.showModal = true
-      console.log('uuu')
       this.modalRegiter.booking_register_details= [{
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),

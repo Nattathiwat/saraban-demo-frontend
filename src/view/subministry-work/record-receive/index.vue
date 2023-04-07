@@ -169,12 +169,12 @@ export default {
       .then((response) => {
         this.showLoading = false
         if (response.data.data) {
-          let loop = ['a','b','c']
-          let mockup = ''
-          loop.filter(x => {
-            mockup += (x + ',')
-          } )
-          console.log(mockup)
+          // let loop = ['a','b','c']
+          // let mockup = ''
+          // loop.filter(x => {
+          //   mockup += (x + ',')
+          // } )
+          // console.log(mockup)
             response.data.data.filter(row => {
             row.speed_name = row.speed_name
             row.document_number = row.document_number
@@ -185,7 +185,7 @@ export default {
             row.status_name = row.status_name
             row.send_department_name = row.send_department_name
             row.department_receive_name = row.department_receive_name
-            row.test = mockup
+            // row.test = mockup
             this.data.total = row.total
           })
           this.data.table = response.data.data
