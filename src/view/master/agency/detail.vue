@@ -27,14 +27,19 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
+                <div class="name">เปิด/ปิด การใช้งาน</div>
+                <cpn-toggleSwitch v-model="data.active_flag"
+                            name="active_flag" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
                 <div class="name">ชื่อย่อหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_short_name"
                             name="department_short_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
-            </div>
-            <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชื่อหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_full_name"
@@ -122,6 +127,7 @@ export default {
         organization_id:'',
         filename: '',
         filepath: '',
+        active_flag: true
       },
       optionSelect: {
           organization_id: []
@@ -196,7 +202,8 @@ export default {
                 organization_id: _this.data.organization_id,
                 desc: _this.data.desc,
                 filename: _this.data.filename,
-                filepath: _this.data.filepath
+                filepath: _this.data.filepath,
+                active_flag: _this.data.active_flag ? 1 : 0
               }
               _this.showLoading = true
               _this.axios[_this.edit ? 'put' : 'post'](`/department${_this.edit ? '/' + _this.$route.params.id : ''}`, groupdata)
@@ -221,7 +228,8 @@ export default {
               organization_id: _this.data.organization_id,
               desc: _this.data.desc,
               filename: _this.data.filename,
-              filepath: _this.data.filepath
+              filepath: _this.data.filepath,
+              active_flag: _this.data.active_flag ? 1 : 0
             }
             _this.showLoading = true
             _this.axios[_this.edit ? 'put' : 'post'](`/department${_this.edit ? '/' + _this.$route.params.id : ''}`, groupdata)
@@ -245,6 +253,7 @@ export default {
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data,...response.data.data}
+        this.data.active_flag = response.data.data.active_flag == 1
       })
       .catch((error) => {
         this.showLoading = false

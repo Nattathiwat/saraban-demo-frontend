@@ -109,7 +109,7 @@
                                   :optionSelect="data.optionSelect.subministry" />
               </div>
               <div class="group-input">
-                <div class="name">กลุ่ม <span class="required">*</span></div>
+                <div class="name">กลุ่ม</div>
                 <cpn-autoComplete v-model="data.group_id"
                                   name="group"
                                   placeholder="กรุณาระบุ"

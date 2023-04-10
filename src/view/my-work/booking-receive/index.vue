@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="booking-receive-inex">
     <div class="group-overflow">
       <div class="detail">
@@ -61,7 +61,7 @@
                     <span class="span">
                       {{item.response}}
                     </span>
-                    <div class="show-detail">{{item.person}}
+                    <div class="show-detail">{{item.response}}
                       <div v-if="false" class="image-size"></div>
                     </div>
                   </div>

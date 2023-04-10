@@ -1952,14 +1952,6 @@ export default {
       }
     }
 
-    .line {
-      height: 2px;
-      width: 100%;
-      background-color: #e2ebf7;
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
-
     .detail-history {
       width: 100%;
       height: 100%;
