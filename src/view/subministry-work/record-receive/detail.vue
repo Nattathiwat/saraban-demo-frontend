@@ -259,7 +259,7 @@
                 <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
               </div>
               <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
-              <div class="name ms-2 mt-1">เอกสารแนบ : {{item?.sendToFile.filename || '-'}}</div>
+              <div class="name ms-2 mt-1">เอกสารแนบ : {{item?.sendToFile?.filename || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -523,7 +523,7 @@ export default {
             response_id: parseInt(item.value),
             sendToFile: {
               ...this.data.sendToFile,
-              filename: JSON.parse(JSON.stringify(this.data.sendToFile.filename))
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
             },
             response_type: item.type,
           }
@@ -895,7 +895,7 @@ export default {
           item.flag = 'edit'
           return item
         })
-        // this.data.booking_follows = []
+        this.data.booking_follows = []
         if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', flag: 'add'}]
         if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
         if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: '', flag: 'add'}]
