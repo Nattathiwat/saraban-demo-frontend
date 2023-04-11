@@ -197,7 +197,7 @@
               <div class="group-input-file">
                 <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}`)">
                   <span :class="item.attach_filename ? '' : 'no-data'">
-                    {{item.attach_filename ? item.attach_filename : 'สำเนาคู่ฉบับ'}}
+                    {{item.attach_filename ? item.attach_filename : 'สิ่งที่แนบมาด้วย'}}
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`dupplicate_copy${index}`)">แนบเอกสาร</div>
@@ -245,7 +245,7 @@
                     <div class="group-input-file">
                       <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}${index2}`)">
                         <span :class="item2.attach_filename ? '' : 'no-data'">
-                          {{item2.attach_filename ? item2.attach_filename : 'สำเนาคู่ฉบับ'}}
+                          {{item2.attach_filename ? item2.attach_filename : 'สิ่งที่แนบมาด้วย'}}
                         </span>
                       </button>
                       <div class="text pointer" @click="upload_file(`dupplicate_copy${index}${index2}`)">แนบเอกสาร</div>
@@ -732,7 +732,10 @@ export default {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            await this.axios.post(`/booking-out/generate-number`, {
+              department_id: parseInt(localStorage.getItem('department_id')), 
+              year: this.assetsUtils.currentDate().split('/')[2]-543
+            })
             .then((response) => {
               this.showLoading = false
               item.booking_registers.push({
@@ -1041,13 +1044,13 @@ export default {
     },
     add_booking_register_details() {
       this.modalRegiter.showModal = true
-      // console.log(item.type,'3')
       this.modalRegiter.booking_register_details= [{
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),
         book_out_num_type: '0',
         send_method_id: '2',
         department_dest_id: [],
+        flag: 'add',
         optionSelect: {
           regis_id: this.optionSelectDefault.regis_id,
           book_out_num_type: this.optionSelectDefault.book_out_num_type,
@@ -1055,7 +1058,6 @@ export default {
           department_dest_id: [],
         },
       }]
-      // console.log(item.type,'v')
     },
     add_booking_register_details_modal() {
       console.log(item.type,'2')
@@ -1072,9 +1074,9 @@ export default {
           send_method_id: this.optionSelectDefault.send_method_id
         },
         response_id: item.id,
-        response_type:item.type
+        response_type:item.type,
+        flag: 'add',
       })
-      console.log(item.type,'a')
     },
     back() {
       this.$router.push({ 
@@ -1130,7 +1132,10 @@ export default {
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            await this.axios.post(`/booking-out/generate-number`, {
+              department_id: parseInt(localStorage.getItem('department_id')), 
+              year: this.assetsUtils.currentDate().split('/')[2]-543
+            })
             .then((response) => {
               this.showLoading = false
               item.department_dest_id.filter(item2 => {
@@ -1452,10 +1457,10 @@ export default {
           item.optionSelect = {signer_id: this.optionSelectDefault.signer_id}
           item.signer_id = ''
           item.num = '1'
-          item.flag = 'edit'
+          item.flag = 'add'
           item.booking_registers.filter(item2 => {
             item2.optionSelect = {signer_id: this.optionSelectDefault.signer_id, department_dest_id: this.optionSelectDefault.department_dest_id}
-            item2.flag = 'edit'
+            item2.flag = 'add'
             item2.main_link = item2.main_filepath? this.backendport+'/'+item2.main_filepath : ''
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
             item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id 
@@ -1464,12 +1469,12 @@ export default {
           return item
         })
         this.data.attachments.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.booking_follows.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           return item
         })
         if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) 

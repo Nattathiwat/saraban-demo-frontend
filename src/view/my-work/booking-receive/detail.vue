@@ -462,7 +462,7 @@ export default {
         attachments: [{ filename: ''}],
         main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
-        sendTo: [],
+        sendTo: [{ filename: ''}],
         booking_follows: [],
         comment: '',
         process_type_id: '12',
@@ -1042,21 +1042,21 @@ export default {
           })
         })
         this.data.main_docs.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.attachments.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.contracts.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           return item
         })
         this.data.booking_follows.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           return item
         })
         this.data.booking_follows = []
