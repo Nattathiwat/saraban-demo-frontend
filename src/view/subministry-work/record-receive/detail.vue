@@ -494,9 +494,9 @@ export default {
       // this.data.history.data = dataMock
       this.showLoading = true
       this.axios.get(`/booking-note/history/${this.$route.params.id}`, {
-        // params: {
-        //   histFlag: data,
-        // }
+        params: {
+          book_type: this.$route.query.book_type,
+        }
       })
       .then((response) => {
         this.showLoading = false

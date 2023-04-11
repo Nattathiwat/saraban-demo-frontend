@@ -491,6 +491,60 @@
         </div>
       </div>
     </div>
+    <div class="detail-history">
+        <div class="history">
+          <div class="header pointer" @click="data.history.hide = !data.history.hide, historyClick(data.history.tab)">
+            <div class="group-left">
+              <i class="bi bi-clock icon-size"></i>
+              <div class="name">ประวัติการแก้ไข</div>
+            </div>
+            <div class="group-right">
+              <i class="bi bi-chevron-right icon-angle" v-show="!data.history.hide"></i>
+              <i class="bi bi-chevron-down icon-angle" v-show="data.history.hide"></i>
+            </div>
+          </div>
+          <div class="line" v-show="data.history.hide"></div>
+          <div class="content" v-show="data.history.hide">
+            <div class="content-head">
+              <div class="pointer" :class="data.history.tab == 1 ? 'active' : ''" @click="data.history.tab = 1, historyClick(1)"><i class="bi bi-border-all icon-size"></i>ทั้งหมด</div>
+              <div class="pointer" :class="data.history.tab == 2 ? 'active' : ''" @click="data.history.tab = 2, historyClick(2)"><i class="bi bi-chat-left icon-size"></i>ความเห็นคำสั่ง</div>
+              <div class="pointer" :class="data.history.tab == 3 ? 'active' : ''" @click="data.history.tab = 3, historyClick(3)"><i class="bi bi-pencil-square icon-size"></i>แก้ไขข้อมูล</div>
+            </div>
+            <div class="content-detail" v-for="(item, index) in data.history.data" :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
+              <div class="detail-head">
+                <div class="number">#{{index+1}}</div>
+                <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
+                  <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
+                  {{item.bookactionname}}
+                </div>
+                <div class="create">
+                  <i class="bi bi-person icon-size"></i> 
+                  โดย {{item.updateBy}} / {{item.subName}}
+                </div>
+                <div class="date">
+                  วันที่ {{item.createDate}}
+                </div>
+                <div class="time">
+                  <i class="bi bi-clock icon-size"></i>
+                  {{item.createTime}}
+                </div>
+              </div>
+              <button v-show="item.filename" class="button-file" @click="download_file(item)">{{item.filename}}</button>
+              <ul class="detail-list">
+                <li v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
+                  {{item2.remark}}
+                </li>
+              </ul>
+              <div class="detail-signager" v-if="item.picture2">
+                <img :src="item.picture2" alt="" class="image-size">
+                <div class="name">({{item.fullname}})</div>
+                <div class="position">{{item.positionName}}</div>
+              </div>
+              <div v-if="index != (data.history.data.length-1)" class="line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     <cpn-modal-alert  :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
   </div>
@@ -532,6 +586,11 @@ export default {
         comment: '',
         process_type_id: '12',
         permission_id: '8',
+        history: {
+          hide: false,
+          data: [],
+          tab: 1
+        },
       },
       optionSelect: {
         creater_id: [],
@@ -551,6 +610,23 @@ export default {
     }
   },
   methods: {
+    historyClick(data) {
+      
+      this.showLoading = true
+      this.axios.get(`/booking-out/${this.$route.params.id}/history`, {
+        params: {
+          book_type: 1
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        this.data.history.data = response.data.data
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
     delete_click() {
       let _this = this
       this.modalAlert = {
@@ -2234,6 +2310,197 @@ export default {
                   font-weight: 500;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+
+    .detail-history {
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      border-radius: 15px;
+      background-color: #fff;
+      border: 0px;
+
+      .history{
+        margin-top: 30px;
+        border-radius: 10px;
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 22px 29px;
+
+          .group-left {
+            display: flex;
+
+            .icon-size {
+              font-size: 25px;
+              margin-right: 18px;
+              color: #1a456b;
+            }
+
+            .name {
+              margin-top: 5px;
+              color: #1a456b;
+              font-weight: bold;
+              font-size: 18px;
+            }
+          }
+        }
+
+        .content {
+          padding: 22px 29px;
+
+          .content-head {
+            display: flex;
+            margin-left: 20px;
+
+            .icon-size {
+              font-size: 18px;
+              margin-right: 10px;
+              color: #1a456b;
+            }
+
+            div {
+              font-size: 18px;
+              color: #1a456b;
+              padding: 10px 15px;
+            }
+
+            div.active {
+              background-color: #1a456b;
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              color: #ffffff;
+
+              .icon-size {
+                color: #ffffff;
+              }
+            }
+          }
+
+          .content-detail.first {
+            border-top: 2px solid #e2ebf7;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+          }
+
+          .content-detail.end {
+            border-bottom: 2px solid #e2ebf7;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+          }
+
+          .content-detail {
+            padding: 22px;
+            border-left: 2px solid #e2ebf7;
+            border-right: 2px solid #e2ebf7;
+
+            .detail-head {
+              display: flex;
+
+              .number {
+                font-size: 18px;
+                background-color: #1a456b;
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: #ffffff;
+              }
+
+              .topic {
+                border-radius: 20px;
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .topic.blue {
+                background-color: #a8d0f1;
+              }
+
+              .topic.yellow {
+                background-color: #faee85;
+              }
+
+              .topic.green {
+                background-color: #aaf1a8;
+              }
+
+              .create {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+                margin-top: -5px;
+
+                .icon-size {
+                  font-size: 22px;
+                }
+              }
+
+              .date {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .time {
+                color: #15466e;
+                padding: 5px 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+            }
+
+            .button-file {
+              margin-top: 20px;
+              margin-left: 50px;
+              color: #fff;
+              font-size: 18px;
+              background-color: #0f324e;
+              border-color: #0d2b43;
+              padding: 8px 12px;
+              border-radius: 10px;
+            }
+
+            .detail-list {
+              font-size: 18px;
+              margin-top: 20px;
+              margin-left: 30px;
+            }
+            
+
+            .detail-signager {
+              margin-left: 30px;
+              font-size: 18px;
+              width: 200px;
+              text-align: center;
+
+
+              .image-size {
+                width: 200px;
+              }
+            }
+
+            .line {
+              margin-top: 30px;
             }
           }
         }
