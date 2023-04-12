@@ -510,7 +510,10 @@
               <div class="pointer" :class="data.history.tab == 2 ? 'active' : ''" @click="data.history.tab = 2, historyClick(2)"><i class="bi bi-chat-left icon-size"></i>ความเห็นคำสั่ง</div>
               <div class="pointer" :class="data.history.tab == 3 ? 'active' : ''" @click="data.history.tab = 3, historyClick(3)"><i class="bi bi-pencil-square icon-size"></i>แก้ไขข้อมูล</div>
             </div>
-            <div class="content-detail" v-for="(item, index) in data.history.data" :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
+            <div class="content-detail" v-if="data.history.data.filter(el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+            (el.type == 0 || el.type == 0) : el).length > 0" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ? 
+            el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 0) : el)"  
+            :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
               <div class="detail-head">
                 <div class="number">#{{index+1}}</div>
                 <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
@@ -541,6 +544,11 @@
                 <div class="position">{{item.positionName}}</div>
               </div>
               <div v-if="index != (data.history.data.length-1)" class="line"></div>
+            </div>
+            <div v-else class="content-detail first end">
+              <div class="detail-head">
+                <div class="topic">ไม่มีข้อมูล</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1442,6 +1450,9 @@ export default {
           }
         })
         this.data.sendTo = []
+        this.data.order=[{
+          filename: ''
+        }]
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
           item.flag = 'edit'
@@ -1477,6 +1488,7 @@ export default {
           item.flag = 'add'
           return item
         })
+        this.data.booking_follows = []
         if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) 
         this.data.booking_refers = [{ 
           receive_document_number: '', 
