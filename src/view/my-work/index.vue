@@ -48,7 +48,7 @@ export default {
       min-width: 1550px;
       min-height: 200px;
       border-radius: 15px;
-      background-color: #fff;
+      // background-color: #fff;
       border: 0px;
     }
 
