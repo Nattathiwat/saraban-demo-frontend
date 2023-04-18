@@ -5,11 +5,11 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">หนังสือรับเข้า</div>
+            <div class="name">หนังสือรอรับเข้า</div>
             <button type="button" class="add-booking-receive" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือรับเข้า
+                สร้างหนังสือรอรับเข้า
               </div>
             </button>
           </div>
@@ -204,7 +204,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบหนังสือรับเข้า`,
+        title: `คุณยืนยันการลบหนังสือรอรับเข้า`,
         message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
@@ -216,7 +216,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              title: 'ทำการลบหนังสือรอรับเข้าสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.apigetimport()

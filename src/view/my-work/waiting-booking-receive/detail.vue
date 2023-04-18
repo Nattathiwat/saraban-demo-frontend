@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}}</div>
+            <div class="name">{{edit ? 'แก้ไขหนังสือรอรับเข้า' : 'สร้างหนังสือรอรับเข้า'}}</div>
           </div>
         </div>
         <div class="line"></div>
@@ -490,7 +490,7 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบ`,
-        message: `หนังสือรับเข้า ใช่หรือไม่`,
+        message: `หนังสือรอรับเข้า ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -501,7 +501,7 @@ export default {
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
+              title: 'ทำการลบหนังสือรอรับเข้าสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.back()
