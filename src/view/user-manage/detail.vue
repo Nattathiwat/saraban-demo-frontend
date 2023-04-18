@@ -240,9 +240,9 @@ export default {
       this.axios.get('/master-data/organization', {
         params: {
           keyword: e.target.value,
-          department_id: this.data.department_id,
-          subministry_id: this.data.subministry_id,
-          group_id: this.data.group_id,
+          // department_id: this.data.department_id,
+          // subministry_id: this.data.subministry_id,
+          // group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -352,15 +352,18 @@ export default {
           return item
         })
 
-        this.data.optionSelect.organization = response1.data.data
-        this.data.optionSelect.department = response2.data.data
-        this.data.optionSelect.subministry = response3.data.data
-        this.data.optionSelect.group = response4.data.data
+        // this.data.optionSelect.organization = response1.data.data
+        this.data.optionSelect.department = response2.data?.data || []
+        this.data.optionSelect.subministry = response3.data?.data || []
+        this.data.optionSelect.group = response4.data?.data || []
+
+        response2.data.data ? (response2.data.data.findIndex(item => item.id == this.data.department_id) == '-1' ? this.data.department_id = '' : '') : this.data.department_id = ''
+        response3.data.data ? (response3.data.data.findIndex(item => item.id == this.data.subministry_id) == '-1' ? this.data.subministry_id = '' : '') : this.data.subministry_id = '' 
+        response4.data.data ? (response4.data.data.findIndex(item => item.id == this.data.group_id) == '-1' ? this.data.group_id = '' : '') : this.data.group_id = ''
       })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-
     },
     back() {
       this.$router.push({ 
