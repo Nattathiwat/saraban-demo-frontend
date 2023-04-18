@@ -39,7 +39,8 @@ export default {
   data() {
     return {
       dropdown: false,
-      value: this.modelValue
+      value: this.modelValue,
+      first: true
     }
   },
   props: ['name', 'placeholder', 'modelValue', 'type', 'class', 'style', 'disabled', 'maxlength', 'rules', 'optionSelect', 'iconN', 'firstSelect', 'errorMessage'],
@@ -50,7 +51,7 @@ export default {
       if (!data) {
         this.dropdown = false
         this.$emit('update:modelValue', '')
-        this.$emit('change', '')
+        // this.$emit('changeData', '')
       }
     },
     toggleDropdown() {
@@ -66,12 +67,12 @@ export default {
               if (row.name == this.value && this.value) {
                 check = false
                 this.$emit('update:modelValue', row.value)
-                this.$emit('change', row.value)
+                // this.$emit('changeData', row.value)
               }
             })
             if (check) {
               this.$emit('update:modelValue', '')
-              this.$emit('change', '')
+              // this.$emit('changeData', '')
               this.value = ''
               this.$emit('keyupData', '')
             }
@@ -82,7 +83,7 @@ export default {
     },
     select(data) {
       this.$emit('update:modelValue', data.value)
-      this.$emit('change', data.value)
+      // this.$emit('changeData', data.value)
     
       this.dropdown = false
     }
@@ -97,8 +98,13 @@ export default {
     document.removeEventListener('click',this.focusoutBtn)
   },
   watch: {
-    'modelValue'() {
+    'modelValue'(newVal, oldVal) {
       this.value = this.optionSelect.filter(row=>row.value == this.modelValue)[0]?.name || ''
+      if ((newVal != oldVal) && !this.first) {
+        this.$emit('changeData', newVal)
+      } else {
+        this.first = false
+      }
     }
   },
 }
