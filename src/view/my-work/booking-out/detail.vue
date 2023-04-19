@@ -249,7 +249,7 @@
                         </span>
                       </button>
                       <div class="text pointer" @click="upload_file(`dupplicate_copy${index}${index2}`)">แนบเอกสาร</div>
-                      <input type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" >
+                      <input multiple type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" >
                     </div>
                     <button type="button" @click="download_file({filename: item2.attach_filename, type: item2.attach_type, filepath: item2.attach_filepath, link: item2.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   </div>
@@ -994,8 +994,12 @@ export default {
     file_booking_register_details_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type == 'application/pdf') {
-          if (name == 'main_docs') {
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
             let dataFile = {
               main_filename: file.name,
               main_type: file.type,
@@ -1007,7 +1011,9 @@ export default {
             this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
               this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
             })
-          } else {
+            document.querySelector(`[name="${data}"]`).value=null;
+          }
+        } else {
             let dataFile = {
               attach_filename: file.name,
               attach_type: file.type,
@@ -1019,16 +1025,19 @@ export default {
             this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
               this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
             })
+            document.querySelector(`[name="${data}"]`).value=null;
           }
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
       }
     },
     file_booking_registers_change(data, index, index2, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
-        if (file.type == 'application/pdf') {
-          if (name == 'main_docs') {
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
             let dataFile = {
               main_filename: file.name,
               main_type: file.type,
@@ -1037,8 +1046,8 @@ export default {
               main_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
+            document.querySelector(`[name="${data}"]`).value=null;
           } 
-          document.querySelector(`[name="${data}"]`).value=null;
         } else {
             let dataFile = {
               attach_filename: file.name,
@@ -1048,6 +1057,7 @@ export default {
               attach_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
+            document.querySelector(`[name="${data}"]`).value=null;
           }
       }
     },

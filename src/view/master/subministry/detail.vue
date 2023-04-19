@@ -216,8 +216,8 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const response1 = this.axios.get('/organization')
-      const response2 = this.axios.get('/department')
+      const response1 = this.axios.get('/master-data/organization')
+      const response2 = this.axios.get('/master-data/department')
 
       this.axios.all([response1, response2 ])
       .then(this.axios.spread ((...responses) =>{
@@ -274,27 +274,10 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.name
+            item.name = item.department_full_name
             return item
           })
           this.optionSelect.department_id = response.data.data
-        }
-      })
-    },
-    keyupDep(e, data) {
-      this.axios.get('/department', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.name
-            return item
-          })
-          data.optionSelect.department_id = response.data.data
         }
       })
     },
