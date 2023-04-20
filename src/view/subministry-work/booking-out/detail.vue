@@ -319,7 +319,20 @@
                               name="sendTo" />
             </div>
             <div class="group-input">
-              <div class="name">ความเห็น / คำสั่ง</div>
+              <div class="name d-flex justify-content-between">
+                <div>ความเห็น / คำสั่ง</div>
+                <div>
+                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
+                    <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
+                    แนบเอกสาร
+                  </button>
+                  <div v-else class="del-comment pointer" @click="data.sendToFile.filename = ''" >
+                    {{data.sendToFile?.filename}}
+                    <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
+                  </div>
+               </div>
+              </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
                             rows="3" />
@@ -516,6 +529,7 @@ export default {
         comment: '',
         process_type_id: '',
         permission_id: '',
+        FileType: []
       },
       optionSelect: {
         creater_id: [],
@@ -731,7 +745,14 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            sendToFile: {
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
+            },
+            response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -819,9 +840,32 @@ export default {
     upload_file(data) {
       document.querySelector(`[name="${data}"]`).click()
     },
+    file_set_change(data, index, name) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (name == 'sendTo') {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data.sendToFile = dataFile
+        }
+      }
+    },
     file_attachment_change(data, index) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         let dataFile = {
           filename: file.name,
           type: file.type,
@@ -836,6 +880,10 @@ export default {
     file_booking_register_details_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         if (file.type == 'application/pdf') {
           if (name == 'main_docs') {
             let dataFile = {
@@ -869,6 +917,10 @@ export default {
     file_booking_registers_change(data, index, index2, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         if (file.type == 'application/pdf') {
           if (name == 'main_docs') {
             let dataFile = {
@@ -1103,7 +1155,7 @@ export default {
                   completeFile.push(true)
                 }
                 if (completeFile.length == this.data.booking_register_details.length) {
-                  this.call_api_save(data)
+                  this.upload_file_all3(data)
                 }
               }
             }).catch((error) => {
@@ -1127,7 +1179,7 @@ export default {
                   completeFile.push(true)
                 }
                 if (completeFile.length == this.data.booking_register_details.length) {
-                  this.call_api_save(data)
+                  this.upload_file_all3(data)
                 }
               }
             }).catch((error) => {
@@ -1143,17 +1195,67 @@ export default {
               completeFile.push(true)
             }
             if (completeFile.length == this.data.booking_register_details.length) {
-              this.call_api_save(data)
+              this.upload_file_all3(data)
             }
           }
         })
         if (item.booking_registers.length < 1) {
           completeFile.push(true)
           if (completeFile.length == this.data.booking_register_details.length) {
-            this.call_api_save(data)
+            this.upload_file_all3(data)
           }
         }
       })
+    },
+    upload_file_all3(data) {
+      let currentDate = this.assetsUtils.currentDate()
+      if (this.data.sendToFile?.filename) {
+        let formDataFile = new FormData();
+        formDataFile.append('file', this.data.sendToFile.file);
+        formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+        this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+        .then((response) => {
+          this.data.attach_filename = response.data.data.filename
+          this.data.attach_filepath = response.data.data.path
+          this.upload_file_all4(data)
+        }).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.upload_file_all4(data)
+      }
+    },
+    upload_file_all4(data) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileSendTo = []
+      this.data.booking_follows.filter(item=> {
+        if (item.sendToFile?.filename) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.sendToFile.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            this.data.booking_follows[index].attach_filepath = item.data.data.path
+            this.data.booking_follows[index].attach_filename = item.data.data.filename
+            fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileSendTo.length) {
+            this.call_api_save(data)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(data)
+      }
     },
     call_api_save(data) {
       let fileAttachments = data
@@ -1173,7 +1275,13 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename,
+            sendToFile :{filename : this.data.attach_filename}
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -1260,7 +1368,7 @@ export default {
       this.axios.get(`/booking-out/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -1321,8 +1429,9 @@ export default {
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/register-type`)
       const request9 = this.axios.get('/master-data/department')
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9])
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
         const response1 = responses[0]
@@ -1334,6 +1443,7 @@ export default {
         const response7 = responses[6]
         const response8 = responses[7]
         const response9 = responses[8]
+        const response10 = responses[9]
         
         response1.data.data.filter(row => {
           row.value = row.id
@@ -1379,6 +1489,14 @@ export default {
           item.value = item.id
           item.name = item.department_full_name
           return item
+        })
+
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
         })
 
         this.optionSelect.book_type_id = response1.data.data
@@ -1542,6 +1660,45 @@ export default {
 
           .image-trash {
             width: 18px;
+          }
+        }
+
+        .icon-paperclip {
+          color: #8aa3b7;
+          // font-size: 14px;
+          margin-right: 2px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .button-con {
+          width: auto;
+          height: 30px;
+          background-color: transparent;
+          color: #000;
+          font-size: 15px;
+          font-weight: 500;
+          border: 0;
+          border-radius: 5px;
+          
+          .right{
+            margin-left: 500px;
+          }
+        }
+
+        .del-comment {
+          // width: 45px;
+          // height: 45px;
+          color: #212529;
+          background-color: transparent;
+          // border-color: #f8f9fa;
+          border: none;
+          border-radius: 5px;
+          margin-left: 15px;
+
+          .image-x {
+            width: 14px;
+            margin-left: 5px;
           }
         }
       }

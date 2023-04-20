@@ -405,6 +405,7 @@ export default {
           data: [],
           tab: 1
         },
+        FileType: []
       },
       optionSelect: {
         book_category_id: [],
@@ -420,7 +421,6 @@ export default {
       optionSelectDefault: {
         book_category_id: [],
       },
-      FileType: []
     }
   },
   methods: {
@@ -644,6 +644,10 @@ export default {
     file_set_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         if (name == 'main_docs') {
           if (file.type == 'application/pdf') {
             let dataFile = {
@@ -804,7 +808,6 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        console.log('elseup3')
         this.upload_file_all4(filemain_docs,file_attachments)
       }
     },
@@ -814,7 +817,6 @@ export default {
       let fileSendTo = []
       this.data.booking_follows.filter(item=> {
         if (item.sendToFile?.filename) {
-          console.log('up4')
           let formDataFile = new FormData();
           formDataFile.append('file', item.sendToFile.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -822,17 +824,14 @@ export default {
         }
       })
       if (axiosArray1.length>0) {
-        console.log('arr3')
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
-          console.log('then4')
           responses.filter((item, index) => {
             this.data.booking_follows[index].attach_filepath = item.data.data.path
             this.data.booking_follows[index].attach_filename = item.data.data.filename
             fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileSendTo.length) {
-            console.log('call')
             this.call_api_save(filemain_docs,file_attachments)
           }
         })).catch((error) => {
@@ -840,7 +839,6 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        console.log('elseup4')
         this.call_api_save(filemain_docs,file_attachments)
       }
     },
@@ -1084,7 +1082,6 @@ export default {
     //       msgSuccess: true,
     //       afterPressAgree() {
     //           _this.showLoading = true
-    //           console.log('after')
     //               let groupdata = {
     //                 regis_id: this.data.book_category_id,
     //                 book_type: parseInt(this.data.book_type),
@@ -1284,6 +1281,7 @@ export default {
             width: 18px;
           }
         }
+        
         .icon-paperclip {
           color: #8aa3b7;
           // font-size: 14px;
@@ -1308,20 +1306,20 @@ export default {
         }
 
         .del-comment {
-        // width: 45px;
-        // height: 45px;
-        color: #212529;
-        background-color: transparent;
-        // border-color: #f8f9fa;
-        border: none;
-        border-radius: 5px;
-        margin-left: 15px;
+          // width: 45px;
+          // height: 45px;
+          color: #212529;
+          background-color: transparent;
+          // border-color: #f8f9fa;
+          border: none;
+          border-radius: 5px;
+          margin-left: 15px;
 
-        .image-x {
-          width: 14px;
-          margin-left: 5px;
+          .image-x {
+            width: 14px;
+            margin-left: 5px;
+          }
         }
-      }
       }
 
       .group-detail {

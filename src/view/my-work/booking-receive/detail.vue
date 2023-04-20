@@ -478,6 +478,7 @@ export default {
         permission_id: '9',
         book_type:'',
         regis_id:'',
+        FileType: []
       },
       optionSelect: {
         receive_regis_id: [],
@@ -709,6 +710,10 @@ export default {
     file_set_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         if (name == 'main_docs') {
           if (file.type == 'application/pdf') {
             let dataFile = {
@@ -869,7 +874,6 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        console.log('elseup3')
         this.upload_file_all4(filemain_docs,file_attachments)
       }
     },
@@ -879,7 +883,6 @@ export default {
       let fileSendTo = []
       this.data.booking_follows.filter(item=> {
         if (item.sendToFile?.filename) {
-          console.log('up4')
           let formDataFile = new FormData();
           formDataFile.append('file', item.sendToFile.file);
           formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -887,17 +890,14 @@ export default {
         }
       })
       if (axiosArray1.length>0) {
-        console.log('arr3')
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
-          console.log('then4')
           responses.filter((item, index) => {
             this.data.booking_follows[index].attach_filepath = item.data.data.path
             this.data.booking_follows[index].attach_filename = item.data.data.filename
             fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileSendTo.length) {
-            console.log('call')
             this.call_api_save(filemain_docs,file_attachments)
           }
         })).catch((error) => {
@@ -905,7 +905,6 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        console.log('elseup4')
         this.call_api_save(filemain_docs,file_attachments)
       }
     },
