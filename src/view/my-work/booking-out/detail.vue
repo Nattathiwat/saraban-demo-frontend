@@ -600,6 +600,7 @@ export default {
           data: [],
           tab: 1
         },
+        FileType: []
       },
       optionSelect: {
         creater_id: [],
@@ -614,8 +615,7 @@ export default {
       modalRegiter: {
         showModal: false,
         booking_register_details: []
-      },
-      FileType: []
+      }
     }
   },
   methods: {
@@ -846,8 +846,8 @@ export default {
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
             sendToFile: {
-              ...this.data.sendToFile?.filename,
-              filename: this.data.sendToFile?.filename ? JSON.parse(JSON.stringify(this.data.sendToFile?.filename)) : ''
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
             },
             response_type: item.type,
           }
@@ -981,6 +981,10 @@ export default {
     file_attachment_change(data, index) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         let dataFile = {
           filename: file.name,
           type: file.type,
@@ -1284,7 +1288,7 @@ export default {
                   completeFile.push(true)
                 }
                 if (completeFile.length == this.data.booking_register_details.length) {
-                  this.call_api_save(data)
+                  this.upload_file_all3(data)
                 }
               }
             }).catch((error) => {
@@ -1308,7 +1312,7 @@ export default {
                   completeFile.push(true)
                 }
                 if (completeFile.length == this.data.booking_register_details.length) {
-                  this.call_api_save(data)
+                  this.upload_file_all3(data)
                 }
               }
             }).catch((error) => {
@@ -1324,17 +1328,67 @@ export default {
               completeFile.push(true)
             }
             if (completeFile.length == this.data.booking_register_details.length) {
-              this.call_api_save(data)
+              this.upload_file_all3(data)
             }
           }
         })
         if (item.booking_registers.length < 1) {
           completeFile.push(true)
           if (completeFile.length == this.data.booking_register_details.length) {
-            this.call_api_save(data)
+            this.upload_file_all3(data)
           }
         }
       })
+    },
+    upload_file_all3(data) {
+      let currentDate = this.assetsUtils.currentDate()
+      if (this.data.sendToFile?.filename) {
+        let formDataFile = new FormData();
+        formDataFile.append('file', this.data.sendToFile.file);
+        formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+        this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+        .then((response) => {
+          this.data.attach_filename = response.data.data.filename
+          this.data.attach_filepath = response.data.data.path
+          this.upload_file_all4(data)
+        }).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.upload_file_all4(data)
+      }
+    },
+    upload_file_all4(data) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileSendTo = []
+      this.data.booking_follows.filter(item=> {
+        if (item.sendToFile?.filename) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.sendToFile.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            this.data.booking_follows[index].attach_filepath = item.data.data.path
+            this.data.booking_follows[index].attach_filename = item.data.data.filename
+            fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileSendTo.length) {
+            this.call_api_save(data)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(data)
+      }
     },
     call_api_save(data) {
       let fileAttachments = data
@@ -1359,9 +1413,9 @@ export default {
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
             response_type: item.type,
-            // attach_filepath: this.data.attach_filepath,
-            // attach_filename: this.data.attach_filename,
-            // sendToFile :{filename : this.data.attach_filename}
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename,
+            sendToFile :{filename : this.data.attach_filename}
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -1790,20 +1844,20 @@ export default {
         }
 
         .del-comment {
-        // width: 45px;
-        // height: 45px;
-        color: #212529;
-        background-color: transparent;
-        // border-color: #f8f9fa;
-        border: none;
-        border-radius: 5px;
-        margin-left: 15px;
+          // width: 45px;
+          // height: 45px;
+          color: #212529;
+          background-color: transparent;
+          // border-color: #f8f9fa;
+          border: none;
+          border-radius: 5px;
+          margin-left: 15px;
 
-        .image-x {
-          width: 14px;
-          margin-left: 5px;
+          .image-x {
+            width: 14px;
+            margin-left: 5px;
+          }
         }
-      }
 
         .button-delete {
           width: 45px;

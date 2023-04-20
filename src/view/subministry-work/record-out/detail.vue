@@ -412,7 +412,8 @@ export default {
           hide: false,
           data: [],
           tab: 1
-        }
+        },
+        FileType: []
       },
       optionSelect: {
         creater_id: [],
@@ -428,7 +429,6 @@ export default {
         showModal: false,
         booking_register_details: []
       },
-      FileType: []
     }
   },
   methods: {
@@ -596,8 +596,8 @@ export default {
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
             sendToFile: {
-              ...this.data.sendToFile?.filename,
-              filename: this.data.sendToFile?.filename ? JSON.parse(JSON.stringify(this.data.sendToFile?.filename)) : ''
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
             },
             response_type: item.type,
           }
@@ -730,6 +730,10 @@ export default {
     file_attachment_change(data, index) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         let dataFile = {
           filename: file.name,
           type: file.type,
@@ -760,7 +764,6 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           if (_this.flagSave == 3) {
-            console.log('if')
             _this.showLoading = true
             _this.axios.post(`/booking-note/generate-number`,{
               department_id: parseInt(localStorage.getItem('department_id')),
@@ -1344,20 +1347,20 @@ export default {
         }
 
         .del-comment {
-        // width: 45px;
-        // height: 45px;
-        color: #212529;
-        background-color: transparent;
-        // border-color: #f8f9fa;
-        border: none;
-        border-radius: 5px;
-        margin-left: 15px;
+          // width: 45px;
+          // height: 45px;
+          color: #212529;
+          background-color: transparent;
+          // border-color: #f8f9fa;
+          border: none;
+          border-radius: 5px;
+          margin-left: 15px;
 
-        .image-x {
-          width: 14px;
-          margin-left: 5px;
+          .image-x {
+            width: 14px;
+            margin-left: 5px;
+          }
         }
-      }
       }
 
       .group-detail {

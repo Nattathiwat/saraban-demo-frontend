@@ -272,7 +272,20 @@
                               name="sendTo" />
             </div>
             <div class="group-input">
-              <div class="name">ความเห็น / คำสั่ง</div>
+              <div class="name d-flex justify-content-between">
+                <div>ความเห็น / คำสั่ง</div>
+                <div>
+                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
+                    <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
+                    แนบเอกสาร
+                  </button>
+                  <div v-else class="del-comment pointer" @click="data.sendToFile.filename = ''" >
+                    {{data.sendToFile?.filename}}
+                    <img src="@/assets/images/icon/x-solid.svg" alt="" class="image-x">
+                  </div>
+               </div>
+              </div>
               <cpn-textArea v-model="data.comment"
                             name="comment"
                             rows="3" />
@@ -395,6 +408,7 @@ export default {
         permission_id: '',
         book_type:'',
         regis_id:'',
+        FileType: []
       },
       optionSelect: {
         receive_regis_id: [],
@@ -562,7 +576,14 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            sendToFile: {
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
+            },
+            response_type: item.type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -597,6 +618,10 @@ export default {
     file_set_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
         if (name == 'main_docs') {
           if (file.type == 'application/pdf') {
             let dataFile = {
@@ -609,6 +634,15 @@ export default {
             this.data[name][index] = {...this.data[name][index], ...dataFile}
             document.querySelector(`[name="${data}"]`).value=null;
           }
+        } else if (name == 'sendTo') {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data.sendToFile = dataFile
         } else {
           let dataFile = {
             filename: file.name,
@@ -678,7 +712,7 @@ export default {
             fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+            this.upload_file_all3([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -692,7 +726,7 @@ export default {
             fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+            this.upload_file_all3([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -700,7 +734,57 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.call_api_save([...fileMain_docs_old],[])
+        this.upload_file_all3([...fileMain_docs_old],[])
+      }
+    },
+    upload_file_all3(fileMain_docs,fileAttachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      if (this.data.sendToFile?.filename) {
+        let formDataFile = new FormData();
+        formDataFile.append('file', this.data.sendToFile.file);
+        formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+        this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+        .then((response) => {
+          this.data.attach_filename = response.data.data.filename
+          this.data.attach_filepath = response.data.data.path
+          this.upload_file_all4(fileMain_docs,fileAttachments)
+        }).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.upload_file_all4(fileMain_docs,fileAttachments)
+      }
+    },
+    upload_file_all4(fileMain_docs,fileAttachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let fileSendTo = []
+      this.data.booking_follows.filter(item=> {
+        if (item.sendToFile?.filename) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.sendToFile.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            this.data.booking_follows[index].attach_filepath = item.data.data.path
+            this.data.booking_follows[index].attach_filename = item.data.data.filename
+            fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == fileSendTo.length) {
+            this.call_api_save(fileMain_docs,fileAttachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(fileMain_docs,fileAttachments)
       }
     },
     call_api_save(fileMain_docs,fileAttachments) {
@@ -720,7 +804,13 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename,
+            sendToFile :{filename : this.data.attach_filename}
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -816,7 +906,7 @@ export default {
           main_docs_del.push({...item,flag: 'delete'})
         })
         response.data.data = {...response.data.data, main_docs_del}
-        this.data = JSON.parse(JSON.stringify(response.data.data))
+        this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -873,8 +963,9 @@ export default {
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department')
       const request8 = this.axios.get('/master-data/receive-type')
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8])
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false;
         const response1 = responses[0]
@@ -885,6 +976,7 @@ export default {
         const response6 = responses[5]
         const response7 = responses[6]
         const response8 = responses[7]
+        const response10 = responses[8]
         
         response1.data.data.filter(item => {
           item.value = item.id
@@ -926,6 +1018,15 @@ export default {
           item.name = item.desc
           return item
         })
+
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
+        })
+
         this.optionSelect.receive_regis_id = response1.data.data
         this.optionSelect.book_type_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data
@@ -1092,6 +1193,45 @@ export default {
 
           .image-trash {
             width: 18px;
+          }
+        }
+
+        .icon-paperclip {
+          color: #8aa3b7;
+          // font-size: 14px;
+          margin-right: 2px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .button-con {
+          width: auto;
+          height: 30px;
+          background-color: transparent;
+          color: #000;
+          font-size: 15px;
+          font-weight: 500;
+          border: 0;
+          border-radius: 5px;
+          
+          .right{
+            margin-left: 500px;
+          }
+        }
+
+        .del-comment {
+          // width: 45px;
+          // height: 45px;
+          color: #212529;
+          background-color: transparent;
+          // border-color: #f8f9fa;
+          border: none;
+          border-radius: 5px;
+          margin-left: 15px;
+
+          .image-x {
+            width: 14px;
+            margin-left: 5px;
           }
         }
       }
