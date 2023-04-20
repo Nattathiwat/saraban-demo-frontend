@@ -596,8 +596,8 @@ export default {
             human_flag: item.human_flag,
             response_id: parseInt(item.value),
             sendToFile: {
-              ...this.data.sendToFile?.filename,
-              filename: this.data.sendToFile?.filename ? JSON.parse(JSON.stringify(this.data.sendToFile?.filename)) : ''
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
             },
             response_type: item.type,
           }
@@ -751,6 +751,9 @@ export default {
       }).catch(()=>{});
     },
     on_submit() {
+      console.log('data.booking_follows', this.data.booking_follows)
+    },
+    on_submit2() {
       let _this = this
       this.modalAlert = {
         showModal: true,
