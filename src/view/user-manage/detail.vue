@@ -86,7 +86,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupOrganization($event)"
-                                  @changeData="masterDropdown"
                                   :optionSelect="data.optionSelect.organization" />
               </div>
               <div class="group-input">
@@ -96,7 +95,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupDepartment($event)"
-                                  @changeData="masterDropdown"
                                   :optionSelect="data.optionSelect.department" />
               </div>
             </div>
@@ -108,7 +106,6 @@
                                   placeholder="กรุณาระบุ"
                                   rules="required"
                                   @keyup="keyupSubministry($event)"
-                                  @changeData="masterDropdown"
                                   :optionSelect="data.optionSelect.subministry" />
               </div>
               <div class="group-input">
@@ -117,7 +114,6 @@
                                   name="group"
                                   placeholder="กรุณาระบุ"
                                   @keyup="keyupGroup($event)"
-                                  @changeData="masterDropdown"
                                   :optionSelect="data.optionSelect.group" />
               </div>
             </div>
@@ -585,18 +581,18 @@ export default {
     this.apiMaster()
   },
   watch: {
-    // 'data.organization_id'() {
-    //   this.masterDropdown()
-    // },
-    // 'data.department_id'() {
-    //   this.masterDropdown()
-    // },
-    // 'data.subministry_id'() {
-    //   this.masterDropdown()
-    // },
-    // 'data.group_id'() {
-    //   this.masterDropdown()
-    // },
+    'data.organization_id'() {
+      this.masterDropdown()
+    },
+    'data.department_id'() {
+      this.masterDropdown()
+    },
+    'data.subministry_id'() {
+      this.masterDropdown()
+    },
+    'data.group_id'() {
+      this.masterDropdown()
+    },
   }
 }
 
