@@ -217,7 +217,7 @@ export default {
     api_master() {
       this.showLoading = true
       const response1 = this.axios.get('/master-data/organization')
-      const response2 = this.axios.get('/master-data/department')
+      const response2 = this.axios.get('/department')
 
       this.axios.all([response1, response2 ])
       .then(this.axios.spread ((...responses) =>{

@@ -83,7 +83,7 @@ export default {
     },
     select(data) {
       this.$emit('update:modelValue', data.value)
-      this.$emit('change', data.value)
+      this.change(data.value)
     
       this.dropdown = false
     },

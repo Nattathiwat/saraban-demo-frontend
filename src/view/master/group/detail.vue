@@ -241,11 +241,8 @@ export default {
         })
 
         this.optionSelect.organization_id = response1.data.data
-        console.log('a')
         this.optionSelect.department_id = response2.data.data
-        console.log('b')
         this.optionSelect.subministry_id = response3.data.data
-        console.log('c')
 
         if (this.$route.params.id) {
           this.edit = true
