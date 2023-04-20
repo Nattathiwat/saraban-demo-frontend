@@ -160,7 +160,7 @@ export default {
             row.bookingSubject = row.subject
             row.department_name = row.department_name
             row.date = row.regis_date
-            row.typename = row.book_type_name
+            row.typename = row.book_type
             row.prepareBy = row.creater_name
             row.statusName = row.status_name
             this.data.total = row.total

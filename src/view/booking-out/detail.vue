@@ -567,7 +567,7 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -576,7 +576,9 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -585,7 +587,7 @@ export default {
     },
     keyupDepartment(e, data) {
       data.optionSelect.department_dest_id = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -594,7 +596,9 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           data.optionSelect.department_dest_id = response.data.data
@@ -724,6 +728,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -731,7 +736,14 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
+            sendToFile: {
+              ...this.data.sendToFile,
+              filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
+            },
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -907,6 +919,9 @@ export default {
           send_method_id: this.optionSelectDefault.send_method_id,
           department_dest_id: [],
         },
+        human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
       }]
     },
     add_booking_register_details_modal() {
@@ -921,6 +936,9 @@ export default {
           book_out_num_type: this.optionSelectDefault.book_out_num_type,
           send_method_id: this.optionSelectDefault.send_method_id
         },
+        human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
       })
     },
     back() {
@@ -1166,6 +1184,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -1173,7 +1192,13 @@ export default {
             process_type_name: '',
             permission_id: parseInt(this.data.permission_id),
             permission_name: '',
-            flag: 'add'
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename,
+            sendToFile :{filename : this.data.attach_filename}
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
