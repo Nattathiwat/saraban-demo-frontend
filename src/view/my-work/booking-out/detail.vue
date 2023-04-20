@@ -624,7 +624,8 @@ export default {
       this.showLoading = true
       this.axios.get(`/booking-out/${this.$route.params.id}/history`, {
         params: {
-          book_type: 1
+          book_type: 1 ,
+          department_id: parseInt(localStorage.getItem('department_id'))        
         }
       })
       .then((response) => {
