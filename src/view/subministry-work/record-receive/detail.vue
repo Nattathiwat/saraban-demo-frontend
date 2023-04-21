@@ -331,6 +331,7 @@
               <ul class="detail-list">
                 <li v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
                   {{item2.remark}}
+                  {{item2.comment}}
                 </li>
               </ul>
               <div class="detail-signager" v-if="item.picture2">

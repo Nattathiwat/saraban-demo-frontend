@@ -492,7 +492,7 @@
         </div>
       </div>
     </div>
-    <div class="detail-history">
+    <div class="detail-history" v-if="$route.params.id">
         <div class="history">
           <div class="header pointer" @click="data.history.hide = !data.history.hide, historyClick(data.history.tab)">
             <div class="group-left">
@@ -538,6 +538,7 @@
               <ul class="detail-list">
                 <li v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
                   {{item2.remark}}
+                  {{item2.comment}}
                 </li>
               </ul>
               <div class="detail-signager" v-if="item.picture2">
@@ -801,6 +802,9 @@ export default {
                 signer_id: this.optionSelectDefault.signer_id,
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
+              human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
             })
           }).catch((error) => {
             this.showLoading = false

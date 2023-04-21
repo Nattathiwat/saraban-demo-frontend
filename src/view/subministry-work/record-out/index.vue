@@ -12,8 +12,8 @@
                 สร้างบันทึกส่งออก
               </div>
             </button>
-            <div class="d-flex justify-content-end">
-            <button type="button" class="add-booking-out"  @click="gennum()" v-show="false">
+            <div class="d-flex justify-content-end" v-show="false">
+            <button type="button" class="add-booking-out"  @click="modal_genno()" >
                 ออกเลขบันทึกภายใน
             </button>
           </div>
@@ -113,7 +113,7 @@
                     <div class="name">ยกเลิก</div>
                   </div>
                 </button>
-                <button type="submit" class="btn button-success">
+                <button type="submit" class="btn button-success" @click="flagSave=3" v-show="!data.booking_note_number">
                   <div class="group-name">
                   <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
                     <div class="name">ตกลง</div>
@@ -329,7 +329,7 @@ export default {
       
       this.modalRegiter.showModal = false
     },
-    gennum() {
+    modal_genno() {
       this.modalRegiter.showModal = true
       this.modalRegiter.booking_register_details= [{
         regis_id: '',
