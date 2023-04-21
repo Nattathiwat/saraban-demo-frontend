@@ -99,6 +99,9 @@ axios.defaults.baseURL = baseURL;
 setupValidate(app) // Validate
 app.config.globalProperties.assetsUtils = assetsUtils //assetsUtils
 app.config.globalProperties.backendport = baseURL //backendport
+app.config.globalProperties.ruleSet = (data) => {
+  app.config.globalProperties.rule = data
+}
 app.component('Datepicker', Datepicker); //Datepicker
 app.component('cpnLoading', loading); //loading
 app.component('cpnModal', modal); //modal
@@ -116,6 +119,7 @@ app.component('cpnDatepicker', date); //date
 app.component('cpnDatepickerRange', dateRange); //dateRange
 app.component('cpnTime', time); //time
 app.component('cpnToggleSwitch', toggleSwitch); //toggleSwitch
+
 
 
 app.use(VueAxios, axios) //axios

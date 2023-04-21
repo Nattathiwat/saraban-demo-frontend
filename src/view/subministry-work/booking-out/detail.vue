@@ -174,6 +174,7 @@
                                   :name="`is_signed${index}`"
                                   class="cpn-select"
                                   label="ลายเซ็น"
+                                  :disabled="!rule.user6"
                                   @change="change_signature(index)" />
                   </div>
                 </div>
@@ -264,7 +265,8 @@
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
                                     class="cpn-select"
-                                    label="ลายเซ็น" />
+                                    label="ลายเซ็น"
+                                    :disabled="!rule.user6" />
                     </div>
                   </div>
                 </div>
