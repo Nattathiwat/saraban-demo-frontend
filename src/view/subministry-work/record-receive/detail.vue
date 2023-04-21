@@ -427,7 +427,7 @@ export default {
   methods: {
     historyClick(data) {
       this.showLoading = true
-      this.axios.get(`/booking-note/history/${this.$route.params.id}`, {
+      this.axios.get(`/booking-note/${this.$route.params.id}/history`, {
         params: {
           book_type: this.$route.query.book_type,
         }
@@ -1073,42 +1073,6 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    // submitClick(){
-    //   let _this = this
-    //     this.modalAlert = {
-    //       showModal: true,
-    //       type: 'confirm',
-    //       title: `คุณยืนยันการรับเข้าหรือไม่`,
-    //       confirm: true,
-    //       msgSuccess: true,
-    //       afterPressAgree() {
-    //           _this.showLoading = true
-    //               let groupdata = {
-    //                 regis_id: this.data.book_category_id,
-    //                 book_type: parseInt(this.data.book_type),
-    //                 human_flag: this.data.human_flag,
-    //                 response_id: parseInt(this.data.response)
-    //               }
-    //           .then(_this.axios.spread (() => {
-    //             _this.axios.put(`/booking-receive/receive-note/${_this.$route.params.id}`, groupdata)
-    //             _this.showLoading = false
-    //             _this.modalAlert = {
-    //               showModal: true, 
-    //               type: 'success', 
-    //               title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
-    //               msgSuccess: true, 
-    //               afterPressAgree() {
-    //                 _this.apigetrecord()
-    //               }
-    //             }                
-    //           })) 
-    //           .catch((error) => {
-    //             _this.showLoading = false
-    //             _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-    //           })
-    //       }
-    //     }
-    // },
   },
   mounted () {
     this.api_master()
