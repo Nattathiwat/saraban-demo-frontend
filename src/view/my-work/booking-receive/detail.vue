@@ -1090,8 +1090,9 @@ export default {
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department-user')
       const request8 = this.axios.get('/master-data/receive-type')
+      const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8])
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request10])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false;
         const response1 = responses[0]
@@ -1102,6 +1103,7 @@ export default {
         const response6 = responses[5]
         const response7 = responses[6]
         const response8 = responses[7]
+        const response10 = responses[8]
         
         response1.data.data.filter(item => {
           item.value = item.id
@@ -1143,6 +1145,15 @@ export default {
           item.name = item.desc
           return item
         })
+
+        this.data.FileType = []
+
+        response10.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.FileType.push(item.content_type)
+          }
+        })
+        
         this.optionSelect.receive_regis_id = response1.data.data
         this.optionSelect.book_type_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data

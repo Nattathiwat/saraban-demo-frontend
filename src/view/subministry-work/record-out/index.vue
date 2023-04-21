@@ -12,8 +12,8 @@
                 สร้างบันทึกส่งออก
               </div>
             </button>
-            <div class="d-flex justify-content-end" v-show="false">
-            <button type="button" class="add-booking-out"  @click="modal_genno()" >
+            <div class="d-flex justify-content-end" >
+            <button type="button" class="add-booking-out"  @click="modal_genno()" v-show="false">
                 ออกเลขบันทึกภายใน
             </button>
           </div>
