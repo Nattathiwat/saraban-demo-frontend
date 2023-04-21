@@ -128,6 +128,11 @@ export default {
           localStorage.setItem('fname', response.data.data?.fname || '')
           localStorage.setItem('lname', response.data.data?.lname || '')
           localStorage.setItem('login', 'true')
+          let rule = {}
+          response3.data.data.roles.filter(row => {
+            rule[`user${row.role_id}`] = true
+          })
+          this.ruleSet(rule)
           this.$router.push({ 
             name: 'my-work.waiting-booking-receive',
           }).catch(()=>{});

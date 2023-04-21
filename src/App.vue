@@ -285,6 +285,7 @@ export default {
       localStorage.setItem('login', 'false')
       this.data.logoImage = ''
       this.dataUser.image = ''
+      this.ruleSet()
     },
     logoutClick() {
       let _this = this
