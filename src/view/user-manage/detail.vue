@@ -122,6 +122,7 @@
             <div class="level-first">
               <img src="@/assets/images/icon/crown-duotone.svg" alt="" class="icon-crown">
               <div class="name">สิทธิ์</div>
+              {{rule}}
             </div>
             <div class="level-button">
               <div v-for="(item, index) in data.optionSelect.roles" :key="index">
@@ -132,7 +133,7 @@
                     {{item.desc}}
                   </div>
                 </button>
-                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check">
+                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check" :disabled="item.id == 6 ? !rule.user5 : false">
                   {{item.desc}}
                 </button>
               </div>
