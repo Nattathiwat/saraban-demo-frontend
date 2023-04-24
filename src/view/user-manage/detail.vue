@@ -122,7 +122,6 @@
             <div class="level-first">
               <img src="@/assets/images/icon/crown-duotone.svg" alt="" class="icon-crown">
               <div class="name">สิทธิ์</div>
-              {{rule}}
             </div>
             <div class="level-button">
               <div v-for="(item, index) in data.optionSelect.roles" :key="index">
