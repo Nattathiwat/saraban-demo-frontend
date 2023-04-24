@@ -175,7 +175,7 @@
                                   :name="`is_signed${index}`"
                                   class="cpn-select"
                                   label="ลายเซ็น"
-                                  :disabled="!(rule.user6 || rule.user5)"
+                                  :disabled="!rule.user6"
                                   @change="change_signature(index)" />
                   </div>
                 </div>
@@ -268,7 +268,7 @@
                                     :name="`is_signed${index}${index2}`"
                                     class="cpn-select"
                                     label="ลายเซ็น"
-                                    :disabled="!(rule.user6 || rule.user5)"
+                                    :disabled="!rule.user6"
                                     @change="change_signer_id(index)(index2)" />
                     </div>
                   </div>

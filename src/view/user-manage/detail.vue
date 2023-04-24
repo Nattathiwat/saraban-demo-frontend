@@ -132,7 +132,7 @@
                     {{item.desc}}
                   </div>
                 </button>
-                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check">
+                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check" :disabled="item.id == 6 ? !rule.user5 : false">
                   {{item.desc}}
                 </button>
               </div>
