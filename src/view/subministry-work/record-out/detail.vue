@@ -437,7 +437,7 @@ export default {
       this.showLoading = true
       this.axios.get(`/booking-note/history/${this.$route.params.id}`, {
         params: {
-          book_type: this.$route.query.book_type,
+          book_type: 4,
         }
       })
       .then((response) => {
@@ -601,7 +601,6 @@ export default {
               filename: JSON.parse(JSON.stringify(this.data.sendToFile?.filename || ''))
             },
             response_type: item.type,
-            book_type: this.$route.query.book_type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -918,7 +917,6 @@ export default {
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
             sendToFile :{filename : this.data.attach_filename},
-            book_type: this.$route.query.book_type,
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
