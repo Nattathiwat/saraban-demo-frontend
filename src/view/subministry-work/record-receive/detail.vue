@@ -271,7 +271,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="button" class="confirm-receive" v-show="false" >
+              <button type="button" class="confirm-receive"  >
               <div class="group-image" @click="submitClick()">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
@@ -1073,9 +1073,51 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    submitClick(){
+      let _this = this
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+              _this.showLoading = true
+                  let groupdata = {
+                    regis_id: row.regis_id,
+                    book_type: parseInt(row.book_type),
+                    human_flag: row.human_flag,
+                    response_id: parseInt(row.response)
+                  }
+                  if (row.selected) {
+                    axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
+                  };              
+              _this.axios.all([...axiosArray])
+              .then(_this.axios.spread (() => {
+                _this.showLoading = false
+                _this.modalAlert = {
+                  showModal: true, 
+                  type: 'success', 
+                  title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+                  msgSuccess: true, 
+                  afterPressAgree() {
+                    _this.apigetrecord()
+                  }
+                }                
+              })) 
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+          }
+        }
+    },
   },
   mounted () {
     this.api_master()
+    if (this.$route.params.id){
+      this.submitClick()
+    }
   },
   watch: {
     'modalRegiter.showModal' () {

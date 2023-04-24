@@ -302,24 +302,6 @@ export default {
         }
       })
     },
-    keyupOrg(e, data) {
-      data.optionSelect.organization_id = []
-      this.axios.get('/organization', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.name
-            return item
-          })
-          data.optionSelect.organization_id = response.data.data
-        }
-      })
-    },
   },
   mounted () {
     this.api_master()
