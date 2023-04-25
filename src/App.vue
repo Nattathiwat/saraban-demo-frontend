@@ -296,6 +296,7 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.clearData()
+          _this.ruleSet()
           _this.$router.push({name: 'login'})
         }
       }
