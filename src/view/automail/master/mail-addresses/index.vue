@@ -20,30 +20,30 @@
               </div>
               <div class="group-input">
                 <div class="name">หน่วยงาน</div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
+                <cpn-input  v-model="data.department_name"
+                            name="department_name"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ส่งถึง (TO) </div>
-                <cpn-input  v-model="data.send_to"
-                            name="send_to"
+                <cpn-input  v-model="data.to"
+                            name="to"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">สำเนาถึง (Cc) </div>
-                <cpn-input  v-model="data.send_cc"
-                            name="send_cc"
+                <cpn-input  v-model="data.cc"
+                            name="cc"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">สำเนาลับถึง (Bcc)</div>
-                <cpn-input  v-model="data.send_bcc"
-                            name="send_bcc"
+                <cpn-input  v-model="data.bcc"
+                            name="bcc"
                             placeholder="กรุณาระบุ"  />
               </div>
             </div>
@@ -74,27 +74,27 @@
                 <th class="col4">เครื่องมือ</th>
               </tr>
             </thead>
-            <tbody class="tbody">
+            <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col2">{{item.department_full_name}}</td>
+                <td class="col2">{{item.department_name}}</td>
                 <td class="col3">
                   <div class="new-line">
                     <div class="name">ส่งถึง (TO)</div>
-                    <cpn-input  v-model="item.department_full_name"
-                                :name="'send_to'+index"
+                    <cpn-input  v-model="item.to"
+                                :name="'to'+index"
                                 :disabled="item.disabled"  />
                   </div>
                   <div class="new-line">
                     <div class="name">สำเนาถึง (Cc)</div>
-                    <cpn-input  v-model="item.department_full_name"
-                                :name="'send_cc'+index"
+                    <cpn-input  v-model="item.cc"
+                                :name="'cc'+index"
                                 :disabled="item.disabled"  />
                   </div>
                   <div class="new-line">
                     <div class="name">สำเนาลับถึง (Bcc)</div>
-                    <cpn-input  v-model="item.department_full_name"
-                                :name="'send_bcc'+index"
+                    <cpn-input  v-model="item.bcc"
+                                :name="'bcc'+index"
                                 :disabled="item.disabled"  />
                   </div>
                 </td>
@@ -142,10 +142,10 @@ export default {
       showLoading: false,
       data: {
         short_name: '',
-        department_full_name: '',
-        send_to: '',
-        send_cc: '',
-        send_bcc: '',
+        department_name: '',
+        to: '',
+        cc: '',
+        bcc: '',
         table: [],
         page: 1,
         total: 0,
@@ -157,10 +157,10 @@ export default {
   methods: {
     cancelClick() {
       this.data.short_name = ''
-      this.data.department_full_name = ''
-      this.data.send_to = ''
-      this.data.send_cc = ''
-      this.data.send_bcc = ''
+      this.data.department_name = ''
+      this.data.to = ''
+      this.data.cc = ''
+      this.data.bcc = ''
       this.data.perPage = 10
       this.data.page = 1
       this.apiMailAddress()
@@ -173,12 +173,12 @@ export default {
     save(item) {
       let _this = this
       let groupdata = {
-        send_to: item.send_to,
-        send_cc: item.send_cc,
-        send_bcc: item.send_bcc
+        to: item.to,
+        cc: item.cc,
+        bcc: item.bcc
       }
       this.showLoading = true
-      this.axios.put(`/bookmethodx/${item.id}`, groupdata)
+      this.axios.put(`/master-data/department-contact/${item.id}`, groupdata)
       .then(() => { 
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขอีเมล์ติดต่อหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.apiMailAddress() }}
@@ -191,24 +191,22 @@ export default {
     apiMailAddress() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/department', {
+      this.axios.get('/master-data/department-contact', {
         params:{
           short_name: this.data.short_name,
-          department_full_name: this.data.department_full_name,
-          send_to: this.data.send_to,
-          send_cc: this.data.send_cc,
-          send_bcc: this.data.send_bcc,
+          department_name: this.data.department_name,
+          to: this.data.to,
+          cc: this.data.cc,
+          bcc: this.data.bcc,
           page_size: this.data.perPage,
           page: this.data.page,
         }
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(row => {
-          row.disabled = true
-          this.data.total = row.total
-        })
-        this.data.table = response.data.data
+        response.data.data.meta.filter(row => row.disabled = true)
+        this.data.table = response.data.data.meta
+        this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
@@ -421,6 +419,10 @@ export default {
             }
           }
 
+          .tbody-top {
+            vertical-align: inherit;
+          }
+
           .tbody {
             .color-tr {
               background-color: #f1f5fa;
@@ -448,29 +450,33 @@ export default {
               }
 
               .col3 {
-                padding: 10px 0;
+                padding: 20px;
 
                 .name {
                   margin-bottom: 5px;
                 }
 
                 .new-line {
-                  padding: 5px 0;
+                  padding-bottom: 10px;
                 }
               }
 
               .col4 {
                 padding-right: 28px;
+                position: relative;
 
                 .group-icon {
                   display: flex;
-                  height: 70px;
                   align-items: center;
                   justify-content: center;
+                  position: absolute;
+                  left: 50%;
+                  transform: translate(-50%, 20px);
 
                   .icon-pencil {
-                    width: 21px;
-                    height: 21px;
+                    width: 22px;
+                    height: 22px;
+                    margin-top: 5px;
                   }
 
 

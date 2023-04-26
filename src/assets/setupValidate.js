@@ -37,6 +37,13 @@ export function setupValidate (app) {
     return true;
   });
 
+  defineRule("min", (value, [min]) => {
+    if (value && value.length < min) {
+      return `*กรุณากรอกข้อมูล ${min} อักษร`;
+    }
+    return true;
+  });
+
   app.config.globalProperties.defaultMessageError = messageError
   app.config.globalProperties.defaultMessageErrorFile = "ไฟล์ไม่ตรงกับตั้งค่าประเภทไฟล์"
 
