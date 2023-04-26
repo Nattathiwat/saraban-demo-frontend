@@ -1,0 +1,520 @@
+<template>
+  <div class="master-receiver-profile">
+    <div class="group-overflow">
+      <div class="detail">
+        <div class="group-head">
+          <div class="group-first">
+            <i class="bi bi-inbox-fill icon-inbox"></i>
+            <div class="name">ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย</div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <Form @submit="apiReceiverProfile" @invalid-submit="onInvalidSubmit">
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">รหัส </div>
+                <cpn-input  v-model="data.code"
+                            name="code"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input left">
+                <div class="name">กลุ่มผู้รับหนังสือ</div>
+                <cpn-select v-model="data.department_group"
+                            name="department_group"
+                            rules="required"
+                            :optionSelect="optionSelect.department_group"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">ชื่อเรียก</div>
+                <cpn-input  v-model="data.department_full_name"
+                            name="department_full_name"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-button">
+              <div class="button-left">
+                <button type="button" class="button-warning" @click="cancelClick()">
+                  <i class="bi bi-arrow-clockwise icon-clockwise"></i>
+                  ล้างการค้นหา
+                </button>
+              </div>
+              <div class="button-right">
+                <button type="submit" class="button-search">
+                  <i class="bi bi-search icon-search"></i>
+                  ค้นหา
+                </button>
+              </div>
+            </div>
+          </div>
+        </Form>
+        <div class="line"></div>
+        <button type="button" class="add-button" @click="addClick()">
+          <div class="group-image">
+            <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
+            เพิ่มรูปแบบการรับ-ส่งหนังสือ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+          </div>
+        </button>
+        <div class="group-body">
+          <table class="table-department-inex">
+            <thead class="thead">
+              <tr class="thead-row">
+                <th class="col1">ชื่อรูปแบบการรับ-ส่งหนังสือ</th>
+                <th class="col2">รายละเอียด</th>
+                <th class="col3">ประเภทหนังสือ</th>
+                <th class="col3">วันที่สร้าง</th>
+                <th class="col7">เครื่องมือ</th>
+              </tr>
+            </thead>
+            <tbody class="tbody">
+              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+                <td class="col1">{{item.name}}</td>
+                <td class="col2">{{item.desc}}</td>
+                <td class="col3">{{item.type_desc}}</td>
+                <td class="col3">{{item.created_at}}</td>
+                <td class="col7">
+                  <div class="group-icon">
+                    <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
+                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                  </div>
+                </td>
+              </tr>
+              <tr class="tbody-row" v-if="data.table.length == 0">
+                <td colspan="4">ไม่มีข้อมูล</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-footer">
+          <cpn-pagination :page="data.page"
+                          :total="data.total"
+                          :lastPage="data.lastPage"
+                          :perPage="data.perPage"
+                          @pageChange="pageChange"
+                    />
+        </div>
+      </div>
+    </div>
+    <cpn-modal-alert :modalAlert="modalAlert"/>
+    <cpn-loading :show="showLoading"/>
+  </div>
+</template>
+<script>
+export default {
+  name: 'receiver-profile',
+  data() {
+    return {
+      modalAlert: {
+        showModal: false,
+        title: '',
+        message: ''
+      },
+      showLoading: false,
+      data: {
+        code: '',
+        department_group: '',
+        department_full_name: '',
+        table: [],
+        page: 1,
+        total: 0,
+        lastPage: 0,
+        perPage: 10,
+      },
+      optionSelect: {
+        department_group: [{value: 1, name: 'พระราชวงศ์'}, {value: 2, name: 'พระภิกษุ'}, {value: 3, name: 'บุคคลธรรมดา'}, {value: 4, name: 'อื่นๆ'}]
+      }
+    }
+  },
+  methods: {
+    cancelClick() {
+      this.data.code = ''
+      this.data.department_full_name = ''
+      this.data.department_group = ''
+      this.data.perPage = 10
+      this.data.page = 1
+      this.apiReceiverProfile()
+    },
+    addClick() {
+      this.$router.push({ 
+        name: 'book-method-create',
+      }).catch(()=>{});
+    },
+    editClick(item) {
+      this.$router.push({ 
+        name: 'book-method-edit',
+        params: {id: item.id},
+        query: {
+          page: this.data.page,
+          perPage: this.data.perPage
+        }
+      }).catch(()=>{});
+    },
+    pageChange(data) {
+      this.data.perPage = data.perPage
+      this.data.page = data.page
+      this.apibookmethod()
+    },
+    search() {
+      this.data.status = true
+      this.data.perPage = 10
+      this.data.page = 1
+      this.apibookmethod()
+    },
+    apibookmethod() {
+      this.data.table = []
+      this.showLoading = true
+      this.axios.get('/bookmethod', {
+        params:{
+          keyword: this.data.search,
+          page_size: this.data.perPage,
+          page: this.data.page,
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        response.data.data.filter(row => {
+          this.data.total = row.total
+        })
+        this.data.table = response.data.data
+        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
+    deleteClick(data) {
+      let _this = this
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการลบรูปแบบการรับ-ส่งหนังสือ`,
+        message: `“${data.name}” ใช่หรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          _this.showLoading = true
+          _this.axios.delete(`/bookmethod/${data.id}`)
+          .then(() => { 
+            _this.showLoading = false
+            _this.modalAlert = {
+              showModal: true,
+              type: 'success',
+              title: 'ทำการลบรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว',
+              msgSuccess: true,
+              afterPressAgree() {
+                _this.apibookmethod()
+              }
+            }
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        }
+      }
+    },
+  },
+  mounted() {
+    this.data.page = this.$route.query?.page || this.data.page
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage
+    this.apibookmethod()
+  },
+}
+
+</script>
+<style lang="scss">
+  .master-receiver-profile {
+    .group-overflow {
+      // overflow: auto;
+    }
+
+    .detail {
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      min-height: 200px;
+      border-radius: 15px;
+      // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+      background-color: #fff;
+      border: 0px;
+      padding-bottom: 22px;
+
+      .group-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 29px;
+
+        .group-first {
+          display: flex;
+          align-items: center;
+
+          .icon-inbox {
+            margin-right: 10px;
+            color: #0f3a64;
+            font-size: 26px;
+          }
+
+          .name {
+            color: #1a456b;
+            font-weight: bold;
+            font-size: 18px;
+          }
+
+        }
+      }
+
+      .line {
+        height: 2px;
+        width: 100%;
+        background-color: #e2ebf7;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      .group-detail {
+        padding: 20px 23px;
+
+        .group-between {
+          display: flex;
+
+          .left {
+            margin-right: 30px;
+          }
+        }
+
+        .group-input {
+          width: 100%;
+          padding: 0 10px;
+          margin-bottom: 30px;
+
+          .name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 7px;
+          }
+        }
+
+        .group-button {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          padding: 0 10px;
+
+          .button-left {
+            .button-warning {
+              width: 160px;
+            }
+          }
+
+          .button-right {
+            display: flex;
+            margin-left: 10px;
+
+            .button-search {
+              background-color: #1a456b;
+              font-size: 16px;
+              font-weight: 500;
+              color: #ffffff;
+              min-width: 100px;
+              max-width: 100px;
+              height: 45px;
+              border: 0;
+              border-top-right-radius: 5px;
+              border-bottom-right-radius: 5px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-left: -5px;
+            }
+          }
+
+          button {
+            height: 45px;
+            border-radius: 5px;
+            box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
+            border: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .icon-clockwise {
+            font-size: 22px;
+            margin-right: 10px;
+          }
+
+          .icon-search {
+            font-size: 20px;
+            margin-right: 10px;
+          }
+        }
+      }
+
+      .add-button {
+        height: 45px;
+        border: 0;
+        border-radius: 5px;
+        background-color: #007773;
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+        margin-top: 20px;
+        padding: 0 20px 0 20px;
+        margin-left: auto;
+        margin-right: 30px;
+        display: block;
+
+        .group-image {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .icon-plus {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+          }
+        }
+      }
+      .group-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 26px 30px;
+        overflow: auto;
+        margin-bottom: 1px;
+
+        table tbody tr:nth-child(odd) {
+          background-color: #ffffff;
+        }
+
+        table tbody tr:nth-child(even) {
+          background-color: #f1f5fa;
+        }
+
+        .table-department-inex {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0px;
+          border-radius: 5px;
+          border: solid 1px #c1cfe3;
+          background-color: #fff;
+          overflow: hidden;
+          
+          .thead {
+            .thead-row {
+              font-weight: bold;
+              font-size: 16px;
+              color: #333333;
+              height: 71px;
+
+              th {
+                border-bottom: solid 1px #c1cfe3;
+                padding: 0 10px;
+                text-align: center !important;
+              }
+            }
+
+            .col1 {
+              min-width: 250px;
+              width: 15%;
+              padding-left: 28px !important;
+            }
+
+            .col2 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col3 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col4 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col5 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col6 {
+              min-width: 170px;
+              width: 15%;
+            }
+
+            .col7 {
+              min-width: 170px;
+              width: 15%;
+              padding-right: 28px !important;
+            }
+          }
+
+          .tbody {
+            .color-tr {
+              background-color: #f1f5fa;
+            }
+
+            .tbody-row {
+              width: 100%;
+              height: 70px;
+              text-align: center;
+              color: #333333;
+              border-bottom: 0px;
+              font-weight: 500;
+              font-size: 16px;
+
+              td {
+                padding: 0 10px;
+              }
+
+              .text-left {
+                text-align: left;
+              }
+
+              .col1 {
+                padding-left: 28px;
+              }
+
+              .col7 {
+                padding-right: 28px;
+
+                .group-icon {
+                  display: flex;
+                  height: 70px;
+                  align-items: center;
+                  justify-content: center;
+
+                  .image-pencil {
+                    width: 21px;
+                    height: 21px;
+                    margin-right: 28px;
+                  }
+
+                  .image-trash {
+                    width: 20px;
+                    height: 23px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .group-footer {
+        margin: 0px 29px;
+      }
+    }
+  }
+</style>

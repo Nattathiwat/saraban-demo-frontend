@@ -13,11 +13,49 @@
               ระบบสารบรรณอิเล็กทรอนิกส์
             </div>
           </div>
-          <div class="group-list-head">
+          <div class="group-list-head" v-if="routePath('/automail/')">
+            <div class="list-navbar-group">
+              <div class="list-navbar pointer" :class="routePath('/automail/sendmail') ? 'active' : ''" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
+                <div class="group-image">
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
+                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
+                </div>
+                รายการส่งอีเมล์
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
+              </div>
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail' || $route.name == 'automail-sendmail-list' || $route.name == 'automail-sendmail-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail'})">
+                <div class="icon-circle" />
+                รายการหนังสือส่งออกที่ส่งผ่านอีเมล์ (อัตโนมัติ)
+              </div>
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail-logs' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail-logs'})">
+                <div class="icon-circle" />
+                บันทึกการส่งอีเมล์
+              </div>
+            </div>
+            <div class="list-navbar-group">
+              <div class="list-navbar pointer" :class="routePath('/master/') ? 'active' : ''" @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
+                <div class="group-image">
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
+                </div>
+                มาสเตอร์
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.master"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.master"></i>
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-mail-addresses' ? 'active2' : ''" @click="$router.push({name: 'automail-mail-addresses'})">
+                <div class="icon-circle" />
+                ข้อมูลติดต่อหน่วยงาน
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-receiver-profile' || $route.name == 'automail-receiver-profile-create' || $route.name == 'automail-receiver-profile-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-receiver-profile'})">
+                <div class="icon-circle" />
+                ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย
+              </div>
+            </div>
+          </div>
+          <div class="group-list-head" v-else>
             <div  class="list-navbar-group" >
-              <div class="list-navbar pointer" :class="$route.name == 'my-work.booking-receive'|| $route.name == 'my-work.booking-receive-create' || $route.name == 'my-work.booking-receive-edit' ||
-              $route.name == 'my-work.booking-out'|| $route.name == 'my-work.booking-out-create' || $route.name == 'my-work.booking-out-edit' ||
-              $route.name == 'my-work.waiting-booking-receive'|| $route.name == 'my-work.waiting-booking-receive-create' || $route.name == 'my-work.waiting-booking-receive-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'my-work'})">
+              <div class="list-navbar pointer" :class="routePath('/my-work/') ? 'active': ''" @click="removeSelect(), $router.push({name: 'my-work'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
@@ -26,15 +64,31 @@
               </div>
             </div>
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'subministry-work.booking-receive'|| $route.name == 'subministry-work.booking-receive-create' || $route.name == 'subministry-work.booking-receive-edit' ||
-              $route.name == 'subministry-work.booking-out'|| $route.name == 'subministry-work.booking-out-create' || $route.name == 'subministry-work.booking-out-edit' ||
-              $route.name == 'subministry-work.record-receive'|| $route.name == 'subministry-work.record-receive-create' || $route.name == 'subministry-work.record-receive-edit' ||
-              $route.name == 'subministry-work.record-out'|| $route.name == 'subministry-work.record-out-create' || $route.name == 'subministry-work.record-out-edit' ? 'active': ''" @click="removeSelect(), $router.push({name: 'subministry-work'})">
+              <div class="list-navbar pointer" :class="routePath('/subministry-work/') ? 'active': ''" @click="removeSelect(), $router.push({name: 'subministry-work'})">
                 <div class="group-image">
                   <img class="icon-square" src="@/assets/images/navbar/square.svg">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
                 </div>
                 งานของกอง
+              </div>
+            </div>
+            <div class="list-navbar-group">
+              <div class="list-navbar pointer" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
+                <div class="group-image">
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
+                </div>
+                รายการส่งอีเมล์
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
+              </div>
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" @click="automailClick('automail-sendmail')">
+                <div class="icon-circle" />
+                รายการหนังสือส่งออกที่ส่งผ่านอีเมล์ (อัตโนมัติ)
+              </div>
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" @click="automailClick('automail-sendmail-logs')">
+                <div class="icon-circle" />
+                บันทึกการส่งอีเมล์
               </div>
             </div>
             <div class="list-navbar-group">
@@ -47,18 +101,10 @@
               </div>
             </div>
             <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="$route.name == 'agency' || $route.name == 'agency-create' || $route.name == 'agency-edit' ||
-              $route.name == 'book-type' || $route.name == 'book-type-create' || $route.name == 'book-type-edit' ||
-              $route.name == 'record-type' || $route.name == 'record-type-create' || $route.name == 'record-type-edit' ||
-              $route.name == 'book-record' || $route.name == 'book-record-create' || $route.name == 'book-record-edit' ||
-              $route.name == 'subministry' || $route.name == 'subministry-create' || $route.name == 'subministry-edit' ||
-              $route.name == 'group' || $route.name == 'group-create' || $route.name == 'group-edit' ||
-              $route.name == 'book-method' || $route.name == 'book-method-create' || $route.name == 'book-method-edit' || 
-              $route.name == 'file' || $route.name == 'file-create' || $route.name == 'file-edit' ||
-              $route.name == 'organization' || $route.name == 'organization-create' || $route.name == 'organization-edit' ? 'active' : '' " @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
+              <div class="list-navbar pointer" :class="routePath('/master/') ? 'active' : '' " @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
                 <div class="group-image">
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">
-                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
                 </div>
                 มาสเตอร์
                 <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.master"></i>
@@ -156,7 +202,8 @@ export default {
         logoImage: ''
       },
       iconAngle: {
-        master: false
+        master: false,
+        automail: false
       },
       dataUser: {
         name: localStorage.getItem('fname') + ' ' + localStorage.getItem('lname'),
@@ -275,12 +322,29 @@ export default {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}, {name: 'สร้างบันทึกส่งออก', path: 'subministry-work.record-out-create'}]
       } else if (this.$route.name == 'subministry-work.record-out-edit') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}, {name: 'แก้ไขบันทึกส่งออก', path: 'subministry-work.record-out-edit'}]
+      } else if (this.$route.name == 'automail-mail-addresses') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'อีเมล์ติดต่อหน่วยงาน', path: 'automail-mail-addresses'}]
+      } else if (this.$route.name == 'automail-receiver-profile') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}]
+      } else if (this.$route.name == 'automail-receiver-profile-create') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'สร้างตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-create'}]
+      } else if (this.$route.name == 'automail-receiver-profile-edit') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'แก้ไขตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-edit'}]
       } else {
         return [{name: this.$route.name , path: this.$route.name }]
       }
     },
   },
   methods: {
+    automailClick(name) {
+      let routeData = this.$router.resolve({ 
+        name: name,
+      })
+      window.open(routeData.href, '_blank');
+    },
+    routePath (path) {
+      return this.$route.path.indexOf(path) != -1
+    },
     clearData() {
       localStorage.setItem('login', 'false')
       this.data.logoImage = ''
@@ -400,14 +464,13 @@ export default {
   watch: {
     '$route.name'() {
       this.checkPathRoute()
-      if (this.$route.name == 'book-type' || this.$route.name == 'book-type-create' || this.$route.name == 'book-type-edit' || 
-      this.$route.name == 'organization' || this.$route.name == 'organization-create' || this.$route.name == 'organization-edit' || 
-      this.$route.name == 'agency' || this.$route.name == 'agency-create' || this.$route.name == 'agency-edit' || 
-      this.$route.name == 'subministry' || this.$route.name == 'subministry-create' || this.$route.name == 'subministry-edit' || 
-      this.$route.name == 'group' || this.$route.name == 'group-create' || this.$route.name == 'group-edit' || 
-      this.$route.name == 'book-method' || this.$route.name == 'book-method-create' || this.$route.name == 'book-method-edit' || 
-      this.$route.name == 'file' || this.$route.name == 'file-create' || this.$route.name == 'file-edit') {
+      if (this.routePath('/master/')) {
+        this.removeSelect('master')
         this.iconAngle.master = true
+      }
+      if (this.routePath('/automail/sendmail')) {
+        this.removeSelect('automail')
+        this.iconAngle.automail = true
       }
     }
   }

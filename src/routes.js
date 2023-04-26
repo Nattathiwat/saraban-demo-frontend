@@ -154,140 +154,207 @@ export default {
       name: 'user-manage-edit',
       component: () => import("./view/user-manage/detail.vue"),
     },
-    { 
-      path: '/master/book-type', 
-      name: 'book-type',
-      component: () => import("./view/master/book-type/index.vue"),
+    {
+      path: '/master', 
+      name: 'master',
+      redirect: {
+        name: 'book-type'
+      },
+      children: [
+        { 
+          path: 'book-type', 
+          name: 'book-type',
+          component: () => import("./view/master/book-type/index.vue"),
+        },
+        { 
+          path: 'book-type/create', 
+          name: 'book-type-create',
+          component: () => import("./view/master/book-type/detail.vue"),
+        },
+        { 
+          path: 'book-type/:id', 
+          name: 'book-type-edit',
+          component: () => import("./view/master/book-type/detail.vue"),
+        },
+        { 
+          path: 'record-type', 
+          name: 'record-type',
+          component: () => import("./view/master/record-type/index.vue"),
+        },
+        { 
+          path: 'record-type/create', 
+          name: 'record-type-create',
+          component: () => import("./view/master/record-type/detail.vue"),
+        },
+        { 
+          path: 'record-type/:id', 
+          name: 'record-type-edit',
+          component: () => import("./view/master/record-type/detail.vue"),
+        },
+        { 
+          path: 'book-record', 
+          name: 'book-record',
+          component: () => import("./view/master/book-record/index.vue"),
+        },
+        { 
+          path: 'book-record/create', 
+          name: 'book-record-create',
+          component: () => import("./view/master/book-record/detail.vue"),
+        },
+        { 
+          path: 'book-record/:id', 
+          name: 'book-record-edit',
+          component: () => import("./view/master/book-record/detail.vue"),
+        },
+        { 
+          path: 'organization', 
+          name: 'organization',
+          component: () => import("./view/master/organization/index.vue"),
+        },
+        { 
+          path: 'organization/create', 
+          name: 'organization-create',
+          component: () => import("./view/master/organization/detail.vue"),
+        },
+        { 
+          path: 'organization/:id', 
+          name: 'organization-edit',
+          component: () => import("./view/master/organization/detail.vue"),
+        },
+        { 
+          path: 'agency', 
+          name: 'agency',
+          component: () => import("./view/master/agency/index.vue"),
+        },
+        { 
+          path: 'agency/create', 
+          name: 'agency-create',
+          component: () => import("./view/master/agency/detail.vue"),
+        },
+        { 
+          path: 'agency/:id', 
+          name: 'agency-edit',
+          component: () => import("./view/master/agency/detail.vue"),
+        },
+        { 
+          path: 'subministry', 
+          name: 'subministry',
+          component: () => import("./view/master/subministry/index.vue"),
+        },
+        { 
+          path: 'subministry/create', 
+          name: 'subministry-create',
+          component: () => import("./view/master/subministry/detail.vue"),
+        },
+        { 
+          path: 'subministry/:id', 
+          name: 'subministry-edit',
+          component: () => import("./view/master/subministry/detail.vue"),
+        },
+        { 
+          path: 'group', 
+          name: 'group',
+          component: () => import("./view/master/group/index.vue"),
+        },
+        { 
+          path: 'group/create', 
+          name: 'group-create',
+          component: () => import("./view/master/group/detail.vue"),
+        },
+        { 
+          path: 'group/:id', 
+          name: 'group-edit',
+          component: () => import("./view/master/group/detail.vue"),
+        },
+        { 
+          path: 'book-method', 
+          name: 'book-method',
+          component: () => import("./view/master/book-method/index.vue"),
+        },
+        { 
+          path: 'book-method/create', 
+          name: 'book-method-create',
+          component: () => import("./view/master/book-method/detail.vue"),
+        },
+        { 
+          path: 'book-method/:id', 
+          name: 'book-method-edit',
+          component: () => import("./view/master/book-method/detail.vue"),
+        },
+        { 
+          path: 'file', 
+          name: 'file',
+          component: () => import("./view/master/file/index.vue"),
+        },
+        { 
+          path: 'file/create', 
+          name: 'file-create',
+          // component: () => import("./view/master/file/detail.vue"),
+        },
+        { 
+          path: 'file/:id', 
+          name: 'file-edit',
+          // component: () => import("./view/master/file/detail.vue"),
+        },
+      ]
     },
-    { 
-      path: '/master/book-type/create', 
-      name: 'book-type-create',
-      component: () => import("./view/master/book-type/detail.vue"),
-    },
-    { 
-      path: '/master/book-type/:id', 
-      name: 'book-type-edit',
-      component: () => import("./view/master/book-type/detail.vue"),
-    },
-    { 
-      path: '/master/record-type', 
-      name: 'record-type',
-      component: () => import("./view/master/record-type/index.vue"),
-    },
-    { 
-      path: '/master/record-type/create', 
-      name: 'record-type-create',
-      component: () => import("./view/master/record-type/detail.vue"),
-    },
-    { 
-      path: '/master/record-type/:id', 
-      name: 'record-type-edit',
-      component: () => import("./view/master/record-type/detail.vue"),
-    },
-    { 
-      path: '/master/book-record', 
-      name: 'book-record',
-      component: () => import("./view/master/book-record/index.vue"),
-    },
-    { 
-      path: '/master/book-record/create', 
-      name: 'book-record-create',
-      component: () => import("./view/master/book-record/detail.vue"),
-    },
-    { 
-      path: '/master/book-record/:id', 
-      name: 'book-record-edit',
-      component: () => import("./view/master/book-record/detail.vue"),
-    },
-    { 
-      path: '/master/organization', 
-      name: 'organization',
-      component: () => import("./view/master/organization/index.vue"),
-    },
-    { 
-      path: '/master/organization/create', 
-      name: 'organization-create',
-      component: () => import("./view/master/organization/detail.vue"),
-    },
-    { 
-      path: '/master/organization/:id', 
-      name: 'organization-edit',
-      component: () => import("./view/master/organization/detail.vue"),
-    },
-    { 
-      path: '/master/agency', 
-      name: 'agency',
-      component: () => import("./view/master/agency/index.vue"),
-    },
-    { 
-      path: '/master/agency/create', 
-      name: 'agency-create',
-      component: () => import("./view/master/agency/detail.vue"),
-    },
-    { 
-      path: '/master/agency/:id', 
-      name: 'agency-edit',
-      component: () => import("./view/master/agency/detail.vue"),
-    },
-    { 
-      path: '/master/subministry', 
-      name: 'subministry',
-      component: () => import("./view/master/subministry/index.vue"),
-    },
-    { 
-      path: '/master/subministry/create', 
-      name: 'subministry-create',
-      component: () => import("./view/master/subministry/detail.vue"),
-    },
-    { 
-      path: '/master/subministry/:id', 
-      name: 'subministry-edit',
-      component: () => import("./view/master/subministry/detail.vue"),
-    },
-    { 
-      path: '/master/group', 
-      name: 'group',
-      component: () => import("./view/master/group/index.vue"),
-    },
-    { 
-      path: '/master/group/create', 
-      name: 'group-create',
-      component: () => import("./view/master/group/detail.vue"),
-    },
-    { 
-      path: '/master/group/:id', 
-      name: 'group-edit',
-      component: () => import("./view/master/group/detail.vue"),
-    },
-    { 
-      path: '/master/book-method', 
-      name: 'book-method',
-      component: () => import("./view/master/book-method/index.vue"),
-    },
-    { 
-      path: '/master/book-method/create', 
-      name: 'book-method-create',
-      component: () => import("./view/master/book-method/detail.vue"),
-    },
-    { 
-      path: '/master/book-method/:id', 
-      name: 'book-method-edit',
-      component: () => import("./view/master/book-method/detail.vue"),
-    },
-    { 
-      path: '/master/file', 
-      name: 'file',
-      component: () => import("./view/master/file/index.vue"),
-    },
-    { 
-      path: '/master/file/create', 
-      name: 'file-create',
-      // component: () => import("./view/master/file/detail.vue"),
-    },
-    { 
-      path: '/master/file/:id', 
-      name: 'file-edit',
-      // component: () => import("./view/master/file/detail.vue"),
-    },
+    {
+      path: '/automail', 
+      name: 'automail',
+      redirect: {
+        name: 'automail-sendmail'
+      },
+      children: [
+        { 
+          path: 'sendmail', 
+          name: 'automail-sendmail',
+          component: () => import("./view/automail/sendmail/index.vue"),
+        },
+        { 
+          path: 'sendmail', 
+          name: 'automail-sendmail-list',
+          component: () => import("./view/automail/sendmail/list.vue"),
+        },
+        { 
+          path: 'sendmail/:id', 
+          name: 'automail-sendmail-edit',
+          component: () => import("./view/automail/sendmail/detail.vue"),
+        },
+        { 
+          path: 'sendmail-logs', 
+          name: 'automail-sendmail-logs',
+          component: () => import("./view/automail/sendmail-logs/index.vue"),
+        },
+        {
+          path: 'master', 
+          name: 'automail-master',
+          redirect: {
+            name: 'automail-mail-addresses'
+          },
+          children: [
+            { 
+              path: 'mail-addresses', 
+              name: 'automail-mail-addresses',
+              component: () => import("./view/automail/master/mail-addresses/index.vue"),
+            },
+            { 
+              path: 'receiver-profile', 
+              name: 'automail-receiver-profile',
+              component: () => import("./view/automail/master/receiver-profile/index.vue"),
+            },
+            { 
+              path: 'receiver-profile/create', 
+              name: 'automail-receiver-profile-create',
+              component: () => import("./view/automail/master/receiver-profile/detail.vue"),
+            },
+            { 
+              path: 'receiver-profile/:id', 
+              name: 'automail-receiver-profile-edit',
+              component: () => import("./view/automail/master/receiver-profile/detail.vue"),
+            },
+          ]
+        },
+      ]
+    }
   ]
 };
