@@ -159,7 +159,8 @@ export default {
             receive_person_name: _this.data.receive_person_name,
             address_to: _this.data.address_to,
             title_signature: _this.data.title_signature,
-            signature: _this.data.signature
+            signature: _this.data.signature,
+            user_id: parseInt(localStorage.getItem('user_id'))
           }
           _this.showLoading = true
           _this.axios[_this.edit ? 'put' : 'post'](`/master-data/message-template${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile)

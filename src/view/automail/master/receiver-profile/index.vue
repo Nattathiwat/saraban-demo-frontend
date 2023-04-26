@@ -16,6 +16,8 @@
                 <div class="name">รหัส </div>
                 <cpn-input  v-model="data.template_code"
                             name="template_code"
+                            :isNumber="true"
+                            maxlength="3"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input left">
