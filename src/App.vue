@@ -330,6 +330,8 @@ export default {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'สร้างตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-create'}]
       } else if (this.$route.name == 'automail-receiver-profile-edit') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'แก้ไขตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-edit'}]
+      } else if (this.$route.name == 'automail-sendmail-logs') {
+        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'บันทึกการส่งอีเมลอัตโนมัติ', path: 'automail-sendmail-logs'}]
       } else {
         return [{name: this.$route.name , path: this.$route.name }]
       }
