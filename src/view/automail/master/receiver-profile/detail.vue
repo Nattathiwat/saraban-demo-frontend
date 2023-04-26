@@ -4,8 +4,8 @@
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขรูปแบบการรับ-ส่งหนังสือ' : 'สร้างรูปแบบการรับ-ส่งหนังสือ'}}</div>
+            <i class="bi bi-inbox-fill icon-inbox"></i>
+            <div class="name">{{edit ? 'แก้ไข' : 'เพิ่ม'}}รูปแบบข้อความตามผู้รับจดหมาย</div>
           </div>
           <div class="group-end">
             <button type="button" class="button-back" @click="back()" >
@@ -19,43 +19,71 @@
         <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ชื่อรูปแบบการรับ-ส่งหนังสือ <span class="required">*</span></div>
-                <cpn-input  v-model="data.name"
-                            name="name"
-                            rules="required"
+              <div class="group-input w-25">
+                <div class="name">รหัส <span class="required">*</span></div>
+                <cpn-input  v-model="data.template_code"
+                            name="template_code"
+                            rules="required|min:3"
+                            :isNumber="true"
+                            maxlength="3"
                             placeholder="กรุณาระบุ" />
               </div>              
-              <div class="group-input">
-                <div class="name">ประเภทหนังสือ<span class="required">*</span></div>
-                <cpn-select v-model="data.type"
-                            name="type"
-                            :optionSelect="data.optionSelect.type"
+              <div class="group-input w-25">
+                <div class="name">กลุ่มผู้รับหนังสือ <span class="required">*</span></div>
+                <cpn-select v-model="data.group_receive_id"
+                            name="group_receive_id"
+                            rules="required"
+                            :optionSelect="optionSelect.group_receive_id"
                             placeholder="กรุณาระบุ" />
               </div>
+              <div class="group-input w-50">
+                <div class="name">ผู้รับหนังสือ <span class="required">*</span></div>
+                <cpn-input  v-model="data.receive_name"
+                            name="receive_name"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>   
             </div>
             <div class="group-between">
-              <div class="group-input">
-                <div class="name">รายละเอียด </div>
-                <cpn-textArea v-model="data.desc"
-                            name="book_method_desc"
-                            rows="4"
-                            placeholder="กรุณาระบุ"  />
-              </div>
+              <div class="group-input w-25">
+                <div class="name">คำขึ้นต้น</div>
+                <cpn-input  v-model="data.title_name"
+                            name="title_name"
+                            placeholder="กรุณาระบุ" />
+              </div>              
+              <div class="group-input w-75">
+                <div class="name">ชื่อผู้รับหนังสือ</div>
+                <cpn-input  v-model="data.receive_person_name"
+                            name="receive_person_name"
+                            placeholder="กรุณาระบุ" />
+              </div>   
+            </div>
+            <div class="group-input">
+              <div class="name">คำลงท้าย</div>
+              <cpn-input  v-model="data.address_to"
+                          name="address_to"
+                          placeholder="กรุณาระบุ" />
+            </div>
+            <div class="group-input">
+              <div class="name">คำนำหน้าชื่อผู้เซ็น</div>
+              <cpn-input  v-model="data.title_signature"
+                          name="title_signature"
+                          placeholder="กรุณาระบุ" />
+            </div>
+            <div class="group-input">
+              <div class="name">คำที่ใช้ในการจ่าหน้าซอง</div>
+              <cpn-input  v-model="data.signature"
+                          name="signature"
+                          placeholder="กรุณาระบุ" />
             </div>
           </div>
           <div class="line"></div>
           <div class="group-footer">
-            <div class="footer-left">
-              <button type="button" class="button-danger" @click="cancelClick()">
-                <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
-                ยกเลิก
-              </button>
-            </div>
+            <div class="footer-left"></div>
             <div class="footer-right">
               <button type="submit" class="button-success">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขรูปแบบการรับ-ส่งหนังสือ' : 'ยืนยันสร้างรูปแบบการรับ-ส่งหนังสือ'}}
+                บันทึก
               </button>
             </div>
           </div>
@@ -79,19 +107,24 @@ export default {
       showLoading: false,
       edit: false,
       data: {
-        code: '',
-        name: '',
-        desc: '',
-        optionSelect: {
-          type: [{ name: 'หนังสือรับเข้า',value: '0' },{ name: 'หนังสือส่งออก',value: '1' }],
-        }
+        template_code: '',
+        group_receive_id: '',
+        receive_name: '',
+        title_name: '',
+        receive_person_name: '',
+        address_to: '',
+        title_signature: '',
+        signature: '',
       },
+      optionSelect: {
+        group_receive_id: [{value: 1, name: 'พระราชวงศ์'}, {value: 2, name: 'พระภิกษุ'}, {value: 3, name: 'บุคคลธรรมดา'}, {value: 4, name: 'อื่นๆ'}]
+      }
     }
   },
   methods: {
     back() {
       this.$router.push({ 
-        name: 'book-method',
+        name: 'automail-receiver-profile',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -100,9 +133,14 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.name = ''
-      this.data.type = ''
-      this.data.desc = ''
+      this.data.template_code = ''
+      this.data.group_receive_id = ''
+      this.data.receive_name = ''
+      this.data.title_name = ''
+      this.data.receive_person_name = ''
+      this.data.address_to = ''
+      this.data.title_signature = ''
+      this.data.signature = ''
     },
     onSubmit() {
       let _this = this
@@ -113,50 +151,42 @@ export default {
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          if (_this.edit) {
-            let groupdata = {
-              name: _this.data.name,
-              type: _this.data.type,
-              desc: _this.data.desc
-            }
-            _this.showLoading = true
-            _this.axios.put(`/bookmethod/${_this.$route.params.id}`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            let groupdata = {
-              name: _this.data.name,
-              type: _this.data.type,
-              desc: _this.data.desc
-            }
-            _this.showLoading = true
-            _this.axios.post(`/bookmethod`, groupdata)
-            .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'success', title: 'ทำการสร้างรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-            })
-            .catch((error) => {
-              _this.showLoading = false
-              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
+          let formDataFile = {
+            template_code: _this.data.template_code,
+            group_receive_id: _this.data.group_receive_id,
+            receive_name: _this.data.receive_name,
+            title_name: _this.data.title_name,
+            receive_person_name: _this.data.receive_person_name,
+            address_to: _this.data.address_to,
+            title_signature: _this.data.title_signature,
+            signature: _this.data.signature
           }
+          _this.showLoading = true
+          _this.axios[_this.edit ? 'put' : 'post'](`/master-data/message-template${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile)
+          .then(() => { 
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขรูปแบบข้อความตามผู้รับจดหมายงานสำเร็จแล้ว' : 'ทำการเพิ่มรูปแบบข้อความตามผู้รับจดหมายงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            _this.showLoading = false
+            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
         }
       }
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/bookmethod/${this.$route.params.id}`)
+      this.axios.get(`/master-data/message-template/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.name = response.data.data.name
-        this.data.type = response.data.data.type
-        this.data.desc = response.data.data.desc
+        this.data.template_code = response.data.data.template_code
+        this.data.group_receive_id = response.data.data.group_receive_id
+        this.data.receive_name = response.data.data.receive_name
+        this.data.title_name = response.data.data.title_name
+        this.data.receive_person_name = response.data.data.receive_person_name
+        this.data.address_to = response.data.data.address_to
+        this.data.title_signature = response.data.data.title_signature
+        this.data.signature = response.data.data.signature
       })
       .catch((error) => {
         this.showLoading = false
@@ -202,10 +232,10 @@ export default {
           display: flex;
           align-items: center;
 
-          .icon-users {
-            width: 45px;
-            height: 41px;
-            margin-right: 18px;
+          .icon-inbox {
+            margin-right: 10px;
+            color: #0f3a64;
+            font-size: 26px;
           }
 
           .name {
@@ -254,10 +284,16 @@ export default {
         padding: 20px 23px;
 
         .group-between {
+          width: 100%;
           display: flex;
+
 
           .left {
             margin-right: 30px;
+          }
+
+          .w-30 {
+            width: 30% !important;
           }
         }
 
@@ -355,7 +391,7 @@ export default {
           display: flex;
 
           .button-success {
-            width: 300px;
+            width: 130px;
           }
         }
 

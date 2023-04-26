@@ -14,22 +14,21 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">รหัส </div>
-                <cpn-input  v-model="data.code"
-                            name="code"
+                <cpn-input  v-model="data.template_code"
+                            name="template_code"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input left">
                 <div class="name">กลุ่มผู้รับหนังสือ</div>
-                <cpn-select v-model="data.department_group"
-                            name="department_group"
-                            rules="required"
-                            :optionSelect="optionSelect.department_group"
+                <cpn-select v-model="data.group_receive_id"
+                            name="group_receive_id"
+                            :optionSelect="optionSelect.group_receive_id"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ชื่อเรียก</div>
-                <cpn-input  v-model="data.department_full_name"
-                            name="department_full_name"
+                <cpn-input  v-model="data.keyword"
+                            name="keyword"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
@@ -60,20 +59,20 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ชื่อรูปแบบการรับ-ส่งหนังสือ</th>
-                <th class="col2">รายละเอียด</th>
-                <th class="col3">ประเภทหนังสือ</th>
-                <th class="col3">วันที่สร้าง</th>
-                <th class="col7">เครื่องมือ</th>
+                <th class="col1">ลำดับ</th>
+                <th class="col2">รหัส</th>
+                <th class="col3">กลุ่มผู้รับหนังสือ</th>
+                <th class="col4">ชื่อเรียก</th>
+                <th class="col5">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.name}}</td>
-                <td class="col2">{{item.desc}}</td>
-                <td class="col3">{{item.type_desc}}</td>
-                <td class="col3">{{item.created_at}}</td>
-                <td class="col7">
+                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col2">{{item.template_code}}</td>
+                <td class="col3">{{item.group_receive_name}}</td>
+                <td class="col4">{{item.receive_name}}</td>
+                <td class="col5">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
                     <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
@@ -91,8 +90,7 @@
                           :total="data.total"
                           :lastPage="data.lastPage"
                           :perPage="data.perPage"
-                          @pageChange="pageChange"
-                    />
+                          @pageChange="pageChange" />
         </div>
       </div>
     </div>
@@ -112,9 +110,9 @@ export default {
       },
       showLoading: false,
       data: {
-        code: '',
-        department_group: '',
-        department_full_name: '',
+        template_code: '',
+        group_receive_id: '',
+        keyword: '',
         table: [],
         page: 1,
         total: 0,
@@ -122,27 +120,27 @@ export default {
         perPage: 10,
       },
       optionSelect: {
-        department_group: [{value: 1, name: 'พระราชวงศ์'}, {value: 2, name: 'พระภิกษุ'}, {value: 3, name: 'บุคคลธรรมดา'}, {value: 4, name: 'อื่นๆ'}]
+        group_receive_id: [{value: 1, name: 'พระราชวงศ์'}, {value: 2, name: 'พระภิกษุ'}, {value: 3, name: 'บุคคลธรรมดา'}, {value: 4, name: 'อื่นๆ'}]
       }
     }
   },
   methods: {
     cancelClick() {
-      this.data.code = ''
-      this.data.department_full_name = ''
-      this.data.department_group = ''
+      this.data.template_code = ''
+      this.data.keyword = ''
+      this.data.group_receive_id = ''
       this.data.perPage = 10
       this.data.page = 1
       this.apiReceiverProfile()
     },
     addClick() {
       this.$router.push({ 
-        name: 'book-method-create',
+        name: 'automail-receiver-profile-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'book-method-edit',
+        name: 'automail-receiver-profile-edit',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -153,30 +151,31 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apibookmethod()
+      this.apiReceiverProfile()
     },
-    search() {
-      this.data.status = true
-      this.data.perPage = 10
-      this.data.page = 1
-      this.apibookmethod()
-    },
-    apibookmethod() {
+    apiReceiverProfile() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/bookmethod', {
+      this.axios.get('/master-data/message-template', {
         params:{
-          keyword: this.data.search,
+          template_code: this.data.template_code,
+          group_receive_id: this.data.group_receive_id,
+          keyword: this.data.keyword,
           page_size: this.data.perPage,
           page: this.data.page,
         }
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(row => {
-          this.data.total = row.total
+        response.data.data.meta.filter(row=> {
+          this.optionSelect.group_receive_id.filter(row2 => {
+            if (row2.value == row.group_receive_id) {
+              row.group_receive_name = row2.name
+            }
+          })
         })
-        this.data.table = response.data.data
+        this.data.table = response.data.data.meta
+        this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
@@ -189,22 +188,22 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบรูปแบบการรับ-ส่งหนังสือ`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        title: `คุณยืนยันการลบตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย`,
+        message: `“${data.receive_name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/bookmethod/${data.id}`)
+          _this.axios.delete(`/master-data/message-template/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบรูปแบบการรับ-ส่งหนังสือสำเร็จแล้ว',
+              title: 'ทำการลบตั้งค่ารูปแบบข้อความตามผู้รับจดหมายสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apibookmethod()
+                _this.apiReceiverProfile()
               }
             }
           })
@@ -219,7 +218,7 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apibookmethod()
+    this.apiReceiverProfile()
   },
 }
 
@@ -423,39 +422,33 @@ export default {
             }
 
             .col1 {
-              min-width: 250px;
-              width: 15%;
+              min-width: 120px;
+              max-width: 120px;
+              width: 0%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
             }
 
             .col3 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 220px;
+              max-width: 220px;
+              width: 0%;
             }
 
             .col4 {
-              min-width: 170px;
+              min-width: 250px;
               width: 15%;
             }
 
             .col5 {
-              min-width: 170px;
-              width: 15%;
-            }
-
-            .col6 {
-              min-width: 170px;
-              width: 15%;
-            }
-
-            .col7 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 200px;
+              max-width: 200px;
+              width: 0%;
               padding-right: 28px !important;
             }
           }
@@ -478,7 +471,7 @@ export default {
                 padding: 0 10px;
               }
 
-              .text-left {
+              .col4 {
                 text-align: left;
               }
 
@@ -486,7 +479,7 @@ export default {
                 padding-left: 28px;
               }
 
-              .col7 {
+              .col5 {
                 padding-right: 28px;
 
                 .group-icon {
