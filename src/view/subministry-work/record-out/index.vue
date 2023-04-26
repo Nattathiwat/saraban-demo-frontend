@@ -13,7 +13,7 @@
               </div>
             </button>
             <div class="d-flex justify-content-end" >
-            <button type="button" class="add-booking-out"  @click="modal_genno()" v-show="false">
+            <button type="button" class="add-booking-out"  @click="modal_genno()">
                 ออกเลขบันทึกภายใน
             </button>
           </div>
@@ -87,17 +87,17 @@
                   <div class="detail-sub">
                     <div class="group-between">
                       <div class="group-input">
-                        <div class="name">ทะเบียนส่ง <span class="required">*</span></div>
-                        <cpn-select v-model="data.send_method_id"
-                                    name="send_method_id"
+                        <div class="name">ทะเบียนบันทึกข้อความ <span class="required">*</span></div>
+                        <cpn-select v-model="data.book_category_id"
+                                    name="book_category_id"
                                     rules="required"
-                                    :optionSelect="data.optionSelect.send_method_id" />
+                                    :optionSelect="optionSelectDefault.book_category_id" />
                       </div>
                     </div>
                     <div class="group-between">
                       <div class="group-input">
                         <div class="name">ลงวันที่ <span class="required">*</span></div>
-                        <cpn-datepicker v-model="item.regis_date"
+                        <cpn-datepicker v-model="data.as_of_date"
                                         rules="required"
                                         :name="`addregis_date${index}`"/>
                       </div>
@@ -142,6 +142,7 @@ export default {
       showLoading: false,
       optionSelectDefault: {
         regis_id: [],
+        book_category_id: [],
       },
       data: {
         search: '',
@@ -150,16 +151,9 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 10,
-        // desc:'',
-        // receive_date_str:'',
-        // receive_date_end:'',
-        // as_of_date_str:'',
-        // as_of_date_end:'',
-        // booktype:'',
         tag:'',
-        optionSelect:{
-          send_method_id: [{ name: 'นร : บันทึกข้อความ',value: '1' },{ name: 'นร : ทะเบียนบันทึกข้อความ(เวียน)',value: '2' }],
-        },
+        as_of_date:'',
+        book_category_id:''
       },
       modalRegiter: {
         showModal: false,
@@ -224,132 +218,78 @@ export default {
       })
     },
     async on_submit_modal() {
-      // for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
-        // let item = this.modalRegiter.booking_register_details[i]
-        // let regis_id_desc = ''
-        // let book_out_num_type_desc = ''
-        // let send_method_id_desc = ''
-        // item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_id_desc = item2.name}})
-        // item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_desc = item2.name}})
-        // item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_id_desc = item2.name}})
+      console.log('str')
         let data = {
-          optionSelect: {
-            signer_id: this.optionSelectDefault.signer_id
-          },
-          book_out_num_type: parseInt(item.book_out_num_type),
-          book_out_num_type_desc: book_out_num_type_desc,
-          send_method_id: parseInt(item.send_method_id),
-          send_method_id_desc: send_method_id_desc,
-          regis_date: item.regis_date,
-          regis_id: parseInt(item.regis_id),
-          regis_id_desc: regis_id_desc,
-          num: '1',
-          signer_id: '',
-          is_signed: false,
-          flag: 'add',
-          main_filename: '',
-          attach_filename: '',
-          booking_registers: []
+          book_category_id: parseInt(this.data.book_category_id),
+          user_id: parseInt(localStorage.getItem('user_id')),
+          as_of_date: this.data.as_of_date
         }
-        if (item.department_dest_id.length > 0) {
-          if (item.book_out_num_type == 0) {
-            this.showLoading = true
-            await this.axios.post(`/booking-note/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-            .then((response) => {
-              this.showLoading = false
-              item.department_dest_id.filter(item2 => {
-                data.booking_registers.push({
-                  book_out_num: response.data.data.out_document_number,
-                  greeting: '',
-                  department_dest_id: item2.value,
-                  main_filename: '',
-                  attach_filename: '',
-                  signer_id: '',
-                  is_signed: false,
-                  flag: 'add',
-                  optionSelect: {
-                    signer_id: this.optionSelectDefault.signer_id,
-                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
-                  },
-                })
-              })
-            }).catch((error) => {
-              this.showLoading = false
-              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
-          } else {
-            for (let i = 0; i < item.department_dest_id.length; i++) {
-              let item2 = item.department_dest_id[i]
-              this.showLoading = true
-              await this.axios.post(`/booking-note`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-              .then((response) => {
-                this.showLoading = false
-                data.booking_registers.push({
-                  book_out_num: response.data.data.out_document_number,
-                  greeting: '',
-                  department_dest_id: item2.value,
-                  main_filename: '',
-                  attach_filename: '',
-                  signer_id: '',
-                  is_signed: false,
-                  flag: 'add',
-                  optionSelect: {
-                    signer_id: this.optionSelectDefault.signer_id,
-                    department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
-                  },
-                })
-              }).catch((error) => {
-                this.showLoading = false
-                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-            }
-          }
-        } else {
-          this.showLoading = true
-          await this.axios.post(`/booking-note`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
-          .then((response) => {
-            this.showLoading = false
-            data.booking_registers.push({
-              book_out_num: response.data.data.out_document_number,
-              greeting: '',
-              department_dest_id: '',
-              main_filename: '',
-              attach_filename: '',
-              signer_id: '',
-              is_signed: false,
-              flag: 'add',
-              optionSelect: {
-                signer_id: this.optionSelectDefault.signer_id,
-                department_dest_id: this.optionSelectDefault.department_dest_id
-              },
-            })
-          })
-        }
-        // this.data.booking_register_details.push(data)
+        console.log(this.data.book_category_id)
+        this.showLoading = true
+        this.axios.post(`/booking-note/quick`, data)
+        .then(() => { 
+          this.showLoading = false
+          this.modalAlert = {
+            showModal: true, 
+            type: 'success', 
+            title: 'สร้างบันทึกข้อความสำเร็จแล้ว', 
+            msgSuccess: true, 
+            afterPressAgree() { 
+              location.reload() 
+            }}
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
       
       this.modalRegiter.showModal = false
     },
     modal_genno() {
       this.modalRegiter.showModal = true
       this.modalRegiter.booking_register_details= [{
-        regis_id: '',
-        regis_date: this.assetsUtils.currentDate(),
-        book_out_num_type: '0',
-        send_method_id: '2',
-        department_dest_id: [],
+        as_of_date: this.assetsUtils.currentDate(),
         optionSelect: {
-          regis_id: this.optionSelectDefault.regis_id,
-          book_out_num_type: this.optionSelectDefault.book_out_num_type,
-          send_method_id: this.optionSelectDefault.send_method_id,
-          department_dest_id: [],
+          book_type: this.optionSelectDefault.book_category_id,
         },
       }]
+    },
+    api_master() {
+      this.showLoading = TextTrackCueList
+      const request8 = this.axios.get(`/master-data/register-type`)
+
+      this.axios.all([request8, ])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response8 = responses[0]
+        
+        response8.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+
+        this.optionSelectDefault.book_category_id = response8.data.data
+        
+        if (this.$route.params.id) {
+          this.edit = true
+          this.api_detail()
+        } else {
+          this.edit = false
+        }
+        
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+      
     },
   },
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
     this.apirecordout()
+    this.api_master()
   },
 }
 

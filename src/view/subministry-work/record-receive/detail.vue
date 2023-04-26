@@ -271,7 +271,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="button" class="confirm-receive" v-show="false" >
+              <button type="button" class="confirm-receive"  >
               <div class="group-image" @click="submitClick()">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
@@ -406,7 +406,9 @@ export default {
           data: [],
           tab: 1
         },
-        FileType: []
+        FileType: [],
+        regis_id:'',
+
       },
       optionSelect: {
         book_category_id: [],
@@ -893,7 +895,9 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id')),
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
-        receive_regis_id : parseInt(this.$route.query.regis_id)
+        receive_regis_id : parseInt(this.$route.query.regis_id),
+        // human_flag: this.data.human_flag,
+        // response_type:this.data.response_type
       }
       if (this.edit) {
         if (this.flagSave == 1) {
@@ -1073,9 +1077,49 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    submitClick(){
+      let _this = this
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+            let groupdata = {
+              regis_id: parseInt(_this.data.book_category_id),
+              book_type: 4,
+              human_flag: _this.data.human_flag,
+              response_id: parseInt(_this.data.response_id),
+              user_id: parseInt(localStorage.getItem('user_id'))  
+              // receive_regis_id : parseInt(_this.$route.query.regis_id),
+              // receive_document_number: _this.data.receive_document_number
+            }
+              _this.showLoading = true
+              _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
+              .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {
+                showModal: true, 
+                type: 'success', 
+                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+                msgSuccess: true, 
+                afterPressAgree() { 
+                  _this.back() }}
+            })
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+          }
+        }
+    },
   },
   mounted () {
     this.api_master()
+    // if (this.$route.params.id){
+    //   this.submitClick()
+    // }
   },
   watch: {
     'modalRegiter.showModal' () {

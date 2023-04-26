@@ -1091,7 +1091,6 @@ export default {
       }]
     },
     add_booking_register_details_modal() {
-      console.log(item.type,'2')
       this.modalRegiter.booking_register_details.push({
         ...item,
         regis_id: '',
