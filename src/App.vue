@@ -158,7 +158,7 @@
           <img src="@/assets/images/navbar/hamburger.svg" class="icon-hamburger pointer" alt="hamburger" @click="hamburger = !hamburger">
           <ul class="breadcrumbs">
             <li v-for="(item, index) in breadcrumbs" :key="index">
-              <span :class="[$route.name == item.path ? 'active' : '', item.path ? 'pointer' : 'none-pointer']" @click="$router.push({name: item.path})">{{item.name}}</span>
+              <span :class="[$route.name == item.path ? 'active' : '', item.path ? 'pointer' : 'none-pointer']" @click="$router.push({name: item.path, query: item.query})">{{item.name}}</span>
               <span v-show="breadcrumbs.length>0 && index!=(breadcrumbs.length-1)" class="none-pointer space">/</span>
             </li>
           </ul>
@@ -185,6 +185,7 @@
     </div>
     <div :style="hamburger ?'padding-left: 0px;':''" class="foot-index">
       สงวนลิขสิทธิ์  2566 พีเคเอ็ม คอนซัลติ้ง กรุ๊ป จำกัด
+      {{$route.fullPath}}
     </div>
     <cpn-modal-alert :modal-alert="modalAlert" />
     <cpn-loading :show="showLoading" />
@@ -195,7 +196,7 @@ export default {
   name: 'App',
   data() {
     return {
-      version: '1.0.6',
+      version: '1.0.7',
       hamburger: false,
       showLoading: false,
       data:{
@@ -223,61 +224,61 @@ export default {
       if (this.$route.name == 'user-manage') {
         return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}]
       } else if (this.$route.name == 'user-manage-edit') {
-        return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}, {name: 'แก้ไขผู้ใช้งาน', path: 'user-manage-edit'}]
+        return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}, {name: 'แก้ไขผู้ใช้งาน', path: 'user-manage-edit', query: this.$route.query}]
       } else if (this.$route.name == 'user-manage-create') {
         return [{name: 'การจัดการผู้ใช้งาน', path: 'user-manage'}, {name: 'เพิ่มผู้ใช้งาน', path: 'user-manage-create'}]
       } else if (this.$route.name == 'book-type') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}]
       } else if (this.$route.name == 'book-type-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'แก้ไขชนิดหนังสือ', path: 'book-type-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'แก้ไขชนิดหนังสือ', path: 'book-type-edit', query: this.$route.query}]
       } else if (this.$route.name == 'book-type-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดหนังสือ', path: 'book-type'}, {name: 'เพิ่มชนิดหนังสือ', path: 'book-type-create'}]
       } else if (this.$route.name == 'record-type') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}]
       } else if (this.$route.name == 'record-type-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'แก้ไขชนิดบันทึกข้อความ', path: 'record-type-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'แก้ไขชนิดบันทึกข้อความ', path: 'record-type-edit', query: this.$route.query}]
       } else if (this.$route.name == 'record-type-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ชนิดบันทึกข้อความ', path: 'record-type'}, {name: 'เพิ่มชนิดบันทึกข้อความ', path: 'record-type-create'}]
       } else if (this.$route.name == 'book-record') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}]
       } else if (this.$route.name == 'book-record-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}, {name: 'แก้ไขทะเบียนหนังสือ', path: 'book-record-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}, {name: 'แก้ไขทะเบียนหนังสือ', path: 'book-record-edit', query: this.$route.query}]
       } else if (this.$route.name == 'book-record-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ทะเบียนหนังสือ', path: 'book-record'}, {name: 'เพิ่มทะเบียนหนังสือ', path: 'book-record-create'}]
       } else if (this.$route.name == 'organization') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}]
       } else if (this.$route.name == 'organization-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}, {name: 'แก้ไขกระทรวง', path: 'organization-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}, {name: 'แก้ไขกระทรวง', path: 'organization-edit', query: this.$route.query}]
       } else if (this.$route.name == 'organization-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กระทรวง', path: 'organization'}, {name: 'เพิ่มกระทรวง', path: 'organization-create'}]
       } else if (this.$route.name == 'agency') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}]
       } else if (this.$route.name == 'agency-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}, {name: 'แก้ไขหน่วยงาน', path: 'agency-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}, {name: 'แก้ไขหน่วยงาน', path: 'agency-edit', query: this.$route.query}]
       } else if (this.$route.name == 'agency-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'หน่วยงาน', path: 'agency'}, {name: 'เพิ่มหน่วยงาน', path: 'agency-create'}]
       } else if (this.$route.name == 'subministry') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}]
       } else if (this.$route.name == 'subministry-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}, {name: 'แก้ไขกอง', path: 'subministry-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}, {name: 'แก้ไขกอง', path: 'subministry-edit', query: this.$route.query}]
       } else if (this.$route.name == 'subministry-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กอง', path: 'subministry'}, {name: 'เพิ่มกอง', path: 'subministry-create'}]
       } else if (this.$route.name == 'group') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}]
       } else if (this.$route.name == 'group-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}, {name: 'แก้ไขกลุ่ม', path: 'group-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}, {name: 'แก้ไขกลุ่ม', path: 'group-edit', query: this.$route.query}]
       } else if (this.$route.name == 'group-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'กลุ่ม', path: 'group'}, {name: 'เพิ่มกลุ่ม', path: 'group-create'}]
       } else if (this.$route.name == 'book-method') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}]
       } else if (this.$route.name == 'book-method-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}, {name: 'แก้ไขรูปแบบการรับ-ส่งหนังสือ', path: 'book-method-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}, {name: 'แก้ไขรูปแบบการรับ-ส่งหนังสือ', path: 'book-method-edit', query: this.$route.query}]
       } else if (this.$route.name == 'book-method-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'รูปแบบการรับ-ส่งหนังสือ', path: 'book-method'}, {name: 'เพิ่มรูปแบบการรับ-ส่งหนังสือ', path: 'book-method-create'}]
       } else if (this.$route.name == 'file') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}]
       } else if (this.$route.name == 'file-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}, {name: 'แก้ไขตั้งค่าประเภทไฟล์', path: 'file-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}, {name: 'แก้ไขตั้งค่าประเภทไฟล์', path: 'file-edit', query: this.$route.query}]
       } else if (this.$route.name == 'file-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าประเภทไฟล์', path: 'file'}, {name: 'เพิ่มตั้งค่าประเภทไฟล์', path: 'file-create'}]
       } else if (this.$route.name == 'my-work.waiting-booking-receive') {
@@ -285,43 +286,43 @@ export default {
       } else if (this.$route.name == 'my-work.waiting-booking-receive-create') {
         return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรอรับเข้า', path: 'my-work.waiting-booking-receive'}, {name: 'สร้างหนังสือรอรับเข้า', path: 'my-work.waiting-booking-receive-create'}]
       } else if (this.$route.name == 'my-work.waiting-booking-receive-edit') {
-        return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรอรับเข้า', path: 'my-work.waiting-booking-receive'}, {name: 'แก้ไขหนังสือรอรับเข้า', path: 'my-work.waiting-booking-receive-edit'}]
+        return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรอรับเข้า', path: 'my-work.waiting-booking-receive'}, {name: 'แก้ไขหนังสือรอรับเข้า', path: 'my-work.waiting-booking-receive-edit', query: this.$route.query}]
       } else if (this.$route.name == 'my-work.booking-receive') {
         return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรับเข้า', path: 'my-work.booking-receive'}]
       } else if (this.$route.name == 'my-work.booking-receive-create') {
         return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรับเข้า', path: 'my-work.booking-receive'}, {name: 'สร้างหนังสือรับเข้า', path: 'my-work.booking-receive-create'}]
       } else if (this.$route.name == 'my-work.booking-receive-edit') {
-        return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรับเข้า', path: 'my-work.booking-receive'}, {name: 'แก้ไขหนังสือรับเข้า', path: 'my-work.booking-receive-edit'}]
+        return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือรับเข้า', path: 'my-work.booking-receive'}, {name: 'แก้ไขหนังสือรับเข้า', path: 'my-work.booking-receive-edit', query: this.$route.query}]
       } else if (this.$route.name == 'my-work.booking-out') {
         return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือส่งออก', path: 'my-work.booking-out'}]
       } else if (this.$route.name == 'my-work.booking-out-create') {
         return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือส่งออก', path: 'my-work.booking-out'}, {name: 'สร้างหนังสือส่งออก', path: 'my-work.booking-out-create'}]
       } else if (this.$route.name == 'my-work.booking-out-edit') {
-        return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือส่งออก', path: 'my-work.booking-out'}, {name: 'แก้ไขหนังสือส่งออก', path: 'my-work.booking-out-edit'}]
+        return [{name: 'งานรับ-ส่งหนังสือ', path: 'my-work'}, {name: 'หนังสือส่งออก', path: 'my-work.booking-out'}, {name: 'แก้ไขหนังสือส่งออก', path: 'my-work.booking-out-edit', query: this.$route.query}]
       } else if (this.$route.name == 'subministry-work.booking-receive') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือรับเข้า', path: 'subministry-work.booking-receive'}]
       } else if (this.$route.name == 'subministry-work.booking-receive-create') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือรับเข้า', path: 'subministry-work.booking-receive'}, {name: 'สร้างหนังสือรับเข้า', path: 'subministry-work.booking-receive-create'}]
       } else if (this.$route.name == 'subministry-work.booking-receive-edit') {
-        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือรับเข้า', path: 'subministry-work.booking-receive'}, {name: 'แก้ไขหนังสือรับเข้า', path: 'subministry-work.booking-receive-edit'}]
+        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือรับเข้า', path: 'subministry-work.booking-receive'}, {name: 'แก้ไขหนังสือรับเข้า', path: 'subministry-work.booking-receive-edit', query: this.$route.query}]
       } else if (this.$route.name == 'subministry-work.booking-out') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือส่งออก', path: 'subministry-work.booking-out'}]
       } else if (this.$route.name == 'subministry-work.booking-out-create') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือส่งออก', path: 'subministry-work.booking-out'}, {name: 'สร้างหนังสือส่งออก', path: 'subministry-work.booking-out-create'}]
       } else if (this.$route.name == 'subministry-work.booking-out-edit') {
-        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือส่งออก', path: 'subministry-work.booking-out'}, {name: 'แก้ไขหนังสือส่งออก', path: 'subministry-work.booking-out-edit'}]
+        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'หนังสือส่งออก', path: 'subministry-work.booking-out'}, {name: 'แก้ไขหนังสือส่งออก', path: 'subministry-work.booking-out-edit', query: this.$route.query}]
       } else if (this.$route.name == 'subministry-work.record-receive') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกรับเข้า', path: 'subministry-work.record-receive'}]
       } else if (this.$route.name == 'subministry-work.record-receive-create') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกรับเข้า', path: 'subministry-work.record-receive'}, {name: 'สร้างบันทึกรับเข้า', path: 'subministry-work.record-receive-create'}]
       } else if (this.$route.name == 'subministry-work.record-receive-edit') {
-        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกรับเข้า', path: 'subministry-work.record-receive'}, {name: 'แก้ไขบันทึกรับเข้า', path: 'subministry-work.record-receive-edit'}]
+        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกรับเข้า', path: 'subministry-work.record-receive'}, {name: 'แก้ไขบันทึกรับเข้า', path: 'subministry-work.record-receive-edit', query: this.$route.query}]
       } else if (this.$route.name == 'subministry-work.record-out') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}]
       } else if (this.$route.name == 'subministry-work.record-out-create') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}, {name: 'สร้างบันทึกส่งออก', path: 'subministry-work.record-out-create'}]
       } else if (this.$route.name == 'subministry-work.record-out-edit') {
-        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}, {name: 'แก้ไขบันทึกส่งออก', path: 'subministry-work.record-out-edit'}]
+        return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}, {name: 'แก้ไขบันทึกส่งออก', path: 'subministry-work.record-out-edit', query: this.$route.query}]
       } else if (this.$route.name == 'automail-mail-addresses') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'อีเมล์ติดต่อหน่วยงาน', path: 'automail-mail-addresses'}]
       } else if (this.$route.name == 'automail-receiver-profile') {
@@ -329,9 +330,15 @@ export default {
       } else if (this.$route.name == 'automail-receiver-profile-create') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'สร้างตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-create'}]
       } else if (this.$route.name == 'automail-receiver-profile-edit') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'แก้ไขตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-edit'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'แก้ไขตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-edit', query: this.$route.query}]
       } else if (this.$route.name == 'automail-sendmail-logs') {
         return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'บันทึกการส่งอีเมลอัตโนมัติ', path: 'automail-sendmail-logs'}]
+      } else if (this.$route.name == 'automail-sendmail') {
+        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}]
+      } else if (this.$route.name == 'automail-sendmail-list') {
+        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-list', query: this.$route.query}]
+      } else if (this.$route.name == 'automail-sendmail-edit') {
+        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-edit', query: this.$route.query}]
       } else {
         return [{name: this.$route.name , path: this.$route.name }]
       }
