@@ -473,6 +473,14 @@ export default {
   watch: {
     '$route.name'() {
       this.checkPathRoute()
+      let data = JSON.parse(localStorage.getItem('data_rule'))
+      let rule = {}
+      if (data) {
+        data.filter(row => {
+          rule[`user${row.role_id}`] = true
+        })
+        this.ruleSet(rule)
+      }
       if (this.routePath('/master/')) {
         this.removeSelect('master')
         this.iconAngle.master = true
