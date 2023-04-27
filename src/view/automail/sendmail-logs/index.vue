@@ -4,7 +4,7 @@
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <i class="bi bi-envelope-fill icon-envelope"></i>
+            <i class="bi bi-envelope icon-envelope"></i>
             <div class="name">บันทึกการส่งอีเมลอัตโนมัติ</div>
           </div>
         </div>
@@ -107,7 +107,7 @@
         </Form>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-department-inex">
+          <table class="table-automail-sendmail-logs">
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ลำดับ</th>
@@ -162,7 +162,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-inex',
+  name: 'automail-sendmail-logs',
   data() {
     return {
       modalAlert: {
@@ -491,7 +491,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-department-inex {
+        .table-automail-sendmail-logs {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;

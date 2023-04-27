@@ -1,168 +1,130 @@
 <template>
-  <div class="user-detail">
+  <div class="automail-sendmail-list">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}}</div>
-          </div>
-          <div class="group-end">
-            <button type="button" class="button-back" @click="back()" >
-              <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back">
-              <img src="@/assets/images/icon/line-up.svg" class="icon-line">
-              ย้อนกลับ
-            </button>
+            <i class="bi bi-envelope icon-envelope"></i>
+            <div class="name">ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ</div>
           </div>
         </div>
         <div class="line"></div>
-        <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
+        <Form @submit="apiSendmailLogs" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
-              <div class="group-image left">
-                <div class="name">โปรไฟล์</div>
-                <div class="image-preview-wrapper" v-show="data.previewImage1" :style="{ 'background-image': `url(${data.previewImage1})` }"></div>
-                <input ref="fileInput1" type="file" @input="pickFile('fileInput1')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
-                <button name="fileInput1" type="button" @click="selectImage('fileInput1')" class="button-image">เลือกรูปภาพ</button>
-                <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
-              </div>
-              <div class="group-image">
-                <div class="name">ลายเซ็น</div>
-                <div class="image-preview-wrapper" v-show="data.previewImage2" :style="{ 'background-image': `url(${data.previewImage2})` }"></div>
-                <input ref="fileInput2" type="file" @input="pickFile('fileInput2')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
-                <button name="fileInput2" type="button" @click="selectImage('fileInput2')" class="button-image">เลือกรูปภาพ</button>
-                <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
-              </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ชื่อ <span class="required">*</span></div>
-                <cpn-input  v-model="data.fname"
-                            name="fname"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
+              <div class="group-input w-50">
+                <div class="name">คำขึ้นต้น </div>
+                <div class="group-recommend">
+                  <cpn-input v-model="data.mail_register"
+                              name="mail_register"
+                              class="input-recommend"
+                              placeholder="กรุณาระบุ" />
+                  <button type="button" class="button-recommend">
+                    <i class="bi bi-question icon-question"></i>
+                    แนะนำ
+                  </button>
+                </div>
               </div>
               <div class="group-input">
-                <div class="name">นามสกุล <span class="required">*</span></div>
-                <cpn-input  v-model="data.lname"
-                            name="lname"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
+                <div class="name">คำลงท้าย </div>
+                <div class="d-flex">
+                  <cpn-input  v-model="data.mail_number_out"
+                              name="mail_number_out"
+                              placeholder="กรุณาระบุ" />
+
+                  <button type="button" class="button-check">
+                    <i class="bi bi-check icon-check"></i>
+                    ปรับปรุงทั้งหมด
+                  </button>
+                </div>
               </div>
             </div>
             <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ชื่อผู้ใช้งาน <span v-if="!edit" class="required">*</span></div>
-                <cpn-input  v-model="data.username"
-                            name="Usern"
-                            :rules="edit ? '' : 'required'"
-                            :disabled="edit"
-                            placeholder="กรุณาระบุ" />
-              </div>
               <div class="group-input">
-                <div class="name">รหัสผ่าน <span v-if="!edit" class="required">*</span></div>
-                <cpn-input  v-model="data.password"
-                            name="passw"
-                            type="password"
-                            :rules="edit ? '' : 'required'"
-                            placeholder="กรุณาระบุ" />
+                <div class="name">ข้อมูลผู้ติดต่อ </div>
+                <div class="d-flex">
+                  <cpn-input  v-model="data.mail_division"
+                              name="mail_division"
+                              placeholder="เลือกกอง/สำนัก" />
+
+                  <button type="button" class="button-check">
+                    <i class="bi bi-check icon-check"></i>
+                    ปรับปรุงทั้งหมด
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">Email <span class="required">*</span></div>
-                <cpn-input  v-model="data.email"
-                            name="email"
-                            rules="required|email"
-                            placeholder="กรุณาระบุ" />
-              </div>
-              <div class="group-input"></div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">กระทรวง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.organization_id"
-                                  name="organization"
-                                  placeholder="กรุณาระบุ"
-                                  rules="required"
-                                  @keyup="keyupOrganization($event)"
-                                  :optionSelect="data.optionSelect.organization" />
-              </div>
-              <div class="group-input">
-                <div class="name">หน่วยงาน <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.department_id"
-                                  name="department"
-                                  placeholder="กรุณาระบุ"
-                                  rules="required"
-                                  @keyup="keyupDepartment($event)"
-                                  :optionSelect="data.optionSelect.department" />
-              </div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">กอง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.subministry_id"
-                                  name="subministry"
-                                  placeholder="กรุณาระบุ"
-                                  rules="required"
-                                  @keyup="keyupSubministry($event)"
-                                  :optionSelect="data.optionSelect.subministry" />
-              </div>
-              <div class="group-input">
-                <div class="name">กลุ่ม</div>
-                <cpn-autoComplete v-model="data.group_id"
-                                  name="group"
-                                  placeholder="กรุณาระบุ"
-                                  @keyup="keyupGroup($event)"
-                                  :optionSelect="data.optionSelect.group" />
-              </div>
-            </div>
-          </div>
-          <div class="group-level" v-show="data.optionSelect.roles.length > 0">
-            <div class="level-first">
-              <img src="@/assets/images/icon/crown-duotone.svg" alt="" class="icon-crown">
-              <div class="name">สิทธิ์</div>
-            </div>
-            <div class="level-button">
-              <div v-for="(item, index) in data.optionSelect.roles" :key="index">
-                <button v-if="item.id == 1" type="button" class="button-admin" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check">
-                  <div class="group-user">
-                    <img v-if="item.check" src="@/assets/images/icon/user-crown-duotoneffffff.svg" alt="" class="icon-user-crown">
-                    <img v-else src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
-                    {{item.desc}}
-                  </div>
-                </button>
-                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check" :disabled="item.id == 6 ? !rule.user5 : false">
-                  {{item.desc}}
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="line"></div>
-          <div class="group-footer">
-            <div class="footer-left">
-              <button type="button" class="button-danger" @click="cancelClick()">
-                <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
-                ยกเลิก
-              </button>
-            </div>
-            <div class="footer-right">
-              <button type="submit" class="button-success">
-                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-                {{edit ? 'ยืนยันแก้ไขผู้ใช้งาน' : 'ยืนยันสร้างผู้ใช้งาน'}}
-              </button>
             </div>
           </div>
         </Form>
+        <div class="line"></div>
+        <div class="group-body">
+          <table class="table-automail-sendmail-list">
+            <thead class="thead">
+              <tr class="thead-row">
+                <th class="col1">ลำดับ</th>
+                <th class="col2">หน่วยงาน</th>
+                <th class="col3">อีเมล์ติดต่อหน่วยงาน</th>
+                <th class="col4">เครื่องมือ</th>
+              </tr>
+            </thead>
+            <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
+              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col2">{{item.department_name}}</td>
+                <td class="col3">
+                  <div class="new-line">
+                    <div class="name">ส่งถึง (TO)</div>
+                    <cpn-input  v-model="item.to"
+                                :name="'to'+index"
+                                :disabled="item.disabled"  />
+                  </div>
+                  <div class="new-line">
+                    <div class="name">สำเนาถึง (Cc)</div>
+                    <cpn-input  v-model="item.cc"
+                                :name="'cc'+index"
+                                :disabled="item.disabled"  />
+                  </div>
+                  <div class="new-line">
+                    <div class="name">สำเนาลับถึง (Bcc)</div>
+                    <cpn-input  v-model="item.bcc"
+                                :name="'bcc'+index"
+                                :disabled="item.disabled"  />
+                  </div>
+                </td>
+                <td class="col4">
+                  <div class="group-icon">
+                    <img v-show="item.disabled" @click="item.disabled = false" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="icon-pencil pointer">
+                    <button @click="save(item)" v-show="!item.disabled" type="button" class="button-success">
+                      <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle pointer"/>
+                    </button>
+                    <button v-show="!item.disabled" @click="item.disabled = true" type="button" class="button-danger">
+                      <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="tbody-row" v-if="data.table.length == 0">
+                <td colspan="4">ไม่มีข้อมูล</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-footer">
+          <cpn-pagination :page="data.page"
+                          :total="data.total"
+                          :lastPage="data.lastPage"
+                          :perPage="data.perPage"
+                          @pageChange="pageChange" />
+        </div>
       </div>
     </div>
-    <cpn-modal-alert  :modalAlert="modalAlert"/>
+    <cpn-modal-alert :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
   </div>
 </template>
 <script>
 export default {
-  name: 'user-manage-detail',
+  name: 'automail-sendmail-list',
   data() {
     return {
       modalAlert: {
@@ -171,99 +133,91 @@ export default {
         message: ''
       },
       showLoading: false,
-      edit: false,
       data: {
-        previewImage1: '',
-        previewImage2: '',
-        profile_img: '',
-        signature_img: '',
-        fname: '',
-        lname: '',
-        username: '',
-        password: '',
-        email: '',
-        department_id: '',
-        organization_id: '',
-        subministry_id: '',
-        group_id: '',
-        level: [],
-        birthdate:'',
-        optionSelect: {
-          organization: [],
-          department: [],
-          subministry: [],
-          group: [],
-          roles: []
-        },
-        fileType: []
+        mail_register: '',
+        mail_number_out: '',
+        mail_speed: '',
+        mail_title: '',
+        mail_division: '',
+        mail_to: '',
+        mail_date_st: '',
+        mail_send_to: '',
+        mail_send_cc: '',
+        mail_send_bcc: '',
+        mail_date_send: '',
+        table: [],
+        page: 1,
+        total: 0,
+        lastPage: 0,
+        perPage: 10,
       },
+      optionSelect: {
+        mail_register: [],
+        mail_speed: [],
+        mail_division: [],
+        mail_to: []
+      }
     }
   },
   methods: {
-    selectImage (data) {
-      this.$refs[data].click()
+    cancelClick() {
+      this.data.mail_register = ''
+      this.data.mail_number_out = ''
+      this.data.mail_speed = ''
+      this.data.mail_title = ''
+      this.data.mail_division = ''
+      this.data.mail_to = ''
+      this.data.mail_date_st = ''
+      this.data.mail_send_to = ''
+      this.data.mail_send_cc = ''
+      this.data.mail_send_bcc = ''
+      this.data.mail_date_send = ''
+      this.data.perPage = 10
+      this.data.page = 1
+      this.apiSendmailLogs()
     },
-    pickFile (data) {
-      for (var i = 0; i < this.$refs[data].files.length; i++) {
-        let file = this.$refs[data].files[i]
-        if ((this.data.fileType.indexOf(file.type)==-1)) {
-          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
-          return false
-        }
-        if ((file.type == 'image/jpeg' || file.type == 'image/png') && (file.size < 500000)) {
-          if (data == 'fileInput1') {
-            this.data.previewImage1 = URL.createObjectURL(file)
-            this.data.profile_img = file
-          } else {
-            this.data.previewImage2 = URL.createObjectURL(file)
-            this.data.signature_img = file
-          }
-          this.$refs[data].value=null;
-        } else {
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: '*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB'}
-        }
-      }
+    pageChange(data) {
+      this.data.perPage = data.perPage
+      this.data.page = data.page
+      this.apiSendmailLogs()
     },
-    callApiUser() {
-      this.axios.get(`/user/${localStorage.getItem('user_id')}`)
-      .then((response) => { 
-        localStorage.setItem('profile_img', response.data.data?.profile_img || '')
-        this.$emit('getUserImage', localStorage.getItem('profile_img'), localStorage.getItem('profile_img'))
-        let rule = {}
-        response.data.data.roles.filter(row => {
-          rule[`user${row.role_id}`] = true
-        })
-        this.ruleSet(rule)
-      })
-    },
-    keyupOrganization(e) {
-      this.data.optionSelect.organization = []
-      this.axios.get('/master-data/organization', {
-        params: {
-          keyword: e.target.value,
-          // department_id: this.data.department_id,
-          // subministry_id: this.data.subministry_id,
-          // group_id: this.data.group_id,
+    apiSendmailLogs() {
+      this.data.table = []
+      this.showLoading = true
+      this.axios.get('/master-data/department-contact', {
+        params:{
+          mail_register: this.data.mail_register,
+          mail_number_out: this.data.mail_number_out,
+          mail_speed: this.data.mail_speed,
+          mail_title: this.data.mail_title,
+          mail_division: this.data.mail_division,
+          mail_to: this.data.mail_to,
+          mail_date_st: this.data.mail_date_st,
+          mail_send_to: this.data.mail_send_to,
+          mail_send_cc: this.data.mail_send_cc,
+          mail_send_bcc: this.data.mail_send_bcc,
+          mail_date_send: this.data.mail_date_send,
+          page_size: this.data.perPage,
+          page: this.data.page,
         }
       })
       .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            return item
-          })
-          this.data.optionSelect.organization = response.data.data
-        }
+        this.showLoading = false
+        response.data.data.meta.filter(row => row.disabled = true)
+        this.data.table = response.data.data.meta
+        this.data.total = response.data.data.total
+        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
     keyupDepartment(e) {
-      this.data.optionSelect.department = []
+      this.optionSelect.mail_to = []
       this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value,
-          organization_id: this.data.organization_id,
-          subministry_id: this.data.subministry_id,
-          group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -273,18 +227,15 @@ export default {
             item.name = item.department_full_name
             return item
           })
-          this.data.optionSelect.department = response.data.data
+          this.optionSelect.mail_to = response.data.data
         }
       })
     },
     keyupSubministry(e) {
-      this.data.optionSelect.subministry = []
+      this.optionSelect.mail_division = []
       this.axios.get('/master-data/subministry', {
         params: {
           keyword: e.target.value,
-          organization_id: this.data.organization_id,
-          department_id: this.data.department_id,
-          group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -294,36 +245,16 @@ export default {
             item.name = item.Name
             return item
           })
-          this.data.optionSelect.subministry = response.data.data
+          this.optionSelect.mail_division = response.data.data
         }
       })
     },
-    keyupGroup(e) {
-      this.data.optionSelect.group = []
-      this.axios.get('/master-data/group', {
-        params: {
-          keyword: e.target.value,
-          organization_id: this.data.organization_id,
-          department_id: this.data.department_id,
-          subministry_id: this.data.subministry_id,
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            return item
-          })
-          this.data.optionSelect.group = response.data.data
-        }
-      })
-    },
-    masterDropdown(data) {
+    api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/organization?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request2 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request3 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
-      const request4 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+      const request1 = this.axios.get(`/master-data/book-type`)
+      const request2 = this.axios.get(`/master-data/speed`)
+      const request3 = this.axios.get(`/master-data/subministry`)
+      const request4 = this.axios.get(`/master-data/department`)
 
       this.axios.all([request1, request2, request3, request4])
       .then(this.axios.spread((...responses) => {
@@ -333,275 +264,52 @@ export default {
         const response3 = responses[2]
         const response4 = responses[3]
 
-        response1.data.data?.filter(item => {
-          item.value = item.id
-          return item
+        response1.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
         })
-        response2.data.data?.filter(item => {
-          item.value = item.id
-          item.name = item.department_full_name
-          return item
+        response2.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
         })
-        
-        response3.data.data?.filter(item => {
-          item.value = item.id
-          return item
-        })
-        
-        response4.data.data?.filter(item => {
-          item.value = item.id
-          return item
-        })
-
-        // this.data.optionSelect.organization = response1.data.data
-        this.data.optionSelect.department = response2.data?.data || []
-        this.data.optionSelect.subministry = response3.data?.data || []
-        this.data.optionSelect.group = response4.data?.data || []
-
-        response2.data.data ? (response2.data.data.findIndex(item => item.id == this.data.department_id) == '-1' ? this.data.department_id = '' : '') : this.data.department_id = ''
-        response3.data.data ? (response3.data.data.findIndex(item => item.id == this.data.subministry_id) == '-1' ? this.data.subministry_id = '' : '') : this.data.subministry_id = '' 
-        response4.data.data ? (response4.data.data.findIndex(item => item.id == this.data.group_id) == '-1' ? this.data.group_id = '' : '') : this.data.group_id = ''
-      })).catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
-    },
-    back() {
-      this.$router.push({ 
-        name: 'user-manage',
-        query: {
-          page: this.$route.query.page,
-          perPage: this.$route.query.perPage
-        }
-      }).catch(()=>{});
-    },
-    cancelClick() {
-      this.back()
-      this.data.previewImage1 = ''
-      this.data.previewImage2 = ''
-      this.data.profile_img = ''
-      this.data.signature_img = ''
-      this.data.username = ''
-      this.data.password = ''
-      this.data.email = ''
-      this.data.organization_id = ''
-      this.data.department_id = ''
-      this.data.subministry_id = ''
-      this.data.group_id = ''
-      this.data.level = []
-      this.data.birthdate = ''
-      this.data.fileType = []
-    },
-    onSubmit() {
-      let _this = this
-      // if ((!this.data.profile_img || !this.data.signature_img) && !this.edit) {
-      //   document.querySelector(`[name="fileInput1"]`).scrollIntoView({block: "center"})
-      // } else {
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          let roles = []
-          _this.data.level.filter(item => {
-            item.flag = 'delete'
-            roles.push(item)
-          })
-          _this.data.optionSelect.roles.filter(item => {
-            item.flag = 'add'
-            item.check ? roles.push(item) : ''
-          })
-
-          let formDataFile = new FormData();
-          formDataFile.append('fname', _this.data?.fname || '');
-          formDataFile.append('lname', _this.data?.lname || '');
-          formDataFile.append('email', _this.data?.email || '');
-          formDataFile.append('department_id', _this.data?.department_id || '');
-          formDataFile.append('organization_id', _this.data?.organization_id || '');
-          formDataFile.append('subministry_id', _this.data?.subministry_id || '');
-          formDataFile.append('group_id', _this.data?.group_id || '');
-          formDataFile.append('username', _this.data?.username || '');
-          formDataFile.append('password', _this.data?.password || '');
-          formDataFile.append('birthdate', _this.data?.birthdate || '');
-          formDataFile.append('profile_img', _this.data?.profile_img || '');
-          formDataFile.append('signature_img', _this.data?.signature_img || '');
-          formDataFile.append('total_role', roles?.length || 0);
-          roles.filter((item, index) => {
-            if (item.id) {
-            formDataFile.append(`roles[${index}][id]`, item.id)
-            }
-            if (item.role_id) {
-              formDataFile.append(`roles[${index}][role_id]`, item.role_id)
-            }
-            if (item.flag) {
-              formDataFile.append(`roles[${index}][flag]`, item.flag)
-            }
-          })
-          _this.showLoading = true
-          _this.axios[_this.edit ? 'put' : 'post'](`/user${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-          .then(() => { 
-            _this.showLoading = false
-            _this.callApiUser()
-            _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว' : 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      }
-      // }
-    },
-    apiDetail() {
-      this.showLoading = true
-      this.axios.get(`/user/${this.$route.params.id}`)
-      .then((response) => { 
-        this.showLoading = false
-        this.data.fname = response.data.data.fname
-        this.data.lname = response.data.data.lname
-        this.data.username = response.data.data.username
-        this.data.password = response.data.data.password
-        this.data.email = response.data.data.email
-        this.data.department_id = response.data.data.department_id
-        this.data.organization_id = response.data.data.organization_id
-        this.data.subministry_id = response.data.data.subministry_id
-        this.data.group_id = response.data.data.group_id
-        this.data.birthdate = response.data.data.birthdate
-        this.data.level = response.data.data.roles
-        if (response.data.data.profile_img) {
-          this.axios({ method:'get', url: this.backendport+'/'+response.data.data.profile_img, baseURL: '', responseType: 'blob',})
-          .then(response3 => {
-            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.profile_img) })
-            this.data.previewImage1 = URL.createObjectURL(blob)
-          })
-          .catch((error) => {
-            this.data.previewImage1 = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
-          })
-        } else {
-          this.data.previewImage1 = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
-        }
-        if (response.data.data.signature_img) {
-          this.axios({ method:'get', url: this.backendport+'/'+response.data.data.signature_img, baseURL: '', responseType: 'blob',})
-          .then(response3 => {
-            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.signature_img) })
-            this.data.previewImage2 = URL.createObjectURL(blob)
-          })
-          .catch((error) => {
-            this.data.previewImage2 = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-          })
-        } else {
-          this.data.previewImage2 = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-        }
-        this.data.optionSelect.roles.filter(item2 => {
-          item2.check = false 
-          response.data.data.roles.filter(item => {
-            if (item.role_id == item2.role_id) {
-              item2.check = true 
-            }
-          })
-        })
-      })
-      .catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
-    },
-    apiMaster() {
-      this.showLoading = true
-      const request1 = this.axios.get(`/master-data/department`)
-      const request2 = this.axios.get(`/master-data/role`)
-      const request3 = this.axios.get(`/master-data/organization`)
-      const request4 = this.axios.get(`/master-data/subministry`)
-      const request5 = this.axios.get(`/master-data/group`)
-      const request6 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
-
-      this.axios.all([request1, request2, request3, request4, request5, request6])
-      .then(this.axios.spread((...responses) => {
-        this.showLoading = false
-        const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
-        const response4 = responses[3]
-        const response5 = responses[4]
-        const response6 = responses[5]
-        
-        response1.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.department_full_name
-          return item
-        })
-
-        response2.data.data.filter(item => {
-          item.role_id = item.id
-          return item
-        })
-        
         response3.data.data.filter(item => {
           item.value = item.id
           return item
         })
-        
         response4.data.data.filter(item => {
           item.value = item.id
+          item.name = item.department_full_name
           return item
         })
+
+        this.optionSelect.mail_register = response1.data.data
+        this.optionSelect.mail_speed = response2.data.data
+        this.optionSelect.mail_division = response3.data.data
+        this.optionSelect.mail_to = response4.data.data
         
-        response5.data.data.filter(item => {
-          item.value = item.id
-          return item
-        })
-
-        this.data.optionSelect.department = response1.data.data
-        this.data.optionSelect.roles = response2.data.data
-        this.data.optionSelect.organization = response3.data.data
-        this.data.optionSelect.subministry = response4.data.data
-        this.data.optionSelect.group = response5.data.data
-        this.data.fileType = []
-
-        response6.data.data.filter(item => {
-          if (item.active_flag == 1) {
-            this.data.fileType.push(item.content_type)
-          }
-        })
-
-        if (this.$route.params.id) {
-          this.edit = true
-          this.apiDetail()
-        } else {
-          this.edit = false
-        }
+        this.apiSendmailLogs()
+        
       })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    }
+      
+    },
   },
-  mounted () {
-    this.apiMaster()
+  mounted() {
+    this.data.page = this.$route.query?.page || this.data.page
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage
+    // this.api_master()
   },
-  watch: {
-    'data.organization_id'() {
-      this.masterDropdown()
-    },
-    'data.department_id'() {
-      this.masterDropdown()
-    },
-    'data.subministry_id'() {
-      this.masterDropdown()
-    },
-    'data.group_id'() {
-      this.masterDropdown()
-    },
-  }
 }
 
 </script>
 <style lang="scss">
-  .user-detail {
+  .automail-sendmail-list {
     .group-overflow {
-      overflow: auto;
+      // overflow: auto;
     }
 
     .detail {
@@ -613,7 +321,7 @@ export default {
       // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
       background-color: #fff;
       border: 0px;
-      padding-bottom: 48px;
+      padding-bottom: 22px;
 
       .group-head {
         display: flex;
@@ -625,10 +333,10 @@ export default {
           display: flex;
           align-items: center;
 
-          .icon-users {
-            width: 45px;
-            height: 41px;
-            margin-right: 18px;
+          .icon-envelope {
+            margin-right: 10px;
+            color: #0f3a64;
+            font-size: 26px;
           }
 
           .name {
@@ -637,40 +345,6 @@ export default {
             font-size: 18px;
           }
         }
-
-        .group-end {
-          .button-back {
-            width: 129px;
-            height: 45px;
-            border-radius: 5px;
-            border: solid 1px #c1cfe3;
-            background-color: transparent;
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 500;
-            color: #15466e;
-            
-            .icon-back {
-              width: 23px;
-              margin-left: 3px;
-            }
-
-            .icon-line {
-              height: 45px;
-              margin-left: 10px;
-              margin-right: 9px;
-            }
-          }
-        }
-      }
-
-      .line {
-        height: 2px;
-        width: 100%;
-        background-color: #e2ebf7;
-        margin-top: 5px;
-        margin-bottom: 5px;
       }
 
       .group-detail {
@@ -681,46 +355,6 @@ export default {
 
           .left {
             margin-right: 30px;
-          }
-        }
-
-        .group-image {
-          width: 100%;
-          padding: 0 10px;
-          margin-bottom: 30px;
-          text-align: center;
-
-          .name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 7px;
-          }
-
-          .image-preview-wrapper {
-            background-repeat: no-repeat;
-            width: 250px;
-            height: 250px;
-            display: block;
-            margin: 0 auto 30px;
-            background-size: contain;
-            background-position: center center;
-          }
-
-          .button-image {
-            background-color: #15466e;
-            color: #fff;
-            padding: 5px 12px;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 5px;
-          }
-
-          .warning-message {
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #9fa1a3;
           }
         }
 
@@ -736,143 +370,229 @@ export default {
             margin-bottom: 7px;
           }
         }
-      }
 
+        .group-recommend {
+          position: relative;
 
-
-      .group-level {
-        border-radius: 5px;
-        background-color: #f9fafc;
-
-        .level-first {
-          display: flex;
-          align-items: center;
-          padding: 24px 26px;
-
-          .icon-crown {
-            width: 34px;
-            height: 28px;
+          .input-recommend {
+            margin-right: 90px;
           }
 
-          .name {
+          .button-recommend {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #1a456b;
             font-size: 16px;
             font-weight: 500;
-            color: #333;
-            margin-left: 15px;
-            margin-top: 5px;
-          }
-        }
-
-        .level-button {
-          display: flex;
-          align-items: center;
-          padding: 0 28px 20px;
-          flex-wrap: wrap;
-
-          .group-user {
+            color: #ffffff;
+            min-width: 100px;
+            max-width: 100px;
+            height: 45px;
+            border: 0;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 5px;
+            padding-right: 15px;
 
-            .icon-user-crown {
-              width: 19px;
-              height: 21px;
-              margin-right: 9px;
-              margin-top: -5px;
-            }
-
-            .icon-badge-sheriff {
-              width: 20px;
-              height: 23px;
-              margin-right: 9px;
+            .icon-question {
+              font-size: 30px;
             }
           }
+        }
 
-          .button-admin {
-            width: 150px;
-            height: 45px;
-            border-radius: 5px;
-            box-shadow: 2.9px 0.8px 9.6px 0.4px rgb(137 148 169 / 35%);
-            border: solid 2px #e2ebf7;
-            background-color: #fff;
-            font-size: 16px;
-            font-weight: 500;
-            color: #f94859;
-            margin-right: 24px;
+        .button-check {
+          background-color: #1a456b;
+          font-size: 16px;
+          font-weight: 500;
+          color: #ffffff;
+          min-width: 160px;
+          max-width: 160px;
+          height: 45px;
+          border: 0;
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 15px;
+          padding-right: 10px;
+
+          .icon-check {
+            font-size: 30px;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .line {
+        height: 2px;
+        width: 100%;
+        background-color: #e2ebf7;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      .group-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 26px 30px;
+        overflow: auto;
+        margin-bottom: 1px;
+
+        table tbody tr:nth-child(odd) {
+          background-color: #ffffff;
+        }
+
+        table tbody tr:nth-child(even) {
+          background-color: #f1f5fa;
+        }
+
+        .table-automail-sendmail-list {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0px;
+          border-radius: 5px;
+          border: solid 1px #c1cfe3;
+          background-color: #fff;
+          overflow: hidden;
+          
+          .thead {
+            .thead-row {
+              font-weight: bold;
+              font-size: 16px;
+              color: #333333;
+              height: 71px;
+
+              th {
+                border-bottom: solid 1px #c1cfe3;
+                padding: 0 10px;
+                text-align: center !important;
+              }
+            }
+
+            .col1 {
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
+              padding-left: 28px !important;
+            }
+
+            .col2 {
+              min-width: 350px;
+              max-width: 350px;
+              width: 0%;
+            }
+
+            .col3 {
+              min-width: 450px;
+              width: 15%;
+            }
+
+            .col4 {
+              min-width: 200px;
+              max-width: 200px;
+              width: 0%;
+              padding-right: 28px !important;
+            }
           }
 
-          .button-roles {
-            min-width: 88px;
-            height: 45px;
-            border-radius: 5px;
-            box-shadow: 2.9px 0.8px 9.6px 0.4px rgb(137 148 169 / 35%);
-            border: solid 2px #e2ebf7;
-            background-color: #fff;
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            padding: 5px 12px 0;
-            margin-right: 24px;
+          .tbody-top {
+            vertical-align: inherit;
           }
 
-          button {
-            margin-bottom: 15px;
-          }
+          .tbody {
+            .color-tr {
+              background-color: #f1f5fa;
+            }
 
-          .active {
-            background-color: #15466e;
-            color: #fff;
-          }
+            .tbody-row {
+              width: 100%;
+              height: 70px;
+              text-align: center;
+              color: #333333;
+              border-bottom: 0px;
+              font-weight: 500;
+              font-size: 16px;
 
+              td {
+                padding: 0 10px;
+              }
+
+              .col2, .col3 {
+                text-align: left;
+              }
+
+              .col1 {
+                padding-left: 28px;
+              }
+
+              .col3 {
+                padding: 20px;
+
+                .name {
+                  margin-bottom: 5px;
+                }
+
+                .new-line {
+                  padding-bottom: 10px;
+                }
+              }
+
+              .col4 {
+                padding-right: 28px;
+                position: relative;
+
+                .group-icon {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  position: absolute;
+                  left: 50%;
+                  transform: translate(-50%, 20px);
+
+                  .icon-pencil {
+                    width: 22px;
+                    height: 22px;
+                    margin-top: 5px;
+                  }
+
+
+                  .icon-times-circle {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 10px;
+                  }
+
+                  .icon-check-circle {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 10px;
+                  }
+
+                  button {
+                    width: 30px;
+                    padding: 0;
+                    margin: 0;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                  }
+
+                  .button-danger {
+                    margin-left: 15px;
+                  }
+                }
+              }
+            }
+          }
         }
       }
 
       .group-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 23px;
-        padding: 0 23px;
-
-        .footer-left {
-          .button-danger {
-            width: 120px;
-          }
-        }
-
-        .footer-right {
-          display: flex;
-
-          .button-success {
-            width: 210px;
-          }
-        }
-
-        button {
-          height: 45px;
-          border-radius: 5px;
-          box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
-          border: 0;
-          font-size: 16px;
-          font-weight: 500;
-          color: #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .icon-times-circle {
-          width: 25px;
-          height: 25px;
-          margin-right: 10px;
-        }
-
-        .icon-check-circle {
-          width: 25px;
-          height: 25px;
-          margin-right: 10px;
-        }
+        margin: 0px 29px;
       }
     }
   }
