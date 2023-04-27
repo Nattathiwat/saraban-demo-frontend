@@ -7,9 +7,16 @@
             <i class="bi bi-envelope icon-envelope"></i>
             <div class="name">ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ</div>
           </div>
+          <div class="group-end">
+            <button type="button" class="button-back" @click="back()" >
+              <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back">
+              <img src="@/assets/images/icon/line-up.svg" class="icon-line">
+              ย้อนกลับ
+            </button>
+          </div>
         </div>
         <div class="line"></div>
-        <Form @submit="apiSendmailLogs" @invalid-submit="onInvalidSubmit">
+        <Form @submit="apiSendmailList" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input w-50">
@@ -19,7 +26,7 @@
                               name="mail_register"
                               class="input-recommend"
                               placeholder="กรุณาระบุ" />
-                  <button type="button" class="button-recommend">
+                  <button type="button" class="button-recommend" @click="recommendClick()">
                     <i class="bi bi-question icon-question"></i>
                     แนะนำ
                   </button>
@@ -32,7 +39,7 @@
                               name="mail_number_out"
                               placeholder="กรุณาระบุ" />
 
-                  <button type="button" class="button-check">
+                  <button type="button" class="button-check" @click="amendClick(1)">
                     <i class="bi bi-check icon-check"></i>
                     ปรับปรุงทั้งหมด
                   </button>
@@ -47,7 +54,7 @@
                               name="mail_division"
                               placeholder="เลือกกอง/สำนัก" />
 
-                  <button type="button" class="button-check">
+                  <button type="button" class="button-check" @click="amendClick(2)">
                     <i class="bi bi-check icon-check"></i>
                     ปรับปรุงทั้งหมด
                   </button>
@@ -118,6 +125,44 @@
         </div>
       </div>
     </div>
+    <div class="modal-recommend" v-show="modal.showModal">
+      <div class="modal-class">
+        <div class="modal-center">
+          <div class="modal-size">
+            <div class="modal-title">
+              <div class="title-size">เลือกผู้รับหนังสือ</div> 
+              <i class="bi bi-x-lg icon-close" @click="modal.showModal = false"></i>
+            </div>
+            <div class="line"></div>
+            <div class="modal-detail">
+              <div class="group-input">
+                <div class="name">ผู้รับหนังสือ </div>
+                <cpn-autoComplete v-model="modal.mail_number_out"
+                                  name="mail_number_out"
+                                  :optionSelect="modal.optionSelect.mail_number_out"
+                                  @keyup="keyupModal($event)"
+                                  placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="line"></div>
+            <div class="group-footer">
+              <button type="button" @click="modal.showModal = false" class="btn button-danger">
+                <div class="group-name">
+                  <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                  <div class="name">ยกเลิก</div>
+                </div>
+              </button>
+              <button type="submit" class="btn button-success" @click="modalClick()">
+                <div class="group-name">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                  <div class="name">ตกลง</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <cpn-modal-alert :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
   </div>
@@ -132,71 +177,73 @@ export default {
         title: '',
         message: ''
       },
+      modal: {
+        showModal: true,
+        title: '',
+        message: '' ,
+        optionSelect: {
+          mail_number_out: []
+        }
+      },
       showLoading: false,
       data: {
-        mail_register: '',
-        mail_number_out: '',
-        mail_speed: '',
-        mail_title: '',
-        mail_division: '',
-        mail_to: '',
-        mail_date_st: '',
-        mail_send_to: '',
-        mail_send_cc: '',
-        mail_send_bcc: '',
-        mail_date_send: '',
         table: [],
         page: 1,
         total: 0,
         lastPage: 0,
         perPage: 10,
       },
-      optionSelect: {
-        mail_register: [],
-        mail_speed: [],
-        mail_division: [],
-        mail_to: []
-      }
     }
   },
   methods: {
-    cancelClick() {
-      this.data.mail_register = ''
-      this.data.mail_number_out = ''
-      this.data.mail_speed = ''
-      this.data.mail_title = ''
-      this.data.mail_division = ''
-      this.data.mail_to = ''
-      this.data.mail_date_st = ''
-      this.data.mail_send_to = ''
-      this.data.mail_send_cc = ''
-      this.data.mail_send_bcc = ''
-      this.data.mail_date_send = ''
-      this.data.perPage = 10
-      this.data.page = 1
-      this.apiSendmailLogs()
+    keyupModal(e) {
+      this.modal.optionSelect.mail_number_out = []
+      this.axios.get('/master-data/subministry', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.Name
+            return item
+          })
+          this.modal.optionSelect.mail_number_out = response.data.data
+        }
+      })
+
+    },
+    modalClick() {
+
+    },
+    recommendClick() {
+      this.keyupModal({target: {value: ''}})
+      this.modal.showModal = true
+    },
+    amendClick() {
+
+    },
+    back() {
+      this.$router.push({ 
+        name: 'automail-sendmail',
+        query: {
+          page: this.$route.query.page,
+          perPage: this.$route.query.perPage
+        }
+      }).catch(()=>{});
     },
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiSendmailLogs()
+      this.apiSendmailList()
     },
-    apiSendmailLogs() {
+    apiSendmailList() {
       this.data.table = []
       this.showLoading = true
       this.axios.get('/master-data/department-contact', {
         params:{
-          mail_register: this.data.mail_register,
-          mail_number_out: this.data.mail_number_out,
-          mail_speed: this.data.mail_speed,
-          mail_title: this.data.mail_title,
-          mail_division: this.data.mail_division,
-          mail_to: this.data.mail_to,
-          mail_date_st: this.data.mail_date_st,
-          mail_send_to: this.data.mail_send_to,
-          mail_send_cc: this.data.mail_send_cc,
-          mail_send_bcc: this.data.mail_send_bcc,
-          mail_date_send: this.data.mail_date_send,
           page_size: this.data.perPage,
           page: this.data.page,
         }
@@ -213,96 +260,17 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    keyupDepartment(e) {
-      this.optionSelect.mail_to = []
-      this.axios.get('/master-data/department', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.department_full_name
-            return item
-          })
-          this.optionSelect.mail_to = response.data.data
-        }
-      })
-    },
-    keyupSubministry(e) {
-      this.optionSelect.mail_division = []
-      this.axios.get('/master-data/subministry', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.Name
-            return item
-          })
-          this.optionSelect.mail_division = response.data.data
-        }
-      })
-    },
-    api_master() {
-      this.showLoading = true
-      const request1 = this.axios.get(`/master-data/book-type`)
-      const request2 = this.axios.get(`/master-data/speed`)
-      const request3 = this.axios.get(`/master-data/subministry`)
-      const request4 = this.axios.get(`/master-data/department`)
-
-      this.axios.all([request1, request2, request3, request4])
-      .then(this.axios.spread((...responses) => {
-        this.showLoading = false
-        const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
-        const response4 = responses[3]
-
-        response1.data.data.filter(row => {
-          row.value = row.id
-          row.name = row.desc
-          return row
-        })
-        response2.data.data.filter(row => {
-          row.value = row.id
-          row.name = row.desc
-          return row
-        })
-        response3.data.data.filter(item => {
-          item.value = item.id
-          return item
-        })
-        response4.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.department_full_name
-          return item
-        })
-
-        this.optionSelect.mail_register = response1.data.data
-        this.optionSelect.mail_speed = response2.data.data
-        this.optionSelect.mail_division = response3.data.data
-        this.optionSelect.mail_to = response4.data.data
-        
-        this.apiSendmailLogs()
-        
-      })).catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
-      
-    },
   },
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    // this.api_master()
+    // this.apiSendmailList()
   },
+  watch: {
+    'modal.showModal' () {
+      document.body.style.overflow = this.modal.showModal ? 'hidden' : ''
+    }
+  }
 }
 
 </script>
@@ -343,6 +311,32 @@ export default {
             color: #1a456b;
             font-weight: bold;
             font-size: 18px;
+          }
+        }
+        
+        .group-end {
+          .button-back {
+            width: 129px;
+            height: 45px;
+            border-radius: 5px;
+            border: solid 1px #c1cfe3;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+            color: #15466e;
+            
+            .icon-back {
+              width: 23px;
+              margin-left: 3px;
+            }
+
+            .icon-line {
+              height: 45px;
+              margin-left: 10px;
+              margin-right: 9px;
+            }
           }
         }
       }
@@ -593,6 +587,117 @@ export default {
 
       .group-footer {
         margin: 0px 29px;
+      }
+    }
+
+    .modal-recommend {
+      .modal-class {
+        position: fixed;
+        overflow-y: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background-color: rgba(33, 85, 163, 0.16);
+
+        .modal-center {
+          height: 85%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      
+
+          .modal-size {
+            width: 100%;
+            pointer-events: auto;
+            margin: auto;
+            max-width: 800px;
+            background-color: #ffffffff;
+            border-radius: 15px;
+
+            .line {
+              height: 2px;
+              width: 100%;
+              background-color: #e2ebf7;
+              margin-top: 5px;
+              margin-bottom: 5px;
+            }
+
+            .modal-title {
+              display: flex;
+              justify-content: space-between;
+              padding-top: 25px;
+              margin-bottom: 16px;
+              margin-right: 30px;
+              margin-left: 30px;
+
+              .title-size {
+                font-size: 18px;
+                font-weight: 700;
+                color: #0A1629;
+                margin-top: 5px;
+              }
+
+              .icon-close {
+                font-size: 22px;
+                cursor: pointer;
+              }
+            }
+
+            .modal-detail {
+              padding: 20px 30px 50px;
+
+              .group-input {
+                width: 100%;
+                padding: 0 10px;
+                margin-bottom: 30px;
+
+                .name {
+                  font-size: 16px;
+                  font-weight: bold;
+                  color: #333;
+                  margin-bottom: 7px;
+                }
+              }
+            }
+
+            .group-footer {
+              margin-top: 13px;
+              margin-bottom: 15px;
+              text-align: center;
+              display: flex;
+              justify-content: flex-end;
+              padding: 0 30px;
+              
+              button {
+                margin-left: 20px;
+                width: 115px;
+                height: 45px;
+                border-radius: 5px;
+                border: 0;
+              }
+
+              .group-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .image-icon {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+
+                .name {
+                  color: #ffffff;
+                  font-size: 16px;
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

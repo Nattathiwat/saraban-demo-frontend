@@ -295,7 +295,6 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.Name
             return item
           })
           this.data.optionSelect.subministry = response.data.data
