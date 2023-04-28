@@ -16,53 +16,51 @@
           </div>
         </div>
         <div class="line"></div>
-        <Form @submit="apiSendmailList" @invalid-submit="onInvalidSubmit">
-          <div class="group-detail">
-            <div class="group-between">
-              <div class="group-input w-50">
-                <div class="name">คำขึ้นต้น </div>
-                <div class="group-recommend">
-                  <cpn-input v-model="data.salutation"
-                              name="salutation"
-                              class="input-recommend"
-                              placeholder="กรุณาระบุ" />
-                  <button type="button" class="button-recommend" @click="recommendClick()">
-                    <i class="bi bi-question icon-question"></i>
-                    แนะนำ
-                  </button>
-                </div>
-              </div>
-              <div class="group-input">
-                <div class="name">คำลงท้าย </div>
-                <div class="d-flex">
-                  <cpn-input  v-model="data.postscript"
-                              name="postscript"
-                              placeholder="กรุณาระบุ" />
-
-                  <button type="button" class="button-check" @click="amendClick(1)">
-                    <i class="bi bi-check icon-check"></i>
-                    ปรับปรุงทั้งหมด
-                  </button>
-                </div>
+        <div class="group-detail">
+          <div class="group-between">
+            <div class="group-input w-50">
+              <div class="name">คำขึ้นต้น </div>
+              <div class="group-recommend">
+                <cpn-input v-model="data.salutation"
+                            name="salutation"
+                            class="input-recommend"
+                            placeholder="กรุณาระบุ" />
+                <button type="button" class="button-recommend" @click="recommendClick()">
+                  <i class="bi bi-question icon-question"></i>
+                  แนะนำ
+                </button>
               </div>
             </div>
-            <div class="group-between">
-              <div class="group-input">
-                <div class="name">ข้อมูลผู้ติดต่อ </div>
-                <div class="d-flex">
-                  <cpn-input  v-model="data.contact_information"
-                              name="contact_information"
-                              placeholder="กรุณาระบุ" />
+            <div class="group-input">
+              <div class="name">คำลงท้าย </div>
+              <div class="d-flex">
+                <cpn-input  v-model="data.postscript"
+                            name="postscript"
+                            placeholder="กรุณาระบุ" />
 
-                  <button type="button" class="button-check" @click="amendClick(2)">
-                    <i class="bi bi-check icon-check"></i>
-                    ปรับปรุงทั้งหมด
-                  </button>
-                </div>
+                <button type="button" class="button-check" @click="amendClick(1)">
+                  <i class="bi bi-check icon-check"></i>
+                  ปรับปรุงทั้งหมด
+                </button>
               </div>
             </div>
           </div>
-        </Form>
+          <div class="group-between">
+            <div class="group-input">
+              <div class="name">ข้อมูลผู้ติดต่อ </div>
+              <div class="d-flex">
+                <cpn-input  v-model="data.contact_information"
+                            name="contact_information"
+                            placeholder="กรุณาระบุ" />
+
+                <button type="button" class="button-check" @click="amendClick(2)">
+                  <i class="bi bi-check icon-check"></i>
+                  ปรับปรุงทั้งหมด
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="line"></div>
         <div class="group-body">
           <table class="table-automail-sendmail-list">
@@ -80,7 +78,7 @@
             </thead>
             <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col1">{{index + 1}}</td>
                 <td class="col2">{{item.department_name}}</td>
                 <td class="col3">
                   <div class="new-line">
@@ -150,7 +148,7 @@
                 </td>
                 <td class="col5">
                   <div class="sum-size-file">
-                    <span>ขนาดไฟล์รวม</span>
+                    <span>ขนาดไฟล์รวม {{sumfile(item)}}</span>
                   </div>
                   <div class="new-line">
                     <div class="name">วิธีการส่งไฟล์</div>
@@ -174,10 +172,10 @@
                   <div class="new-line">
                     <div class="name">ไฟล์ต้นเรื่อง</div>
                     <div class="d-flex">
-                      <cpn-input  v-model="item.cc"
-                                  :name="'cc'+index"
+                      <cpn-input  v-model="item.original_file"
+                                  :name="'original_file'+index"
                                   :disabled="true"/>
-                      <button type="button" class="button-view">
+                      <button type="button" class="button-view" @click="previewFile(item)">
                         <i class="bi bi-eye icon-eye"></i>
                       </button>
                     </div>
@@ -185,10 +183,10 @@
                   <div class="new-line">
                     <div class="name">สำเนาคู่ฉบับ</div>
                     <div class="d-flex">
-                      <cpn-input  v-model="item.cc"
-                                  :name="'cc'+index"
+                      <cpn-input  v-model="item.duplicate_copy"
+                                  :name="'duplicate_copy'+index"
                                   :disabled="true"/>
-                      <button type="button" class="button-view">
+                      <button type="button" class="button-view" @click="previewFile(item)">
                         <i class="bi bi-eye icon-eye"></i>
                       </button>
                     </div>
@@ -196,18 +194,29 @@
                   <div class="new-line">
                     <div class="name d-flex justify-content-between align-items-center mb-2">
                       <div>สิ่งที่แนบมาด้วย</div>
-                      <button type="button" class="button-file">
+                      <input type="file" multiple @change="fileChange('attachments', item)" name="attachments" style="display:none;" accept="application/pdf">
+                      <button type="button" class="button-file"  @click="uploadFile('attachments')">
                         <i class="bi bi-plus icon-plus"></i>
                         แนบเอกสาร
                       </button>
                     </div>
-                    <div class="d-flex">
-                      <cpn-input  v-model="item.cc"
-                                  :name="'cc'+index"
+                    <div v-for="(item2, index2) in item.attachments.filter(el => el.flag != 'delete')" :key="index2" v-if="item?.attachments?.length > 0">
+                      <div class="d-flex mb-2">
+                        <cpn-input  v-model="item2.filename"
+                                    :name="'filename'+index2"
+                                    :disabled="true"/>
+                        <button type="button" class="button-view" @click="previewFile(item2)">
+                          <i class="bi bi-eye icon-eye"></i>
+                        </button>
+                        <button type="button" class="button-del" @click="deleteFile(item, index2)">
+                          <i class="bi bi-trash icon-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <cpn-input  v-model="noData"
+                                  :name="'noData'+index"
                                   :disabled="true"/>
-                      <button type="button" class="button-view">
-                        <i class="bi bi-eye icon-eye"></i>
-                      </button>
                     </div>
                   </div>
                 </td>
@@ -218,12 +227,18 @@
             </tbody>
           </table>
         </div>
+        <div class="line"></div>
         <div class="group-footer">
-          <cpn-pagination :page="data.page"
-                          :total="data.total"
-                          :lastPage="data.lastPage"
-                          :perPage="data.perPage"
-                          @pageChange="pageChange" />
+          <div class="footer-right">
+            <button type="button" class="button-primary" @click="save(1)">
+              <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+              บันทึกร่าง
+            </button>
+            <button type="button" class="button-success" @click="save(2)">
+              <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+              บันทึกและส่ง
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -274,6 +289,7 @@ export default {
   name: 'automail-sendmail-list',
   data() {
     return {
+      noData: 'ไม่มีสิ่งที่แนบมาด้วย',
       modalAlert: {
         showModal: false,
         title: '',
@@ -292,10 +308,7 @@ export default {
         postscript: '',
         contact_information: '',
         table: [],
-        page: 1,
-        total: 0,
-        lastPage: 0,
-        perPage: 10,
+        fileType: []
       },
       optionSelect: {
         how_to_send_files: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
@@ -305,6 +318,122 @@ export default {
     }
   },
   methods: {
+    save(flag) {
+      let _this = this
+      this.modalAlert = {
+        showModal: true,
+        type: 'confirm',
+        title: `คุณยืนยันการ${flag == 1 ? 'บันทึกแบบร่าง' : 'บันทึกและส่งต่อ'}หรือไม่`,
+        confirm: true,
+        msgSuccess: true,
+        afterPressAgree() {
+          _this.showLoading = true
+          _this.uploadFileAll(flag)
+        }
+      }
+    },
+    uploadFileAll(flag) {
+      let currentDate = this.assetsUtils.currentDate()
+      let completeFile = []
+      this.data.table.filter(row => {
+        let completeFile2 = []
+        if (row?.attachments?.length > 0) {
+          row.attachments.filter(row2 => {
+            let formDataFile = new FormData();
+            formDataFile.append('file', row2.file);
+            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+            this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+            .then((responses) => {
+              item2.attach_filepath = responses.data.data.path
+              completeFile2.push(true)
+              if (completeFile2.length == row.attachments.length) {
+                completeFile.push(true)
+              }
+              if (completeFile.length == this.data.table.length) {
+                this.callApiSave(flag)
+              }
+            }).catch((error) => {
+              this.showLoading = false
+              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          })
+        } else {
+          completeFile.push(true)
+        }
+      })
+    },
+    callApiSave(flag) {
+      let _this = this
+      this.showLoading = true
+      let dataSave = {
+        table: this.data.table,
+        user_id: parseInt(localStorage.getItem('user_id')),
+      }
+      this.axios.put(`/booking-outx/${this.$route.params.id}`, dataSave)
+      .then(() => { 
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'success', title: flag == 1 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
+    sumfile(item) {
+      let size = 0
+      item?.attachments?.filter(row => {
+        size += row.file.size
+      })
+      return (size /1024 /1024).toFixed(2) + ' MB'
+    },
+    uploadFile(data) {
+      document.querySelector(`[name="${data}"]` ).click()
+    },
+    fileChange(data,item) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.fileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (data == 'attachments') {
+          item?.attachments ? '' : (item.attachments = [])
+          if (file.type == 'application/pdf') {
+            let dataFile = {
+              filename: file.name,
+              type: file.type,
+              link: URL.createObjectURL(file),
+              size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              file: file,
+              flag: 'add'
+            }
+            item.attachments.push(dataFile)
+          }
+        }
+      }
+      document.querySelector(`[name="${data}"]`).value=null;
+    },
+    previewFile(data) {
+      if (data.filename && data.link) {
+        this.axios({
+          method:'get',
+          url: data.link,
+          baseURL: '',
+          responseType: 'blob',
+        })
+        .then(response => {
+          const blob = new Blob([response.data], { type: this.assetsUtils.getTypeFile(data.filename) })
+          window.open(URL.createObjectURL(blob))
+        })
+      }
+    },
+    deleteFile(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        item.attachments.splice(index,1)
+      }
+    },
     keyupModal(e) {
       this.modal.optionSelect.book_recipient = []
       this.axios.get('/master-data/subministry', {
@@ -378,37 +507,41 @@ export default {
         }
       }).catch(()=>{});
     },
-    pageChange(data) {
-      this.data.perPage = data.perPage
-      this.data.page = data.page
-      this.apiSendmailList()
-    },
     apiSendmailList() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/master-data/department-contact', {
-        params:{
-          page_size: this.data.perPage,
-          page: this.data.page,
-        }
-      })
+      this.axios.get('/master-data/department-contact')
       .then((response) => {
         this.showLoading = false
-        response.data.data.meta.filter(row => row.disabled = true)
         this.data.table = response.data.data.meta
-        this.data.total = response.data.data.total
-        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    apiMaster() {
+      this.showLoading = true
+      const request1 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
+      this.axios.all([request1])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response1 = responses[0]
+        this.data.fileType = []
+        response1.data.data.filter(item => {
+          if (item.active_flag == 1) {
+            this.data.fileType.push(item.content_type)
+          }
+        })
+        this.apiSendmailList()
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    }
   },
   mounted() {
-    this.data.page = this.$route.query?.page || this.data.page
-    this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apiSendmailList()
+    this.apiMaster()
   },
   watch: {
     'modal.showModal' () {
@@ -773,6 +906,21 @@ export default {
 
                   .icon-eye {
                     font-size: 22px;
+                    color: #1a456b;
+                  }
+                }
+
+                .button-del {
+                  min-width: 45px;
+                  height: 45px;
+                  border-radius: 5px;
+                  border: solid 1px #ced4da;
+                  background-color: #fff;
+                  margin-left: 5px;
+
+                  .icon-trash {
+                    font-size: 22px;
+                    color: #f74756;
                   }
                 }
               }
@@ -782,7 +930,37 @@ export default {
       }
 
       .group-footer {
-        margin: 0px 29px;
+        margin-top: 23px;
+        margin-bottom: 15px;
+        text-align: center;
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 30px;
+        
+        button {
+          height: 45px;
+          border-radius: 5px;
+          box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
+          border: 0;
+          font-size: 16px;
+          font-weight: 500;
+          color: #fff;
+        }
+
+        .button-primary {
+          width: 170px;
+        }
+
+        .button-success {
+          width: 175px;
+          margin-left: 20px;
+        }
+        
+        .icon-check-circle {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
       }
     }
 
