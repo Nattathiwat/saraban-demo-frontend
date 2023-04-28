@@ -1,6 +1,26 @@
 <template>
   <div class="user-detail">
     <div class="group-overflow">
+      <!-- <div class="detail-history">
+        <div class="group-detail">
+          <div class="group-between">
+              <div class="group-input left">
+                <div class="name">ชื่อ <span class="required">*</span></div>
+                <cpn-input  v-model="data.fname"
+                            name="fname"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">นามสกุล <span class="required">*</span></div>
+                <cpn-input  v-model="data.lname"
+                            name="lname"
+                            rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+        </div>
+      </div> -->
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
@@ -19,122 +39,160 @@
         <Form @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
-              <div class="group-image left">
-                <div class="name">โปรไฟล์</div>
-                <div class="image-preview-wrapper" v-show="data.previewImage1" :style="{ 'background-image': `url(${data.previewImage1})` }"></div>
-                <input ref="fileInput1" type="file" @input="pickFile('fileInput1')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
-                <button name="fileInput1" type="button" @click="selectImage('fileInput1')" class="button-image">เลือกรูปภาพ</button>
-                <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
-              </div>
-              <div class="group-image">
-                <div class="name">ลายเซ็น</div>
-                <div class="image-preview-wrapper" v-show="data.previewImage2" :style="{ 'background-image': `url(${data.previewImage2})` }"></div>
-                <input ref="fileInput2" type="file" @input="pickFile('fileInput2')" accept="image/png, image/jpg, image/jpeg" style="display:none;">
-                <button name="fileInput2" type="button" @click="selectImage('fileInput2')" class="button-image">เลือกรูปภาพ</button>
-                <div class="warning-message">*ไฟล์ที่อัพโหลดได้ png, jpg และ jpeg ขนาดไม่เดิน 500 KB</div>
-              </div>
-            </div>
-            <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อ <span class="required">*</span></div>
+                <div class="name">ประเภท</div>
                 <cpn-input  v-model="data.fname"
                             name="fname"
-                            rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">นามสกุล <span class="required">*</span></div>
+                <div class="name">ทะเบียน</div>
                 <cpn-input  v-model="data.lname"
                             name="lname"
-                            rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ชื่อผู้ใช้งาน <span v-if="!edit" class="required">*</span></div>
+                <div class="name">ชั้นความลับ</div>
                 <cpn-input  v-model="data.username"
                             name="Usern"
-                            :rules="edit ? '' : 'required'"
+                            :disabled="edit"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input left">
+                <div class="name">ความเร่งด่วน</div>
+                <cpn-input  v-model="data.password"
+                            name="passw"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input left">
+                <div class="name">เลขที่ออก สลค.</div>
+                <cpn-input  v-model="data.username"
+                            name="Usern"
                             :disabled="edit"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">รหัสผ่าน <span v-if="!edit" class="required">*</span></div>
+                <div class="name">ลงวันที่</div>
                 <cpn-input  v-model="data.password"
                             name="passw"
-                            type="password"
-                            :rules="edit ? '' : 'required'"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">Email <span class="required">*</span></div>
+                <div class="name">จากสังกัด/กอง <span class="required">*</span></div>
                 <cpn-input  v-model="data.email"
                             name="email"
-                            rules="required|email"
                             placeholder="กรุณาระบุ" />
               </div>
-              <div class="group-input"></div>
-            </div>
-            <div class="group-between">
-              <div class="group-input left">
-                <div class="name">กระทรวง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.organization_id"
-                                  name="organization"
-                                  placeholder="กรุณาระบุ"
-                                  rules="required"
-                                  @keyup="keyupOrganization($event)"
-                                  :optionSelect="data.optionSelect.organization" />
-              </div>
               <div class="group-input">
-                <div class="name">หน่วยงาน <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.department_id"
-                                  name="department"
-                                  placeholder="กรุณาระบุ"
-                                  rules="required"
-                                  @keyup="keyupDepartment($event)"
-                                  :optionSelect="data.optionSelect.department" />
+                <div class="name">ถึง <span class="required">*</span></div>
+                <cpn-input  v-model="data.email"
+                            name="email"
+                            placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">กอง <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.subministry_id"
-                                  name="subministry"
-                                  placeholder="กรุณาระบุ"
-                                  rules="required"
-                                  @keyup="keyupSubministry($event)"
-                                  :optionSelect="data.optionSelect.subministry" />
-              </div>
-              <div class="group-input">
-                <div class="name">กลุ่ม</div>
-                <cpn-autoComplete v-model="data.group_id"
-                                  name="group"
-                                  placeholder="กรุณาระบุ"
-                                  @keyup="keyupGroup($event)"
-                                  :optionSelect="data.optionSelect.group" />
+                <div class="name">ชื่อเรื่อง <span class="required">*</span></div>
+                <cpn-input  v-model="data.email"
+                            name="email"
+                            placeholder="กรุณาระบุ" />
               </div>
             </div>
           </div>
-          <div class="group-level" v-show="data.optionSelect.roles.length > 0">
-            <div class="level-first">
-              <img src="@/assets/images/icon/crown-duotone.svg" alt="" class="icon-crown">
-              <div class="name">สิทธิ์</div>
+          <div class="line"></div>
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">คำขึ้นต้น <span class="required">*</span></div>
+                <cpn-input  v-model="data.fname"
+                            name="fname"
+                            rule="required"
+                            searchFlag="true"
+                            placeholder="กรุณาระบุ" />
+              </div>
             </div>
-            <div class="level-button">
-              <div v-for="(item, index) in data.optionSelect.roles" :key="index">
-                <button v-if="item.id == 1" type="button" class="button-admin" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check">
-                  <div class="group-user">
-                    <img v-if="item.check" src="@/assets/images/icon/user-crown-duotoneffffff.svg" alt="" class="icon-user-crown">
-                    <img v-else src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
-                    {{item.desc}}
-                  </div>
-                </button>
-                <button v-else type="button" class="button-roles" v-bind:class="item.check ? 'active' : ''" @click="item.check = !item.check" :disabled="item.id == 6 ? !rule.user5 : false">
-                  {{item.desc}}
-                </button>
+            <div class="group-between">
+              <div class="group-input">
+                <cpn-input  v-model="data.lname"
+                            name="lname"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">ข้อความ</div>
+                <cpn-textArea v-model="input4"
+                              name="input4"
+                              rows="8"
+                              placeholder="Text Area"  />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">รายละเอียดตามเอกสารที่ส่งมาด้วย</div>
+                <cpn-textArea v-model="input4"
+                              name="input4"
+                              rows="2"
+                              placeholder="รายละเอียดตามเอกสารที่ส่งมาด้วย"  />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">คำลงท้าย <span class="required">*</span></div>
+                <cpn-input  v-model="data.fname"
+                            name="fname"
+                            rule="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">ชื่อส่วนราชการที่ส่งหนังสือ <span class="required">*</span></div>
+                <cpn-input  v-model="data.lname"
+                            name="lname"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">ข้อมูลผู้ติดต่อ <span class="required">*</span></div>
+                <cpn-input  v-model="data.fname"
+                            name="fname"
+                            rule="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <cpn-input  v-model="data.lname"
+                            name="lname"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+          </div>
+          <div class="line"></div>
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">ข้อความขอให้ตอบกลับ <span class="required">*</span></div>
+                <cpn-input  v-model="data.fname"
+                            name="fname"
+                            rule="required"
+                            searchFlag="true"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">Disclaimer</div>
+                <cpn-textArea v-model="input4"
+                              name="input4"
+                              rows="8"
+                              placeholder="Text Area"  />
               </div>
             </div>
           </div>
@@ -872,6 +930,197 @@ export default {
           width: 25px;
           height: 25px;
           margin-right: 10px;
+        }
+      }
+    }
+
+    .detail-history {
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      border-radius: 15px;
+      background-color: #fff;
+      border: 0px;
+
+      .history{
+        margin-top: 30px;
+        border-radius: 10px;
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 22px 29px;
+
+          .group-left {
+            display: flex;
+
+            .icon-size {
+              font-size: 25px;
+              margin-right: 18px;
+              color: #1a456b;
+            }
+
+            .name {
+              margin-top: 5px;
+              color: #1a456b;
+              font-weight: bold;
+              font-size: 18px;
+            }
+          }
+        }
+
+        .content {
+          padding: 22px 29px;
+
+          .content-head {
+            display: flex;
+            margin-left: 20px;
+
+            .icon-size {
+              font-size: 18px;
+              margin-right: 10px;
+              color: #1a456b;
+            }
+
+            div {
+              font-size: 18px;
+              color: #1a456b;
+              padding: 10px 15px;
+            }
+
+            div.active {
+              background-color: #1a456b;
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              color: #ffffff;
+
+              .icon-size {
+                color: #ffffff;
+              }
+            }
+          }
+
+          .content-detail.first {
+            border-top: 2px solid #e2ebf7;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+          }
+
+          .content-detail.end {
+            border-bottom: 2px solid #e2ebf7;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+          }
+
+          .content-detail {
+            padding: 22px;
+            border-left: 2px solid #e2ebf7;
+            border-right: 2px solid #e2ebf7;
+
+            .detail-head {
+              display: flex;
+
+              .number {
+                font-size: 18px;
+                background-color: #1a456b;
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: #ffffff;
+              }
+
+              .topic {
+                border-radius: 20px;
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .topic.blue {
+                background-color: #a8d0f1;
+              }
+
+              .topic.yellow {
+                background-color: #faee85;
+              }
+
+              .topic.green {
+                background-color: #aaf1a8;
+              }
+
+              .create {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+                margin-top: -5px;
+
+                .icon-size {
+                  font-size: 22px;
+                }
+              }
+
+              .date {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .time {
+                color: #15466e;
+                padding: 5px 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+            }
+
+            .button-file {
+              margin-top: 20px;
+              margin-left: 50px;
+              color: #fff;
+              font-size: 18px;
+              background-color: #0f324e;
+              border-color: #0d2b43;
+              padding: 8px 12px;
+              border-radius: 10px;
+            }
+
+            .detail-list {
+              font-size: 18px;
+              margin-top: 20px;
+              margin-left: 30px;
+            }
+            
+
+            .detail-signager {
+              margin-left: 30px;
+              font-size: 18px;
+              width: 200px;
+              text-align: center;
+
+
+              .image-size {
+                width: 200px;
+              }
+            }
+
+            .line {
+              margin-top: 30px;
+            }
+          }
         }
       }
     }

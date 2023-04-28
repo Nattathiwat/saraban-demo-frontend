@@ -72,7 +72,7 @@
                 งานของกอง
               </div>
             </div>
-            <div class="list-navbar-group">
+            <div class="list-navbar-group" v-show="false">
               <div class="list-navbar pointer" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
                 <div class="group-image">
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">

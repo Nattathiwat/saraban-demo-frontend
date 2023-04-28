@@ -126,7 +126,7 @@
                 <td class="col11">
                   <div class="group-icon">
                     <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
-                    <img @click="deleteClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
+                    <img @click="sendmailClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
                   </div>
                 </td>
               </tr>
@@ -228,36 +228,15 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    deleteClick(data) {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบผู้ใช้งาน`,
-        message: `“${data.fname}  ${data. lname}”  ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          _this.showLoading = true
-          _this.axios.delete(`/user/${data.id}`)
-          .then(() => { 
-            _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบผู้ใช้งานสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apiUser()
-              }
-            }
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
+    sendmailClick(item) {
+      this.$router.push({ 
+        name: 'automail-sendmail-edit',
+        params: {id: item.id},
+        query: {
+          page: this.data.page,
+          perPage: this.data.perPage
         }
-      }
+      }).catch(()=>{});
     },
   },
   mounted() {
