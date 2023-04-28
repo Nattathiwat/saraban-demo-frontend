@@ -1,5 +1,5 @@
 <template>
-  <div class="user-inex">
+  <div class="mail-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -85,9 +85,18 @@
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ลำดับ</th>
-                <th class="col2">หน่วยงาน</th>
-                <th class="col3">อีเมล์ติดต่อหน่วยงาน</th>
-                <th class="col4">เครื่องมือ</th>
+                <th class="col2">ความเร่งด่วน</th>
+                <th class="col3">ชั้นความลับ</th>
+                <th class="col4">เลขออก สลค.</th>
+                <th class="col5">ทะเบียนหนังสือ</th>
+                <th class="col6">ชื่อเรื่อง</th>
+                <th class="col7">ชนิดหนังสือ</th>
+                <th class="col8">ลงวันที่</th>
+                <th class="col9">จาก</th>
+                <th class="col10">ถึง</th>
+                <th class="col11">                    
+                  <img src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send">
+                </th>
               </tr>
             </thead>
             <tbody class="tbody">
@@ -97,20 +106,32 @@
                 <td class="col3">
                   <div class="new-line">
                     <div class="name">ส่งถึง (TO)</div>
-                    <cpn-input  v-model="item.department_full_name"
-                                :name="'send_to'+index"
-                                :disabled="item.disabled"  />
                   </div>
                 </td>
-                <td class="col4">
+                <td class="col4">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col5">{{data.department_full_name}}</td>
+                <td class="col6">
+                  <div class="new-line">
+                    <div class="name">ส่งถึง (TO)</div>
+                  </div>
+                </td>
+                <td class="col7">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col8">{{data.department_full_name}}</td>
+                <td class="col9">
+                  <div class="new-line">
+                    <div class="name">ส่งถึง (TO)</div>
+                  </div>
+                </td>
+                <td class="col10">{{data.department_full_name}}</td>
+                <td class="col11">
                   <div class="group-icon">
-                    <img @click="editClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
+                    <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
                     <img @click="deleteClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
                   </div>
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="4">ไม่มีข้อมูล</td>
+                <td colspan="12">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -131,7 +152,7 @@
 </template>
 <script>
 export default {
-  name: 'user-manage-inex',
+  name: 'mail-manage-inex',
   data() {
     return {
       modalAlert: {
@@ -157,9 +178,9 @@ export default {
         name: 'user-manage-create',
       }).catch(()=>{});
     },
-    editClick(item) {
+    listClick(item) {
       this.$router.push({ 
-        name: 'user-manage-edit',
+        name: 'automail-sendmail-list',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -248,7 +269,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .user-inex {
+  .mail-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -443,28 +464,75 @@ export default {
             }
 
             .col1 {
-              min-width: 180px;
-              max-width: 180px;
+              min-width: 140px;
+              max-width: 140px;
               width: 0%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 350px;
-              max-width: 350px;
+              min-width: 160px;
+              max-width: 160px;
               width: 0%;
             }
 
             .col3 {
+              min-width: 160px;
+              max-width: 160px;
+              width: 0%;
+            }
+            
+            .col4 {
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
+            }
+
+            .col5 {
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
+            }
+
+            .col6 {
               min-width: 450px;
               width: 15%;
             }
 
-            .col4 {
+            .col7 {
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
+            }
+
+            .col8 {
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
+            }
+
+            .col9 {
+              min-width: 150px;
+              width: 15%;
+            }
+
+            .col10 {
+              min-width: 150px;
+              width: 15%;
+            }
+
+            .col11 {
               min-width: 200px;
               max-width: 200px;
               width: 0%;
               padding-right: 28px !important;
+
+              .icon-send {
+                margin-right: 10px;
+                color: #0f3a64;
+                width: 20px;
+                height: 20px;
+              }
             }
           }
 
@@ -506,7 +574,7 @@ export default {
                 }
               }
 
-              .col4 {
+              .col11 {
                 padding-right: 28px;
 
                 .group-icon {
