@@ -1,71 +1,137 @@
 <template>
-  <div class="user-inex">
+  <div class="mail-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">ผู้ใช้งาน</div>
-            <button type="button" class="add-user" @click="addClick()">
-              <div class="group-image">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                เพิ่มผู้ใช้งาน
-              </div>
-            </button>
-          </div>
-          <div class="group-end">
-            <div class="search" >
-              <cpn-input  v-model="data.search"
-                          name="search"
-                          type="text"
-                          :searchFlag="true"
-                          @searchClick="search()"
-                          placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
-            </div>
+            <div class="name">รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ</div>
           </div>
         </div>
         <div class="line"></div>
+        <Form @submit="apiMailAddress" @invalid-submit="onInvalidSubmit">
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">ทะเบียน </div>
+                <cpn-autoComplete   v-model="data.record"
+                                    name="record"
+                                    @keyupData="keyupData"
+                                    placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">เลขออก สลค.</div>
+                <cpn-input  v-model="data.doc_num"
+                            name="doc_num"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">เรื่อง</div>
+                <cpn-input  v-model="data.name"
+                            name="name"
+                            placeholder="กรุณาระบุ"  />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">จาก</div>
+                <cpn-autoComplete  v-model="data.send_from"
+                            name="send_from"
+                            @keyupData="keyupData"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">ถึง</div>
+                <cpn-autoComplete  v-model="data.send_to"
+                            name="send_to"
+                            @keyupData="keyupData"
+                            placeholder="เลือกหน่วยงานปลายทาง" />
+              </div>
+            </div>
+            <div class="group-between">
+              <div class="group-input left">
+                <div class="name">จากวันที่</div>
+                <cpn-datepicker  v-model="data.start_date"
+                            name="start_date"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">ถึงวันที่</div>
+                <cpn-datepicker  v-model="data.end_date"
+                            name="end_date"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-button">
+              <div class="button-left">
+                <button type="button" class="button-warning" @click="cancelClick()">
+                  <i class="bi bi-arrow-clockwise icon-clockwise"></i>
+                  ล้างการค้นหา
+                </button>
+              </div>
+              <div class="button-right">
+                <button type="submit" class="button-search">
+                  <i class="bi bi-search icon-search"></i>
+                  ค้นหา
+                </button>
+              </div>
+            </div>
+          </div>
+        </Form>
         <div class="group-body">
-          <table class="table-user-inex">
+          <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ไอดี</th>
-                <th class="col2">ชื่อ-นามสกุล</th>
-                <th class="col3">หน่วยงาน</th>
-                <th class="col4">ชื่อผู้ใช้งาน</th>
-                <th class="col5">Email</th>
-                <th class="col6" v-show="false">สิทธิ์</th>
-                <th class="col7">เครื่องมือ</th>
+                <th class="col1">ลำดับ</th>
+                <th class="col2">ความเร่งด่วน</th>
+                <th class="col3">ชั้นความลับ</th>
+                <th class="col4">เลขออก สลค.</th>
+                <th class="col5">ทะเบียนหนังสือ</th>
+                <th class="col6">ชื่อเรื่อง</th>
+                <th class="col7">ชนิดหนังสือ</th>
+                <th class="col8">ลงวันที่</th>
+                <th class="col9">จาก</th>
+                <th class="col10">ถึง</th>
+                <th class="col11">                    
+                  <img src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send">
+                </th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.id}}</td>
-                <td class="col2">{{item.fname}}  {{item.lname}}</td>
-                <td class="col3">{{item.department_name}}</td>
-                <td class="col4">{{item.username}}</td>
-                <td class="col5">{{item.email}}</td>
-                <td class="col6" v-show="false">
-                  <div class="group-col6">
-                    <span class="span" v-bind:class="item.permission_id == 1 ? 'admin1' : item.permission_id == 2 ? 'admin2' : ''">
-                      <img v-show="item.permission_id == 1" src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
-                      <img v-show="item.permission_id == 2" src="@/assets/images/icon/badge-sheriff-duotone.svg" alt="" class="icon-badge-sheriff">
-                      {{item.permission_name}}
-                    </span>
-                    <div class="col6-detail" v-show="item.permission_id != 1 && item.permission_id != 2 && item.levelDesc != ''">{{item.levelDesc}}
-                      <div class="image-size"></div>
-                    </div>
+                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col2">{{data.department_full_name}}</td>
+                <td class="col3">
+                  <div class="new-line">
+                    <div class="name">ส่งถึง (TO)</div>
                   </div>
                 </td>
-                <td class="col7">
+                <td class="col4">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col5">{{data.department_full_name}}</td>
+                <td class="col6">
+                  <div class="new-line">
+                    <div class="name">ส่งถึง (TO)</div>
+                  </div>
+                </td>
+                <td class="col7">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col8">{{data.department_full_name}}</td>
+                <td class="col9">
+                  <div class="new-line">
+                    <div class="name">ส่งถึง (TO)</div>
+                  </div>
+                </td>
+                <td class="col10">{{data.department_full_name}}</td>
+                <td class="col11">
                   <div class="group-icon">
-                    <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
-                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                    <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
+                    <img @click="deleteClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
                   </div>
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="7">ไม่มีข้อมูล</td>
+                <td colspan="12">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -86,7 +152,7 @@
 </template>
 <script>
 export default {
-  name: 'user-manage-inex',
+  name: 'mail-manage-inex',
   data() {
     return {
       modalAlert: {
@@ -102,6 +168,7 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 10,
+        department_full_name: 'Test'
       },
     }
   },
@@ -111,9 +178,9 @@ export default {
         name: 'user-manage-create',
       }).catch(()=>{});
     },
-    editClick(item) {
+    listClick(item) {
       this.$router.push({ 
-        name: 'user-manage-edit',
+        name: 'automail-sendmail-list',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -202,7 +269,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .user-inex {
+  .mail-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -265,17 +332,86 @@ export default {
             }
           }
         }
+      }
 
-        .group-end {
+      .group-detail {
+        padding: 20px 23px;
+
+        .group-between {
           display: flex;
 
-          .date {
-            margin-right: 25px;
-            width: 230px;
+          .left {
+            margin-right: 30px;
+          }
+        }
+
+        .group-input {
+          width: 100%;
+          padding: 0 10px;
+          margin-bottom: 30px;
+
+          .name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 7px;
+          }
+        }
+        .group-button {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          padding: 0 10px;
+
+          .button-left {
+            .button-warning {
+              width: 160px;
+            }
           }
 
-          .search {
-            min-width: 480px;
+          .button-right {
+            display: flex;
+            margin-left: 10px;
+
+            .button-search {
+              background-color: #1a456b;
+              font-size: 16px;
+              font-weight: 500;
+              color: #ffffff;
+              min-width: 100px;
+              max-width: 100px;
+              height: 45px;
+              border: 0;
+              border-top-right-radius: 5px;
+              border-bottom-right-radius: 5px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-left: -5px;
+            }
+          }
+
+          button {
+            height: 45px;
+            border-radius: 5px;
+            box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
+            border: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .icon-clockwise {
+            font-size: 22px;
+            margin-right: 10px;
+          }
+
+          .icon-search {
+            font-size: 20px;
+            margin-right: 10px;
           }
         }
       }
@@ -304,7 +440,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-user-inex {
+        .table-department-inex {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
@@ -328,40 +464,75 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 140px;
+              max-width: 140px;
+              width: 0%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 250px;
-              width: 20%;
+              min-width: 160px;
+              max-width: 160px;
+              width: 0%;
             }
 
             .col3 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 160px;
+              max-width: 160px;
+              width: 0%;
             }
-
+            
             .col4 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
             }
 
             .col5 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
             }
 
             .col6 {
-              min-width: 170px;
+              min-width: 450px;
               width: 15%;
             }
 
             .col7 {
-              min-width: 170px;
+              min-width: 180px;
+              max-width: 180px;
+              width: 0%;
+            }
+
+            .col8 {
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
+            }
+
+            .col9 {
+              min-width: 150px;
               width: 15%;
+            }
+
+            .col10 {
+              min-width: 150px;
+              width: 15%;
+            }
+
+            .col11 {
+              min-width: 200px;
+              max-width: 200px;
+              width: 0%;
               padding-right: 28px !important;
+
+              .icon-send {
+                margin-right: 10px;
+                color: #0f3a64;
+                width: 20px;
+                height: 20px;
+              }
             }
           }
 
@@ -383,7 +554,7 @@ export default {
                 padding: 0 10px;
               }
 
-              .text-left {
+              .col2, .col3 {
                 text-align: left;
               }
 
@@ -391,96 +562,19 @@ export default {
                 padding-left: 28px;
               }
 
-              .col9 {
-                padding-left: 28px !important;
-              }
+              .col3 {
+                padding: 10px 0;
 
-              .col6 {
-                .group-col6 {
-                  text-align: left;
-                  position: relative;
-                  height: 100%;
-                  display: flex;
-                  align-items: center;
+                .name {
+                  margin-bottom: 5px;
+                }
 
-                  .col6-detail {
-                    width: 250px;
-                    color: #fff;
-                    position: absolute;
-                    top: 40px;
-                    left: 50%;
-                    transform: translate(-50%, 0px);
-                    padding: 19px 18px 16px 18px;
-                    display: none;
-                    font-size: 16px;
-                    font-weight: 500;
-                    text-align: left;
-                    z-index: 1;
-                    background-color: #15466e;
-                    border-radius: 9px;
-
-                    .image-size {
-                      position: absolute;
-                      left: 50%;
-                      z-index: -1;
-                      top: -5px;
-                      width: 22px;
-                      height: 22px;
-                      background-color: #15466e;
-                      -ms-transform: rotate(45deg);
-                      transform: rotate(45deg);
-                      margin-left: -11px;
-                    }
-                  }
+                .new-line {
+                  padding: 5px 0;
                 }
               }
 
-              .col6 .group-col6 {
-                float: left;
-
-                .icon-user-crown {
-                  width: 19px;
-                  height: 21px;
-                  margin-right: 8px;
-                }
-
-                .icon-badge-sheriff {
-                  width: 20px;
-                  height: 23px;
-                  margin-right: 7px;
-                }
-
-                .admin1 {
-                  height: 34px;
-                  padding: 8px 10px 8px 10px;
-                  border-radius: 8px;
-                  background-color: #fae4e7;
-                  font-size: 16px;
-                  font-weight: 500;
-                  color: #f94859;
-                  display: flex;
-                  align-items: center;
-                }
-
-                .admin2 {
-                  height: 34px;
-                  padding: 8px 10px 8px 10px;
-                  border-radius: 8px;
-                  background-color: #d2eae9;
-                  font-size: 16px;
-                  font-weight: 500;
-                  color: #007773;
-                  display: flex;
-                }
-              }
-
-              .col6 .group-col6:hover{
-                .col6-detail{
-                  display: block;
-                }
-              }
-
-              .col7 {
+              .col11 {
                 padding-right: 28px;
 
                 .group-icon {
@@ -489,15 +583,31 @@ export default {
                   align-items: center;
                   justify-content: center;
 
-                  .image-pencil {
-                    width: 21px;
-                    height: 21px;
-                    margin-right: 28px;
+                  .icon-send {
+                    margin-right: 10px;
+                    color: #0f3a64;
+                    width: 20px;
+                    height: 20px;
                   }
 
-                  .image-trash {
+                  .icon-envelope {
+                    // margin-right: 10px;
+                    // color: #0f3a64;
                     width: 20px;
-                    height: 23px;
+                    height: 20px;
+                  }
+
+                  button {
+                    width: 30px;
+                    padding: 0;
+                    margin: 0;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                  }
+
+                  .button-danger {
+                    margin-left: 15px;
                   }
                 }
               }

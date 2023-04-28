@@ -248,10 +248,10 @@ export default {
     modal_genno() {
       this.modalRegiter.showModal = true
       this.modalRegiter.booking_register_details= [{
-        as_of_date: this.assetsUtils.currentDate(),
-        optionSelect: {
-          book_type: this.optionSelectDefault.book_category_id,
-        },
+        // as_of_date: this.assetsUtils.currentDate(),
+        // optionSelect: {
+        //   book_type: this.optionSelectDefault.book_category_id,
+        // },
       }]
     },
     api_master() {
