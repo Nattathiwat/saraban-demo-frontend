@@ -311,7 +311,7 @@ export default {
           component: () => import("./view/automail/sendmail/index.vue"),
         },
         { 
-          path: 'sendmail', 
+          path: 'sendmail/list', 
           name: 'automail-sendmail-list',
           component: () => import("./view/automail/sendmail/list.vue"),
         },

@@ -65,7 +65,7 @@
         </Form>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-department-inex">
+          <table class="table-master-mail-addresses">
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ลำดับ</th>
@@ -308,12 +308,9 @@ export default {
               font-size: 16px;
               font-weight: 500;
               color: #ffffff;
-              min-width: 100px;
-              max-width: 100px;
+              width: 100px;
               height: 45px;
               border: 0;
-              border-top-right-radius: 5px;
-              border-bottom-right-radius: 5px;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -370,7 +367,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-department-inex {
+        .table-master-mail-addresses {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;

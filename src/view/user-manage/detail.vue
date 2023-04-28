@@ -233,6 +233,7 @@ export default {
       .then((response) => { 
         localStorage.setItem('profile_img', response.data.data?.profile_img || '')
         this.$emit('getUserImage', localStorage.getItem('profile_img'), localStorage.getItem('profile_img'))
+        localStorage.setItem('data_rule', JSON.stringify(response.data.data.roles))
         let rule = {}
         response.data.data.roles.filter(row => {
           rule[`user${row.role_id}`] = true
@@ -295,7 +296,6 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.Name
             return item
           })
           this.data.optionSelect.subministry = response.data.data

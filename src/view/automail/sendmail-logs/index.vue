@@ -1,71 +1,148 @@
 <template>
-  <div class="user-inex">
+  <div class="automail-sendmail-logs">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">ผู้ใช้งาน</div>
-            <button type="button" class="add-user" @click="addClick()">
-              <div class="group-image">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                เพิ่มผู้ใช้งาน
-              </div>
-            </button>
-          </div>
-          <div class="group-end">
-            <div class="search" >
-              <cpn-input  v-model="data.search"
-                          name="search"
-                          type="text"
-                          :searchFlag="true"
-                          @searchClick="search()"
-                          placeholder="กรุณากรอกข้อมูลที่ต้องการค้นหา" />
-            </div>
+            <i class="bi bi-envelope icon-envelope"></i>
+            <div class="name">บันทึกการส่งอีเมลอัตโนมัติ</div>
           </div>
         </div>
         <div class="line"></div>
+        <Form @submit="apiSendmailLogs" @invalid-submit="onInvalidSubmit">
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">ทะเบียน </div>
+                <cpn-select v-model="data.mail_register"
+                            name="mail_register"
+                            :optionSelect="optionSelect.mail_register"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">เลขออก สลค. </div>
+                <cpn-input  v-model="data.mail_number_out"
+                            name="mail_number_out"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">ความเร่งด่วน</div>
+                <cpn-select v-model="data.mail_speed"
+                            name="mail_speed"
+                            :optionSelect="optionSelect.mail_speed"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div>
+            <div class="group-input">
+              <div class="name">ชื่อเรื่อง </div>
+              <cpn-input  v-model="data.mail_title"
+                          name="mail_title"
+                          placeholder="กรุณาระบุ" />
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">กอง/สำนัก </div>
+                <cpn-autoComplete v-model="data.mail_division"
+                                  name="mail_division"
+                                  :optionSelect="optionSelect.mail_division"
+                                  @keyup="keyupSubministry($event)"
+                                  placeholder="เลือกกอง/สำนัก" />
+              </div>
+              <div class="group-input">
+                <div class="name">ถึง </div>
+                <cpn-autoComplete v-model="data.mail_to"
+                                  name="mail_to"
+                                  :optionSelect="optionSelect.mail_to"
+                                  @keyup="keyupDepartment($event)"
+                                  placeholder="เลือกหน่วยงานปลายทาง" />
+              </div>
+            </div>
+            <div class="group-input">
+              <div class="name">ลงวันที่ตั้งแต่ - ถึง </div>
+              <cpn-datepickerRange  v-model="data.mail_date_st"
+                                    name="mail_date_st"
+                                    placeholder="เลือกวันที่ - ถึงวันที่" />
+            </div>
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">ส่งถึง (TO) </div>
+                <cpn-input  v-model="data.mail_send_to"
+                            name="mail_send_to"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">สำเนาถึง (Cc) </div>
+                <cpn-input  v-model="data.mail_send_cc"
+                            name="mail_send_cc"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">สำเนาลับถึง (Bcc)</div>
+                <cpn-input  v-model="data.mail_send_bcc"
+                            name="mail_send_bcc"
+                            placeholder="กรุณาระบุ"  />
+              </div>
+            </div>
+            <div class="group-input">
+              <div class="name">วันที่ส่งตั้งแต่ - ถึง </div>
+              <cpn-datepickerRange  v-model="data.mail_date_send"
+                                    name="mail_date_send"
+                                    placeholder="เลือกวันที่ - ถึงวันที่" />
+            </div>
+            <div class="group-button">
+              <div class="button-left">
+                <button type="button" class="button-warning" @click="cancelClick()">
+                  <i class="bi bi-arrow-clockwise icon-clockwise"></i>
+                  ล้างการค้นหา
+                </button>
+              </div>
+              <div class="button-right">
+                <button type="submit" class="button-search">
+                  <i class="bi bi-search icon-search"></i>
+                  ค้นหา
+                </button>
+              </div>
+            </div>
+          </div>
+        </Form>
+        <div class="line"></div>
         <div class="group-body">
-          <table class="table-user-inex">
+          <table class="table-automail-sendmail-logs">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ไอดี</th>
-                <th class="col2">ชื่อ-นามสกุล</th>
-                <th class="col3">หน่วยงาน</th>
-                <th class="col4">ชื่อผู้ใช้งาน</th>
-                <th class="col5">Email</th>
-                <th class="col6" v-show="false">สิทธิ์</th>
-                <th class="col7">เครื่องมือ</th>
+                <th class="col1">ลำดับ</th>
+                <th class="col2">สถานะ</th>
+                <th class="col3">วันและเวลาที่ส่ง</th>
+                <th class="col4">เลขออกสลค.</th>
+                <th class="col5">ทะเบียนหนังสือ</th>
+                <th class="col6">ความเร่งด่วน</th>
+                <th class="col7">ชื่อเรื่อง</th>
+                <th class="col8">ลงวันที่</th>
+                <th class="col9">จาก</th>
+                <th class="col10">ถึง</th>
+                <th class="col11">To</th>
+                <th class="col12">Cc</th>
+                <th class="col13">Bcc</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.id}}</td>
-                <td class="col2">{{item.fname}}  {{item.lname}}</td>
-                <td class="col3">{{item.department_name}}</td>
-                <td class="col4">{{item.username}}</td>
-                <td class="col5">{{item.email}}</td>
-                <td class="col6" v-show="false">
-                  <div class="group-col6">
-                    <span class="span" v-bind:class="item.permission_id == 1 ? 'admin1' : item.permission_id == 2 ? 'admin2' : ''">
-                      <img v-show="item.permission_id == 1" src="@/assets/images/icon/user-crown-duotone.svg" alt="" class="icon-user-crown">
-                      <img v-show="item.permission_id == 2" src="@/assets/images/icon/badge-sheriff-duotone.svg" alt="" class="icon-badge-sheriff">
-                      {{item.permission_name}}
-                    </span>
-                    <div class="col6-detail" v-show="item.permission_id != 1 && item.permission_id != 2 && item.levelDesc != ''">{{item.levelDesc}}
-                      <div class="image-size"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="col7">
-                  <div class="group-icon">
-                    <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
-                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
-                  </div>
-                </td>
+                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                <td class="col2">{{item.status}}</td>
+                <td class="col3">{{item.mail_date_send}}</td>
+                <td class="col4">{{item.mail_number_out}}</td>
+                <td class="col5">{{item.mail_register}}</td>
+                <td class="col6">{{item.mail_speed}}</td>
+                <td class="col7">{{item.mail_title}}</td>
+                <td class="col8">{{item.mail_date_st}}</td>
+                <td class="col9">{{item.mail_division}}</td>
+                <td class="col10">{{item.mail_to}}</td>
+                <td class="col11">{{item.mail_send_to}}</td>
+                <td class="col12">{{item.mail_send_cc}}</td>
+                <td class="col13">{{item.mail_send_bcc}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="7">ไม่มีข้อมูล</td>
+                <td colspan="13">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -73,10 +150,9 @@
         <div class="group-footer">
           <cpn-pagination :page="data.page"
                           :total="data.total"
-                          :lastPage="data.lastPage" 
+                          :lastPage="data.lastPage"
                           :perPage="data.perPage"
-                          @pageChange="pageChange"
-                    />
+                          @pageChange="pageChange" />
         </div>
       </div>
     </div>
@@ -86,7 +162,7 @@
 </template>
 <script>
 export default {
-  name: 'user-manage-inex',
+  name: 'automail-sendmail-logs',
   data() {
     return {
       modalAlert: {
@@ -96,64 +172,78 @@ export default {
       },
       showLoading: false,
       data: {
-        search: '',
+        mail_register: '',
+        mail_number_out: '',
+        mail_speed: '',
+        mail_title: '',
+        mail_division: '',
+        mail_to: '',
+        mail_date_st: '',
+        mail_send_to: '',
+        mail_send_cc: '',
+        mail_send_bcc: '',
+        mail_date_send: '',
         table: [],
         page: 1,
         total: 0,
         lastPage: 0,
         perPage: 10,
       },
+      optionSelect: {
+        mail_register: [],
+        mail_speed: [],
+        mail_division: [],
+        mail_to: []
+      }
     }
   },
   methods: {
-    addClick() {
-      this.$router.push({ 
-        name: 'user-manage-create',
-      }).catch(()=>{});
-    },
-    editClick(item) {
-      this.$router.push({ 
-        name: 'user-manage-edit',
-        params: {id: item.id},
-        query: {
-          page: this.data.page,
-          perPage: this.data.perPage
-        }
-      }).catch(()=>{});
+    cancelClick() {
+      this.data.mail_register = ''
+      this.data.mail_number_out = ''
+      this.data.mail_speed = ''
+      this.data.mail_title = ''
+      this.data.mail_division = ''
+      this.data.mail_to = ''
+      this.data.mail_date_st = ''
+      this.data.mail_send_to = ''
+      this.data.mail_send_cc = ''
+      this.data.mail_send_bcc = ''
+      this.data.mail_date_send = ''
+      this.data.perPage = 10
+      this.data.page = 1
+      this.apiSendmailLogs()
     },
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiUser()
+      this.apiSendmailLogs()
     },
-    search() {
-      this.data.status = true
-      this.data.perPage = 10
-      this.data.page = 1
-      this.apiUser()
-    },
-    apiUser() {
+    apiSendmailLogs() {
       this.data.table = []
-      // this.data.page = 1
-      // this.data.lastPage = 1
-      // this.data.total = 1
-      
       this.showLoading = true
-      this.axios.get('/user' , {
-        params: {
-          keyword: this.data.search,
+      this.axios.get('/master-data/department-contact', {
+        params:{
+          mail_register: this.data.mail_register,
+          mail_number_out: this.data.mail_number_out,
+          mail_speed: this.data.mail_speed,
+          mail_title: this.data.mail_title,
+          mail_division: this.data.mail_division,
+          mail_to: this.data.mail_to,
+          mail_date_st: this.data.mail_date_st,
+          mail_send_to: this.data.mail_send_to,
+          mail_send_cc: this.data.mail_send_cc,
+          mail_send_bcc: this.data.mail_send_bcc,
+          mail_date_send: this.data.mail_date_send,
           page_size: this.data.perPage,
-          page: this.data.page, 
+          page: this.data.page,
         }
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(row => {
-          row.permission_id = row.role_id
-          row.permission_name = row.role_name
-          this.data.total = row.total
-        })
-        this.data.table = response.data.data
+        response.data.data.meta.filter(row => row.disabled = true)
+        this.data.table = response.data.data.meta
+        this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
@@ -161,48 +251,100 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    deleteClick(data) {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบผู้ใช้งาน`,
-        message: `“${data.fname}  ${data. lname}”  ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          _this.showLoading = true
-          _this.axios.delete(`/user/${data.id}`)
-          .then(() => { 
-            _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบผู้ใช้งานสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apiUser()
-              }
-            }
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
+    keyupDepartment(e) {
+      this.optionSelect.mail_to = []
+      this.axios.get('/master-data/department', {
+        params: {
+          keyword: e.target.value,
         }
-      }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+          this.optionSelect.mail_to = response.data.data
+        }
+      })
+    },
+    keyupSubministry(e) {
+      this.optionSelect.mail_division = []
+      this.axios.get('/master-data/subministry', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            return item
+          })
+          this.optionSelect.mail_division = response.data.data
+        }
+      })
+    },
+    api_master() {
+      this.showLoading = true
+      const request1 = this.axios.get(`/master-data/book-type`)
+      const request2 = this.axios.get(`/master-data/speed`)
+      const request3 = this.axios.get(`/master-data/subministry`)
+      const request4 = this.axios.get(`/master-data/department`)
+
+      this.axios.all([request1, request2, request3, request4])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response1 = responses[0]
+        const response2 = responses[1]
+        const response3 = responses[2]
+        const response4 = responses[3]
+
+        response1.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        response2.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.desc
+          return row
+        })
+        response3.data.data.filter(item => {
+          item.value = item.id
+          return item
+        })
+        response4.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.department_full_name
+          return item
+        })
+
+        this.optionSelect.mail_register = response1.data.data
+        this.optionSelect.mail_speed = response2.data.data
+        this.optionSelect.mail_division = response3.data.data
+        this.optionSelect.mail_to = response4.data.data
+        
+        this.apiSendmailLogs()
+        
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+      
     },
   },
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apiUser()
+    this.api_master()
   },
 }
 
 </script>
 <style lang="scss">
-  .user-inex {
+  .automail-sendmail-logs {
     .group-overflow {
       // overflow: auto;
     }
@@ -228,11 +370,10 @@ export default {
           display: flex;
           align-items: center;
 
-          .icon-users-cog {
-            width: 46px;
-            height: 32px;
-            margin-right: 16px;
+          .icon-envelope {
+            margin-right: 10px;
             color: #0f3a64;
+            font-size: 26px;
           }
 
           .name {
@@ -240,42 +381,87 @@ export default {
             font-weight: bold;
             font-size: 18px;
           }
+        }
+      }
 
-          .add-user {
-            height: 45px;
-            border: 0;
-            border-radius: 5px;
-            background-color: #007773;
-            font-size: 16px;
-            font-weight: 500;
-            color: #ffffff;
-            margin-left: 35px;
-            padding: 0 20px 0 20px;
+      .group-detail {
+        padding: 20px 23px;
 
-            .group-image {
-              display: flex;
-              align-items: center;
-              justify-content: center;
+        .group-between {
+          display: flex;
 
-              .icon-plus {
-                width: 24px;
-                height: 24px;
-                margin-right: 10px;
-              }
-            }
+          .left {
+            margin-right: 30px;
           }
         }
 
-        .group-end {
-          display: flex;
+        .group-input {
+          width: 100%;
+          padding: 0 10px;
+          margin-bottom: 30px;
 
-          .date {
-            margin-right: 25px;
-            width: 230px;
+          .name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 7px;
+          }
+        }
+        .group-button {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          padding: 0 10px;
+
+          .button-left {
+            .button-warning {
+              width: 160px;
+            }
           }
 
-          .search {
-            min-width: 480px;
+          .button-right {
+            display: flex;
+            margin-left: 10px;
+
+            .button-search {
+              background-color: #1a456b;
+              font-size: 16px;
+              font-weight: 500;
+              color: #ffffff;
+              min-width: 100px;
+              max-width: 100px;
+              height: 45px;
+              border: 0;
+              border-top-right-radius: 5px;
+              border-bottom-right-radius: 5px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-left: -5px;
+            }
+          }
+
+          button {
+            height: 45px;
+            border-radius: 5px;
+            box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
+            border: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .icon-clockwise {
+            font-size: 22px;
+            margin-right: 10px;
+          }
+
+          .icon-search {
+            font-size: 20px;
+            margin-right: 10px;
           }
         }
       }
@@ -304,7 +490,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-user-inex {
+        .table-automail-sendmail-logs {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
@@ -328,38 +514,77 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 80px;
+              max-width: 80px;
+              width: 0%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 250px;
-              width: 20%;
+              min-width: 100px;
+              max-width: 100px;
+              width: 0%;
             }
 
             .col3 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
             }
 
             .col4 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
             }
 
             .col5 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 250px;
+              max-width: 250px;
+              width: 0%;
             }
 
             .col6 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
             }
 
             .col7 {
-              min-width: 170px;
+              min-width: 250px;
+              width: 10%;
+            }
+
+            .col8 {
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
+            }
+            
+            .col9 {
+              min-width: 100px;
+              max-width: 100px;
+              width: 0%;
+            }
+
+            .col10 {
+              min-width: 150px;
+              max-width: 150px;
+              width: 0%;
+            }
+
+            .col11 {
+              min-width: 250px;
+              width: 15%;
+            }
+
+            .col12 {
+              min-width: 250px;
+              width: 15%;
+            }
+
+            .col13 {
+              min-width: 250px;
               width: 15%;
               padding-right: 28px !important;
             }
@@ -383,123 +608,21 @@ export default {
                 padding: 0 10px;
               }
 
-              .text-left {
+              .col3, .col5, .col7, .col8, .col9, .col10, .col11, .col12, .col13 {
                 text-align: left;
+              }
+
+              .col3 {
+                color: #15466e;
+                text-decoration: underline;
               }
 
               .col1 {
                 padding-left: 28px;
               }
 
-              .col9 {
-                padding-left: 28px !important;
-              }
-
-              .col6 {
-                .group-col6 {
-                  text-align: left;
-                  position: relative;
-                  height: 100%;
-                  display: flex;
-                  align-items: center;
-
-                  .col6-detail {
-                    width: 250px;
-                    color: #fff;
-                    position: absolute;
-                    top: 40px;
-                    left: 50%;
-                    transform: translate(-50%, 0px);
-                    padding: 19px 18px 16px 18px;
-                    display: none;
-                    font-size: 16px;
-                    font-weight: 500;
-                    text-align: left;
-                    z-index: 1;
-                    background-color: #15466e;
-                    border-radius: 9px;
-
-                    .image-size {
-                      position: absolute;
-                      left: 50%;
-                      z-index: -1;
-                      top: -5px;
-                      width: 22px;
-                      height: 22px;
-                      background-color: #15466e;
-                      -ms-transform: rotate(45deg);
-                      transform: rotate(45deg);
-                      margin-left: -11px;
-                    }
-                  }
-                }
-              }
-
-              .col6 .group-col6 {
-                float: left;
-
-                .icon-user-crown {
-                  width: 19px;
-                  height: 21px;
-                  margin-right: 8px;
-                }
-
-                .icon-badge-sheriff {
-                  width: 20px;
-                  height: 23px;
-                  margin-right: 7px;
-                }
-
-                .admin1 {
-                  height: 34px;
-                  padding: 8px 10px 8px 10px;
-                  border-radius: 8px;
-                  background-color: #fae4e7;
-                  font-size: 16px;
-                  font-weight: 500;
-                  color: #f94859;
-                  display: flex;
-                  align-items: center;
-                }
-
-                .admin2 {
-                  height: 34px;
-                  padding: 8px 10px 8px 10px;
-                  border-radius: 8px;
-                  background-color: #d2eae9;
-                  font-size: 16px;
-                  font-weight: 500;
-                  color: #007773;
-                  display: flex;
-                }
-              }
-
-              .col6 .group-col6:hover{
-                .col6-detail{
-                  display: block;
-                }
-              }
-
-              .col7 {
+              .col13 {
                 padding-right: 28px;
-
-                .group-icon {
-                  display: flex;
-                  height: 70px;
-                  align-items: center;
-                  justify-content: center;
-
-                  .image-pencil {
-                    width: 21px;
-                    height: 21px;
-                    margin-right: 28px;
-                  }
-
-                  .image-trash {
-                    width: 20px;
-                    height: 23px;
-                  }
-                }
               }
             }
           }

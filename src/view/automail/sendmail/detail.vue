@@ -161,7 +161,6 @@
   </div>
 </template>
 <script>
-import date from '../../components/date/index.vue'
 export default {
   name: 'user-manage-detail',
   data() {
@@ -199,9 +198,6 @@ export default {
         fileType: []
       },
     }
-  },
-  components:{
-    date
   },
   methods: {
     selectImage (data) {
