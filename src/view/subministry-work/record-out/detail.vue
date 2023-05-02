@@ -2043,8 +2043,6 @@ export default {
             }
 
             .button-file {
-              // margin-top: 20px;
-              // margin-left: 50px;
               margin-bottom: 10px;
               color: #fff;
               font-size: 18px;
