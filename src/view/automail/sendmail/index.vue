@@ -14,15 +14,15 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ทะเบียน </div>
-                <cpn-autoComplete   v-model="data.record"
-                                    name="record"
+                <cpn-autoComplete   v-model="data.registertype"
+                                    name="registertype"
                                     @keyupData="keyupData"
                                     placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">เลขออก สลค.</div>
-                <cpn-input  v-model="data.doc_num"
-                            name="doc_num"
+                <cpn-input  v-model="data.document_number"
+                            name="document_number"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
@@ -173,9 +173,14 @@ export default {
     }
   },
   methods: {
-    addClick() {
+    sendmailClick(item) {
       this.$router.push({ 
-        name: 'user-manage-create',
+        name: 'automail-sendmail-edit',
+        params: {id: item.id},
+        query: {
+          page: this.data.page,
+          perPage: this.data.perPage
+        }
       }).catch(()=>{});
     },
     listClick(item) {
@@ -199,44 +204,37 @@ export default {
       this.data.page = 1
       this.apiUser()
     },
-    apiUser() {
+    apiSendmailLogs() {
       this.data.table = []
-      // this.data.page = 1
-      // this.data.lastPage = 1
-      // this.data.total = 1
-      
       this.showLoading = true
-      this.axios.get('/user' , {
-        params: {
-          keyword: this.data.search,
+      this.axios.get('/master-data/department-contact', {
+        params:{
+          mail_register: this.data.mail_register,
+          mail_number_out: this.data.mail_number_out,
+          mail_speed: this.data.mail_speed,
+          mail_title: this.data.mail_title,
+          mail_division: this.data.mail_division,
+          mail_to: this.data.mail_to,
+          mail_date_st: this.data.mail_date_st,
+          mail_send_to: this.data.mail_send_to,
+          mail_send_cc: this.data.mail_send_cc,
+          mail_send_bcc: this.data.mail_send_bcc,
+          mail_date_send: this.data.mail_date_send,
           page_size: this.data.perPage,
-          page: this.data.page, 
+          page: this.data.page,
         }
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(row => {
-          row.permission_id = row.role_id
-          row.permission_name = row.role_name
-          this.data.total = row.total
-        })
-        this.data.table = response.data.data
+        response.data.data.meta.filter(row => row.disabled = true)
+        this.data.table = response.data.data.meta
+        this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
       .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    },
-    sendmailClick(item) {
-      this.$router.push({ 
-        name: 'automail-sendmail-edit',
-        params: {id: item.id},
-        query: {
-          page: this.data.page,
-          perPage: this.data.perPage
-        }
-      }).catch(()=>{});
     },
   },
   mounted() {

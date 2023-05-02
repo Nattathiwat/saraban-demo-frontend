@@ -401,9 +401,9 @@
                   {{item.create_time}}
                 </div>
               </div>
-              <button v-show="item.filename" class="button-file" @click="download_file(item)">{{item.filename}}</button>
-              <ul class="detail-list">
-                <li v-for="(item2, index2) in item.booking_remarks" :key="index2" >
+              <ul class="detail-list" v-for="(item2, index2) in item.booking_remarks" :key="index2" >
+                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
+                <li>
                   {{item2.remark}}
                   {{item2.comment}}
                 </li>
@@ -470,6 +470,7 @@ export default {
         }],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
+        sendToFile: [{ filename: ''}],
         main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [{ filename: ''}],
@@ -505,6 +506,13 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
+        response.data.data.filter(item => {
+          item.bookingRemarks.filter(item2 =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
+            return item2
+          })
+          return item
+        })
         this.data.history.data = response.data.data
       })
       .catch((error) => {
@@ -1888,8 +1896,7 @@ export default {
             }
 
             .button-file {
-              margin-top: 20px;
-              margin-left: 50px;
+              margin-bottom: 10px;
               color: #fff;
               font-size: 18px;
               background-color: #0f324e;
