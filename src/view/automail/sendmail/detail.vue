@@ -1,31 +1,11 @@
 <template>
-  <div class="user-detail">
+  <div class="automail-sendmail-detail">
     <div class="group-overflow">
-      <!-- <div class="detail-history">
-        <div class="group-detail">
-          <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ชื่อ <span class="required">*</span></div>
-                <cpn-input  v-model="data.fname"
-                            name="fname"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
-              </div>
-              <div class="group-input">
-                <div class="name">นามสกุล <span class="required">*</span></div>
-                <cpn-input  v-model="data.lname"
-                            name="lname"
-                            rules="required"
-                            placeholder="กรุณาระบุ" />
-              </div>
-            </div>
-        </div>
-      </div> -->
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <img src="@/assets/images/icon/users-duotone.svg" alt="" class="icon-users">
-            <div class="name">{{edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}}</div>
+            <i class="bi bi-envelope icon-envelope"></i>
+            <div class="name">ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ</div>
           </div>
           <div class="group-end">
             <button type="button" class="button-back" @click="back()" >
@@ -220,7 +200,7 @@
 </template>
 <script>
 export default {
-  name: 'user-manage-detail',
+  name: 'automail-sendmail-detail',
   data() {
     return {
       modalAlert: {
@@ -426,7 +406,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'user-manage',
+        name: 'automail-sendmail',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -637,7 +617,7 @@ export default {
     }
   },
   mounted () {
-    this.apiMaster()
+    // this.apiMaster()
   },
   watch: {
     'data.organization_id'() {
@@ -657,7 +637,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .user-detail {
+  .automail-sendmail-detail {
     .group-overflow {
       overflow: auto;
     }
@@ -683,10 +663,10 @@ export default {
           display: flex;
           align-items: center;
 
-          .icon-users {
-            width: 45px;
-            height: 41px;
-            margin-right: 18px;
+          .icon-envelope {
+            margin-right: 10px;
+            color: #0f3a64;
+            font-size: 26px;
           }
 
           .name {

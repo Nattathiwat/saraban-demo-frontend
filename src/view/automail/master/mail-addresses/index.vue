@@ -70,7 +70,7 @@
               <tr class="thead-row">
                 <th class="col1">ลำดับ</th>
                 <th class="col2">หน่วยงาน</th>
-                <th class="col3">อีเมล์ติดต่อหน่วยงาน</th>
+                <th class="col3">อีเมลติดต่อหน่วยงาน</th>
                 <th class="col4">เครื่องมือ</th>
               </tr>
             </thead>
@@ -181,7 +181,7 @@ export default {
       this.axios.put(`/master-data/department-contact/${item.id}`, groupdata)
       .then(() => { 
         this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขอีเมล์ติดต่อหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.apiMailAddress() }}
+        this.modalAlert = {showModal: true, type: 'success', title: 'ทำการแก้ไขอีเมลติดต่อหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.apiMailAddress() }}
       })
       .catch((error) => {
         this.showLoading = false
