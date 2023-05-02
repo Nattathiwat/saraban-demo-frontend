@@ -402,7 +402,7 @@
                 </div>
               </div>
               <ul class="detail-list" v-for="(item2, index2) in item.booking_remarks" :key="index2" >
-                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.filepath})">{{item2.filepath.split("/").pop()}}</button>
+                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
                 <li>
                   {{item2.remark}}
                   {{item2.comment}}
@@ -506,6 +506,13 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
+        response.data.data.filter(item => {
+          item.bookingRemarks.filter(item2 =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
+            return item2
+          })
+          return item
+        })
         this.data.history.data = response.data.data
       })
       .catch((error) => {
