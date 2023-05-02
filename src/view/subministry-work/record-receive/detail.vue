@@ -327,9 +327,9 @@
                   {{item.createTime}}
                 </div>
               </div>
-              <button v-show="item.filename" class="button-file" @click="download_file(item)">{{item.filename}}</button>
-              <ul class="detail-list">
-                <li v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
+              <ul class="detail-list" v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
+                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.filepath})">{{item2.filepath.split("/").pop()}}</button>
+                <li>
                   {{item2.remark}}
                   {{item2.comment}}
                 </li>
@@ -1862,8 +1862,7 @@ export default {
             }
 
             .button-file {
-              margin-top: 20px;
-              margin-left: 50px;
+              margin-bottom: 10px;
               color: #fff;
               font-size: 18px;
               background-color: #0f324e;
