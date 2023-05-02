@@ -423,7 +423,7 @@ export default {
   data() {
     return {
       flag: 1,
-      step: 3,
+      step: 1,
       modalAlert: {
         showModal: false,
         title: '',
