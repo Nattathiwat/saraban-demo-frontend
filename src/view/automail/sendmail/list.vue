@@ -159,8 +159,8 @@
                   <div class="new-line">
                     <div class="name">ลิงค์ดาวน์โหลดเอกสาร</div>
                     <div class="group-recommend">
-                      <cpn-input  v-model="item.cc"
-                                  :name="'cc'+index"
+                      <cpn-input  v-model="item.link_download"
+                                  :name="'link_download'+index"
                                   class="input-link"
                                   :disabled="item.how_to_send_files == 1"
                                   placeholder="กรุณาระบุ" />
@@ -208,7 +208,7 @@
                         <button type="button" class="button-view" @click="previewFile(item2)">
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
-                        <button type="button" class="button-del" @click="deleteFile(item, index2)">
+                        <button type="button" class="button-del" @click="deleteFile(item, item2, index2)">
                           <i class="bi bi-trash icon-trash"></i>
                         </button>
                       </div>
@@ -427,9 +427,9 @@ export default {
         })
       }
     },
-    deleteFile(item, index) {
-      if (item.flag == 'edit') {
-        item.flag = 'delete'
+    deleteFile(item, item2, index) {
+      if (item2.flag == 'edit') {
+        item2.flag = 'delete'
       } else {
         item.attachments.splice(index,1)
       }
