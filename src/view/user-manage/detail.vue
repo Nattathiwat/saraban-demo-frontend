@@ -267,8 +267,8 @@ export default {
         params: {
           keyword: e.target.value,
           organization_id: this.data.organization_id,
-          subministry_id: this.data.subministry_id,
-          group_id: this.data.group_id,
+          // subministry_id: this.data.subministry_id,
+          // group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -289,7 +289,7 @@ export default {
           keyword: e.target.value,
           organization_id: this.data.organization_id,
           department_id: this.data.department_id,
-          group_id: this.data.group_id,
+          // group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -322,28 +322,27 @@ export default {
         }
       })
     },
-    masterDropdown(data) {
+    masterDropdown1(data) {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/organization?department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request2 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}&subministry_id=${this.data.subministry_id}&group_id=${this.data.group_id}`)
-      const request3 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&group_id=${this.data.group_id}`)
-      const request4 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+      const request1 = this.axios.get(`/master-data/department?organization_id=${this.data.organization_id}`)
+      const request2 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}`)
+      const request3 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
 
-      this.axios.all([request1, request2, request3, request4])
+      this.axios.all([request1, request2, request3])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
         const response1 = responses[0]
         const response2 = responses[1]
         const response3 = responses[2]
-        const response4 = responses[3]
-
+      
         response1.data.data?.filter(item => {
           item.value = item.id
+          item.name = item.department_full_name
           return item
         })
+        
         response2.data.data?.filter(item => {
           item.value = item.id
-          item.name = item.department_full_name
           return item
         })
         
@@ -351,20 +350,67 @@ export default {
           item.value = item.id
           return item
         })
+
+        this.data.optionSelect.department = response1.data?.data || []
+        this.data.optionSelect.subministry = response2.data?.data || []
+        this.data.optionSelect.group = response3.data?.data || []
+
+        response1.data.data ? (response1.data.data.findIndex(item => item.id == this.data.department_id) == '-1' ? this.data.department_id = '' : '') : this.data.department_id = ''
+        response2.data.data ? (response2.data.data.findIndex(item => item.id == this.data.subministry_id) == '-1' ? this.data.subministry_id = '' : '') : this.data.subministry_id = '' 
+        response3.data.data ? (response3.data.data.findIndex(item => item.id == this.data.group_id) == '-1' ? this.data.group_id = '' : '') : this.data.group_id = ''
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
+    masterDropdown2(data) {
+      this.showLoading = true
+      const request1 = this.axios.get(`/master-data/subministry?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}`)
+      const request2 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+
+      this.axios.all([request1, request2])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response1 = responses[0]
+        const response2 = responses[1]
+
+        response1.data.data?.filter(item => {
+          item.value = item.id
+          return item
+        })
         
-        response4.data.data?.filter(item => {
+        response2.data.data?.filter(item => {
           item.value = item.id
           return item
         })
 
-        // this.data.optionSelect.organization = response1.data.data
-        this.data.optionSelect.department = response2.data?.data || []
-        this.data.optionSelect.subministry = response3.data?.data || []
-        this.data.optionSelect.group = response4.data?.data || []
+        this.data.optionSelect.subministry = response1.data?.data || []
+        this.data.optionSelect.group = response2.data?.data || []
 
-        response2.data.data ? (response2.data.data.findIndex(item => item.id == this.data.department_id) == '-1' ? this.data.department_id = '' : '') : this.data.department_id = ''
-        response3.data.data ? (response3.data.data.findIndex(item => item.id == this.data.subministry_id) == '-1' ? this.data.subministry_id = '' : '') : this.data.subministry_id = '' 
-        response4.data.data ? (response4.data.data.findIndex(item => item.id == this.data.group_id) == '-1' ? this.data.group_id = '' : '') : this.data.group_id = ''
+        response1.data.data ? (response1.data.data.findIndex(item => item.id == this.data.subministry_id) == '-1' ? this.data.subministry_id = '' : '') : this.data.subministry_id = '' 
+        response2.data.data ? (response2.data.data.findIndex(item => item.id == this.data.group_id) == '-1' ? this.data.group_id = '' : '') : this.data.group_id = ''
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
+    masterDropdown3(data) {
+      this.showLoading = true
+      const request1 = this.axios.get(`/master-data/group?organization_id=${this.data.organization_id}&department_id=${this.data.department_id}&subministry_id=${this.data.subministry_id}`)
+
+      this.axios.all([request1])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response1 = responses[0]
+
+        response1.data.data?.filter(item => {
+          item.value = item.id
+          return item
+        })
+
+        this.data.optionSelect.group = response1.data?.data || []
+
+        response1.data.data ? (response1.data.data.findIndex(item => item.id == this.data.group_id) == '-1' ? this.data.group_id = '' : '') : this.data.group_id = ''
       })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -587,16 +633,16 @@ export default {
   },
   watch: {
     'data.organization_id'() {
-      this.masterDropdown()
+      this.masterDropdown1()
     },
     'data.department_id'() {
-      this.masterDropdown()
+      this.masterDropdown2()
     },
     'data.subministry_id'() {
-      this.masterDropdown()
+      this.masterDropdown3()
     },
     'data.group_id'() {
-      this.masterDropdown()
+      // this.masterDropdown4()
     },
   }
 }
