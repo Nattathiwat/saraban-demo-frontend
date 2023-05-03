@@ -51,11 +51,12 @@
               </div>
               <div class="group-input">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_id"
-                            name="book_type_id"
-                            rules="required"
-                            :optionSelect="optionSelect.book_type_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-autoComplete v-model="data.book_type_id"
+                                  name="book_type_id"
+                                  rules="required"
+                                  :optionSelect="optionSelect.book_type_id"
+                                  placeholder="กรุณาระบุ" 
+                                  @keyup="keyup_book_type"/>
               </div>
             </div>
             <div class="group-between">
@@ -118,6 +119,10 @@
           </div>
           <div class="line"></div>
           <div class="d-flex justify-content-end">
+            <button type="button" class="add-send" @click="modal_send()">
+                <i class="bi bi-send"></i>
+                เลือกวิธีการส่ง
+            </button>
             <button type="button" class="add-register" :disabled="(!data.book_category_id || !data.book_type_id || !data.secret_id || !data.speed_id)" @click="add_booking_register_details()">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                 เพิ่มทะเบียน
@@ -197,11 +202,11 @@
               <div class="group-input-file">
                 <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}`)">
                   <span :class="item.attach_filename ? '' : 'no-data'">
-                    {{item.attach_filename ? item.attach_filename : 'สำเนาคู่ฉบับ'}}
+                    {{item.attach_filename ? item.attach_filename : 'สิ่งที่แนบมาด้วย'}}
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`dupplicate_copy${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_booking_register_details_change(`dupplicate_copy${index}`, index, 'dupplicate_copy')" :name="`dupplicate_copy${index}`" style="display:none;" accept="application/pdf">
+                <input type="file" @change="file_booking_register_details_change(`dupplicate_copy${index}`, index, 'dupplicate_copy')" :name="`dupplicate_copy${index}`" style="display:none;">
               </div>
               <button type="button" @click="download_file({filename: item.attach_filename, type: item.attach_type, filepath: item.attach_filepath, link: item.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
             </div>
@@ -245,11 +250,11 @@
                     <div class="group-input-file">
                       <button type="button" class="button-file" @click="upload_file(`dupplicate_copy${index}${index2}`)">
                         <span :class="item2.attach_filename ? '' : 'no-data'">
-                          {{item2.attach_filename ? item2.attach_filename : 'สำเนาคู่ฉบับ'}}
+                          {{item2.attach_filename ? item2.attach_filename : 'สิ่งที่แนบมาด้วย'}}
                         </span>
                       </button>
                       <div class="text pointer" @click="upload_file(`dupplicate_copy${index}${index2}`)">แนบเอกสาร</div>
-                      <input type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" accept="application/pdf">
+                      <input multiple type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" >
                     </div>
                     <button type="button" @click="download_file({filename: item2.attach_filename, type: item2.attach_type, filepath: item2.attach_filepath, link: item2.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   </div>
@@ -260,13 +265,15 @@
                     <div class="d-flex">
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2.optionSelect.signer_id"  />
+                                        :optionSelect="item2.optionSelect.signer_id"  
+                                        @change="change_signer_id(index)(index2)"/>
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
                                     class="cpn-select"
                                     label="ลายเซ็น"
-                                    :disabled="!rule.user6" />
+                                    :disabled="!rule.user6"
+                                    @change="change_signer_id(index)(index2)" />
                     </div>
                   </div>
                 </div>
@@ -320,7 +327,7 @@
                               @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
-            <div class="group-input">
+            <div class="group-input left">
               <div class="name d-flex justify-content-between">
                 <div>ความเห็น / คำสั่ง</div>
                 <div>
@@ -379,6 +386,7 @@
                 <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
               </div>
               <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
+              <div class="name ms-2 mt-1">เอกสารแนบ : {{item?.sendToFile?.filename || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -490,6 +498,156 @@
         </div>
       </div>
     </div>
+    <div class="modal-send" v-show="modalSend.showModal">
+      <div class="modal-class">
+        <div class="modal-center">
+          <div class="modal-size" ref="modalSendref">
+            <div class="modal-title">
+              <div class="title-size">วิธีการส่ง</div> 
+              <i class="bi bi-x-lg icon-close" @click="modalSend.showModal = false"></i>
+            </div>
+            <div class="line"></div>
+            <div class="modal-detail">
+              <div class="group-head">
+                <div class="group-input">
+                  <cpn-checkbox v-model="modalSend.select"
+                                :name="`select`"
+                                @change="selectedAll()"
+                                label="ทั้งหมด" />
+                </div>
+                <div class="group-input w-25">
+                  <div class="name">วิธีการส่ง</div>
+                  <cpn-select v-model="modalSend.send_style_id"
+                              name="send_style_id"
+                              :optionSelect="modalSend.optionSelect.send_style" />
+                </div>
+              </div>
+              <div class="message" v-for="(item, index) in modalSend.booking_register_details" :key="index">
+                <div class="d-flex">
+                  <div class="col-checkbox">
+                    <cpn-checkbox v-model="item.select"
+                                  @change="selected1(item)"
+                                  :name="`select${index}`" />
+                  </div>
+                  <div class="col-start">ชุดที่ #{{index+1}}</div>
+                  <div class="col-center">
+                    <div class="row">
+                      <div class="col-lg-auto col-md-auto mb-3">
+                        <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                      </div>
+                      <div class="col-lg-auto col-md-auto mb-3">
+                        <div class="name">ลงวันที่ : {{item.regis_date}}</div>
+                      </div>
+                    </div>
+                    <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                  </div>
+                </div>
+                <div class="detail-sub">
+                  <div class="mb-3">หน่วยงานปลายทาง</div>
+                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers" :key="index2">
+                    <div class="group-input checkbox">
+                    <cpn-checkbox v-model="item2.select"
+                                  @change="selected2(item, item2)"
+                                  :name="`select${index}${index2}`" />
+                    </div>
+                    <div class="group-input index">{{index2+1}}.</div>
+                    <div class="group-input">
+                      <cpn-input  v-model="item2.department_dest_name"
+                                  :disabled="true"
+                                  :name="`department_dest_name${index}${index2}`" />
+                    </div>
+                    <div class="group-input w-50">
+                      <cpn-input  v-model="item2.email"
+                                  :name="`email${index}${index2}`"
+                                  :disabled="true" />
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <div class="line"></div>
+            <div class="group-footer">
+              <button type="button" @click="modalSend.showModal = false" class="btn button-danger">
+                <div class="group-name">
+                  <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                  <div class="name">ยกเลิก</div>
+                </div>
+              </button>
+              <button type="button" class="btn button-success" @click="sendMailClick()">
+                <div class="group-name">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                  <div class="name">ตกลง</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-history" v-if="$route.params.id">
+        <div class="history">
+          <div class="header pointer" @click="data.history.hide = !data.history.hide, historyClick(data.history.tab)">
+            <div class="group-left">
+              <i class="bi bi-clock icon-size"></i>
+              <div class="name">ประวัติการแก้ไข</div>
+            </div>
+            <div class="group-right">
+              <i class="bi bi-chevron-right icon-angle" v-show="!data.history.hide"></i>
+              <i class="bi bi-chevron-down icon-angle" v-show="data.history.hide"></i>
+            </div>
+          </div>
+          <div class="line" v-show="data.history.hide"></div>
+          <div class="content" v-show="data.history.hide">
+            <div class="content-head">
+              <div class="pointer" :class="data.history.tab == 1 ? 'active' : ''" @click="data.history.tab = 1, historyClick(1)"><i class="bi bi-border-all icon-size"></i>ทั้งหมด</div>
+              <div class="pointer" :class="data.history.tab == 2 ? 'active' : ''" @click="data.history.tab = 2, historyClick(2)"><i class="bi bi-chat-left icon-size"></i>ความเห็นคำสั่ง</div>
+              <div class="pointer" :class="data.history.tab == 3 ? 'active' : ''" @click="data.history.tab = 3, historyClick(3)"><i class="bi bi-pencil-square icon-size"></i>แก้ไขข้อมูล</div>
+            </div>
+            <div class="content-detail" v-if="data.history.data.filter(
+              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+              (el.type == 0 || el.type == 1) : el).length > 0" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ?
+               el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
+               :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
+              <div class="detail-head">
+                <div class="number">#{{index+1}}</div>
+                <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
+                  <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
+                  {{item.bookactionname}}
+                </div>
+                <div class="create">
+                  <i class="bi bi-person icon-size"></i> 
+                  โดย {{item.updateBy}} / {{item.subName}}
+                </div>
+                <div class="date">
+                  วันที่ {{item.createDate}}
+                </div>
+                <div class="time">
+                  <i class="bi bi-clock icon-size"></i>
+                  {{item.createTime}}
+                </div>
+              </div>
+              <ul class="detail-list" v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
+                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
+                <li>
+                  {{item2.remark}}
+                  {{item2.comment}}
+                </li>
+              </ul>
+              <div class="detail-signager" v-if="item.picture2">
+                <img :src="item.picture2" alt="" class="image-size">
+                <div class="name">({{item.fullname}})</div>
+                <div class="position">{{item.positionName}}</div>
+              </div>
+              <div v-if="index != (data.history.data.length-1)" class="line"></div>
+            </div>
+            <div v-else class="content-detail first end">
+              <div class="detail-head">
+                <div class="topic">ไม่มีข้อมูล</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <cpn-modal-alert  :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
   </div>
@@ -529,8 +687,13 @@ export default {
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
+        process_type_id: '12',
+        permission_id: '8',
+        history: {
+          hide: false,
+          data: [],
+          tab: 1
+        },
         FileType: []
       },
       optionSelect: {
@@ -546,10 +709,111 @@ export default {
       modalRegiter: {
         showModal: false,
         booking_register_details: []
+      },
+      modalSend: {
+        showModal: false,
+        select: false,
+        send_style_id: 0,
+        booking_register_details: [],
+        optionSelect: {
+          send_style: [{value: 1, name:'eMail(อัตโนมัติ)'}]
+        }
       }
     }
   },
   methods: {
+    sendMailClick() {
+      let axiosArray = []
+      this.modalSend.booking_register_details.filter((row) => {
+        if (row.select) {
+          row.booking_registers.filter((row2) => {
+            if(row2.select && (row2.book_id || row2.book_id == 0) && (row2.regis_id || row2.regis_id == 0)) {
+              let dataSave = {
+                send_style_id: parseInt(this.modalSend.send_style_id),
+                book_id: parseInt(row2.book_id),
+                book_regis_id: parseInt(row2.regis_id),
+                user_id: parseInt(localStorage.getItem('user_id'))
+              }
+              axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+            }
+          })
+        }
+      })
+      if (axiosArray.length>0) {
+        this.axios.all([...axiosArray])
+        .then(this.axios.spread(() => {
+         this.modalSend.showModal = false
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.modalSend.showModal = false
+      }
+    },
+    selectedAll(item) {
+      this.modalSend.booking_register_details.filter((row) => {
+        row.select = this.modalSend.select;
+        row.booking_registers.filter((row2) => {
+          row2.select = this.modalSend.select;
+        })
+      })
+    },
+    selected1(item) {
+      this.modalSend.select = this.modalSend.booking_register_details.every((row) => {
+        return row.select;
+      })
+      item.booking_registers.filter((row2) => {
+        row2.select = item.select;
+      })
+    },
+    selected2(item, item2) {
+      item.select = item.booking_registers.every((row) => {
+        return row.select;
+      })
+      this.modalSend.select = this.modalSend.booking_register_details.every((row) => {
+        return row.select;
+      })
+    },
+    modal_send() {
+      this.modalSend.booking_register_details = this.data.booking_register_details
+      this.modalSend.booking_register_details.filter(item => {
+        item.select = false
+        item.booking_registers.filter(item2 => {
+          item2.select = false
+          item2.optionSelect.department_dest_id.filter(item3 => {
+            if (item3.id == item2.department_dest_id) {
+              item2.department_dest_name = item3.desc
+            }
+          })
+        })
+      })
+      this.modalSend.showModal = true
+    },
+    historyClick(data) {
+      this.showLoading = true
+      this.axios.get(`/booking-out/${this.$route.params.id}/history`, {
+        params: {
+          book_type: 1 ,
+          department_id: parseInt(localStorage.getItem('department_id'))        
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        response.data.data.filter(item => {
+          item.bookingRemarks.filter(item2 =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
+            return item2
+          })
+          return item
+        })
+        this.data.history.data = response.data.data
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
     delete_click() {
       let _this = this
       this.modalAlert = {
@@ -583,16 +847,18 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
         }
       })
       .then((response) => {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -601,16 +867,19 @@ export default {
     },
     keyupDepartment(e, data) {
       data.optionSelect.department_dest_id = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          type: 1
         }
       })
       .then((response) => {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           data.optionSelect.department_dest_id = response.data.data
@@ -650,7 +919,10 @@ export default {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            await this.axios.post(`/booking-out/generate-number`, {
+              department_id: parseInt(localStorage.getItem('department_id')), 
+              year: this.assetsUtils.currentDate().split('/')[2]-543
+            })
             .then((response) => {
               this.showLoading = false
               item.booking_registers.push({
@@ -705,6 +977,9 @@ export default {
                 signer_id: this.optionSelectDefault.signer_id,
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
+              human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
             })
           }).catch((error) => {
             this.showLoading = false
@@ -849,7 +1124,19 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        if (name == 'sendTo') {
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
+            let dataFile = {
+              filename: file.name,
+              type: file.type,
+              link: URL.createObjectURL(file),
+              size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              file: file,
+            }
+            this.data[name][index] = {...this.data[name][index], ...dataFile}
+            document.querySelector(`[name="${data}"]`).value=null;
+          }
+        } else if (name == 'sendTo') {
           let dataFile = {
             filename: file.name,
             type: file.type,
@@ -858,6 +1145,16 @@ export default {
             file: file,
           }
           this.data.sendToFile = dataFile
+        } else {
+          let dataFile = {
+            filename: file.name,
+            type: file.type,
+            link: URL.createObjectURL(file),
+            size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            file: file,
+          }
+          this.data[name][index] = {...this.data[name][index], ...dataFile}
+          document.querySelector(`[name="${data}"]`).value=null;
         }
       }
     },
@@ -886,8 +1183,8 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        if (file.type == 'application/pdf') {
-          if (name == 'main_docs') {
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
             let dataFile = {
               main_filename: file.name,
               main_type: file.type,
@@ -899,7 +1196,9 @@ export default {
             this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
               this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
             })
-          } else {
+            document.querySelector(`[name="${data}"]`).value=null;
+          }
+        } else {
             let dataFile = {
               attach_filename: file.name,
               attach_type: file.type,
@@ -911,9 +1210,8 @@ export default {
             this.data.booking_register_details[index].booking_registers.filter((item, index2) => {
               this.data.booking_register_details[index].booking_registers[index2] = {...item, ...dataFile}
             })
+            document.querySelector(`[name="${data}"]`).value=null;
           }
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
       }
     },
     file_booking_registers_change(data, index, index2, name) {
@@ -923,8 +1221,8 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        if (file.type == 'application/pdf') {
-          if (name == 'main_docs') {
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
             let dataFile = {
               main_filename: file.name,
               main_type: file.type,
@@ -933,7 +1231,9 @@ export default {
               main_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
-          } else {
+            document.querySelector(`[name="${data}"]`).value=null;
+          } 
+        } else {
             let dataFile = {
               attach_filename: file.name,
               attach_type: file.type,
@@ -942,9 +1242,8 @@ export default {
               attach_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
+            document.querySelector(`[name="${data}"]`).value=null;
           }
-          document.querySelector(`[name="${data}"]`).value=null;
-        }
       }
     },
     add_booking_register_details() {
@@ -955,6 +1254,7 @@ export default {
         book_out_num_type: '0',
         send_method_id: '2',
         department_dest_id: [],
+        flag: 'add',
         optionSelect: {
           regis_id: this.optionSelectDefault.regis_id,
           book_out_num_type: this.optionSelectDefault.book_out_num_type,
@@ -965,6 +1265,7 @@ export default {
     },
     add_booking_register_details_modal() {
       this.modalRegiter.booking_register_details.push({
+        ...item,
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),
         book_out_num_type: '0',
@@ -975,11 +1276,14 @@ export default {
           book_out_num_type: this.optionSelectDefault.book_out_num_type,
           send_method_id: this.optionSelectDefault.send_method_id
         },
+        response_id: item.id,
+        response_type:item.type,
+        flag: 'add',
       })
     },
     back() {
       this.$router.push({ 
-        name: 'subministry-work.booking-out',
+        name: 'my-work.booking-out',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -1031,7 +1335,10 @@ export default {
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+            await this.axios.post(`/booking-out/generate-number`, {
+              department_id: parseInt(localStorage.getItem('department_id')), 
+              year: this.assetsUtils.currentDate().split('/')[2]-543
+            })
             .then((response) => {
               this.showLoading = false
               item.department_dest_id.filter(item2 => {
@@ -1048,7 +1355,10 @@ export default {
                     signer_id: this.optionSelectDefault.signer_id,
                     department_dest_id: [...this.optionSelectDefault.department_dest_id, item2]
                   },
+                  response_type: item2.type,
+                  response_id: item2.id
                 })
+                  console.log(item2.type,'3')
               })
             }).catch((error) => {
               this.showLoading = false
@@ -1270,6 +1580,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -1308,11 +1619,17 @@ export default {
           item.booking_registers.filter(item2 => {
             item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
             item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
+            item2.optionSelect.department_dest_id.find(item3 => {
+              if(item3.value == item2.department_dest_id) {
+                item2.human_flag = item3.human_flag 
+                item2.response_id = item3.id}
+              })
             return item2
           })
           return item
         }),
         flag: this.flagSave == 1 ? "draft" : '',
+        is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
       }
       this.showLoading = false
       if (this.edit) {
@@ -1321,7 +1638,7 @@ export default {
           this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+            this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : '', msgSuccess: true, afterPressAgree() { _this.back() }}
           })
           .catch((error) => {
             this.showLoading = false
@@ -1378,6 +1695,9 @@ export default {
           }
         })
         this.data.sendTo = []
+        this.data.order=[{
+          filename: ''
+        }]
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
           item.flag = 'edit'
@@ -1393,26 +1713,37 @@ export default {
           item.optionSelect = {signer_id: this.optionSelectDefault.signer_id}
           item.signer_id = ''
           item.num = '1'
-          item.flag = 'edit'
+          item.flag = 'add'
           item.booking_registers.filter(item2 => {
             item2.optionSelect = {signer_id: this.optionSelectDefault.signer_id, department_dest_id: this.optionSelectDefault.department_dest_id}
-            item2.flag = 'edit'
+            item2.flag = 'add'
             item2.main_link = item2.main_filepath? this.backendport+'/'+item2.main_filepath : ''
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
+            item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id 
             return item2
           })
           return item
         })
         this.data.attachments.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.booking_follows.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           return item
         })
-        if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
+        this.data.booking_follows = []
+        if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) 
+        this.data.booking_refers = [{ 
+          receive_document_number: '', 
+          desc: '', 
+          receive_date: '', 
+          book_refer_id: '', 
+          original_refer_id: '', 
+          book_type: '', 
+          flag: 'add'
+        }]
         if (this.data.attachments.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
       })
       .catch((error) => {
@@ -1430,7 +1761,7 @@ export default {
       const request6 = this.axios.get(`/user`)
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/register-type`)
-      const request9 = this.axios.get('/master-data/department')
+      const request9 = this.axios.get('/master-data/department-user')
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
@@ -1489,7 +1820,7 @@ export default {
         })
         response9.data.data.filter(item => {
           item.value = item.id
-          item.name = item.department_full_name
+          item.name = item.desc
           return item
         })
 
@@ -1523,6 +1854,23 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
       
+    },
+    keyup_book_type(e) {
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
     },
   },
   mounted () {
@@ -1582,6 +1930,27 @@ export default {
         background-color: #e2ebf7;
         margin-top: 5px;
         margin-bottom: 5px;
+      }
+
+      .add-send {
+        height: 45px;
+        border-radius: 5px;
+        box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+        border: 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #007773;
+        margin: 20px 15px 20px 0px;
+        padding: 0 12px;
+
+        .bi-send {
+          font-size: 18px;
+          margin-right: 10px;
+        }
       }
 
       .add-register {
@@ -1651,20 +2020,6 @@ export default {
           }
         }
 
-        .button-delete {
-          width: 45px;
-          height: 45px;
-          color: #212529;
-          background-color: #f8f9fa;
-          border-color: #f8f9fa;
-          border: 1px solid transparent;
-          border-radius: 5px;
-
-          .image-trash {
-            width: 18px;
-          }
-        }
-
         .icon-paperclip {
           color: #8aa3b7;
           // font-size: 14px;
@@ -1701,6 +2056,20 @@ export default {
           .image-x {
             width: 14px;
             margin-left: 5px;
+          }
+        }
+
+        .button-delete {
+          width: 45px;
+          height: 45px;
+          color: #212529;
+          background-color: #f8f9fa;
+          border-color: #f8f9fa;
+          border: 1px solid transparent;
+          border-radius: 5px;
+
+          .image-trash {
+            width: 18px;
           }
         }
       }
@@ -2058,6 +2427,7 @@ export default {
         }
       }
     }
+
     .modal-register {
       .modal-class {
         position: fixed;
@@ -2224,6 +2594,386 @@ export default {
                   font-weight: 500;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+
+    .modal-send {
+      .modal-class {
+        position: fixed;
+        overflow-y: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background-color: rgba(33, 85, 163, 0.16);
+
+        .modal-center {
+          height: 85%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      
+
+          .modal-size {
+            width: 100%;
+            pointer-events: auto;
+            margin: auto;
+            max-width: 1100px;
+            background-color: #ffffffff;
+            border-radius: 15px;
+
+            .line {
+              height: 2px;
+              width: 100%;
+              background-color: #e2ebf7;
+              margin-top: 5px;
+              margin-bottom: 5px;
+            }
+
+            .modal-title {
+              display: flex;
+              justify-content: space-between;
+              padding-top: 25px;
+              margin-bottom: 16px;
+              margin-right: 30px;
+              margin-left: 30px;
+
+              .title-size {
+                font-size: 18px;
+                font-weight: 700;
+                color: #0A1629;
+                margin-top: 5px;
+              }
+
+              .icon-close {
+                font-size: 22px;
+                cursor: pointer;
+              }
+            }
+
+            .modal-detail {
+              padding-top: 20px;
+
+              .group-head {
+                justify-content: space-between;
+                align-items: center;
+                margin: 0px 23px 20px;
+                display: flex;
+              }
+
+              .col-checkbox {
+                width: 50px;
+              }
+
+              .col-start {
+                width: 100px;
+              }
+
+              .col-center {
+                width: 100%;
+
+                .span {
+                  margin-right: 30px;
+                }
+              }
+
+
+              .message {
+                background-color: rgba(218, 229, 245, 0.84);
+                margin: 0px 23px 20px;
+                padding: 20px 15px;
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                border-radius: 5px;
+
+                .detail-sub {
+                  background-color: #ffffff;
+                  padding: 20px;
+                  border-radius: 5px;
+                  margin-top: 15px;
+
+                  .group-between {
+                    display: flex;
+
+                    .right-width {
+                      width: 50%;
+                    }
+                  }
+
+                  .group-input {
+                    width: 100%;
+                    padding: 0 10px;
+                    margin-bottom: 15px;
+
+                    .name {
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      margin-bottom: 7px;
+                    }
+                  }
+
+                  .checkbox {
+                    width: 70px;
+                  }
+
+                  .index {
+                    width: 100px;
+                  }
+                }
+              }
+
+              .add-register {
+                height: 45px;
+                border-radius: 5px;
+                box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+                border: 0;
+                font-size: 16px;
+                font-weight: 500;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #007773;
+                margin: 20px 23px 20px 0px;
+                padding: 0 18px;
+
+                .icon-plus {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+              }
+            }
+
+            .group-footer {
+              margin-top: 13px;
+              margin-bottom: 15px;
+              text-align: center;
+              display: flex;
+              justify-content: flex-end;
+              padding: 0 30px;
+              
+              button {
+                margin-left: 20px;
+                width: 115px;
+                height: 45px;
+                border-radius: 5px;
+                border: 0;
+              }
+
+              .group-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .image-icon {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+
+                .name {
+                  color: #ffffff;
+                  font-size: 16px;
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .detail-history {
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      border-radius: 15px;
+      background-color: #fff;
+      border: 0px;
+
+      .history{
+        margin-top: 30px;
+        border-radius: 10px;
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 22px 29px;
+
+          .group-left {
+            display: flex;
+
+            .icon-size {
+              font-size: 25px;
+              margin-right: 18px;
+              color: #1a456b;
+            }
+
+            .name {
+              margin-top: 5px;
+              color: #1a456b;
+              font-weight: bold;
+              font-size: 18px;
+            }
+          }
+        }
+
+        .content {
+          padding: 22px 29px;
+
+          .content-head {
+            display: flex;
+            margin-left: 20px;
+
+            .icon-size {
+              font-size: 18px;
+              margin-right: 10px;
+              color: #1a456b;
+            }
+
+            div {
+              font-size: 18px;
+              color: #1a456b;
+              padding: 10px 15px;
+            }
+
+            div.active {
+              background-color: #1a456b;
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              color: #ffffff;
+
+              .icon-size {
+                color: #ffffff;
+              }
+            }
+          }
+
+          .content-detail.first {
+            border-top: 2px solid #e2ebf7;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+          }
+
+          .content-detail.end {
+            border-bottom: 2px solid #e2ebf7;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+          }
+
+          .content-detail {
+            padding: 22px;
+            border-left: 2px solid #e2ebf7;
+            border-right: 2px solid #e2ebf7;
+
+            .detail-head {
+              display: flex;
+
+              .number {
+                font-size: 18px;
+                background-color: #1a456b;
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: #ffffff;
+              }
+
+              .topic {
+                border-radius: 20px;
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .topic.blue {
+                background-color: #a8d0f1;
+              }
+
+              .topic.yellow {
+                background-color: #faee85;
+              }
+
+              .topic.green {
+                background-color: #aaf1a8;
+              }
+
+              .create {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+                margin-top: -5px;
+
+                .icon-size {
+                  font-size: 22px;
+                }
+              }
+
+              .date {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .time {
+                color: #15466e;
+                padding: 5px 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+            }
+
+            .button-file {
+              margin-bottom: 10px;
+              color: #fff;
+              font-size: 18px;
+              background-color: #0f324e;
+              border-color: #0d2b43;
+              padding: 8px 12px;
+              border-radius: 10px;
+            }
+
+            .detail-list {
+              font-size: 18px;
+              margin-top: 20px;
+              margin-left: 30px;
+            }
+            
+
+            .detail-signager {
+              margin-left: 30px;
+              font-size: 18px;
+              width: 200px;
+              text-align: center;
+
+
+              .image-size {
+                width: 200px;
+              }
+            }
+
+            .line {
+              margin-top: 30px;
             }
           }
         }

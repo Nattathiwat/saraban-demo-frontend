@@ -501,8 +501,7 @@ export default {
         margin: 0px 29px;
       }
     }
-  }
-  
+
     .modal-register {
       .modal-class {
         position: fixed;
@@ -674,4 +673,5 @@ export default {
         }
       }
     }
+  }
 </style>

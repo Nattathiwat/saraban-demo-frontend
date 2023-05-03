@@ -119,6 +119,10 @@
           </div>
           <div class="line"></div>
           <div class="d-flex justify-content-end">
+            <button type="button" class="add-send" @click="modal_send()">
+                <i class="bi bi-send"></i>
+                เลือกวิธีการส่ง
+            </button>
             <button type="button" class="add-register" :disabled="(!data.book_category_id || !data.book_type_id || !data.secret_id || !data.speed_id)" @click="add_booking_register_details()">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                 เพิ่มทะเบียน
@@ -494,6 +498,92 @@
         </div>
       </div>
     </div>
+    <div class="modal-send" v-show="modalSend.showModal">
+      <div class="modal-class">
+        <div class="modal-center">
+          <div class="modal-size" ref="modalSendref">
+            <div class="modal-title">
+              <div class="title-size">วิธีการส่ง</div> 
+              <i class="bi bi-x-lg icon-close" @click="modalSend.showModal = false"></i>
+            </div>
+            <div class="line"></div>
+            <div class="modal-detail">
+              <div class="group-head">
+                <div class="group-input">
+                  <cpn-checkbox v-model="modalSend.select"
+                                :name="`select`"
+                                @change="selectedAll()"
+                                label="ทั้งหมด" />
+                </div>
+                <div class="group-input w-25">
+                  <div class="name">วิธีการส่ง</div>
+                  <cpn-select v-model="modalSend.send_style_id"
+                              name="send_style_id"
+                              :optionSelect="modalSend.optionSelect.send_style" />
+                </div>
+              </div>
+              <div class="message" v-for="(item, index) in modalSend.booking_register_details" :key="index">
+                <div class="d-flex">
+                  <div class="col-checkbox">
+                    <cpn-checkbox v-model="item.select"
+                                  @change="selected1(item)"
+                                  :name="`select${index}`" />
+                  </div>
+                  <div class="col-start">ชุดที่ #{{index+1}}</div>
+                  <div class="col-center">
+                    <div class="row">
+                      <div class="col-lg-auto col-md-auto mb-3">
+                        <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                      </div>
+                      <div class="col-lg-auto col-md-auto mb-3">
+                        <div class="name">ลงวันที่ : {{item.regis_date}}</div>
+                      </div>
+                    </div>
+                    <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                  </div>
+                </div>
+                <div class="detail-sub">
+                  <div class="mb-3">หน่วยงานปลายทาง</div>
+                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers" :key="index2">
+                    <div class="group-input checkbox">
+                    <cpn-checkbox v-model="item2.select"
+                                  @change="selected2(item, item2)"
+                                  :name="`select${index}${index2}`" />
+                    </div>
+                    <div class="group-input index">{{index2+1}}.</div>
+                    <div class="group-input">
+                      <cpn-input  v-model="item2.department_dest_name"
+                                  :disabled="true"
+                                  :name="`department_dest_name${index}${index2}`" />
+                    </div>
+                    <div class="group-input w-50">
+                      <cpn-input  v-model="item2.email"
+                                  :name="`email${index}${index2}`"
+                                  :disabled="true" />
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <div class="line"></div>
+            <div class="group-footer">
+              <button type="button" @click="modalSend.showModal = false" class="btn button-danger">
+                <div class="group-name">
+                  <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                  <div class="name">ยกเลิก</div>
+                </div>
+              </button>
+              <button type="button" class="btn button-success" @click="sendMailClick()">
+                <div class="group-name">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
+                  <div class="name">ตกลง</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="detail-history" v-if="$route.params.id">
         <div class="history">
           <div class="header pointer" @click="data.history.hide = !data.history.hide, historyClick(data.history.tab)">
@@ -619,12 +709,88 @@ export default {
       modalRegiter: {
         showModal: false,
         booking_register_details: []
+      },
+      modalSend: {
+        showModal: false,
+        select: false,
+        send_style_id: 0,
+        booking_register_details: [],
+        optionSelect: {
+          send_style: [{value: 1, name:'eMail(อัตโนมัติ)'}]
+        }
       }
     }
   },
   methods: {
+    sendMailClick() {
+      let axiosArray = []
+      this.modalSend.booking_register_details.filter((row) => {
+        if (row.select) {
+          row.booking_registers.filter((row2) => {
+            if(row2.select && (row2.book_id || row2.book_id == 0) && (row2.regis_id || row2.regis_id == 0)) {
+              let dataSave = {
+                send_style_id: parseInt(this.modalSend.send_style_id),
+                book_id: parseInt(row2.book_id),
+                book_regis_id: parseInt(row2.regis_id),
+                user_id: parseInt(localStorage.getItem('user_id'))
+              }
+              axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+            }
+          })
+        }
+      })
+      if (axiosArray.length>0) {
+        this.axios.all([...axiosArray])
+        .then(this.axios.spread(() => {
+         this.modalSend.showModal = false
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.modalSend.showModal = false
+      }
+    },
+    selectedAll(item) {
+      this.modalSend.booking_register_details.filter((row) => {
+        row.select = this.modalSend.select;
+        row.booking_registers.filter((row2) => {
+          row2.select = this.modalSend.select;
+        })
+      })
+    },
+    selected1(item) {
+      this.modalSend.select = this.modalSend.booking_register_details.every((row) => {
+        return row.select;
+      })
+      item.booking_registers.filter((row2) => {
+        row2.select = item.select;
+      })
+    },
+    selected2(item, item2) {
+      item.select = item.booking_registers.every((row) => {
+        return row.select;
+      })
+      this.modalSend.select = this.modalSend.booking_register_details.every((row) => {
+        return row.select;
+      })
+    },
+    modal_send() {
+      this.modalSend.booking_register_details = this.data.booking_register_details
+      this.modalSend.booking_register_details.filter(item => {
+        item.select = false
+        item.booking_registers.filter(item2 => {
+          item2.select = false
+          item2.optionSelect.department_dest_id.filter(item3 => {
+            if (item3.id == item2.department_dest_id) {
+              item2.department_dest_name = item3.desc
+            }
+          })
+        })
+      })
+      this.modalSend.showModal = true
+    },
     historyClick(data) {
-      
       this.showLoading = true
       this.axios.get(`/booking-out/${this.$route.params.id}/history`, {
         params: {
@@ -1766,6 +1932,27 @@ export default {
         margin-bottom: 5px;
       }
 
+      .add-send {
+        height: 45px;
+        border-radius: 5px;
+        box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+        border: 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #007773;
+        margin: 20px 15px 20px 0px;
+        padding: 0 12px;
+
+        .bi-send {
+          font-size: 18px;
+          margin-right: 10px;
+        }
+      }
+
       .add-register {
         height: 45px;
         border-radius: 5px;
@@ -2240,6 +2427,7 @@ export default {
         }
       }
     }
+
     .modal-register {
       .modal-class {
         position: fixed;
@@ -2346,6 +2534,196 @@ export default {
                       color: #333;
                       margin-bottom: 7px;
                     }
+                  }
+                }
+              }
+
+              .add-register {
+                height: 45px;
+                border-radius: 5px;
+                box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+                border: 0;
+                font-size: 16px;
+                font-weight: 500;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #007773;
+                margin: 20px 23px 20px 0px;
+                padding: 0 18px;
+
+                .icon-plus {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+              }
+            }
+
+            .group-footer {
+              margin-top: 13px;
+              margin-bottom: 15px;
+              text-align: center;
+              display: flex;
+              justify-content: flex-end;
+              padding: 0 30px;
+              
+              button {
+                margin-left: 20px;
+                width: 115px;
+                height: 45px;
+                border-radius: 5px;
+                border: 0;
+              }
+
+              .group-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .image-icon {
+                  width: 25px;
+                  height: 25px;
+                  margin-right: 10px;
+                }
+
+                .name {
+                  color: #ffffff;
+                  font-size: 16px;
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .modal-send {
+      .modal-class {
+        position: fixed;
+        overflow-y: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background-color: rgba(33, 85, 163, 0.16);
+
+        .modal-center {
+          height: 85%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      
+
+          .modal-size {
+            width: 100%;
+            pointer-events: auto;
+            margin: auto;
+            max-width: 1100px;
+            background-color: #ffffffff;
+            border-radius: 15px;
+
+            .line {
+              height: 2px;
+              width: 100%;
+              background-color: #e2ebf7;
+              margin-top: 5px;
+              margin-bottom: 5px;
+            }
+
+            .modal-title {
+              display: flex;
+              justify-content: space-between;
+              padding-top: 25px;
+              margin-bottom: 16px;
+              margin-right: 30px;
+              margin-left: 30px;
+
+              .title-size {
+                font-size: 18px;
+                font-weight: 700;
+                color: #0A1629;
+                margin-top: 5px;
+              }
+
+              .icon-close {
+                font-size: 22px;
+                cursor: pointer;
+              }
+            }
+
+            .modal-detail {
+              padding-top: 20px;
+
+              .group-head {
+                justify-content: space-between;
+                align-items: center;
+                margin: 0px 23px 20px;
+                display: flex;
+              }
+
+              .col-checkbox {
+                width: 50px;
+              }
+
+              .col-start {
+                width: 100px;
+              }
+
+              .col-center {
+                width: 100%;
+
+                .span {
+                  margin-right: 30px;
+                }
+              }
+
+
+              .message {
+                background-color: rgba(218, 229, 245, 0.84);
+                margin: 0px 23px 20px;
+                padding: 20px 15px;
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                border-radius: 5px;
+
+                .detail-sub {
+                  background-color: #ffffff;
+                  padding: 20px;
+                  border-radius: 5px;
+                  margin-top: 15px;
+
+                  .group-between {
+                    display: flex;
+
+                    .right-width {
+                      width: 50%;
+                    }
+                  }
+
+                  .group-input {
+                    width: 100%;
+                    padding: 0 10px;
+                    margin-bottom: 15px;
+
+                    .name {
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      margin-bottom: 7px;
+                    }
+                  }
+
+                  .checkbox {
+                    width: 70px;
+                  }
+
+                  .index {
+                    width: 100px;
                   }
                 }
               }
