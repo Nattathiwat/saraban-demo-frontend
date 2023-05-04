@@ -20,17 +20,17 @@
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">
                   <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
                 </div>
-                รายการส่งอีเมล์
+                รายการส่งอีเมล
                 <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
                 <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
               </div>
               <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail' || $route.name == 'automail-sendmail-list' || $route.name == 'automail-sendmail-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail'})">
                 <div class="icon-circle" />
-                รายการหนังสือส่งออกที่ส่งผ่านอีเมล์ (อัตโนมัติ)
+                รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
               </div>
               <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail-logs' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail-logs'})">
                 <div class="icon-circle" />
-                บันทึกการส่งอีเมล์
+                บันทึกการส่งอีเมล
               </div>
             </div>
             <div class="list-navbar-group">
@@ -78,17 +78,17 @@
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">
                   <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
                 </div>
-                รายการส่งอีเมล์
+                รายการส่งอีเมล
                 <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
                 <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
               </div>
               <div v-show="iconAngle.automail" class="list-navbar-sub pointer" @click="automailClick('automail-sendmail')">
                 <div class="icon-circle" />
-                รายการหนังสือส่งออกที่ส่งผ่านอีเมล์ (อัตโนมัติ)
+                รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
               </div>
               <div v-show="iconAngle.automail" class="list-navbar-sub pointer" @click="automailClick('automail-sendmail-logs')">
                 <div class="icon-circle" />
-                บันทึกการส่งอีเมล์
+                บันทึกการส่งอีเมล
               </div>
             </div>
             <div class="list-navbar-group">
@@ -324,7 +324,7 @@ export default {
       } else if (this.$route.name == 'subministry-work.record-out-edit') {
         return [{name: 'งานของกอง', path: 'subministry-work'}, {name: 'บันทึกส่งออก', path: 'subministry-work.record-out'}, {name: 'แก้ไขบันทึกส่งออก', path: 'subministry-work.record-out-edit', query: this.$route.query}]
       } else if (this.$route.name == 'automail-mail-addresses') {
-        return [{name: 'มาสเตอร์', path: ''}, {name: 'อีเมล์ติดต่อหน่วยงาน', path: 'automail-mail-addresses'}]
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'อีเมลติดต่อหน่วยงาน', path: 'automail-mail-addresses'}]
       } else if (this.$route.name == 'automail-receiver-profile') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}]
       } else if (this.$route.name == 'automail-receiver-profile-create') {
@@ -332,13 +332,13 @@ export default {
       } else if (this.$route.name == 'automail-receiver-profile-edit') {
         return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile'}, {name: 'แก้ไขตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย', path: 'automail-receiver-profile-edit', query: this.$route.query}]
       } else if (this.$route.name == 'automail-sendmail-logs') {
-        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'บันทึกการส่งอีเมลอัตโนมัติ', path: 'automail-sendmail-logs'}]
+        return [{name: 'รายการส่งอีเมล', path: ''}, {name: 'บันทึกการส่งอีเมลอัตโนมัติ', path: 'automail-sendmail-logs'}]
       } else if (this.$route.name == 'automail-sendmail') {
-        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}]
+        return [{name: 'รายการส่งอีเมล', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}]
       } else if (this.$route.name == 'automail-sendmail-list') {
-        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-list', query: this.$route.query}]
+        return [{name: 'รายการส่งอีเมล', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-list', query: this.$route.query}]
       } else if (this.$route.name == 'automail-sendmail-edit') {
-        return [{name: 'รายการส่งอีเมล์', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-edit', query: this.$route.query}]
+        return [{name: 'รายการส่งอีเมล', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-edit', query: this.$route.query}]
       } else {
         return [{name: this.$route.name , path: this.$route.name }]
       }
