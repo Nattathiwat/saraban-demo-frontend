@@ -345,6 +345,12 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ลบ
               </button>
+              <button type="button" class="confirm-receive"  >
+              <div class="group-image" @click="submitClick()">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
+              </div>
+            </button>
             </div>
             <div class="footer-right">
               <button type="submit" class="button-primary" @click="flagSave=1">
@@ -1090,7 +1096,11 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get('/master-data/register-type')
+      const request1 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type : 0
+        }
+      })
       const request2 = this.axios.get('/master-data/book-type')
       const request3 = this.axios.get('/master-data/secret')
       const request4 = this.axios.get('/master-data/speed')
@@ -1115,7 +1125,7 @@ export default {
         
         response1.data.data.filter(item => {
           item.value = item.id
-          item.name = item.desc
+          item.name = item.name
           return item
         })
         response2.data.data.filter(item => {
@@ -1198,6 +1208,43 @@ export default {
           this.optionSelect.book_type_id = response.data.data
         }
       })
+    },
+    submitClick(){
+      let _this = this
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+            let groupdata = {
+              regis_id: parseInt(_this.data.book_category_id),
+              book_type: 4,
+              human_flag: _this.data.human_flag,
+              response_id: parseInt(_this.data.response_id),
+              user_id: parseInt(localStorage.getItem('user_id'))  
+              // receive_regis_id : parseInt(_this.$route.query.regis_id),
+              // receive_document_number: _this.data.receive_document_number
+            }
+              _this.showLoading = true
+              _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
+              .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {
+                showModal: true, 
+                type: 'success', 
+                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+                msgSuccess: true, 
+                afterPressAgree() { 
+                  _this.back() }}
+            })
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+          }
+        }
     },
   },
   mounted () {
@@ -1699,6 +1746,30 @@ export default {
         .footer-left {
           .button-danger {
             width: 100px;
+          }
+
+          .confirm-receive {
+            height: 45px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-left: 16px;
+            padding: 0 20px 0 20px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-check-circle {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+              }
+            }
           }
         }
 

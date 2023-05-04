@@ -256,7 +256,11 @@ export default {
     },
     api_master() {
       this.showLoading = TextTrackCueList
-      const request8 = this.axios.get(`/master-data/register-type`)
+      const request8 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type : 3
+        }
+      })
 
       this.axios.all([request8, ])
       .then(this.axios.spread((...responses) => {
@@ -265,7 +269,7 @@ export default {
         
         response8.data.data.filter(row => {
           row.value = row.id
-          row.name = row.desc
+          row.name = row.name
           return row
         })
 

@@ -1007,7 +1007,11 @@ export default {
       const request5 = this.axios.get('/master-data/process-type')
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department')
-      const request8 = this.axios.get(`/master-data/register-type`)
+      const request8 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type : 3
+        }
+      })
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request2, request3, request4, request5, request6, request7, request8, request10])
@@ -1054,7 +1058,7 @@ export default {
         })
         response8.data.data.filter(item => {
           item.value = item.id
-          item.name = item.desc
+          item.name = item.name
           return item
         })
 

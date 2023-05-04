@@ -163,16 +163,16 @@
                 <div class="name">บันทึกต้นเรื่อง</div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button"  class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
+                    <button type="button"  class="button-file" @click="upload_file(`main_docs${index}`)" >
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
                       </span>
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                    <div :class="'text pointer'" @click="upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3"  @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -180,7 +180,7 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" :disabled="edit" @click="upload_file('addAttachments')" >
+                  <button type="button" class="add-booking-receive"  @click="upload_file('addAttachments')" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
@@ -190,16 +190,16 @@
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
+                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="upload_file(`attachments${index}`)">
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
                       </span>
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                    <div :class="'text pointer'" @click="upload_file(`attachments${index}`)">แนบเอกสาร</div>
                     <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
+                  <button type="button" class="del-department-3"   @click="delete_attachments(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -1024,7 +1024,11 @@ export default {
       const request5 = this.axios.get(`/master-data/permission-type`)
       const request6 = this.axios.get(`/user`)
       const request7 = this.axios.get(`/user`)
-      const request8 = this.axios.get(`/master-data/register-type`)
+      const request8 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type : 3
+        }
+      })
       const request9 = this.axios.get('/master-data/department-user')
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
@@ -1079,7 +1083,7 @@ export default {
         })
         response8.data.data.filter(row => {
           row.value = row.id
-          row.name = row.desc
+          row.name = row.name
           return row
         })
         response9.data.data.filter(item => {
