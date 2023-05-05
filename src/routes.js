@@ -74,7 +74,7 @@ export default {
       name: 'subministry-work',
       component: () => import("./view/subministry-work/index.vue"),
       redirect: {
-        name: 'subministry-work.record-receive'
+        name: 'subministry-work.booking-receive'
       },
       children: [
         { 
