@@ -1760,7 +1760,11 @@ export default {
       const request5 = this.axios.get(`/master-data/permission-type`)
       const request6 = this.axios.get(`/user`)
       const request7 = this.axios.get(`/user`)
-      const request8 = this.axios.get(`/master-data/register-type`)
+      const request8 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type : 2
+        }
+      })
       const request9 = this.axios.get('/master-data/department-user')
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
@@ -1815,7 +1819,7 @@ export default {
         })
         response8.data.data.filter(row => {
           row.value = row.id
-          row.name = row.desc
+          row.name = row.name
           return row
         })
         response9.data.data.filter(item => {

@@ -1026,7 +1026,7 @@ export default {
       const request7 = this.axios.get(`/user`)
       const request8 = this.axios.get(`/master-data/book-category` ,{
         params: {
-          book_type : 3
+          book_type : 1
         }
       })
       const request9 = this.axios.get('/master-data/department-user')

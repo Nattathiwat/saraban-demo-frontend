@@ -9,14 +9,15 @@
           </div>
         </div>
         <div class="line"></div>
-        <Form @submit="apiMailAddress" @invalid-submit="onInvalidSubmit">
+        <Form @submit="apiSendmailLists" @invalid-submit="onInvalidSubmit">
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ทะเบียน </div>
-                <cpn-autoComplete   v-model="data.registertype"
-                                    name="registertype"
-                                    @keyupData="keyupData"
+                <cpn-autoComplete   v-model="optionSelect.regis_id"
+                                    name="regis_id"
+                                    @keyup="keyup_regis_type"
+                                    :optionSelect="optionSelect.regis_id"
                                     placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
@@ -37,16 +38,18 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">จาก</div>
-                <cpn-autoComplete  v-model="data.send_from"
-                            name="send_from"
-                            @keyupData="keyupData"
+                <cpn-autoComplete  v-model="optionSelect.department_id"
+                            name="department_id"
+                            @keyup="keyup_department"
+                            :optionSelect="optionSelect.department_id"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ถึง</div>
-                <cpn-autoComplete  v-model="data.send_to"
-                            name="send_to"
-                            @keyupData="keyupData"
+                <cpn-autoComplete  v-model="optionSelect.department_dest_id"
+                            name="department_dest_id"
+                            @keyup="keyup_department"
+                            :optionSelect="optionSelect.department_dest_id"
                             placeholder="เลือกหน่วยงานปลายทาง" />
               </div>
             </div>
@@ -102,27 +105,15 @@
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col2">{{data.department_full_name}}</td>
-                <td class="col3">
-                  <div class="new-line">
-                    <div class="name">ส่งถึง (TO)</div>
-                  </div>
-                </td>
-                <td class="col4">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col5">{{data.department_full_name}}</td>
-                <td class="col6">
-                  <div class="new-line">
-                    <div class="name">ส่งถึง (TO)</div>
-                  </div>
-                </td>
-                <td class="col7">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col8">{{data.department_full_name}}</td>
-                <td class="col9">
-                  <div class="new-line">
-                    <div class="name">ส่งถึง (TO)</div>
-                  </div>
-                </td>
-                <td class="col10">{{data.department_full_name}}</td>
+                <td class="col2">{{item.speed_name}}</td>
+                <td class="col3">{{ item.secret_name }}</td>
+                <td class="col4">{{item.book_out_document_number}}</td>
+                <td class="col5">{{item.book_regis_name}}</td>
+                <td class="col6">{{ item.subject }}</td>
+                <td class="col7">{{item.book_type_name}}</td>
+                <td class="col8">{{item.as_of_date}}</td>
+                <td class="col9">{{item.from }}</td>
+                <td class="col10">{{item.to}}</td>
                 <td class="col11">
                   <div class="group-icon">
                     <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
@@ -168,8 +159,15 @@ export default {
         total: 0,
         lastPage: 0,
         perPage: 10,
-        department_full_name: 'Test'
+        regis_id: '',
+        department_id: '',
+        department_dest_id: '',
       },
+      optionSelect: {
+        regis_id:[],
+        department_id:[],
+        department_dest_id:[],
+      }
     }
   },
   methods: {
@@ -196,37 +194,33 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apiUser()
+      this.apiSendmailLists()
     },
     search() {
       this.data.status = true
       this.data.perPage = 10
       this.data.page = 1
-      this.apiUser()
+      this.apiSendmailLists()
     },
-    apiSendmailLogs() {
+    apiSendmailLists() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/master-data/department-contact', {
+      this.axios.get('/book-out-external/book-out-automail', {
         params:{
-          mail_register: this.data.mail_register,
-          mail_number_out: this.data.mail_number_out,
-          mail_speed: this.data.mail_speed,
-          mail_title: this.data.mail_title,
-          mail_division: this.data.mail_division,
-          mail_to: this.data.mail_to,
-          mail_date_st: this.data.mail_date_st,
-          mail_send_to: this.data.mail_send_to,
-          mail_send_cc: this.data.mail_send_cc,
-          mail_send_bcc: this.data.mail_send_bcc,
-          mail_date_send: this.data.mail_date_send,
+          regis_id: this.data.regis_id,
+          department_id: this.data.department_id,
+          department_dest_id: this.data.department_dest_id,
           page_size: this.data.perPage,
           page: this.data.page,
         }
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.meta.filter(row => row.disabled = true)
+        response.data.data.meta.filter(item => {
+          item.book_series.filter(item2 => {
+            item2.subs.filter(row => row.disabled = true)
+          })
+        })
         this.data.table = response.data.data.meta
         this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
@@ -236,11 +230,94 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
+    api_master() {
+      this.showLoading = true
+      const request8 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type: 1
+        }
+      })
+      const request9 = this.axios.get('/master-data/department-user')
+
+      this.axios.all([ request8, request9])
+      .then(this.axios.spread((...responses) => {
+        this.showLoading = false
+        const response8 = responses[0]
+        const response9 = responses[1]
+        
+        response8.data.data.filter(row => {
+          row.value = row.id
+          row.name = row.name
+          return row
+        })
+        response9.data.data.filter(item => {
+          item.value = item.id
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
+          return item
+        })
+
+        this.optionSelect.regis_id = response8.data.data
+        this.optionSelect.department_dest_id = response9.data.data
+        
+        if (this.$route.params.id) {
+          this.edit = true
+          this.api_detail()
+        } else {
+          this.edit = false
+        }
+        
+      })).catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+      
+    },
+    keyup_regis_type(e) {
+      this.optionSelect.sendTo = []
+      this.axios.get('/master-data/book-category', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.name
+            return item
+          })
+          this.optionSelect.regis_id = response.data.data
+        }
+      })
+    },
+    keyup_department(e) {
+      this.optionSelect.sendTo = []
+      this.axios.get('/master-data/department-user', {
+        params: {
+          keyword: e.target.value
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
+            return item
+          })
+          this.optionSelect.regis_id = response.data.data
+        }
+      })
+    },
   },
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apiUser()
+    this.apiSendmailLists()
+    this.api_master()
   },
 }
 

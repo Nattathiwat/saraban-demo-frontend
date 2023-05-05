@@ -1819,7 +1819,7 @@ export default {
         })
         response8.data.data.filter(row => {
           row.value = row.id
-          row.name = row.desc
+          row.name = row.name
           return row
         })
         response9.data.data.filter(item => {
