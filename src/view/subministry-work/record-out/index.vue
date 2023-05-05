@@ -258,7 +258,7 @@ export default {
       this.showLoading = TextTrackCueList
       const request8 = this.axios.get(`/master-data/book-category` ,{
         params: {
-          book_type : 3
+          book_type : 1
         }
       })
 
