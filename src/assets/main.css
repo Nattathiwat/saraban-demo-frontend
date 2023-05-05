@@ -4,6 +4,7 @@ html, body {
   background: #FFFCF5;
   margin: 0px;
   box-sizing: border-box;
+  font-family: 'Bai Jamjuree', sans-serif !important;
 }
 
 *, *:before, *:after {
@@ -11,7 +12,7 @@ html, body {
 }
 
 * {
-  font-family: 'Bai Jamjuree', sans-serif !important;
+  /* font-family: 'Bai Jamjuree', sans-serif !important; */
 }
 
 .pointer {

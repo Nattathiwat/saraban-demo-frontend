@@ -50,73 +50,81 @@
               <div class="group-between">
                 <div class="group-input">
                   <div class="name">ประเภท</div>
-                  <cpn-input  v-model="data.detail_type"
-                              name="detail_type"
+                  <cpn-input  v-model="data.bookout.book_type_name"
+                              name="bookout.book_type_name"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
                   <div class="name">ทะเบียน</div>
-                  <cpn-input  v-model="data.detal_register"
-                              name="detal_register"
+                  <cpn-input  v-model="data.bookout.book_regis_name"
+                              name="bookout.book_regis_name"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
               </div>
               <div class="group-between">
                 <div class="group-input">
                   <div class="name">ชั้นความลับ</div>
-                  <cpn-input  v-model="data.detail_secret"
-                              name="detail_secret"
+                  <cpn-input  v-model="data.bookout.secret_name"
+                              name="bookout.secret_name"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
                   <div class="name">ความเร่งด่วน</div>
-                  <cpn-input  v-model="data.detail_speed"
-                              name="detail_speed"
+                  <cpn-input  v-model="data.bookout.speed_name"
+                              name="bookout.speed_name"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
                   <div class="name">เลขที่ออก สลค.</div>
-                  <cpn-input  v-model="data.detail_issued_number"
-                              name="detail_issued_number"
-                              :disabled="edit"
+                  <cpn-input  v-model="data.bookout.book_out_document_number"
+                              name="bookout.book_out_document_number"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
                   <div class="name">ลงวันที่</div>
-                  <cpn-input  v-model="data.detail_dated"
-                              name="detail_dated"
+                  <cpn-input  v-model="data.bookout.as_of_date"
+                              name="bookout.as_of_date"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
               </div>
               <div class="group-between">
                 <div class="group-input">
                   <div class="name">จากสังกัด/กอง</div>
-                  <cpn-input  v-model="data.detail_from_affiliation"
-                              name="detail_from_affiliation"
+                  <cpn-input  v-model="data.bookout.from"
+                              name="bookout.from"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
                   <div class="name">ถึง</div>
-                  <cpn-input  v-model="data.detail_from_affiliation_to"
-                              name="detail_from_affiliation_to"
+                  <cpn-input  v-model="data.bookout.to"
+                              name="bookout.to"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
               </div>
               <div class="group-between">
                 <div class="group-input">
                   <div class="name">ชื่อเรื่อง</div>
-                  <cpn-input  v-model="data.detail_title"
-                              name="detail_title"
+                  <cpn-input  v-model="data.bookout.subject"
+                              name="bookout.subject"
+                              :disabled="true"
                               placeholder="กรุณาระบุ" />
                 </div>
               </div>
             </div>
-            <div v-show="step == 1">
+            <div v-if="step == 1">
               <div class="group-input mt-4">
                 <div class="name">คำขึ้นต้น <span class="required">*</span></div>
                 <div class="group-recommend mb-3">
-                  <cpn-input v-model="data.detail_recommend"
-                              name="detail_recommend"
+                  <cpn-input v-model="data.greeting"
+                              name="greeting"
                               class="input-recommend"
                               rules="required"
                               placeholder="กรุณาระบุ" />
@@ -125,8 +133,8 @@
                     แนะนำ
                   </button>
                 </div>
-                <cpn-input  v-model="data.detail_book_recipient"
-                            name="detail_book_recipient"
+                <cpn-input  v-model="data.receive_name"
+                            name="receive_name"
                             rules="required"
                             placeholder="ผู้รับหนังสือ" />
               </div>
@@ -140,44 +148,44 @@
                     </button>
                   </div>
                 </div>
-                <cpn-textArea v-model="data.detail_message"
-                              name="detail_message"
+                <cpn-textArea v-model="data.message"
+                              name="message"
                               rows="15"
                               rules="required"
                               placeholder="เนื้อความจดหมาย" />
               </div>
               <div class="group-input">
                 <div class="name">รายละเอียดตามเอกสารที่ส่งมาด้วย <span class="required">*</span></div>
-                <cpn-textArea v-model="data.detail_message_documents"
-                              name="detail_message_documents"
+                <cpn-textArea v-model="data.detail"
+                              name="detail"
                               rules="required"
                               rows="2"
                               placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">คำลงท้าย <span class="required">*</span></div>
-                <cpn-input  v-model="data.detail_postscript"
-                            name="detail_postscript"
+                <cpn-input  v-model="data.signature"
+                            name="signature"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ชื่อส่วนราชการที่ส่งหนังสือ <span class="required">*</span></div>
-                <cpn-input  v-model="data.detail_government"
-                            name="detail_government"
+                <cpn-input  v-model="data.department_name"
+                            name="department_name"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ข้อมูลผู้ติดต่อ <span class="required">*</span></div>
                 <div class="mb-3">
-                  <cpn-input  v-model="data.detail_contact_name"
-                              name="detail_contact_name"
+                  <cpn-input  v-model="data.contact_name"
+                              name="contact_name"
                               rules="required"
                               placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ" />
                 </div>
-                <cpn-input  v-model="data.detail_contact_phone"
-                            name="detail_contact_phone"
+                <cpn-input  v-model="data.contact"
+                            name="contact"
                             rules="required"
                             placeholder="เบอร์โทร และชื่อผู้ติดต่อ" />
               </div>
@@ -187,39 +195,39 @@
               </div>
               <div class="group-input">
                 <div class="name">ข้อความขอให้ตอบกลับ <span class="required">*</span></div>
-                <cpn-input  v-model="data.detail_reply_message"
-                            name="detail_reply_message"
+                <cpn-input  v-model="data.reply_message"
+                            name="reply_message"
                             rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">Disclaimer <span class="required">*</span></div>
-                <cpn-textArea v-model="data.detail_disclaimer"
-                              name="detail_disclaimer"
+                <cpn-textArea v-model="data.disclaimer"
+                              name="disclaimer"
                               rules="required"
                               rows="15"
                               placeholder="กรุณาระบุ" />
               </div>
             </div>
-            <div v-show="step == 2">
+            <div v-if="step == 2">
               <div class="sum-size-file">
-                <span>ขนาดไฟล์รวม {{sumfile()}} (อนุญาตให้แนบไฟล์รวมกันสูงสุด 25MB)</span>
+                <span>ขนาดไฟล์รวม {{sumfile()}}MB (อนุญาตให้แนบไฟล์รวมกันสูงสุด 25MB)</span>
               </div>
               <div class="group-input">
                 <div class="name">วิธีการส่งไฟล์ <span class="required">*</span></div>
-                <cpn-select v-model="data.detail_how_to_send_files"
-                            name="detail_how_to_send_files"
+                <cpn-select v-model="data.send_type_id"
+                            name="send_type_id"
                             rules="required"
-                            :optionSelect="optionSelect.detail_how_to_send_files"
+                            :optionSelect="optionSelect.send_type_id"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ลิงค์ดาวน์โหลดเอกสาร</div>
                 <div class="group-recommend">
-                  <cpn-input v-model="data.detail_recommend"
-                              name="detail_recommend"
+                  <cpn-input v-model="data.link"
+                              name="link"
                               class="input-link"
-                              :disabled="data.detail_how_to_send_files == 1"
+                              :disabled="data.send_type_id == 1"
                               placeholder="กรุณาระบุ" />
                   <button type="button" class="button-link none-pointer">
                     <i class="bi bi-link-45deg icon-question"></i>
@@ -228,33 +236,33 @@
               </div>
               <div class="group-input">
                 <div class="name">หนังสือต้นเรื่อง</div>
-                <div class="d-flex" v-if="data.detail_original_file">
-                  <cpn-input  v-model="data.detail_original_file"
-                              name="detail_original_file"
+                <div class="d-flex" v-if="data.main_file_name">
+                  <cpn-input  v-model="data.main_file_name"
+                              name="main_file_name"
                               :disabled="true"/>
-                  <button type="button" class="button-view" @click="previewFile(data)">
+                  <button type="button" class="button-view" @click="previewFile({filename: data.main_file_name, link: data.main_file_link})">
                     <i class="bi bi-eye icon-eye"></i>
                   </button>
                 </div>
                 <div v-else>
-                  <cpn-input  v-model="no_detail_original_file"
-                              name="no_detail_original_file"
+                  <cpn-input  v-model="no_main_file_name"
+                              name="no_main_file_name"
                               :disabled="true"/>
                 </div>
               </div>
               <div class="group-input">
                 <div class="name">สำเนาคู่ฉบับ</div>
-                <div class="d-flex" v-if="data.detail_duplicate_copy">
-                  <cpn-input  v-model="data.detail_duplicate_copy"
-                              name="detail_duplicate_copy"
+                <div class="d-flex" v-if="data.copy_file_name">
+                  <cpn-input  v-model="data.copy_file_name"
+                              name="copy_file_name"
                               :disabled="true"/>
-                  <button type="button" class="button-view" @click="previewFile(data)">
+                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_file_name, link: data.copy_file_link})">
                     <i class="bi bi-eye icon-eye"></i>
                   </button>
                 </div>
                 <div v-else>
-                  <cpn-input  v-model="no_detail_duplicate_copy"
-                              name="no_detail_duplicate_copy"
+                  <cpn-input  v-model="no_copy_file_name"
+                              name="no_copy_file_name"
                               :disabled="true"/>
                 </div>
               </div>
@@ -288,48 +296,118 @@
                 </div>
               </div>
             </div>
-            <div v-show="step == 3">
+            <div v-if="step == 3">
               <div class="group-input mt-4">
                 <div class="name">Subject / Mail <span class="required">*</span></div>
-                <cpn-input  v-model="data.detail_subject"
-                            name="detail_subject"
+                <cpn-input  v-model="data.subject"
+                            name="subject"
                             rules="required"
                             placeholder="เรื่อง" />
               </div>
               <div class="group-input mt-4">
                 <div class="name">ถึง / To <span class="required">*</span> (สามารถระบุได้มากกว่า 1 อีเมล โดยคั่นแต่ละอีเมลด้วยสัญลักษณ์ ,)</div>
-                <cpn-input  v-model="data.detail_subject"
-                            name="detail_subject"
+                <cpn-input  v-model="data.to"
+                            name="to"
                             rules="required"
                             placeholder="อีเมลผู้รับจดหมาย" />
               </div>
               <div class="group-input mt-4">
                 <div class="name">สำเนาถึง / Cc (สามารถระบุได้มากกว่า 1 อีเมล โดยคั่นแต่ละอีเมลด้วยสัญลักษณ์ ,)</div>
-                <cpn-input  v-model="data.detail_subject"
-                            name="detail_subject"
+                <cpn-input  v-model="data.cc"
+                            name="cc"
                             placeholder="อีเมลผู้รับจดหมาย" />
               </div>
               <div class="group-input mt-4">
                 <div class="name">สำเนาลับถึง / BCc (สามารถระบุได้มากกว่า 1 อีเมล โดยคั่นแต่ละอีเมลด้วยสัญลักษณ์ ,)</div>
-                <cpn-input  v-model="data.detail_subject"
-                            name="detail_subject"
+                <cpn-input  v-model="data.bcc"
+                            name="bcc"
                             placeholder="อีเมลผู้รับจดหมาย" />
               </div>
               <div class="group-input mt-4">
                 <div class="name d-flex justify-content-between align-items-center mb-3 mt-3">
                   <div>ตัวอย่างข้อความ</div>
-                  <button type="button" class="button-reload" @click="reloadClick()">
+                  <button type="button" class="button-reload" @click="reloadClick()" v-show="false">
                     <i class="bi bi-arrow-clockwise icon-clockwise"></i>
                     โหลดใหม่
                   </button>
                 </div>
                 <div class="border-preview">
-                  <iframe :src="data.detail_file_preview"
-                          width="100%" 
-                          height="1070px"
-                          frameborder="1"
-                          class="mx-auto border d-block"
-                          style="margin: 0 auto;" />
+                  <table bgcolor="#ffffff" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="table-layout: fixed; vertical-align: top; min-width: 320px; border-spacing: 0; border-collapse: collapse; background-color: #ffffff; width: 100%;" valign="top" width="100%">
+                    <tbody>
+                      <tr style="vertical-align: top;" valign="top">
+                        <td style="word-break: break-word; vertical-align: top;" valign="top">
+                          <div style="background-color:#ffffff;">
+                            <div class="block-grid" style="min-width: 320px; max-width: 680px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; margin: 0 auto; background-color: transparent;">
+                              <div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;">
+                                <div class="col num12" style="min-width: 320px; max-width: 680px; display: table-cell; vertical-align: top; width: 680px;">
+                                  <div class="col_cont" style="width:100% !important;">
+                                    <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                      <div align="center" class="img-container center fixedwidth" style="padding-right: 0px;padding-left: 0px; margin-top:40px;">
+                                        <a href="#" style="outline:none" tabindex="-1" target="_blank"> 
+                                          <img align="center" alt="" border="0" class="center fixedwidth" :src="data.logoImage" width="110" style="text-decoration: none; height: auto; border: 0px; width: 100%; max-width: 110px; display: block;" />
+                                        </a>
+                                      </div>
+                                      <div style="color:#666; font-family: 'Arial', sans-serif; line-height:1.5; padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
+                                        <div style="line-height: 2.0; font-size: 12px; color: #15466e; font-family: Arial, sans-serif; margin-bottom: 20px;">
+                                          <p style="font-size: 14px; line-height: 2.0; word-break: break-word; text-align: center; margin: 0;"><strong><span style="font-size: 16px; font-weight: 500;">พีเคเอ็ม คอนซัลติ้ง กรุ๊ป จำกัด</span></strong></p>
+                                          <p style="font-size: 14px; line-height: 1.0; word-break: break-word; text-align: center; margin: 0;"><strong><span style="font-size: 14px; font-weight: 400;">ระบบสารบรรณอิเล็กทรอนิกส์</span></strong></p>
+                                        </div>
+                                        <div style="color:#666; font-family: 'Arial', sans-serif; line-height:1.5; padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
+                                          <div style="line-height: 2.0; font-size: 12px; color: #15466e; font-family: Arial, sans-serif; margin-bottom: 5px;">
+                                            <p style="font-size: 14px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0;">
+                                              <strong><span style="font-size: 20px; font-weight: 600;">{{ data.greeting }} {{ data.receive_name }}</span></strong>
+                                            </p>
+                                          </div>
+                                          <div style="line-height: 1.5; font-size: 12px; color: #333333; font-family: Arial, sans-serif;">
+                                            <p style="font-size: 16px; line-height: 1.5; word-break: break-word; text-align: left; margin: 0;">
+                                              {{ data.message }}
+                                            </p>
+                                          </div>
+                                          <br>
+                                          <div style="line-height: 1.5; font-size: 12px; color: #333333; font-family: Arial, sans-serif;" v-show="data.send_type_id != 1">
+                                            <p style="font-size: 16px; line-height: 1.5; word-break: break-word; text-align: left; margin: 0;">
+                                              <a :href="data.link" title="ลิงค์ดาวน์โหลดเอกสาร">{{ data.link }}</a>
+                                            </p>
+                                          </div>
+                                          <div style="line-height: 2.0; font-size: 12px; color: #333333; font-family: Arial, sans-serif; margin-bottom: 5px; margin-top: 20px;">
+                                            <p style="font-size: 16px; line-height: 1.5; word-break: break-word; text-align: left; margin: 0; ">
+                                              {{ data.detail }}
+                                            </p>
+                                          </div>
+                                          <div style="line-height: 2.0; font-size: 12px; color: #333333; font-family: Arial, sans-serif; margin-bottom: 20px; margin-top: 20px;">
+                                            <p style="font-size: 16px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0; text-indent: 50px">
+                                              {{ data.signature }} 
+                                            </p>
+                                            <p style="font-size: 16px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0;">
+                                              {{ data.department_name }}
+                                            </p>
+                                          </div>
+                                          <div style="line-height: 2.0; font-size: 12px; color: #333333; font-family: Arial, sans-serif; margin-bottom: 20px; margin-top: 20px; border-bottom: #030303 dashed 1px; padding-bottom: 15px;">
+                                            <p style="font-size: 16px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0;">
+                                              {{ data.contact_name }}
+                                            </p>
+                                            <p style="font-size: 16px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0;">
+                                              {{ data.contact }}
+                                            </p>
+                                          </div>
+                                          <div style="line-height: 2.0; font-size: 12px; color: #333333; font-family: Arial, sans-serif; margin-bottom: 20px; margin-top: 20px;">
+                                            <p style="font-size: 16px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0; margin-bottom: 15px;">
+                                              {{ data.reply_message }}
+                                            </p>
+                                            <p id="Disclaimer" style="font-size: 15px; line-height: 2.0; color: #15466e; font-style: italic; word-break: break-word; text-align: left; margin: 0;  margin-bottom: 10px" v-html="data.disclaimer"></p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -446,38 +524,44 @@ export default {
       showLoading: false,
       edit: false,
       data: {
-        detail_type: '',
-        detal_register: '',
-        detail_secret: '',
-        detail_speed: '',
-        detail_issued_number: '',
-        detail_dated: '',
-        detail_from_affiliation: '',
-        detail_from_affiliation_to: '',
-        detail_title: '',
-        detail_recommend: '',
-        detail_book_recipient: '',
-        detail_message: '',
-        detail_message_documents: '',
-        detail_postscript: '',
-        detail_government: '',
-        detail_contact_name: '',
-        detail_contact_phone: '',
-        detail_reply_message: '',
-        detail_disclaimer: '',
-        detail_how_to_send_files: '',
-        detail_recommend: '',
-        detail_original_file: '',
-        detail_duplicate_copy: '',
+        bookout: {
+          book_type_name: '',
+          book_regis_name: '',
+          secret_name: '',
+          speed_name: '',
+          book_out_document_number: '',
+          as_of_date: '',
+          from: '',
+          to: '',
+          subject: ''
+        },
+        greeting: '',
+        receive_name: '',
+        message: '',
+        detail: '',
+        signature: '',
+        department_name: '',
+        contact_name: '',
+        contact: '',
+        reply_message: '',
+        disclaimer: '',
+        send_type_id: '',
+        link: '',
+        main_file_name: '',
+        copy_file_name: '',
         attachments: [],
+        subject: '',
+        to: '',
+        cc: '',
+        bcc: '',
         fileType: [],
-        detail_file_preview: new URL(`@/assets/images/default/department.png`, import.meta.url).href
+        logoImage: new URL(`@/assets/images/default/department.png`, import.meta.url).href
       },
-      no_detail_original_file: 'ไม่มีหนังสือต้นเรื่อง',
-      no_detail_duplicate_copy: 'ไม่มีสำเนาคู่ฉบับ',
+      no_main_file_name: 'ไม่มีหนังสือต้นเรื่อง',
+      no_copy_file_name: 'ไม่มีสำเนาคู่ฉบับ',
       no_attachments: 'ไม่มีสิ่งที่แนบมาด้วย',
       optionSelect: {
-        detail_how_to_send_files: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
+        send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
       },
     }
   },
@@ -497,15 +581,21 @@ export default {
         }
         if (data == 'attachments') {
           if (file.type == 'application/pdf') {
-            let dataFile = {
-              filename: file.name,
-              type: file.type,
-              link: URL.createObjectURL(file),
-              size: (file.size /1024 /1024).toFixed(2) + ' MB',
-              file: file,
-              flag: 'add'
+            if ((+this.sumfile() + +(file.size /1024 /1024).toFixed(2)) <= 25) { 
+              let dataFile = {
+                filename: file.name,
+                type: file.type,
+                link: URL.createObjectURL(file),
+                size: (file.size /1024 /1024).toFixed(2) + ' MB',
+                file_size: (file.size /1024 /1024).toFixed(2),
+                file: file,
+                flag: 'add'
+              }
+              this.data.attachments.push(dataFile)
+            } else {
+              this.modalAlert = {showModal: true, type: 'error', message: 'ขนาดไฟล์รวมเกิน 25MB'}
+              document.querySelector(`[name="${data}"]`).value=null;
             }
-            this.data.attachments.push(dataFile)
           }
         }
       }
@@ -537,7 +627,7 @@ export default {
       this.data.attachments?.filter(row => {
         size += row.file.size
       })
-      return (size /1024 /1024).toFixed(2) + ' MB'
+      return (size /1024 /1024).toFixed(2)
     },
     cancelClick() {
       console.log('cancelClick')
@@ -549,32 +639,33 @@ export default {
     },
     keyupModal(e) {
       this.modal.optionSelect.book_recipient = []
-      this.axios.get('/master-data/subministry', {
+      this.axios.get('/master-data/message-template', {
         params: {
           keyword: e.target.value,
         }
       })
       .then((response) => {
         if(response.data.data) {
-          response.data.data.filter(item => {
+          response.data.data.meta.filter(item => {
             item.value = item.id
+            item.name = item.receive_name
             return item
           })
-          this.modal.optionSelect.book_recipient = response.data.data
+          this.modal.optionSelect.book_recipient = response.data.data.meta
         }
       })
     },
     modalClick() {
       if (this.modal.book_recipient) {
-        this.axios.get('/master-data/subministry', {
+        this.axios.get(`/master-data/message-template/${this.modal.book_recipient}`, {
           params: {
             keyword: this.modal.book_recipient,
           }
         })
         .then((response) => {
-          this.data.detail_recommend = 'test1'
-          this.data.detail_book_recipient = 'test2'
-          this.data.detail_postscript = 'test3'
+          this.data.greeting = response.data.data.title_name
+          this.data.receive_name = response.data.data.receive_person_name
+          this.data.signature = response.data.data.signature
           this.modal.showModal = false
         })
         .catch((error) => {
@@ -592,41 +683,42 @@ export default {
     },
     keyupModalTeamplate(e) {
       this.modalTemplate.optionSelect.message_format = []
-      this.axios.get('/master-data/subministry', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            return item
-          })
-          this.modalTemplate.optionSelect.message_format = response.data.data
-        }
-      })
+      // this.axios.get('/master-data/subministry', {
+      //   params: {
+      //     keyword: e.target.value,
+      //   }
+      // })
+      // .then((response) => {
+      //   if(response.data.data) {
+      //     response.data.data.filter(item => {
+      //       item.value = item.id
+      //       return item
+      //     })
+      //     this.modalTemplate.optionSelect.message_format = response.data.data
+      //   }
+      // })
+      this.modalTemplate.optionSelect.message_format = [{value:'1', name: '01: ขอนำส่งหนังสือ'}]
     },
     modalTemplateClick() {
       if (this.modalTemplate.message_format) {
-        this.axios.get('/master-data/subministry', {
-          params: {
-            keyword: this.modalTemplate.message_format,
-          }
-        })
-        .then((response) => {
-          this.data.detail_message = 'template_test1'
-          this.data.detail_message_documents = 'template_test2'
-          this.data.detail_government = 'template_test3'
-          this.data.detail_contact_phone = 'template_test4'
-          this.data.detail_reply_message = 'template_test5'
-          this.data.detail_disclaimer = 'template_test6'
+        // this.axios.get('/master-data/subministry', {
+        //   params: {
+        //     keyword: this.modalTemplate.message_format,
+        //   }
+        // })
+        // .then((response) => {
+          this.data.message = 'ขอนำส่งหนังสือ เลขที่ นร0501/48, เรื่อง ทดสอบ, ลงวันที่ 14 กุมภาพันธ์ 2566'
+          this.data.detail = 'รายละเอียดตามเอกสารที่ส่งมาด้วย'
+          this.data.department_name = 'สำนักเลขาธิการคณะรัฐมนตรี'
+          this.data.contact = 'โทร. 0 2280 9000 ต่อ .... (ชื่อผู้ติดต่อ ...)'
+          this.data.reply_message = '“หากท่านได้รับอีเมลนี้แล้วกรุณาแจ้งการได้รับกลับมายังที่อยู่อีเมลนี้ด้วยจะขอบคุณยิ่ง”'
+          this.data.disclaimer = '**อีเมล(และ/หรือเอกสารแนบ) นี้เป็นข้อมูลที่เป็นความลับและอาจเป็นข้อมูลที่เป็นเอกสิทธิ์เฉพาะบุคคล การนำข้อมูลดังกล่าวไปใช้หรือเปิดเผยให้บุคคลอื่นใดล่วงรู้เป็นการกระทำที่ไม่ได้รับอนุญาติหากท่านมิได้เป็นบุคคลที่อีเมลฉบับนี้ระบุถึงแล้ว กรุณาลบอีเมลนี้ออกจากคอมพิวเตอร์ที่ท่านได้รับทั้งนี้ ขอขอบคุณหากท่านได้แจ้งผู้ส่งถึงการจัดส่งอีเมลที่ผิดพลาดด้วย\r\n**This e-mail (and/or attachments) is confidential and may be privileged. Use or disclosure of it by anyone other than a designated address is unauthorized. If you are not intented recipient, please deleate this e-mail from computer on which you received it. We thank you for notifying us immediately.'
           this.modalTemplate.showModal = false
-        })
-        .catch((error) => {
-          this.modalTemplate.showModal = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
+        // })
+        // .catch((error) => {
+        //   this.modalTemplate.showModal = false
+        //   this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        // })
       } else {
         this.modalTemplate.showModal = false
       }
@@ -645,107 +737,93 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.edit ? 'แก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.flag == 1 ? 'บันทึกร่าง' : 'บันทึกและส่ง'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          let roles = []
-          _this.data.level.filter(item => {
-            item.flag = 'delete'
-            roles.push(item)
-          })
-          _this.data.optionSelect.roles.filter(item => {
-            item.flag = 'add'
-            item.check ? roles.push(item) : ''
-          })
-
-          let formDataFile = new FormData();
-          formDataFile.append('fname', _this.data?.fname || '');
-          formDataFile.append('lname', _this.data?.lname || '');
-          formDataFile.append('email', _this.data?.email || '');
-          formDataFile.append('department_id', _this.data?.department_id || '');
-          formDataFile.append('organization_id', _this.data?.organization_id || '');
-          formDataFile.append('subministry_id', _this.data?.subministry_id || '');
-          formDataFile.append('group_id', _this.data?.group_id || '');
-          formDataFile.append('username', _this.data?.username || '');
-          formDataFile.append('password', _this.data?.password || '');
-          formDataFile.append('birthdate', _this.data?.birthdate || '');
-          formDataFile.append('profile_img', _this.data?.profile_img || '');
-          formDataFile.append('signature_img', _this.data?.signature_img || '');
-          formDataFile.append('total_role', roles?.length || 0);
-          roles.filter((item, index) => {
-            if (item.id) {
-            formDataFile.append(`roles[${index}][id]`, item.id)
-            }
-            if (item.role_id) {
-              formDataFile.append(`roles[${index}][role_id]`, item.role_id)
-            }
-            if (item.flag) {
-              formDataFile.append(`roles[${index}][flag]`, item.flag)
-            }
-          })
           _this.showLoading = true
-          _this.axios[_this.edit ? 'put' : 'post'](`/usexr${_this.edit ? '/' + _this.$route.params.id : ''}`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-          .then(() => { 
-            _this.showLoading = false
-            _this.callApiUser()
-            _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขผู้ใช้งานสำเร็จแล้ว' : 'ทำการสร้างผู้ใช้งานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            _this.showLoading = false
-            _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
+          _this.uploadFileAll()
         }
       }
-      // }
+    },
+    uploadFileAll() {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray = []
+      let fileAttachments = []
+      this.data.attachments.filter(item=> {
+        if (item.file && item.flag == 'add') {
+          axiosArray.push(true)
+        }
+      })
+      if (axiosArray.length > 0) {
+        this.data.attachments.filter(item=> {
+          if (item.file && item.flag == 'add') {
+            let formDataFile = new FormData();
+            formDataFile.append('file', item.file);
+            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+            this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+            .then((response) => {
+              item.filename = response.data.data.filename
+              item.filepath = response.data.data.path
+              fileAttachments.push(true)
+              if (axiosArray.length == fileAttachments.length) {
+                this.callApiSave()
+              }
+            }).catch((error) => {
+              this.showLoading = false
+              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+
+          }
+        })
+      } else {
+        this.callApiSave()
+      }
+    },
+    callApiSave() {
+      this.showLoading = true
+      let _this = this
+      let dataSave = {
+        ... this.data,
+        is_draft: this.flag == 1,
+        user_id: parseInt(localStorage.getItem('user_id'))
+      }
+      this.axios.put(`/book-out-external/email-information/${this.$route.params.id}`, dataSave)
+      .then((response) => { 
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'success', title: this.flag == 1 ? 'ทำการบันทึกร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.apiDetail() }}
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/user/${this.$route.params.id}`)
+      this.axios.get(`/book-out-external/book-out-automail/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
-        this.data.fname = response.data.data.fname
-        this.data.lname = response.data.data.lname
-        this.data.username = response.data.data.username
-        this.data.password = response.data.data.password
-        this.data.email = response.data.data.email
-        this.data.department_id = response.data.data.department_id
-        this.data.organization_id = response.data.data.organization_id
-        this.data.subministry_id = response.data.data.subministry_id
-        this.data.group_id = response.data.data.group_id
-        this.data.birthdate = response.data.data.birthdate
-        this.data.level = response.data.data.roles
-        if (response.data.data.profile_img) {
-          this.axios({ method:'get', url: this.backendport+'/'+response.data.data.profile_img, baseURL: '', responseType: 'blob',})
-          .then(response3 => {
-            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.profile_img) })
-            this.data.previewImage1 = URL.createObjectURL(blob)
-          })
-          .catch((error) => {
-            this.data.previewImage1 = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
-          })
-        } else {
-          this.data.previewImage1 = new URL(`@/assets/images/default/profile_img.jpg`, import.meta.url).href
-        }
-        if (response.data.data.signature_img) {
-          this.axios({ method:'get', url: this.backendport+'/'+response.data.data.signature_img, baseURL: '', responseType: 'blob',})
-          .then(response3 => {
-            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(response.data.data.signature_img) })
-            this.data.previewImage2 = URL.createObjectURL(blob)
-          })
-          .catch((error) => {
-            this.data.previewImage2 = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-          })
-        } else {
-          this.data.previewImage2 = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-        }
-        this.data.optionSelect.roles.filter(item2 => {
-          item2.check = false 
-          response.data.data.roles.filter(item => {
-            if (item.role_id == item2.role_id) {
-              item2.check = true 
-            }
-          })
+        this.data = {...this.data, ...response.data.data}
+        this.data.main_file_link = this.data.main_file_path ? this.backendport+'/'+this.data.main_file_path : ''
+        this.data.copy_file_link = this.data.copy_file_path ? this.backendport+'/'+this.data.copy_file_path : ''
+        this.data.attachments.filter(item => {
+          item.flag = 'edit'
+          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
+          return item
+        })
+
+         this.axios({
+          method:'get',
+          url: this.backendport+'/'+localStorage.getItem('filepath'),
+          baseURL: '',
+          responseType: 'blob',
+        })
+        .then(response2 => {
+          const blob = new Blob([response2.data], { type: this.assetsUtils.getTypeFile(localStorage.getItem('filename')) })
+          this.data.logoImage = URL.createObjectURL(blob)
+        })
+        .catch((error) => {
+          this.data.logoImage = new URL(`@/assets/images/default/department.png`, import.meta.url).href
         })
       })
       .catch((error) => {
@@ -766,7 +844,7 @@ export default {
             this.data.fileType.push(item.content_type)
           }
         })
-        // this.apiDetail()
+        this.apiDetail()
       })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -774,7 +852,7 @@ export default {
     }
   },
   mounted () {
-    // this.apiMaster()
+    this.apiMaster()
   },
   watch: {
     'data.organization_id'() {
@@ -869,7 +947,7 @@ export default {
       }
 
       .border {
-        border-color: #dae5f5!important;
+        border-color: #dae5f5 !important;
         border-radius: 5px;
         padding: 20px;
       }
@@ -933,8 +1011,9 @@ export default {
         }
 
         .border-preview {
-          border-color: #dae5f5!important;
+          border: 1px solid #dae5f5 !important;
           border-radius: 5px;
+          padding: 2px;
         }
         
         .sum-size-file {

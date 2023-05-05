@@ -60,8 +60,8 @@
             </div>
             <div class="group-input">
               <div class="name">คำลงท้าย</div>
-              <cpn-input  v-model="data.address_to"
-                          name="address_to"
+              <cpn-input  v-model="data.signature"
+                          name="signature"
                           placeholder="กรุณาระบุ" />
             </div>
             <div class="group-input">
@@ -72,8 +72,8 @@
             </div>
             <div class="group-input">
               <div class="name">คำที่ใช้ในการจ่าหน้าซอง</div>
-              <cpn-input  v-model="data.signature"
-                          name="signature"
+              <cpn-input  v-model="data.address_to"
+                          name="address_to"
                           placeholder="กรุณาระบุ" />
             </div>
           </div>
