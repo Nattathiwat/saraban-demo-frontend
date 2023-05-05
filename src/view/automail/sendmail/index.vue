@@ -14,7 +14,7 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ทะเบียน </div>
-                <cpn-autoComplete   v-model="optionSelect.regis_id"
+                <cpn-autoComplete   v-model="data.regis_id"
                                     name="regis_id"
                                     @keyup="keyup_regis_type"
                                     :optionSelect="optionSelect.regis_id"
@@ -38,7 +38,7 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">จาก</div>
-                <cpn-autoComplete  v-model="optionSelect.department_id"
+                <cpn-autoComplete  v-model="data.department_id"
                             name="department_id"
                             @keyup="keyup_department"
                             :optionSelect="optionSelect.department_id"
@@ -46,7 +46,7 @@
               </div>
               <div class="group-input">
                 <div class="name">ถึง</div>
-                <cpn-autoComplete  v-model="optionSelect.department_dest_id"
+                <cpn-autoComplete  v-model="data.department_dest_id"
                             name="department_dest_id"
                             @keyup="keyup_department"
                             :optionSelect="optionSelect.department_dest_id"
