@@ -103,26 +103,62 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col2">{{item.speed_name}}</td>
-                <td class="col3">{{ item.secret_name }}</td>
-                <td class="col4">{{item.book_out_document_number}}</td>
-                <td class="col5">{{item.book_regis_name}}</td>
-                <td class="col6">{{ item.subject }}</td>
-                <td class="col7">{{item.book_type_name}}</td>
-                <td class="col8">{{item.as_of_date}}</td>
-                <td class="col9">{{item.from }}</td>
-                <td class="col10">{{item.to}}</td>
-                <td class="col11">
-                  <div class="group-icon">
-                    <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
-                    <img @click="sendmailClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
-                  </div>
-                </td>
-              </tr>
+              <template v-for="(item, index) in data.table" :key="index">
+                <tr class="tbody-row tbody-row-index" :class="index%2 !=0 ? 'color-tr1': 'color-tr2'">
+                  <td class="col1" :rowspan="item.rowspan" :class="index%2 !=0 ? 'color-tr1': 'color-tr2'">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
+                  <td class="col2">{{item.speed_name}}</td>
+                  <td class="col3">{{ item.secret_name }}</td>
+                  <td class="col4">{{item.book_out_document_number}}</td>
+                  <td class="col5">{{item.book_regis_name}}</td>
+                  <td class="col6">{{ item.subject }}</td>
+                  <td class="col7">{{item.book_type_name}}</td>
+                  <td class="col8">{{item.as_of_date}}</td>
+                  <td class="col9">{{item.from }}</td>
+                  <td class="col10">{{item.to}}</td>
+                  <td class="col11">
+                    <div class="group-icon">
+                      <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
+                      <img @click="sendmailClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
+                    </div>
+                  </td>
+                </tr>
+                <template v-for="(item2, index2) in item.book_series" :key="index2">
+                  <tr class="tbody-row" :class="(index%2 == 0) ? 'color-tr3': 'color-tr3'">
+                    <td colspan="10" class="col2" style="text-align: left;">ชุดที่{{item2.no}}</td>
+                  </tr>
+                  <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"  :class="(index3%2 != 0) ? 'color-tr1': 'color-tr2'">
+                    <td class="col1">
+                      <div>{{index3+1}} {{item3.book_out_document_number}}</div>
+                      <div>{{item3.book_regis_name}}</div>
+                    </td>
+                    <td class="col2">
+                      <div>{{item3.as_of_date}}</div>
+                      <div>{{item3.from}} ถึง {{item3.to}}</div>
+                    </td>
+                    <td class="col3"></td>
+                    <td class="col4"></td>
+                    <td class="col5"></td>
+                    <td class="col6"></td>
+                    <td class="col7"></td>
+                    <td class="col8"></td>
+                    <td class="col9"></td>
+                    <td class="col11">
+                      <div class="group-icon">
+                        <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
+                        <img @click="sendmailClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="tbody-row-end2">
+                    <td colspan="11"></td>
+                  </tr>
+                  </template>
+                  <tr :class="index%2 !=0 ? 'tbody-row-end1': 'tbody-row-end2'">
+                    <td colspan="11"></td>
+                  </tr>
+                </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="12">ไม่มีข้อมูล</td>
+                <td colspan="11">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -216,13 +252,17 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
-        let table2 = []
-        response.data.data.meta.filter(item => {
-          item.book_series.filter(item2 => {
-            item2.subs.filter(row => row.disabled = true)
+        response.data.data.meta.filter(item1=> {
+          let sum = 0
+          item1.book_series.filter(item2=> {
+            sum += item2.subs.length
           })
+          sum += item1.book_series.length
+          sum += 2
+          item1.rowspan = sum
         })
         this.data.table = response.data.data.meta
+        console.log(this.data.table)
         this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
@@ -262,12 +302,7 @@ export default {
         this.optionSelect.regis_id = response8.data.data
         this.optionSelect.department_dest_id = response9.data.data
         
-        if (this.$route.params.id) {
-          this.edit = true
-          this.api_detail()
-        } else {
-          this.edit = false
-        }
+        this.apiSendmailLists()
         
       })).catch((error) => {
         this.showLoading = false
@@ -317,7 +352,6 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apiSendmailLists()
     this.api_master()
   },
 }
@@ -487,13 +521,13 @@ export default {
         overflow: auto;
         margin-bottom: 1px;
 
-        table tbody tr:nth-child(odd) {
-          background-color: #ffffff;
-        }
+        // table tbody tr:nth-child(odd) {
+        //   background-color: #ffffff;
+        // }
 
-        table tbody tr:nth-child(even) {
-          background-color: #f1f5fa;
-        }
+        // table tbody tr:nth-child(even) {
+        //   background-color: #f1f5fa;
+        // }
 
         .table-department-inex {
           width: 100%;
@@ -592,8 +626,14 @@ export default {
           }
 
           .tbody {
-            .color-tr {
-              background-color: #f1f5fa;
+            .color-tr1 {
+              background-color: #f1f5fa !important;
+            }
+            .color-tr2 {
+              background-color: #ffffff !important;
+            }
+            .color-tr3 {
+              background-color: #f5f5f5 !important;
             }
 
             .tbody-row {
@@ -606,7 +646,7 @@ export default {
               font-size: 16px;
 
               td {
-                padding: 0 10px;
+                padding: 15px;
               }
 
               .col2, .col3 {
@@ -617,17 +657,6 @@ export default {
                 padding-left: 28px;
               }
 
-              .col3 {
-                padding: 10px 0;
-
-                .name {
-                  margin-bottom: 5px;
-                }
-
-                .new-line {
-                  padding: 5px 0;
-                }
-              }
 
               .col11 {
                 padding-right: 28px;
@@ -666,6 +695,21 @@ export default {
                   }
                 }
               }
+            }
+
+            .tbody-row-index {
+              vertical-align: text-top;
+            }
+
+            .tbody-row-end1 {
+              width: 100%;
+              height: 1px;
+              background-color: #f1f5fa !important;
+            }
+            .tbody-row-end2 {
+              width: 100%;
+              height: 1px;
+              background-color: #ffffff !important;
             }
           }
         }
