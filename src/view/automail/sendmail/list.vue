@@ -510,7 +510,7 @@ export default {
     apiSendmailList() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/master-data/department-contact')
+      this.axios.get(`/book-out-external/book-out-automail/${this.$route.params.id}`)
       .then((response) => {
         this.showLoading = false
         this.data.table = response.data.data.meta
