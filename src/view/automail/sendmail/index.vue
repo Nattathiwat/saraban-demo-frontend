@@ -216,6 +216,7 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
+        let table2 = []
         response.data.data.meta.filter(item => {
           item.book_series.filter(item2 => {
             item2.subs.filter(row => row.disabled = true)
