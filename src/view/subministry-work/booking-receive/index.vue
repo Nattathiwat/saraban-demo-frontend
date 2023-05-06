@@ -29,22 +29,31 @@
           <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขรับ</th>
-                <th class="col3">เลขที่หนังสือ</th>
-                <th class="col4">ชื่อเรื่อง</th>
-                <th class="col5">ชนิด</th>
-                <th class="col6">ลงวันที่</th>
-                <th class="col7">ผู้รับผิดชอบ</th>
-                <th class="col8">สถานะ</th>
+                <th class="col1"><cpn-checkbox  v-model="item.selected"
+                                                name="selected"
+                                                @change="selected($event, item)" />
+
+                </th>
+                <th class="col2">ความเร่งด่วน</th>
+                <th class="col3">เลขรับ</th>
+                <th class="col4">เลขที่หนังสือ</th>
+                <th class="col5">ชื่อเรื่อง</th>
+                <th class="col6">ชนิด</th>
+                <th class="col7">ลงวันที่</th>
+                <th class="col8">ผู้รับผิดชอบ</th>
+                <th class="col9">สถานะ</th>
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.referBookno}}</td>
-                <td class="col4">
+              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index">
+                <td class="col1"><cpn-checkbox  v-model="item.selected"
+                                                name="selected"
+                                                @change="selected($event, item)" />
+                </td>
+                <td class="col2" @click="editClick(item)">{{item.speedName}}</td>
+                <td class="col3" @click="editClick(item)">{{item.bookingNo}}</td>
+                <td class="col4" @click="editClick(item)">{{item.referBookno}}</td>
+                <td class="col5" @click="editClick(item)">
                   <div class="group-show none-bg">
                     <span class="span">
                       {{item.bookingSubject}}
@@ -54,9 +63,9 @@
                     </div>
                   </div>
                 </td>
-                <td class="col5">{{item.typename}}</td>
-                <td class="col6">{{item.date}}</td>
-                <td class="col7">
+                <td class="col6">{{item.typename}}</td>
+                <td class="col7">{{item.date}}</td>
+                <td class="col8">
                   <div class="group-show">
                     <span class="span">
                       {{item.response}}
@@ -66,7 +75,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="col8">{{item.statusName}}</td>
+                <td class="col9">{{item.statusName}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="8">ไม่มีข้อมูล</td>
@@ -114,6 +123,7 @@ export default {
         // booktype:'',
         tag:'',
       },
+      checkedList: [],
     }
   },
   methods: {
@@ -226,6 +236,57 @@ export default {
           // })
         }
       }
+    },
+    selected() {
+      this.checkedList = this.data.table.filter((row) => {
+        return row.selected;
+      });
+    },
+    submitClick(){
+      // let _this = this
+      // if (this.data.table.length > 0) {
+      //   this.modalAlert = {
+      //     showModal: true,
+      //     type: 'confirm',
+      //     title: `คุณยืนยันการรับเข้าหรือไม่`,
+      //     confirm: true,
+      //     msgSuccess: true,
+      //     afterPressAgree() {
+      //         _this.showLoading = true
+      //         let axiosArray = []
+      //         _this.data.table.filter((row) => {
+      //           if (_this.checkedList.length > 0) {
+      //             let groupdata = {
+      //               regis_id: row.regis_id,
+      //               book_type: parseInt(row.book_type),
+      //               human_flag: row.human_flag,
+      //               response_id: parseInt(row.response)
+      //             }
+      //             if (row.selected) {
+      //               axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
+      //             }
+      //           }
+      //         });              
+      //         _this.axios.all([...axiosArray])
+      //         .then(_this.axios.spread (() => {
+      //           _this.showLoading = false
+      //           _this.modalAlert = {
+      //             showModal: true, 
+      //             type: 'success', 
+      //             title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+      //             msgSuccess: true, 
+      //             afterPressAgree() {
+      //               _this.apigetrecord()
+      //             }
+      //           }                
+      //         })) 
+      //         .catch((error) => {
+      //           _this.showLoading = false
+      //           _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      //         })
+      //     }
+      //   }
+      // }
     },
   },
   mounted() {
@@ -363,13 +424,13 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 50px;
+              width: 2%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 170px;
+              min-width: 150px;
               width: 15%;
             }
 
@@ -379,12 +440,12 @@ export default {
             }
 
             .col4 {
-              min-width: 300px;
+              min-width: 150px;
               width: 30%;
             }
 
             .col5 {
-              min-width: 250px;
+              min-width: 300px;
               width: 25%;
             }
 
@@ -400,6 +461,11 @@ export default {
             }
 
             .col8 {
+              min-width: 200px;
+              width: 20%;
+              padding-right: 28px !important;
+            }
+            .col9 {
               min-width: 200px;
               width: 20%;
               padding-right: 28px !important;

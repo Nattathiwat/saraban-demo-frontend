@@ -345,6 +345,12 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ลบ
               </button>
+              <button type="button" class="confirm-receive"  >
+              <div class="group-image" @click="submitClick()">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
+              </div>
+            </button>
             </div>
             <div class="footer-right">
               <button type="submit" class="button-primary" @click="flagSave=1">
