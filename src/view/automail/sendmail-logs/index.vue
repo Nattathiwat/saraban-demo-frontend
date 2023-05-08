@@ -14,79 +14,79 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ทะเบียน </div>
-                <cpn-select v-model="data.mail_register"
-                            name="mail_register"
-                            :optionSelect="optionSelect.mail_register"
+                <cpn-select v-model="data.regis_id"
+                            name="regis_id"
+                            :optionSelect="optionSelect.regis_id"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">เลขออก สลค. </div>
-                <cpn-input  v-model="data.mail_number_out"
-                            name="mail_number_out"
+                <cpn-input  v-model="data.book_out_document_number"
+                            name="book_out_document_number"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ความเร่งด่วน</div>
-                <cpn-select v-model="data.mail_speed"
-                            name="mail_speed"
-                            :optionSelect="optionSelect.mail_speed"
+                <cpn-select v-model="data.speed_id"
+                            name="speed_id"
+                            :optionSelect="optionSelect.speed_id"
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-input">
               <div class="name">ชื่อเรื่อง </div>
-              <cpn-input  v-model="data.mail_title"
-                          name="mail_title"
+              <cpn-input  v-model="data.subject"
+                          name="subject"
                           placeholder="กรุณาระบุ" />
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">กอง/สำนัก </div>
-                <cpn-autoComplete v-model="data.mail_division"
-                                  name="mail_division"
-                                  :optionSelect="optionSelect.mail_division"
+                <cpn-autoComplete v-model="data.mnst_id"
+                                  name="mnst_id"
+                                  :optionSelect="optionSelect.mnst_id"
                                   @keyup="keyupSubministry($event)"
                                   placeholder="เลือกกอง/สำนัก" />
               </div>
               <div class="group-input">
                 <div class="name">ถึง </div>
-                <cpn-autoComplete v-model="data.mail_to"
-                                  name="mail_to"
-                                  :optionSelect="optionSelect.mail_to"
+                <cpn-autoComplete v-model="data.department_dest_id"
+                                  name="department_dest_id"
+                                  :optionSelect="optionSelect.department_dest_id"
                                   @keyup="keyupDepartment($event)"
                                   placeholder="เลือกหน่วยงานปลายทาง" />
               </div>
             </div>
             <div class="group-input">
               <div class="name">ลงวันที่ตั้งแต่ - ถึง </div>
-              <cpn-datepickerRange  v-model="data.mail_date_st"
-                                    name="mail_date_st"
+              <cpn-datepickerRange  v-model="data.as_of_date"
+                                    name="as_of_date"
                                     placeholder="เลือกวันที่ - ถึงวันที่" />
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ส่งถึง (TO) </div>
-                <cpn-input  v-model="data.mail_send_to"
-                            name="mail_send_to"
+                <cpn-input  v-model="data.to"
+                            name="to"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">สำเนาถึง (Cc) </div>
-                <cpn-input  v-model="data.mail_send_cc"
-                            name="mail_send_cc"
+                <cpn-input  v-model="data.cc"
+                            name="cc"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">สำเนาลับถึง (Bcc)</div>
-                <cpn-input  v-model="data.mail_send_bcc"
-                            name="mail_send_bcc"
+                <cpn-input  v-model="data.bcc"
+                            name="bcc"
                             placeholder="กรุณาระบุ"  />
               </div>
             </div>
             <div class="group-input">
               <div class="name">วันที่ส่งตั้งแต่ - ถึง </div>
-              <cpn-datepickerRange  v-model="data.mail_date_send"
-                                    name="mail_date_send"
+              <cpn-datepickerRange  v-model="data.send_date"
+                                    name="send_date"
                                     placeholder="เลือกวันที่ - ถึงวันที่" />
             </div>
             <div class="group-button">
@@ -128,18 +128,18 @@
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col2">{{item.status}}</td>
-                <td class="col3">{{item.mail_date_send}}</td>
-                <td class="col4">{{item.mail_number_out}}</td>
-                <td class="col5">{{item.mail_register}}</td>
-                <td class="col6">{{item.mail_speed}}</td>
-                <td class="col7">{{item.mail_title}}</td>
-                <td class="col8">{{item.mail_date_st}}</td>
-                <td class="col9">{{item.mail_division}}</td>
-                <td class="col10">{{item.mail_to}}</td>
-                <td class="col11">{{item.mail_send_to}}</td>
-                <td class="col12">{{item.mail_send_cc}}</td>
-                <td class="col13">{{item.mail_send_bcc}}</td>
+                <td class="col2">{{item.status_name}}</td>
+                <td class="col3">{{item.send_date}}</td>
+                <td class="col4">{{item.book_out_document_number}}</td>
+                <td class="col5">{{item.book_regis_name}}</td>
+                <td class="col6">{{item.speed_name}}</td>
+                <td class="col7">{{item.subject}}</td>
+                <td class="col8">{{item.as_of_date}}</td>
+                <td class="col9">{{item.from}}</td>
+                <td class="col10">{{item.department_dest_name}}</td>
+                <td class="col11">{{item.to}}</td>
+                <td class="col12">{{item.cc}}</td>
+                <td class="col13">{{item.bcc}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="13">ไม่มีข้อมูล</td>
@@ -172,17 +172,17 @@ export default {
       },
       showLoading: false,
       data: {
-        mail_register: '',
-        mail_number_out: '',
-        mail_speed: '',
-        mail_title: '',
-        mail_division: '',
-        mail_to: '',
-        mail_date_st: '',
-        mail_send_to: '',
-        mail_send_cc: '',
-        mail_send_bcc: '',
-        mail_date_send: '',
+        regis_id: '',
+        book_out_document_number: '',
+        speed_id: '',
+        subject: '',
+        mnst_id: '',
+        department_dest_id: '',
+        as_of_date: '',
+        to: '',
+        cc: '',
+        bcc: '',
+        send_date: '',
         table: [],
         page: 1,
         total: 0,
@@ -190,26 +190,26 @@ export default {
         perPage: 10,
       },
       optionSelect: {
-        mail_register: [],
-        mail_speed: [],
-        mail_division: [],
-        mail_to: []
+        regis_id: [],
+        speed_id: [],
+        mnst_id: [],
+        department_dest_id: []
       }
     }
   },
   methods: {
     cancelClick() {
-      this.data.mail_register = ''
-      this.data.mail_number_out = ''
-      this.data.mail_speed = ''
-      this.data.mail_title = ''
-      this.data.mail_division = ''
-      this.data.mail_to = ''
-      this.data.mail_date_st = ''
-      this.data.mail_send_to = ''
-      this.data.mail_send_cc = ''
-      this.data.mail_send_bcc = ''
-      this.data.mail_date_send = ''
+      this.data.regis_id = ''
+      this.data.book_out_document_number = ''
+      this.data.speed_id = ''
+      this.data.subject = ''
+      this.data.mnst_id = ''
+      this.data.department_dest_id = ''
+      this.data.as_of_date = ''
+      this.data.to = ''
+      this.data.cc = ''
+      this.data.bcc = ''
+      this.data.send_date = ''
       this.data.perPage = 10
       this.data.page = 1
       this.apiSendmailLogs()
@@ -222,19 +222,21 @@ export default {
     apiSendmailLogs() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/master-data/department-contact', {
+      this.axios.get('/book-out-external/email-history', {
         params:{
-          mail_register: this.data.mail_register,
-          mail_number_out: this.data.mail_number_out,
-          mail_speed: this.data.mail_speed,
-          mail_title: this.data.mail_title,
-          mail_division: this.data.mail_division,
-          mail_to: this.data.mail_to,
-          mail_date_st: this.data.mail_date_st,
-          mail_send_to: this.data.mail_send_to,
-          mail_send_cc: this.data.mail_send_cc,
-          mail_send_bcc: this.data.mail_send_bcc,
-          mail_date_send: this.data.mail_date_send,
+          regis_id: this.data.regis_id,
+          book_out_document_number: this.data.book_out_document_number,
+          speed_id: this.data.speed_id,
+          subject: this.data.subject,
+          mnst_id: this.data.mnst_id,
+          department_dest_id: this.data.department_dest_id,
+          as_of_date_from: this.data?.as_of_date[0],
+          as_of_date_to: this.data?.as_of_date[1],
+          to: this.data.to,
+          cc: this.data.cc,
+          bcc: this.data.bcc,
+          send_date_from: this.data?.send_date[0],
+          send_date_to: this.data?.send_date[1],
           page_size: this.data.perPage,
           page: this.data.page,
         }
@@ -252,7 +254,7 @@ export default {
       })
     },
     keyupDepartment(e) {
-      this.optionSelect.mail_to = []
+      this.optionSelect.department_dest_id = []
       this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value,
@@ -265,12 +267,12 @@ export default {
             item.name = item.department_full_name
             return item
           })
-          this.optionSelect.mail_to = response.data.data
+          this.optionSelect.department_dest_id = response.data.data
         }
       })
     },
     keyupSubministry(e) {
-      this.optionSelect.mail_division = []
+      this.optionSelect.mnst_id = []
       this.axios.get('/master-data/subministry', {
         params: {
           keyword: e.target.value,
@@ -282,7 +284,7 @@ export default {
             item.value = item.id
             return item
           })
-          this.optionSelect.mail_division = response.data.data
+          this.optionSelect.mnst_id = response.data.data
         }
       })
     },
@@ -321,10 +323,10 @@ export default {
           return item
         })
 
-        this.optionSelect.mail_register = response1.data.data
-        this.optionSelect.mail_speed = response2.data.data
-        this.optionSelect.mail_division = response3.data.data
-        this.optionSelect.mail_to = response4.data.data
+        this.optionSelect.regis_id = response1.data.data
+        this.optionSelect.speed_id = response2.data.data
+        this.optionSelect.mnst_id = response3.data.data
+        this.optionSelect.department_dest_id = response4.data.data
         
         this.apiSendmailLogs()
         
@@ -527,8 +529,8 @@ export default {
             }
 
             .col3 {
-              min-width: 150px;
-              max-width: 150px;
+              min-width: 180px;
+              max-width: 180px;
               width: 0%;
             }
 
@@ -556,14 +558,14 @@ export default {
             }
 
             .col8 {
-              min-width: 150px;
-              max-width: 150px;
+              min-width: 180px;
+              max-width: 180px;
               width: 0%;
             }
             
             .col9 {
-              min-width: 100px;
-              max-width: 100px;
+              min-width: 150px;
+              max-width: 150px;
               width: 0%;
             }
 
