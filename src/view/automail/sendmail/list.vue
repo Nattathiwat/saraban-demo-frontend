@@ -21,8 +21,8 @@
             <div class="group-input w-50">
               <div class="name">คำขึ้นต้น </div>
               <div class="group-recommend">
-                <cpn-input v-model="data.salutation"
-                            name="salutation"
+                <cpn-input v-model="data.greeting"
+                            name="greeting"
                             class="input-recommend"
                             placeholder="กรุณาระบุ" />
                 <button type="button" class="button-recommend" @click="recommendClick()">
@@ -34,8 +34,8 @@
             <div class="group-input">
               <div class="name">คำลงท้าย </div>
               <div class="d-flex">
-                <cpn-input  v-model="data.postscript"
-                            name="postscript"
+                <cpn-input  v-model="data.signature"
+                            name="signature"
                             placeholder="กรุณาระบุ" />
 
                 <button type="button" class="button-check" @click="amendClick(1)">
@@ -49,8 +49,8 @@
             <div class="group-input">
               <div class="name">ข้อมูลผู้ติดต่อ </div>
               <div class="d-flex">
-                <cpn-input  v-model="data.contact_information"
-                            name="contact_information"
+                <cpn-input  v-model="data.contact"
+                            name="contact"
                             placeholder="กรุณาระบุ" />
 
                 <button type="button" class="button-check" @click="amendClick(2)">
@@ -72,33 +72,33 @@
                 <th class="col4" v-show="false">ส่งถึง (To)<br><span class="ms-2">สำเนาถึง (Cc)</span><br><span class="ms-4">สำเนาลับถึง (Bcc)</span><br><span class="ms-6">เรื่อง</span><br><span class="ms-8">ข้อความ</span></th>
                 <th class="col5" v-show="false">วิธีการส่งไฟล์<br><span class="ms-2">ไฟล์ต้นเรื่อง</span><br><span class="ms-4">ไฟล์แนบ</span></th>
                 <th class="col3">ข้อมูลผู้ติดต่อ</th>
-                <th class="col4">ข้อความ</th>
+                <th class="col4"></th>
                 <th class="col5">วิธีส่งไฟล์</th>
               </tr>
             </thead>
             <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{index + 1}}</td>
-                <td class="col2">{{item.department_name}}</td>
+                <td class="col2">{{item.book_out_document_number}}<br>{{item.as_of_date}}</td>
                 <td class="col3">
                   <div class="new-line">
                     <div class="name">ถึง</div>
-                    <cpn-input  v-model="item.table_to"
-                                :name="'table_to'+index"
+                    <cpn-input  v-model="item.contact_name"
+                                :name="'contact_name'+index"
                                 :disabled="true"  />
                   </div>
                   <div class="new-line">
                     <div class="name">เรียน</div>
-                    <cpn-input  v-model="item.table_dear"
-                                :name="'table_dear'+index"
+                    <cpn-input  v-model="item.receive_name"
+                                :name="'receive_name'+index"
                                 class="input-recommend"
-                                placeholder="กรุณาระบุ" />
+                                placeholder="ผู้รับหนังสือ" />
                   </div>
                   <div class="new-line">
                     <div class="name">คำขึ้นต้น</div>
                     <div class="group-recommend">
-                      <cpn-input  v-model="item.table_salutation"
-                                  :name="'table_salutation'+index"
+                      <cpn-input  v-model="item.greeting"
+                                  :name="'greeting'+index"
                                   class="input-recommend"
                                   placeholder="กรุณาระบุ" />
                       <button type="button" class="button-recommend" @click="recommendClick(), indexTable = index, flgTable = true">
@@ -109,60 +109,60 @@
                   </div>
                   <div class="new-line">
                     <div class="name">คำลงท้าย</div>
-                    <cpn-input  v-model="item.table_postscript"
-                                :name="'table_postscript'+index"/>
+                    <cpn-input  v-model="item.signature"
+                                :name="'signature'+index"/>
                   </div>
                   <div class="new-line">
                     <div class="name">ข้อมูลผู้ติดต่อ</div>
-                    <cpn-input  v-model="item.table_contact_information"
-                                :name="'table_contact_information'+index"/>
+                    <cpn-input  v-model="item.contact"
+                                :name="'contact'+index"/>
                   </div>
                 </td>
                 <td class="col4">
                   <div class="new-line">
                     <div class="name">ส่งถึง (TO)</div>
-                    <cpn-input  v-model="item.table_to"
-                                :name="'table_to'+index"/>
+                    <cpn-input  v-model="item.to"
+                                :name="'to'+index"/>
                   </div>
                   <div class="new-line">
                     <div class="name">สำเนาถึง (Cc)</div>
-                    <cpn-input  v-model="item.table_cc"
-                                :name="'table_cc'+index"/>
+                    <cpn-input  v-model="item.cc"
+                                :name="'cc'+index"/>
                   </div>
                   <div class="new-line">
                     <div class="name">สำเนาลับถึง (Bcc)</div>
-                    <cpn-input  v-model="item.table_bcc"
-                                :name="'table_bcc'+index"/>
+                    <cpn-input  v-model="item.bcc"
+                                :name="'bcc'+index"/>
                   </div>
                   <div class="new-line">
                     <div class="name">เรื่อง</div>
-                    <cpn-input  v-model="item.table_subject"
-                                :name="'table_subject'+index"/>
+                    <cpn-input  v-model="item.subject"
+                                :name="'subject'+index"/>
                   </div>
                   <div class="new-line">
                     <div class="name">ข้อความ</div>
-                    <cpn-textArea v-model="item.table_message"
-                                  :name="'table_message'+index"
+                    <cpn-textArea v-model="item.message"
+                                  :name="'message'+index"
                                   rows="5"/>
                   </div>
                 </td>
                 <td class="col5">
                   <div class="sum-size-file">
-                    <span>ขนาดไฟล์รวม {{sumfile(item)}}</span>
+                    <span>ขนาดไฟล์รวม {{sumfile(item)}}MB</span>
                   </div>
                   <div class="new-line">
                     <div class="name">วิธีการส่งไฟล์</div>
-                    <cpn-select v-model="item.how_to_send_files"
-                                :name="'how_to_send_files'+index"
-                                :optionSelect="optionSelect.how_to_send_files"/>
+                    <cpn-select v-model="item.send_type_id"
+                                :name="'send_type_id'+index"
+                                :optionSelect="optionSelect.send_type_id"/>
                   </div>
                   <div class="new-line">
                     <div class="name">ลิงค์ดาวน์โหลดเอกสาร</div>
                     <div class="group-recommend">
-                      <cpn-input  v-model="item.link_download"
-                                  :name="'link_download'+index"
+                      <cpn-input  v-model="item.link"
+                                  :name="'link'+index"
                                   class="input-link"
-                                  :disabled="item.how_to_send_files == 1"
+                                  :disabled="item.send_type_id == 1"
                                   placeholder="กรุณาระบุ" />
                       <button type="button" class="button-link none-pointer">
                         <i class="bi bi-link-45deg icon-question"></i>
@@ -172,10 +172,10 @@
                   <div class="new-line">
                     <div class="name">ไฟล์ต้นเรื่อง</div>
                     <div class="d-flex">
-                      <cpn-input  v-model="item.original_file"
-                                  :name="'original_file'+index"
+                      <cpn-input  v-model="item.main_file_name"
+                                  :name="'main_file_name'+index"
                                   :disabled="true"/>
-                      <button type="button" class="button-view" @click="previewFile(item)">
+                      <button type="button" class="button-view" @click="previewFile({filename: item.main_file_name, link: item.main_file_path ? backendport+'/'+item.main_file_path : ''})">
                         <i class="bi bi-eye icon-eye"></i>
                       </button>
                     </div>
@@ -183,10 +183,10 @@
                   <div class="new-line">
                     <div class="name">สำเนาคู่ฉบับ</div>
                     <div class="d-flex">
-                      <cpn-input  v-model="item.duplicate_copy"
-                                  :name="'duplicate_copy'+index"
+                      <cpn-input  v-model="item.copy_main_file_name"
+                                  :name="'copy_main_file_name'+index"
                                   :disabled="true"/>
-                      <button type="button" class="button-view" @click="previewFile(item)">
+                      <button type="button" class="button-view" @click="previewFile({filename: item.copy_main_file_name, link: item.copy_main_file_path ? backendport+'/'+item.copy_main_file_path : ''})">
                         <i class="bi bi-eye icon-eye"></i>
                       </button>
                     </div>
@@ -205,7 +205,7 @@
                         <cpn-input  v-model="item2.filename"
                                     :name="'filename'+index2"
                                     :disabled="true"/>
-                        <button type="button" class="button-view" @click="previewFile(item2)">
+                        <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : ''})">
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
                         <button type="button" class="button-del" @click="deleteFile(item, item2, index2)">
@@ -304,14 +304,14 @@ export default {
       },
       showLoading: false,
       data: {
-        salutation: '',
-        postscript: '',
-        contact_information: '',
+        greeting: '',
+        signature: '',
+        contact: 'โทร. 0 2280 9000 ต่อ .... (ชื่อผู้ติดต่อ ...)',
         table: [],
         fileType: []
       },
       optionSelect: {
-        how_to_send_files: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
+        send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
       },
       indexTable: 0,
       flgTable: false
@@ -334,22 +334,27 @@ export default {
     },
     uploadFileAll(flag) {
       let currentDate = this.assetsUtils.currentDate()
-      let completeFile = []
-      this.data.table.filter(row => {
-        let completeFile2 = []
-        if (row?.attachments?.length > 0) {
+      let axiosArray = []
+      let fileAttachments = []
+      this.data.table.filter(row=> {
+        row.attachments.filter(row2 => {
+          if (row2.file && row2.flag == 'add') {
+            axiosArray.push(true)
+          }
+        })
+      })
+      if (axiosArray.length > 0) {
+        this.data.table.filter(row => {
           row.attachments.filter(row2 => {
             let formDataFile = new FormData();
             formDataFile.append('file', row2.file);
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
             this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
             .then((responses) => {
-              item2.attach_filepath = responses.data.data.path
-              completeFile2.push(true)
-              if (completeFile2.length == row.attachments.length) {
-                completeFile.push(true)
-              }
-              if (completeFile.length == this.data.table.length) {
+              row2.filename = responses.data.data.filename
+              row2.filepath = responses.data.data.path
+              fileAttachments.push(true)
+              if (axiosArray.length == fileAttachments.length) {
                 this.callApiSave(flag)
               }
             }).catch((error) => {
@@ -357,19 +362,19 @@ export default {
               this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           })
-        } else {
-          completeFile.push(true)
-        }
-      })
+        })
+      } else {
+        this.callApiSave(flag)
+      }
     },
     callApiSave(flag) {
       let _this = this
       this.showLoading = true
-      let dataSave = {
-        table: this.data.table,
-        user_id: parseInt(localStorage.getItem('user_id')),
-      }
-      this.axios.put(`/booking-outx/${this.$route.params.id}`, dataSave)
+      this.data.table.filter(row=> {
+        row.user_id = parseInt(localStorage.getItem('user_id'))
+        row.flag = flag == 1 ? 'draft' : ''
+      })
+      this.axios.post(`/book-out-external/book-out-automail/series`, this.data.table)
       .then(() => { 
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'success', title: flag == 1 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -384,7 +389,7 @@ export default {
       item?.attachments?.filter(row => {
         size += row.file.size
       })
-      return (size /1024 /1024).toFixed(2) + ' MB'
+      return (size /1024 /1024).toFixed(2)
     },
     uploadFile(data) {
       document.querySelector(`[name="${data}"]` ).click()
@@ -399,15 +404,21 @@ export default {
         if (data == 'attachments') {
           item?.attachments ? '' : (item.attachments = [])
           if (file.type == 'application/pdf') {
-            let dataFile = {
-              filename: file.name,
-              type: file.type,
-              link: URL.createObjectURL(file),
-              size: (file.size /1024 /1024).toFixed(2) + ' MB',
-              file: file,
-              flag: 'add'
+            if ((+this.sumfile(item) + +(file.size /1024 /1024).toFixed(2)) <= 25) { 
+              let dataFile = {
+                filename: file.name,
+                type: file.type,
+                link: URL.createObjectURL(file),
+                size: (file.size /1024 /1024).toFixed(2) + ' MB',
+                file_size: (file.size /1024 /1024).toFixed(2),
+                file: file,
+                flag: 'add'
+              }
+              item.attachments.push(dataFile)
+            } else {
+              this.modalAlert = {showModal: true, type: 'error', message: 'ขนาดไฟล์รวมเกิน 25MB'}
+              document.querySelector(`[name="${data}"]`).value=null;
             }
-            item.attachments.push(dataFile)
           }
         }
       }
@@ -436,36 +447,37 @@ export default {
     },
     keyupModal(e) {
       this.modal.optionSelect.book_recipient = []
-      this.axios.get('/master-data/subministry', {
+      this.axios.get('/master-data/message-template', {
         params: {
           keyword: e.target.value,
         }
       })
       .then((response) => {
         if(response.data.data) {
-          response.data.data.filter(item => {
+          response.data.data.meta.filter(item => {
             item.value = item.id
+            item.name = item.receive_name
             return item
           })
-          this.modal.optionSelect.book_recipient = response.data.data
+          this.modal.optionSelect.book_recipient = response.data.data.meta
         }
       })
     },
     modalClick() {
       if (this.modal.book_recipient) {
-        this.axios.get('/master-data/subministry', {
+        this.axios.get(`/master-data/message-template/${this.modal.book_recipient}`, {
           params: {
             keyword: this.modal.book_recipient,
           }
         })
         .then((response) => {
           if (this.flgTable) {
-            this.data.table[this.indexTable].table_dear = 'aa'
-            this.data.table[this.indexTable].table_salutation = 'bb'
-            this.data.table[this.indexTable].table_postscript = 'cc'
+            this.data.table[this.indexTable].receive_name = response.data.data.receive_person_name
+            this.data.table[this.indexTable].greeting = response.data.data.title_name
+            this.data.table[this.indexTable].signature = response.data.data.signature
           } else {
-            this.data.salutation = 'test1'
-            this.data.postscript = 'test2'
+            this.data.greeting = response.data.data.title_name
+            this.data.signature = response.data.data.signature
           }
           this.modal.showModal = false
           this.indexTable = 0
@@ -491,10 +503,10 @@ export default {
     amendClick(flg) {
       this.data.table.filter(row => {
         if (flg == 1) {
-          row.table_salutation = this.data.salutation
-          row.table_postscript = this.data.postscript
+          row.greeting = this.data.greeting
+          row.signature = this.data.signature
         } else {
-          row.table_contact_information = this.data.contact_information
+          row.contact = this.data.contact
         }
       })
     },
@@ -510,11 +522,15 @@ export default {
     apiSendmailList() {
       this.data.table = []
       this.showLoading = true
-      // this.axios.get(`/book-out-external/book-out-automail/${this.$route.params.id}`)
-      this.axios.get('/master-data/department-contact')
+      this.axios.get(`/book-out-external/book-out-automail/series/${this.$route.params.id}`)
       .then((response) => {
         this.showLoading = false
-        this.data.table = response.data.data.meta
+        response.data.data.filter(row=> {
+          row.attachments.filter(row2 => {
+            row2.flag = 'edit'
+          })
+        })
+        this.data.table = response.data.data
       })
       .catch((error) => {
         this.showLoading = false

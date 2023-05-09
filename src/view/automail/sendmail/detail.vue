@@ -855,18 +855,12 @@ export default {
     this.apiMaster()
   },
   watch: {
-    'data.organization_id'() {
-      this.masterDropdown()
+    'modal.showModal' () {
+      document.body.style.overflow = this.modal.showModal ? 'hidden' : ''
     },
-    'data.department_id'() {
-      this.masterDropdown()
-    },
-    'data.subministry_id'() {
-      this.masterDropdown()
-    },
-    'data.group_id'() {
-      this.masterDropdown()
-    },
+    'modalTemplate.showModal' () {
+      document.body.style.overflow = this.modalTemplate.showModal ? 'hidden' : ''
+    }
   }
 }
 
