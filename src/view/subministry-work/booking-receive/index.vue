@@ -6,10 +6,10 @@
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">หนังสือรับเข้า</div>
-            <button type="button" class="add-booking-receive" @click="addClick()">
+            <button type="button" class="confirm-receive" @click="submitClick()" :disabled="checkedList.length < 1" >
               <div class="group-image">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือรับเข้า
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
               </div>
             </button>
           </div>
@@ -29,11 +29,7 @@
           <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1"><cpn-checkbox  v-model="item.selected"
-                                                name="selected"
-                                                @change="selected($event, item)" />
-
-                </th>
+                <th class="col1"></th>
                 <th class="col2">ความเร่งด่วน</th>
                 <th class="col3">เลขรับ</th>
                 <th class="col4">เลขที่หนังสือ</th>
@@ -243,50 +239,50 @@ export default {
       });
     },
     submitClick(){
-      // let _this = this
-      // if (this.data.table.length > 0) {
-      //   this.modalAlert = {
-      //     showModal: true,
-      //     type: 'confirm',
-      //     title: `คุณยืนยันการรับเข้าหรือไม่`,
-      //     confirm: true,
-      //     msgSuccess: true,
-      //     afterPressAgree() {
-      //         _this.showLoading = true
-      //         let axiosArray = []
-      //         _this.data.table.filter((row) => {
-      //           if (_this.checkedList.length > 0) {
-      //             let groupdata = {
-      //               regis_id: row.regis_id,
-      //               book_type: parseInt(row.book_type),
-      //               human_flag: row.human_flag,
-      //               response_id: parseInt(row.response)
-      //             }
-      //             if (row.selected) {
-      //               axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
-      //             }
-      //           }
-      //         });              
-      //         _this.axios.all([...axiosArray])
-      //         .then(_this.axios.spread (() => {
-      //           _this.showLoading = false
-      //           _this.modalAlert = {
-      //             showModal: true, 
-      //             type: 'success', 
-      //             title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
-      //             msgSuccess: true, 
-      //             afterPressAgree() {
-      //               _this.apigetrecord()
-      //             }
-      //           }                
-      //         })) 
-      //         .catch((error) => {
-      //           _this.showLoading = false
-      //           _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      //         })
-      //     }
-      //   }
-      // }
+      let _this = this
+      if (this.data.table.length > 0) {
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+              _this.showLoading = true
+              let axiosArray = []
+              _this.data.table.filter((row) => {
+                if (_this.checkedList.length > 0) {
+                  let groupdata = { 
+                    id: row.id,
+                    regis_id: row.regis_id,
+                    book_type: parseInt(row.book_type),
+                    user_id: parseInt(localStorage.getItem('user_id'))
+                  }
+                  if (row.selected) {
+                    axiosArray.push(groupdata)
+                  }
+                }
+              });              
+             _this.axios.put(`/booking-receive/multi-receive`, axiosArray)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {
+                showModal: true, 
+                type: 'success', 
+                title: 'ยืนยันรับเข้าสำเร็จ', 
+                msgSuccess: true, 
+                afterPressAgree() { 
+                  _this.apigetimport() 
+                }
+              }
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          }
+        }
+      }
     },
   },
   mounted() {
@@ -354,6 +350,30 @@ export default {
               justify-content: center;
 
               .icon-plus {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+              }
+            }
+          }
+
+          .confirm-receive {
+            height: 45px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-left: 35px;
+            padding: 0 20px 0 20px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-check-circle {
                 width: 24px;
                 height: 24px;
                 margin-right: 10px;

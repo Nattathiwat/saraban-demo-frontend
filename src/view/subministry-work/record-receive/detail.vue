@@ -192,8 +192,8 @@
           </div>
           <div class="line"></div>
           <div class="send-to">
-            <div class="group-input">
-              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) <span class="required">*กรุณาใส่รายชื่อที่ต้องการส่งต่อ</span></div>
+            <div class="group-input"> 
+              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) </div> 
               <cpn-input-tags v-model="data.sendTo"
                               :flagSearch="true"
                               :optionSelect="optionSelect.sendTo"
@@ -333,13 +333,13 @@
                 <li>
                   {{item2.remark}}
                   {{item2.comment}}
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img" alt="" class="image-size">
+                    <!-- <div class="name">({{item.fullname}})</div>
+                    <div class="position">{{item.positionName}}</div> -->
+                  </div>
                 </li>
               </ul>
-              <div class="detail-signager" v-if="item.picture2">
-                <img :src="item.picture2" alt="" class="image-size">
-                <div class="name">({{item.fullname}})</div>
-                <div class="position">{{item.positionName}}</div>
-              </div>
               <div v-if="index != (data.history.data.length-1)" class="line"></div>
             </div>
             <div v-else class="content-detail first end">
@@ -439,6 +439,19 @@ export default {
         this.showLoading = false
         response.data.data.filter(item => {
           item.bookingRemarks.filter(item2 =>{
+            if (item2.signature_img) {
+          this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
+          .then(response3 => {
+            const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(item2.signature_img) })
+            item2.signature_img = URL.createObjectURL(blob)
+          })
+          .catch((error) => {
+            item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+          })
+        } else {
+          item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+        }
+            // item2.signature_img = item2.signature_img ? this.backendport+'/'+item2.signature_img : new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
             item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
             return item2
           })
@@ -586,7 +599,8 @@ export default {
       this.optionSelect.sendTo = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          user_id: parseInt(localStorage.getItem('user_id'))
         }
       })
       .then((response) => {

@@ -406,13 +406,13 @@
                 <li>
                   {{item2.remark}}
                   {{item2.comment}}
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookaction_name == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img" alt="" class="image-size">
+                    <!-- <div class="name">({{item.fullname}})</div>
+                    <div class="position">{{item.positionName}}</div> -->
+                  </div>
                 </li>
               </ul>
-              <div class="detail-signager" v-if="item.picture2">
-                <img :src="item.picture2" alt="" class="image-size">
-                <div class="name">({{item.fullname}})</div>
-                <div class="position">{{item.positionName}}</div>
-              </div>
               <div v-if="index != (data.history.data.length-1)" class="line"></div>
             </div>
             <div v-else class="content-detail first end">
@@ -508,6 +508,7 @@ export default {
         this.showLoading = false
         response.data.data.filter(item => {
           item.bookingRemarks.filter(item2 =>{
+            item2.signature_img = item2.signature_img ? item2.signature_img : new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
             item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
             return item2
           })
@@ -649,7 +650,8 @@ export default {
       this.optionSelect.sendTo = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          department_id: localStorage.getItem('department_id'),
         }
       })
       .then((response) => {
@@ -941,7 +943,8 @@ export default {
             response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
-            sendToFile :{filename : this.data.attach_filename}
+            sendToFile :{filename : this.data.attach_filename},
+            // page_flag : ''
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -971,6 +974,7 @@ export default {
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
+        page_flag : ''
       }
       if (this.edit) {
         if (this.flagSave == 1) {
@@ -1215,8 +1219,8 @@ export default {
             let groupdata = {
               regis_id: parseInt(_this.data.book_category_id),
               book_type: 4,
-              human_flag: _this.data.human_flag,
-              response_id: parseInt(_this.data.response_id),
+              // human_flag: _this.data.human_flag,
+              // response_id: parseInt(_this.data.response_id),
               user_id: parseInt(localStorage.getItem('user_id'))  
               // receive_regis_id : parseInt(_this.$route.query.regis_id),
               // receive_document_number: _this.data.receive_document_number

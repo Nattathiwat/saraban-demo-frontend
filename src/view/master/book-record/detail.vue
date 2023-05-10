@@ -20,10 +20,9 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">เลขทะเบียนหนังสือ <span class="required">*</span></div>
+                <div class="name">รหัสทะเบียนหนังสือ</div>
                 <cpn-input  v-model="data.code"
                             name="department_id"
-                            rules="required"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
