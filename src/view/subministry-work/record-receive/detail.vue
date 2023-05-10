@@ -333,8 +333,8 @@
                 <li>
                   {{item2.remark}}
                   {{item2.comment}}
-                  <div class="detail-signager" v-if="item2.signature_img_test && item.bookactionname == 'ความเห็นคำสั่ง'">
-                    <img :src="item2.signature_img_test" alt="" class="image-size">
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img" alt="" class="image-size">
                     <!-- <div class="name">({{item.fullname}})</div>
                     <div class="position">{{item.positionName}}</div> -->
                   </div>
@@ -437,30 +437,24 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(item => {
-          item.bookingRemarks.filter(item2 =>{
-            console.log('bb')
+        this.data.history.data = response.data.data
+        this.data.history.data.filter((item, index) => {
+          item.bookingRemarks.filter((item2, index2) =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
             if (item2.signature_img) {
-              console.log('cc')
               this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
               .then(response3 => {
                 const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(item2.signature_img) })
-                item2.signature_img_test = URL.createObjectURL(blob)
-                console.log('aa', item2)
+                item2.signature_img = URL.createObjectURL(blob)
               })
               .catch((error) => {
-                item2.signature_img_test = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+                item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
               })
             } else {
-              item2.signature_img_test = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+              item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
             }
-            // item2.signature_img = item2.signature_img ? this.backendport+'/'+item2.signature_img : new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
-            return item2
           })
-          return item
         })
-        this.data.history.data = response.data.data
       })
       .catch((error) => {
         this.showLoading = false
