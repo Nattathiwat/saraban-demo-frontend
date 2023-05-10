@@ -209,7 +209,7 @@
           <div class="line"></div>
           <div class="send-to">
             <div class="group-input">
-              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) <span class="required">*กรุณาใส่รายชื่อที่ต้องการส่งต่อ</span></div>
+              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) </div>
               <cpn-input-tags v-model="data.sendTo"
                               :flagSearch="true"
                               :optionSelect="optionSelect.sendTo"
