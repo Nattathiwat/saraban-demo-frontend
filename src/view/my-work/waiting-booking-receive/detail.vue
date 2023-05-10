@@ -893,7 +893,7 @@ export default {
     },
     api_detail() {
       this.showLoading = true
-      this.axios.get(`/booking-receive/${this.$route.params.id}`, {
+      this.axios.get(`/booking-receive/waiting-receive/${this.$route.params.id}`, {
         params:{
           book_type : this.$route.query.book_type ,
           regis_id: this.$route.query.regis_id,

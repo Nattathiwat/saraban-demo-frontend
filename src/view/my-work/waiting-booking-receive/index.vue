@@ -161,7 +161,7 @@ export default {
       // // this.data.total = 1
       
       this.showLoading = true
-      this.axios.get('/booking-receive', {
+      this.axios.get('/booking-receive/waiting-receive', {
         params: {
           keyword: this.data.search,
           page_size: this.data.perPage,
