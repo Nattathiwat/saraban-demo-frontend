@@ -1785,7 +1785,11 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/book-type`)
+      const request1 = this.axios.get(`/master-data/book-type`, {
+        params: {
+          book_type : 1
+        }
+      })
       const request2 = this.axios.get(`/master-data/speed`)
       const request3 = this.axios.get(`/master-data/secret`)
       const request4 = this.axios.get(`/master-data/process-type`)

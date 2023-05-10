@@ -1104,7 +1104,11 @@ export default {
           book_type : 0
         }
       })
-      const request2 = this.axios.get('/master-data/book-type')
+      const request2 = this.axios.get(`/master-data/book-type` ,{
+        params: {
+          book_type : 0
+        }
+      })
       const request3 = this.axios.get('/master-data/secret')
       const request4 = this.axios.get('/master-data/speed')
       const request5 = this.axios.get('/master-data/process-type')

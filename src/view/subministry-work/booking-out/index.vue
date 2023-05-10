@@ -110,12 +110,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'my-work.booking-out-create',
+        name: 'subministry-work.booking-out-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'my-work.booking-out-edit',
+        name: 'subministry-work.booking-out-edit',
         params: {id: item.id},
         query: {
           page: this.data.page,
