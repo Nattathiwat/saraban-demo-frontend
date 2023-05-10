@@ -702,7 +702,7 @@ export default {
         sendTo: [],
         booking_follows: [],
         comment: '',
-        process_type_id: '12',
+        process_type_id: '13',
         permission_id: '8',
         history: {
           hide: false,
