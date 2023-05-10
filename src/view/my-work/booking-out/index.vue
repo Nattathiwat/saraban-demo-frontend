@@ -6,12 +6,12 @@
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">หนังสือส่งออก</div>
-            <button type="button" class="add-booking-out" @click="addClick()">
+            <!-- <button type="button" class="add-booking-out" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                 สร้างหนังสือส่งออก
               </div>
-            </button>
+            </button> -->
           </div>
           <div class="group-end">
             <div class="search">

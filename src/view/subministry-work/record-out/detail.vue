@@ -163,16 +163,16 @@
                 <div class="name">บันทึกต้นเรื่อง</div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" :disabled="data.disabledTest" class="button-file" @click="upload_file(`main_docs${index}`)" >
+                    <button type="button"  class="button-file" @click="upload_file(`main_docs${index}`)" >
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
                       </span>
                     </button>
-                    <div :class="data.disabledTest ? 'text' : 'text pointer'" @click="data.disabledTest ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                    <div :class="'text pointer'" @click="upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" :disabled="data.disabledTest" class="del-department-3"  @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3"  @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -190,16 +190,16 @@
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" :disabled="data.disabledTest" class="button-file" @click="upload_file(`attachments${index}`)">
+                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="upload_file(`attachments${index}`)">
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
                       </span>
                     </button>
-                    <div :class="data.disabledTest ? 'text' : 'text pointer'" @click="data.disabledTest ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                    <div :class="'text pointer'" @click="upload_file(`attachments${index}`)">แนบเอกสาร</div>
                     <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" :disabled="data.disabledTest" class="del-department-3"   @click="delete_attachments(item, index)">
+                  <button type="button" class="del-department-3"   @click="delete_attachments(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -443,15 +443,24 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(item => {
-          item.bookingRemarks.filter(item2 =>{
-            item2.signature_img = item2.signature_img ? item2.signature_img : new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
-            return item2
-          })
-          return item
-        })
         this.data.history.data = response.data.data
+        this.data.history.data.filter((item, index) => {
+          item.bookingRemarks.filter((item2, index2) =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
+            if (item2.signature_img) {
+              this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
+              .then(response3 => {
+                const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(item2.signature_img) })
+                item2.signature_img = URL.createObjectURL(blob)
+              })
+              .catch((error) => {
+                item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+              })
+            } else {
+              item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+            }
+          })
+        })
       })
       .catch((error) => {
         this.showLoading = false
@@ -973,7 +982,6 @@ export default {
         this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
         this.data.regis_date = response.data.data.created_at
         this.data.tag = []
-        this.data.disabledTest = false
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
             this.data.tag.push({value: '', name: item})

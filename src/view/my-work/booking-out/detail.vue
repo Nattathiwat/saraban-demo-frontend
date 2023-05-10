@@ -235,9 +235,8 @@
                               :disabled="true" />
                 </div>
                 <div class="group-input">
-                  <div class="name">เรียน <span class="required">*</span></div>
+                  <div class="name">เรียน</div>
                   <cpn-input  v-model="item2.greeting"
-                              rules="required"
                               :name="`greeting${index}${index2}`"/>
                 </div>
               </div>
@@ -816,15 +815,24 @@ export default {
       })
       .then((response) => {
         this.showLoading = false
-        response.data.data.filter(item => {
-          item.bookingRemarks.filter(item2 =>{
-            item2.signature_img = item2.signature_img ? item2.signature_img : new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
-            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
-            return item2
-          })
-          return item
-        })
         this.data.history.data = response.data.data
+        this.data.history.data.filter((item, index) => {
+          item.bookingRemarks.filter((item2, index2) =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
+            if (item2.signature_img) {
+              this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
+              .then(response3 => {
+                const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(item2.signature_img) })
+                item2.signature_img = URL.createObjectURL(blob)
+              })
+              .catch((error) => {
+                item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+              })
+            } else {
+              item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+            }
+          })
+        })
       })
       .catch((error) => {
         this.showLoading = false

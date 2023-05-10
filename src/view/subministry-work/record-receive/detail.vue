@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขบันทึกรับเข้า' : 'สร้างบันทึกรับเข้า'}}</div>
+            <div class="name">{{edit ? 'แก้ไขบันทึกรับเข้า' : 'สร้างบันทึกรับเข้า'}} <label>{{data.booking_note_number}}</label></div>
           </div>
         </div>
         <div class="line"></div>
@@ -1192,6 +1192,11 @@ export default {
             color: #1a456b;
             font-weight: bold;
             font-size: 18px;
+
+            label {
+              margin-left: 10px;
+              font-size: 22px;
+            }
           }
         }
 
