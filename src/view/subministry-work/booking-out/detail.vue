@@ -336,7 +336,7 @@
           <div class="line mt-4" v-if="data.booking_register_details.length>0"></div>
           <div class="send-to" v-if="data.booking_register_details.length>0">
             <div class="group-input">
-              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) <span class="required">*กรุณาใส่รายชื่อที่ต้องการส่งต่อ</span></div>
+              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ)</div>
               <cpn-input-tags v-model="data.sendTo"
                               :flagSearch="true"
                               :optionSelect="optionSelect.sendTo"
