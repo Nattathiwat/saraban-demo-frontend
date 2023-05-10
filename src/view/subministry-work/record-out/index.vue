@@ -49,10 +49,28 @@
                 <td class="col1">{{item.speed_name}}</td>
                 <td class="col2">{{item.booking_note_number}}</td>
                 <td class="col3">{{item.subject}}</td>
-                <td class="col4">{{item.department_name}}</td>
+                <td class="col4">
+                  <div class="group-show">
+                    <span class="span">
+                      {{item.department_name}}
+                    </span>
+                    <div class="show-detail">{{item.department_name}}
+                      <div v-if="false" class="image-size"></div>
+                    </div>
+                  </div>
+                </td>
                 <td class="col5">{{item.as_of_date}}</td>
                 <td class="col6">{{item.book_type}}</td>
-                <td class="col7">{{item.department_name}}</td>
+                <td class="col7">
+                  <div class="group-show">
+                    <span class="span">
+                      {{item.response_name}}
+                    </span>
+                    <div class="show-detail">{{item.response_name}}
+                      <div v-if="false" class="image-size"></div>
+                    </div>
+                  </div>
+                </td>
                 <td class="col8">{{item.status_name}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
@@ -483,6 +501,85 @@ export default {
 
               .col1 {
                 padding-left: 28px;
+              }
+
+              .none-bg {
+                background-color: transparent !important;
+              }
+
+              .group-show {
+                text-align: left;
+                position: relative;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                padding: 5px 10px;
+                border-radius: 5px;
+                background-color: #f8f9fa;
+
+
+                .span {
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  line-height: 40px;
+                }
+
+                .show-detail {
+                  width: 100%;
+                  overflow: auto;
+                  max-height: 85px;
+                  color: #fff;
+                  position: absolute;
+                  bottom: 45px;
+                  left: 50%;
+                  transform: translate(-50%, 0px);
+                  padding: 9px 13px 9px 13px;
+                  display: none;
+                  font-size: 16px;
+                  font-weight: 500;
+                  text-align: left;
+                  z-index: 1;
+                  background-color: #15466e;
+                  border-radius: 9px;
+
+                  .image-size {
+                    position: absolute;
+                    left: 50%;
+                    z-index: -1;
+                    bottom: -5px;
+                    width: 22px;
+                    height: 22px;
+                    background-color: #15466e;
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    margin-left: -11px;
+                  }
+                }
+              }
+
+              .group-show {
+                float: left;
+
+                .icon-user-crown {
+                  width: 19px;
+                  height: 21px;
+                  margin-right: 8px;
+                }
+
+                .icon-badge-sheriff {
+                  width: 20px;
+                  height: 23px;
+                  margin-right: 7px;
+                }
+              }
+
+              .group-show:hover{
+                .show-detail{
+                  display: block;
+                }
               }
 
               .col8 {

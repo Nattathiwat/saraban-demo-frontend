@@ -6,10 +6,10 @@
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">หนังสือรับเข้า</div>
-            <button type="button" class="add-booking-receive" @click="addClick()">
+            <button type="button" class="confirm-receive" @click="submitClick()" :disabled="checkedList.length < 1" >
               <div class="group-image">
-                <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือรับเข้า
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
               </div>
             </button>
           </div>
@@ -29,22 +29,27 @@
           <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">ความเร่งด่วน</th>
-                <th class="col2">เลขรับ</th>
-                <th class="col3">เลขที่หนังสือ</th>
-                <th class="col4">ชื่อเรื่อง</th>
-                <th class="col5">ชนิด</th>
-                <th class="col6">ลงวันที่</th>
-                <th class="col7">ผู้รับผิดชอบ</th>
-                <th class="col8">สถานะ</th>
+                <th class="col1"></th>
+                <th class="col2">ความเร่งด่วน</th>
+                <th class="col3">เลขรับ</th>
+                <th class="col4">เลขที่หนังสือ</th>
+                <th class="col5">ชื่อเรื่อง</th>
+                <th class="col6">ชนิด</th>
+                <th class="col7">ลงวันที่</th>
+                <th class="col8">ผู้รับผิดชอบ</th>
+                <th class="col9">สถานะ</th>
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.referBookno}}</td>
-                <td class="col4">
+              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index">
+                <td class="col1"><cpn-checkbox  v-model="item.selected"
+                                                name="selected"
+                                                @change="selected($event, item)" />
+                </td>
+                <td class="col2" @click="editClick(item)">{{item.speedName}}</td>
+                <td class="col3" @click="editClick(item)">{{item.bookingNo}}</td>
+                <td class="col4" @click="editClick(item)">{{item.referBookno}}</td>
+                <td class="col5" @click="editClick(item)">
                   <div class="group-show none-bg">
                     <span class="span">
                       {{item.bookingSubject}}
@@ -54,9 +59,9 @@
                     </div>
                   </div>
                 </td>
-                <td class="col5">{{item.typename}}</td>
-                <td class="col6">{{item.date}}</td>
-                <td class="col7">
+                <td class="col6">{{item.typename}}</td>
+                <td class="col7">{{item.date}}</td>
+                <td class="col8">
                   <div class="group-show">
                     <span class="span">
                       {{item.response}}
@@ -66,7 +71,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="col8">{{item.statusName}}</td>
+                <td class="col9">{{item.statusName}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="8">ไม่มีข้อมูล</td>
@@ -114,6 +119,7 @@ export default {
         // booktype:'',
         tag:'',
       },
+      checkedList: [],
     }
   },
   methods: {
@@ -227,6 +233,57 @@ export default {
         }
       }
     },
+    selected() {
+      this.checkedList = this.data.table.filter((row) => {
+        return row.selected;
+      });
+    },
+    submitClick(){
+      let _this = this
+      if (this.data.table.length > 0) {
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+              _this.showLoading = true
+              let axiosArray = []
+              _this.data.table.filter((row) => {
+                if (_this.checkedList.length > 0) {
+                  let groupdata = { 
+                    id: row.id,
+                    regis_id: row.regis_id,
+                    book_type: parseInt(row.book_type),
+                    user_id: parseInt(localStorage.getItem('user_id'))
+                  }
+                  if (row.selected) {
+                    axiosArray.push(groupdata)
+                  }
+                }
+              });              
+             _this.axios.put(`/booking-receive/multi-receive`, axiosArray)
+            .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {
+                showModal: true, 
+                type: 'success', 
+                title: 'ยืนยันรับเข้าสำเร็จ', 
+                msgSuccess: true, 
+                afterPressAgree() { 
+                  _this.apigetimport() 
+                }
+              }
+            })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
+          }
+        }
+      }
+    },
   },
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
@@ -299,6 +356,30 @@ export default {
               }
             }
           }
+
+          .confirm-receive {
+            height: 45px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-left: 35px;
+            padding: 0 20px 0 20px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-check-circle {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+              }
+            }
+          }
         }
 
         .group-end {
@@ -363,13 +444,13 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 50px;
+              width: 2%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 170px;
+              min-width: 150px;
               width: 15%;
             }
 
@@ -379,12 +460,12 @@ export default {
             }
 
             .col4 {
-              min-width: 300px;
+              min-width: 150px;
               width: 30%;
             }
 
             .col5 {
-              min-width: 250px;
+              min-width: 300px;
               width: 25%;
             }
 
@@ -400,6 +481,11 @@ export default {
             }
 
             .col8 {
+              min-width: 200px;
+              width: 20%;
+              padding-right: 28px !important;
+            }
+            .col9 {
               min-width: 200px;
               width: 20%;
               padding-right: 28px !important;

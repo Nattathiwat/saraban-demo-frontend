@@ -196,7 +196,7 @@ export default {
   name: 'App',
   data() {
     return {
-      version: '1.0.7',
+      version: '1.0.8',
       hamburger: false,
       showLoading: false,
       data:{

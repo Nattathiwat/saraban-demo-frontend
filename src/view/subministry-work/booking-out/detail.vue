@@ -41,15 +41,15 @@
               </div>
             </div>
             <div class="group-between">
-              <div class="group-input left">
+              <!-- <div class="group-input left">
                 <div class="name">ประเภท <span class="required">*</span></div>
                 <cpn-select v-model="data.book_category_id"
                             name="book_category_id"
                             rules="required"
                             :optionSelect="optionSelect.book_category_id"
                             placeholder="กรุณาระบุ" />
-              </div>
-              <div class="group-input">
+              </div> -->
+              <div class="group-input left">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
                 <cpn-autoComplete v-model="data.book_type_id"
                                   name="book_type_id"
@@ -58,8 +58,6 @@
                                   placeholder="กรุณาระบุ" 
                                   @keyup="keyup_book_type"/>
               </div>
-            </div>
-            <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชั้นความลับ <span class="required">*</span></div>
                 <cpn-select v-model="data.secret_id"
@@ -77,6 +75,24 @@
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
+            <!-- <div class="group-between">
+              <div class="group-input left">
+                <div class="name">ชั้นความลับ <span class="required">*</span></div>
+                <cpn-select v-model="data.secret_id"
+                            name="secret_id"
+                            rules="required"
+                            :optionSelect="optionSelect.secret_id"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input">
+                <div class="name">ความเร่งด่วน <span class="required">*</span></div>
+                <cpn-select v-model="data.speed_id"
+                            name="speed_id"
+                            rules="required"
+                            :optionSelect="optionSelect.speed_id"
+                            placeholder="กรุณาระบุ" />
+              </div>
+            </div> -->
             <div class="group-input d-flex align-items-center">
               <div class="name">อ้างอิงถึง</div>
               <button type="button" class="add-booking-out" @click="add_booking_refers()">
@@ -123,7 +139,7 @@
                 <i class="bi bi-send"></i>
                 เลือกวิธีการส่ง
             </button>
-            <button type="button" class="add-register" :disabled="(!data.book_category_id || !data.book_type_id || !data.secret_id || !data.speed_id)" @click="add_booking_register_details()">
+            <button type="button" class="add-register" :disabled="(!data.book_type_id || !data.secret_id || !data.speed_id)" @click="add_booking_register_details()">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                 เพิ่มทะเบียน
             </button>
@@ -633,8 +649,8 @@
                   {{item2.comment}}
                 </li>
               </ul>
-              <div class="detail-signager" v-if="item.picture2">
-                <img :src="item.picture2" alt="" class="image-size">
+              <div class="detail-signager" v-if="item.signature_img">
+                <img :src="item.signature_img " alt="" class="image-size">
                 <div class="name">({{item.fullname}})</div>
                 <div class="position">{{item.positionName}}</div>
               </div>
@@ -850,6 +866,7 @@ export default {
       this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value,
+          department_id: localStorage.getItem('department_id'),
         }
       })
       .then((response) => {
@@ -921,7 +938,8 @@ export default {
             this.showLoading = true
             await this.axios.post(`/booking-out/generate-number`, {
               department_id: parseInt(localStorage.getItem('department_id')), 
-              year: this.assetsUtils.currentDate().split('/')[2]-543
+              year: this.assetsUtils.currentDate().split('/')[2]-543,
+              user_id: parseInt(localStorage.getItem('user_id')),
             })
             .then((response) => {
               this.showLoading = false
@@ -961,7 +979,11 @@ export default {
           }
         } else {
           this.showLoading = true
-          await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+          await this.axios.post(`/booking-out/generate-number`, {
+            department_id: parseInt(localStorage.getItem('department_id')),
+             year: this.assetsUtils.currentDate().split('/')[2]-543,
+             user_id: parseInt(localStorage.getItem('user_id'))
+            })
           .then((response) => {
             this.showLoading = false
             item.booking_registers.push({
@@ -1337,7 +1359,8 @@ export default {
             this.showLoading = true
             await this.axios.post(`/booking-out/generate-number`, {
               department_id: parseInt(localStorage.getItem('department_id')), 
-              year: this.assetsUtils.currentDate().split('/')[2]-543
+              year: this.assetsUtils.currentDate().split('/')[2]-543,
+              user_id: parseInt(localStorage.getItem('user_id')),
             })
             .then((response) => {
               this.showLoading = false
@@ -1368,7 +1391,11 @@ export default {
             for (let i = 0; i < item.department_dest_id.length; i++) {
               let item2 = item.department_dest_id[i]
               this.showLoading = true
-              await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+              await this.axios.post(`/booking-out/generate-number`, {
+                department_id: parseInt(localStorage.getItem('department_id')), 
+                year: this.assetsUtils.currentDate().split('/')[2]-543,
+                user_id: parseInt(localStorage.getItem('user_id')),
+              })
               .then((response) => {
                 this.showLoading = false
                 data.booking_registers.push({
@@ -1393,7 +1420,11 @@ export default {
           }
         } else {
           this.showLoading = true
-          await this.axios.post(`/booking-out/generate-number`, {department_id: parseInt(localStorage.getItem('department_id')), year: this.assetsUtils.currentDate().split('/')[2]-543})
+          await this.axios.post(`/booking-out/generate-number`, {
+            department_id: parseInt(localStorage.getItem('department_id')), 
+            year: this.assetsUtils.currentDate().split('/')[2]-543,
+            user_id: parseInt(localStorage.getItem('user_id')),
+          })
           .then((response) => {
             this.showLoading = false
             data.booking_registers.push({

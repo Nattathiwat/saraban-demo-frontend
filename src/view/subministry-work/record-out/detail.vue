@@ -347,13 +347,13 @@
                 <li>
                   {{item2.remark}}
                   {{item2.comment}}
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img" alt="" class="image-size">
+                    <!-- <div class="name">({{item.fullname}})</div>
+                    <div class="position">{{item.positionName}}</div> -->
+                  </div>
                 </li>
               </ul>
-              <div class="detail-signager" v-if="item.picture2">
-                <img :src="item.picture2" alt="" class="image-size">
-                <div class="name">({{item.fullname}})</div>
-                <div class="position">{{item.positionName}}</div>
-              </div>
               <div v-if="index != (data.history.data.length-1)" class="line"></div>
             </div>
             <div v-else class="content-detail first end">
@@ -445,6 +445,7 @@ export default {
         this.showLoading = false
         response.data.data.filter(item => {
           item.bookingRemarks.filter(item2 =>{
+            item2.signature_img = item2.signature_img ? item2.signature_img : new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
             item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
             return item2
           })

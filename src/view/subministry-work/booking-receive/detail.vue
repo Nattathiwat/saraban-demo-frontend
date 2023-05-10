@@ -265,7 +265,7 @@
           <div class="line"></div>
           <div class="send-to">
             <div class="group-input">
-              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ) <span class="required">*กรุณาใส่รายชื่อที่ต้องการส่งต่อ</span></div>
+              <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ)</div>
               <cpn-input-tags v-model="data.sendTo"
                               :flagSearch="true"
                               :optionSelect="optionSelect.sendTo"
@@ -345,6 +345,12 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ลบ
               </button>
+              <button type="button" class="confirm-receive"  >
+              <div class="group-image" @click="submitClick()">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ยืนยันรับเข้า
+              </div>
+            </button>
             </div>
             <div class="footer-right">
               <button type="submit" class="button-primary" @click="flagSave=1">
@@ -649,7 +655,8 @@ export default {
       this.optionSelect.sendTo = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          user_id: parseInt(localStorage.getItem('user_id')),
         }
       })
       .then((response) => {
@@ -941,7 +948,8 @@ export default {
             response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
-            sendToFile :{filename : this.data.attach_filename}
+            sendToFile :{filename : this.data.attach_filename},
+            // page_flag: 'owner'
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -971,6 +979,7 @@ export default {
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
+        page_flag: 'owner'
       }
       if (this.edit) {
         if (this.flagSave == 1) {
