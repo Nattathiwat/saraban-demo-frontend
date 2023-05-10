@@ -255,7 +255,7 @@ export default {
       }]
     },
     api_master() {
-      this.showLoading = TextTrackCueList
+      this.showLoading = true
       const request8 = this.axios.get(`/master-data/book-category` ,{
         params: {
           book_type : 1
@@ -274,25 +274,17 @@ export default {
         })
 
         this.optionSelectDefault.book_category_id = response8.data.data
-        
-        if (this.$route.params.id) {
-          this.edit = true
-          this.api_detail()
-        } else {
-          this.edit = false
-        }
+        this.apirecordout()
         
       })).catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-      
     },
   },
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apirecordout()
     this.api_master()
   },
 }
