@@ -945,7 +945,7 @@ export default {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {
+            await this.axios.post(`/booking-out/generate-number-draft`, {
               department_id: parseInt(localStorage.getItem('department_id')), 
               year: this.assetsUtils.currentDate().split('/')[2]-543,
               user_id: parseInt(localStorage.getItem('user_id')),
@@ -988,7 +988,7 @@ export default {
           }
         } else {
           this.showLoading = true
-          await this.axios.post(`/booking-out/generate-number`, {
+          await this.axios.post(`/booking-out/generate-number-draft`, {
             department_id: parseInt(localStorage.getItem('department_id')),
              year: this.assetsUtils.currentDate().split('/')[2]-543,
              user_id: parseInt(localStorage.getItem('user_id'))
@@ -1369,7 +1369,7 @@ export default {
         if (item.department_dest_id.length > 0) {
           if (item.book_out_num_type == 0) {
             this.showLoading = true
-            await this.axios.post(`/booking-out/generate-number`, {
+            await this.axios.post(`/booking-out/generate-number-draft`, {
               department_id: parseInt(localStorage.getItem('department_id')), 
               year: this.assetsUtils.currentDate().split('/')[2]-543,
               user_id: parseInt(localStorage.getItem('user_id')),
@@ -1403,7 +1403,7 @@ export default {
             for (let i = 0; i < item.department_dest_id.length; i++) {
               let item2 = item.department_dest_id[i]
               this.showLoading = true
-              await this.axios.post(`/booking-out/generate-number`, {
+              await this.axios.post(`/booking-out/generate-number-draft`, {
                 department_id: parseInt(localStorage.getItem('department_id')), 
                 year: this.assetsUtils.currentDate().split('/')[2]-543,
                 user_id: parseInt(localStorage.getItem('user_id')),
@@ -1432,7 +1432,7 @@ export default {
           }
         } else {
           this.showLoading = true
-          await this.axios.post(`/booking-out/generate-number`, {
+          await this.axios.post(`/booking-out/generate-number-draft`, {
             department_id: parseInt(localStorage.getItem('department_id')), 
             year: this.assetsUtils.currentDate().split('/')[2]-543,
             user_id: parseInt(localStorage.getItem('user_id')),

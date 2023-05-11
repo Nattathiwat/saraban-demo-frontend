@@ -137,10 +137,9 @@
               </div>
             </div>
             <div class="group-input left">
-              <div class="name">เรียน <span class="required">*</span></div>
+              <div class="name">เรียน </div>
               <cpn-textArea v-model="data.send_to"
                             name="send_to"
-                            rules="required"
                             rows="1"
                             :disabled="edit" />
             </div>
@@ -989,7 +988,7 @@ export default {
       if (this.edit) {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.put(`/booking-receive/waiting-receive/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -1000,7 +999,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.put(`/booking-receive/waiting-receive/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -1220,43 +1219,6 @@ export default {
           this.optionSelect.book_type_id = response.data.data
         }
       })
-    },
-    submitClick(){
-      let _this = this
-        this.modalAlert = {
-          showModal: true,
-          type: 'confirm',
-          title: `คุณยืนยันการรับเข้าหรือไม่`,
-          confirm: true,
-          msgSuccess: true,
-          afterPressAgree() {
-            let groupdata = {
-              regis_id: parseInt(_this.data.book_category_id),
-              book_type: 4,
-              // human_flag: _this.data.human_flag,
-              // response_id: parseInt(_this.data.response_id),
-              user_id: parseInt(localStorage.getItem('user_id'))  
-              // receive_regis_id : parseInt(_this.$route.query.regis_id),
-              // receive_document_number: _this.data.receive_document_number
-            }
-              _this.showLoading = true
-              _this.axios.put(`/booking-receive/waiting-receive/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {
-                showModal: true, 
-                type: 'success', 
-                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
-                msgSuccess: true, 
-                afterPressAgree() { 
-                  _this.back() }}
-            })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
-          }
-        }
     },
   },
   mounted () {
