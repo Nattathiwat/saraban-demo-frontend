@@ -472,7 +472,7 @@ export default {
         sendToFile: [{ filename: ''}],
         main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
-        sendTo: [{ filename: ''}],
+        sendTo: [],
         booking_follows: [],
         comment: '',
         process_type_id: '12',

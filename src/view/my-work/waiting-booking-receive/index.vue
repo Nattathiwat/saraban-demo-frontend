@@ -1,5 +1,5 @@
 <template>
-  <div class="booking-receive-inex">
+  <div class="my-work-waiting-booking-receive">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -26,7 +26,7 @@
         </div>
         <div class="line"></div>
         <div class="group-body">
-          <table class="table-booking-receive-inex">
+          <table class="table-my-work-waiting-booking-receive">
             <thead class="thead">
               <tr class="thead-row">
                 <th class="col1">ความเร่งด่วน</th>
@@ -40,34 +40,36 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.referBookno}}</td>
-                <td class="col4">
-                  <div class="group-show none-bg">
-                    <span class="span">
-                      {{item.bookingSubject}}
-                    </span>
-                    <div class="show-detail">{{item.bookingSubject}}
-                      <div v-if="false" class="image-size"></div>
+              <template v-for="(item, index) in data.table" :key="index">
+                <tr class="tbody-row pointer" @click="editClick(item)">
+                  <td class="col1">{{item.speedName}}</td>
+                  <td class="col2">{{item.bookingNo}}</td>
+                  <td class="col3">{{item.referBookno}}</td>
+                  <td class="col4">
+                    <div class="group-show none-bg">
+                      <span class="span">
+                        {{item.bookingSubject}}
+                      </span>
+                      <div class="show-detail">{{item.bookingSubject}}
+                        <div v-if="false" class="image-size"></div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="col5">{{item.typename}}</td>
-                <td class="col6">{{item.date}}</td>
-                <td class="col7">
-                  <div class="group-show">
-                    <span class="span">
-                      {{item.response}}
-                    </span>
-                    <div class="show-detail">{{item.response}}
-                      <div v-if="false" class="image-size"></div>
+                  </td>
+                  <td class="col5">{{item.typename}}</td>
+                  <td class="col6">{{item.date}}</td>
+                  <td class="col7">
+                    <div class="group-show">
+                      <span class="span">
+                        {{item.response}}
+                      </span>
+                      <div class="show-detail">{{item.response}}
+                        <div v-if="false" class="image-size"></div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="col8">{{item.statusName}}</td>
-              </tr>
+                  </td>
+                  <td class="col8">{{item.statusName}}</td>
+                </tr>
+              </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="8">ไม่มีข้อมูล</td>
               </tr>
@@ -90,7 +92,7 @@
 </template>
 <script>
 export default {
-  name: 'booking-receive-inex',
+  name: 'my-work-waiting-booking-receive',
   data() {
     return {
       modalAlert: {
@@ -240,7 +242,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .booking-receive-inex {
+  .my-work-waiting-booking-receive {
     .group-overflow {
       // overflow: auto;
     }
@@ -342,7 +344,7 @@ export default {
           background-color: #f1f5fa;
         }
 
-        .table-booking-receive-inex {
+        .table-my-work-waiting-booking-receive {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
@@ -366,9 +368,8 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
+              min-width: 180px;
               width: 15%;
-              padding-left: 28px !important;
             }
 
             .col2 {
