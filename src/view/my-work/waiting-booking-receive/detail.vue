@@ -661,6 +661,7 @@ export default {
         params: {
           keyword: e.target.value,
           department_id: localStorage.getItem('department_id'),
+          user_id: localStorage.getItem('user_id'),
         }
       })
       .then((response) => {

@@ -500,7 +500,7 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department-user', {
+      this.axios.get('master-data/department-user/booking-note-out', {
         params: {
           keyword: e.target.value,
           department_id: localStorage.getItem('department_id'),
@@ -521,7 +521,7 @@ export default {
     },
     keyupDepartment(e, data) {
       data.optionSelect.department_dest_id = []
-      this.axios.get('/master-data/department-user', {
+      this.axios.get('master-data/department-user/booking-note-out', {
         params: {
           keyword: e.target.value
         }
@@ -1039,7 +1039,7 @@ export default {
           book_type : 1
         }
       })
-      const request9 = this.axios.get('/master-data/department-user')
+      const request9 = this.axios.get('master-data/department-user/booking-note-out')
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
