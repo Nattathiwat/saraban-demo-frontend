@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}}</div>
+            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}} </div>
           </div>
         </div>
         <div class="line"></div>
@@ -137,10 +137,9 @@
               </div>
             </div>
             <div class="group-input left">
-              <div class="name">เรียน <span class="required">*</span></div>
+              <div class="name">เรียน </div>
               <cpn-textArea v-model="data.send_to"
                             name="send_to"
-                            rules="required"
                             rows="1"
                             :disabled="edit" />
             </div>
@@ -503,7 +502,7 @@ export default {
   },
   methods: {
     historyClick(data) {
-      this.showLoading = true
+      this.showLoading = true 
       this.axios.get(`/booking-receive/${this.$route.params.id}/history`, {
         params: {
           book_type: this.$route.query.book_type,
@@ -514,9 +513,9 @@ export default {
         this.showLoading = false
         this.data.history.data = response.data.data
         this.data.history.data.filter((item, index) => {
-          item.bookingRemarks.filter((item2, index2) =>{
+          item. booking_remarks .filter((item2, index2) =>{
             item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
-            if (item2.signature_img) {
+            if (item2.signature_img) { 
               this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
               .then(response3 => {
                 const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(item2.signature_img) })
@@ -525,7 +524,7 @@ export default {
               .catch((error) => {
                 item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
               })
-            } else {
+            } else {        
               item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
             }
           })
@@ -802,7 +801,7 @@ export default {
       let axiosArray1 = []
       let axiosArray2 = []
       let fileMain_docs = []
-      let fileAttachments = []
+      let file_attachments = []
       let fileMain_docs_old = []
 
       this.data.main_docs.filter((item) => {
@@ -829,8 +828,8 @@ export default {
           responses.filter((item, index) => {
             fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+            this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -841,10 +840,10 @@ export default {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
+            file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+            this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -852,7 +851,7 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.call_api_save([...fileMain_docs_old],[])
+        this.upload_file_all2(file_attachments)
       }
     },
     upload_file_all2(file_attachments) {
@@ -874,14 +873,14 @@ export default {
             filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == filemain_docs.length) {
-            this.call_api_save(filemain_docs,file_attachments)
+            this.upload_file_all3(filemain_docs,file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(filemain_docs,file_attachments)
+        this.upload_file_all3(filemain_docs,file_attachments)
       }
     },
     upload_file_all3(filemain_docs,file_attachments) {

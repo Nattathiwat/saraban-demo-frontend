@@ -497,7 +497,7 @@ export default {
   methods: {
     historyClick(data) {
       this.showLoading = true
-      this.axios.get(`/booking-receive/waiting-receive/${this.$route.params.id}/history`, {
+      this.axios.get(`/booking-receive/${this.$route.params.id}/history`, {
         params: {
           book_type: this.$route.query.book_type,
           department_id: parseInt(localStorage.getItem('department_id'))  
@@ -770,7 +770,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'my-work.booking-receive',
+        name: 'my-work.waiting-booking-receive',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -796,7 +796,7 @@ export default {
       let axiosArray1 = []
       let axiosArray2 = []
       let fileMain_docs = []
-      let fileAttachments = []
+      let file_attachments = []
       let fileMain_docs_old = []
 
       this.data.main_docs.filter((item) => {
@@ -823,8 +823,8 @@ export default {
           responses.filter((item, index) => {
             fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+            this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -835,10 +835,10 @@ export default {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
+            file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+            this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -846,7 +846,7 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.call_api_save([...fileMain_docs_old],[])
+        this.upload_file_all2(file_attachments)
       }
     },
     upload_file_all2(file_attachments) {
@@ -868,14 +868,14 @@ export default {
             filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == filemain_docs.length) {
-            this.call_api_save(filemain_docs,file_attachments)
+            this.upload_file_all3(filemain_docs,file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(filemain_docs,file_attachments)
+        this.upload_file_all3(filemain_docs,file_attachments)
       }
     },
     upload_file_all3(filemain_docs,file_attachments) {
@@ -928,7 +928,7 @@ export default {
         this.call_api_save(filemain_docs,file_attachments)
       }
     },
-    call_api_save(fileMain_docs,fileAttachments) {
+    call_api_save(fileMain_docs,file_attachments) {
       let _this = this
       let tag = ''
       this.data.tag.filter(item => {
@@ -976,7 +976,7 @@ export default {
         tag: tag,
         contracts: this.data.contracts,
         main_docs: [...fileMain_docs, ...this.data.main_docs_del],
-        attachments: fileAttachments,
+        attachments: file_attachments,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         user_id: parseInt(localStorage.getItem('user_id')),
