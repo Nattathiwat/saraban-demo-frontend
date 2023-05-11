@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขหนังสือรอรับเข้า' : 'สร้างหนังสือรอรับเข้า'}}</div>
+            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}}</div>
           </div>
         </div>
         <div class="line"></div>
@@ -46,11 +46,12 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
-                <cpn-select v-model="data.book_type_id"
-                            name="book_type_id"
-                            rules="required"
-                            :optionSelect="optionSelect.book_type_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-autoComplete v-model="data.book_type_id"
+                                  name="book_type_id"
+                                  rules="required"
+                                  :optionSelect="optionSelect.book_type_id"
+                                  placeholder="กรุณาระบุ" 
+                                  @keyup="keyup_book_type"/>
               </div>
               <div class="group-between">
                 <div class="group-input left">
@@ -271,7 +272,7 @@
                               @keyup="keyup_send_to"
                               name="sendTo" />
             </div>
-            <div class="group-input">
+            <div class="group-input left">
               <div class="name d-flex justify-content-between">
                 <div>ความเห็น / คำสั่ง</div>
                 <div>
@@ -330,6 +331,7 @@
                 <div class="name ms-5">การมองเห็น : {{item?.permission_name || '-'}}</div>
               </div>
               <div class="name ms-2 mt-1">ความเห็น / คำสั่ง : {{item?.comment || '-'}}</div>
+              <div class="name ms-2 mt-1">เอกสารแนบ : {{item?.sendToFile?.filename || '-'}}</div>
             </div>
           </div>
           <div class="line mt-4"></div>
@@ -357,6 +359,70 @@
           </div>
         </Form>
       </div>
+      <div class="detail-history" v-if="$route.params.id">
+        <div class="history" >
+          <div class="header pointer" @click="data.history.hide = !data.history.hide, historyClick(data.history.tab)">
+            <div class="group-left">
+              <i class="bi bi-clock icon-size"></i>
+              <div class="name">ประวัติการแก้ไข</div>
+            </div>
+            <div class="group-right">
+              <i class="bi bi-chevron-right icon-angle" v-show="!data.history.hide"></i>
+              <i class="bi bi-chevron-down icon-angle" v-show="data.history.hide"></i>
+            </div>
+          </div>
+          <div class="line" v-show="data.history.hide"></div>
+          <div class="content" v-show="data.history.hide">
+            <div class="content-head">
+              <div class="pointer" :class="data.history.tab == 1 ? 'active' : ''" @click="data.history.tab = 1, historyClick(1)"><i class="bi bi-border-all icon-size"></i>ทั้งหมด</div>
+              <div class="pointer" :class="data.history.tab == 2 ? 'active' : ''" @click="data.history.tab = 2, historyClick(2)"><i class="bi bi-chat-left icon-size"></i>ความเห็นคำสั่ง</div>
+              <div class="pointer" :class="data.history.tab == 3 ? 'active' : ''" @click="data.history.tab = 3, historyClick(3)"><i class="bi bi-pencil-square icon-size"></i>แก้ไขข้อมูล</div>
+            </div>
+            <div class="content-detail" v-if="data.history.data.filter(
+              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+              (el.type == 0 || el.type == 1) : el).length > 0" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ?
+               el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
+               :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
+              <div class="detail-head">
+                <div class="number">#{{index+1}}</div>
+                <div class="topic" :class="item.bookaction_name == 'ความเห็นคำสั่ง' ? 'blue' : item.bookaction_name == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
+                  <i class="bi icon-size" :class="item.bookaction_name == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookaction_name == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
+                  {{item.bookaction_name}}
+                </div>
+                <div class="create">
+                  <i class="bi bi-person icon-size"></i> 
+                  โดย {{item.updateBy}} / {{item.subName}}
+                </div>
+                <div class="date">
+                  วันที่ {{item.create_date}}
+                </div>
+                <div class="time">
+                  <i class="bi bi-clock icon-size"></i>
+                  {{item.create_time}}
+                </div>
+              </div>
+              <ul class="detail-list" v-for="(item2, index2) in item.booking_remarks" :key="index2" >
+                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
+                <li>
+                  {{item2.remark}}
+                  {{item2.comment}}
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookaction_name == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img" alt="" class="image-size">
+                    <!-- <div class="name">({{item.fullname}})</div>
+                    <div class="position">{{item.positionName}}</div> -->
+                  </div>
+                </li>
+              </ul>
+              <div v-if="index != (data.history.data.length-1)" class="line"></div>
+            </div>
+            <div v-else class="content-detail first end">
+              <div class="detail-head">
+                <div class="topic">ไม่มีข้อมูล</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <cpn-modal-alert  :modalAlert="modalAlert"/>
     <cpn-loading :show="showLoading"/>
@@ -376,6 +442,11 @@ export default {
       edit: false,
       flagSave: 1,
       data: {
+        history: {
+          hide: false,
+          data: [],
+          tab: 1
+        },
         original_flag: false,
         receive_regis_id: '',
         book_type_id: '',
@@ -399,13 +470,14 @@ export default {
         }],
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
+        sendToFile: [{ filename: ''}],
         main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
-        sendTo: [],
+        sendTo: [{ filename: ''}],
         booking_follows: [],
         comment: '',
-        process_type_id: '',
-        permission_id: '',
+        process_type_id: '12',
+        permission_id: '9',
         book_type:'',
         regis_id:'',
         FileType: []
@@ -424,6 +496,40 @@ export default {
     }
   },
   methods: {
+    historyClick(data) {
+      this.showLoading = true
+      this.axios.get(`/booking-receive/waiting-receive/${this.$route.params.id}/history`, {
+        params: {
+          book_type: this.$route.query.book_type,
+          department_id: parseInt(localStorage.getItem('department_id'))  
+        }
+      })
+      .then((response) => {
+        this.showLoading = false
+        this.data.history.data = response.data.data
+        this.data.history.data.filter((item, index) => {
+          item.bookingRemarks.filter((item2, index2) =>{
+            item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
+            if (item2.signature_img) {
+              this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
+              .then(response3 => {
+                const blob = new Blob([response3.data], { type: this.assetsUtils.getTypeFile(item2.signature_img) })
+                item2.signature_img = URL.createObjectURL(blob)
+              })
+              .catch((error) => {
+                item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+              })
+            } else {
+              item2.signature_img = new URL(`@/assets/images/default/signature_img.jpg`, import.meta.url).href
+            }
+          })
+        })
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
     add_attachments() {
       this.data.attachments.push({ 
         filename: '',
@@ -504,18 +610,18 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบ`,
-        message: `หนังสือรอรับเข้า ใช่หรือไม่`,
+        message: `หนังสือรับเข้า ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
+          _this.axios.delete(`/booking-receive/waiting-receive/${_this.$route.params.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบหนังสือรอรับเข้าสำเร็จแล้ว',
+              title: 'ทำการลบหนังสือรับเข้าสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
                 _this.back()
@@ -531,7 +637,7 @@ export default {
     },
     keyup_department(e) {
       this.optionSelect.department_id = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
           keyword: e.target.value
         }
@@ -540,7 +646,9 @@ export default {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.department_id = response.data.data
@@ -549,16 +657,19 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department', {
+      this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          department_id: localStorage.getItem('department_id'),
         }
       })
       .then((response) => {
         if(response.data.data) {
           response.data.data.filter(item => {
             item.value = item.id
-            item.name = item.department_full_name
+            item.name = item.desc
+            item.human_flag = item.human_flag
+            item.response_type = item.type
             return item
           })
           this.optionSelect.sendTo = response.data.data
@@ -569,6 +680,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -712,7 +824,7 @@ export default {
             fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.upload_file_all3([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -726,7 +838,7 @@ export default {
             fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == fileAttachments.length) {
-            this.upload_file_all3([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
+            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], fileAttachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -734,10 +846,39 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.upload_file_all3([...fileMain_docs_old],[])
+        this.call_api_save([...fileMain_docs_old],[])
       }
     },
-    upload_file_all3(fileMain_docs,fileAttachments) {
+    upload_file_all2(file_attachments) {
+      let currentDate = this.assetsUtils.currentDate()
+      let axiosArray1 = []
+      let filemain_docs = []
+      this.data.main_docs.filter(item=> {
+        if (item.file) {
+          let formDataFile = new FormData();
+          formDataFile.append('file', item.file);
+          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
+        }
+      })
+      if (axiosArray1.length>0) {
+        this.axios.all([...axiosArray1])
+        .then(this.axios.spread((...responses) => {
+          responses.filter((item, index) => {
+            filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+          })
+          if (axiosArray1.length == filemain_docs.length) {
+            this.call_api_save(filemain_docs,file_attachments)
+          }
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+        })
+      } else {
+        this.call_api_save(filemain_docs,file_attachments)
+      }
+    },
+    upload_file_all3(filemain_docs,file_attachments) {
       let currentDate = this.assetsUtils.currentDate()
       if (this.data.sendToFile?.filename) {
         let formDataFile = new FormData();
@@ -747,16 +888,16 @@ export default {
         .then((response) => {
           this.data.attach_filename = response.data.data.filename
           this.data.attach_filepath = response.data.data.path
-          this.upload_file_all4(fileMain_docs,fileAttachments)
+          this.upload_file_all4(filemain_docs,file_attachments)
         }).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.upload_file_all4(fileMain_docs,fileAttachments)
+        this.upload_file_all4(filemain_docs,file_attachments)
       }
     },
-    upload_file_all4(fileMain_docs,fileAttachments) {
+    upload_file_all4(filemain_docs,file_attachments) {
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray1 = []
       let fileSendTo = []
@@ -777,14 +918,14 @@ export default {
             fileSendTo.push({...this.data.booking_follows[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileSendTo.length) {
-            this.call_api_save(fileMain_docs,fileAttachments)
+            this.call_api_save(filemain_docs,file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(fileMain_docs,fileAttachments)
+        this.call_api_save(filemain_docs,file_attachments)
       }
     },
     call_api_save(fileMain_docs,fileAttachments) {
@@ -797,6 +938,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -810,7 +952,8 @@ export default {
             response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
-            sendToFile :{filename : this.data.attach_filename}
+            sendToFile :{filename : this.data.attach_filename},
+            // page_flag : ''
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -840,11 +983,12 @@ export default {
         flag: this.flagSave == 1 ? "draft" : '',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
+        page_flag : ''
       }
       if (this.edit) {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/waiting-receive/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -855,7 +999,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.put(`/booking-receive/${this.$route.params.id}`, dataSave)
+          this.axios.put(`/booking-receive/waiting-receive/${this.$route.params.id}`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -868,7 +1012,7 @@ export default {
       } else {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.post(`/booking-receive`, dataSave)
+          this.axios.post(`/booking-receive/waiting-receive`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -879,7 +1023,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.post(`/booking-receive`, dataSave)
+          this.axios.post(`/booking-receive/waiting-receive`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -905,8 +1049,8 @@ export default {
         response.data.data.main_docs.filter(item => {
           main_docs_del.push({...item,flag: 'delete'})
         })
-        response.data.data = {...response.data.data, main_docs_del}
-        this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
+        response.data.data = {...this.data,...response.data.data, main_docs_del}
+        this.data = JSON.parse(JSON.stringify(response.data.data))
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
           if (item) {
@@ -914,6 +1058,9 @@ export default {
           }
         })
         this.data.sendTo = []
+        this.data.order=[{
+          filename: ''
+        }]
         this.data.booking_refers = []
         response.data.data.booking_refers.filter(item => {
           item.flag = 'edit'
@@ -926,23 +1073,24 @@ export default {
           })
         })
         this.data.main_docs.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.attachments.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.contracts.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           return item
         })
         this.data.booking_follows.filter(item => {
-          item.flag = 'edit'
+          item.flag = 'add'
           return item
         })
+        this.data.booking_follows = []
         if (this.data.main_docs?.length < 1 || !this.data.main_docs) this.data.main_docs = [{ filename: '', flag: 'add'}]
         if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
         if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: '', flag: 'add'}]
@@ -955,13 +1103,21 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get('/master-data/register-type')
-      const request2 = this.axios.get('/master-data/book-type')
+      const request1 = this.axios.get(`/master-data/book-category` ,{
+        params: {
+          book_type : 0
+        }
+      })
+      const request2 = this.axios.get('/master-data/book-type',{
+        params: {
+          book_type : 0
+        }
+      })
       const request3 = this.axios.get('/master-data/secret')
       const request4 = this.axios.get('/master-data/speed')
       const request5 = this.axios.get('/master-data/process-type')
       const request6 = this.axios.get('/master-data/permission-type')
-      const request7 = this.axios.get('/master-data/department')
+      const request7 = this.axios.get('/master-data/department-user')
       const request8 = this.axios.get('/master-data/receive-type')
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
@@ -980,7 +1136,7 @@ export default {
         
         response1.data.data.filter(item => {
           item.value = item.id
-          item.name = item.desc
+          item.name = item.name
           return item
         })
         response2.data.data.filter(item => {
@@ -1010,7 +1166,7 @@ export default {
         })
         response7.data.data.filter(item => {
           item.value = item.id
-          item.name = item.department_full_name
+          item.name = item.desc
           return item
         })
         response8.data.data.filter(item => {
@@ -1018,7 +1174,7 @@ export default {
           item.name = item.desc
           return item
         })
-        
+
         this.data.FileType = []
 
         response10.data.data.filter(item => {
@@ -1026,7 +1182,7 @@ export default {
             this.data.FileType.push(item.content_type)
           }
         })
-
+        
         this.optionSelect.receive_regis_id = response1.data.data
         this.optionSelect.book_type_id = response2.data.data
         this.optionSelect.secret_id = response3.data.data
@@ -1046,7 +1202,61 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    }
+    },
+    keyup_book_type(e) {
+      this.axios.get('/master-data/book-type', {
+        params: {
+          keyword: e.target.value,
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.desc
+            return item
+          })
+          this.optionSelect.book_type_id = response.data.data
+        }
+      })
+    },
+    submitClick(){
+      let _this = this
+        this.modalAlert = {
+          showModal: true,
+          type: 'confirm',
+          title: `คุณยืนยันการรับเข้าหรือไม่`,
+          confirm: true,
+          msgSuccess: true,
+          afterPressAgree() {
+            let groupdata = {
+              regis_id: parseInt(_this.data.book_category_id),
+              book_type: 4,
+              // human_flag: _this.data.human_flag,
+              // response_id: parseInt(_this.data.response_id),
+              user_id: parseInt(localStorage.getItem('user_id'))  
+              // receive_regis_id : parseInt(_this.$route.query.regis_id),
+              // receive_document_number: _this.data.receive_document_number
+            }
+              _this.showLoading = true
+              _this.axios.put(`/booking-receive/waiting-receive/${_this.$route.params.id}`, groupdata)
+              .then(() => { 
+              _this.showLoading = false
+              _this.modalAlert = {
+                showModal: true, 
+                type: 'success', 
+                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+                msgSuccess: true, 
+                afterPressAgree() { 
+                  _this.back() }}
+            })
+              .catch((error) => {
+                _this.showLoading = false
+                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+          }
+        }
+    },
   },
   mounted () {
     this.api_master()
@@ -1056,6 +1266,7 @@ export default {
       document.body.style.overflow = this.modalRegiter.showModal ? 'hidden' : ''
     }
   }
+  
 }
 
 </script>
@@ -1233,7 +1444,7 @@ export default {
             width: 14px;
             margin-left: 5px;
           }
-        }
+        }        
       }
 
       .group-detail {
@@ -1547,6 +1758,30 @@ export default {
           .button-danger {
             width: 100px;
           }
+
+          .confirm-receive {
+            height: 45px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007773;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-left: 16px;
+            padding: 0 20px 0 20px;
+
+            .group-image {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .icon-check-circle {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+              }
+            }
+          }
         }
 
         .footer-right {
@@ -1585,6 +1820,196 @@ export default {
           width: 25px;
           height: 25px;
           margin-right: 10px;
+        }
+      }
+    }
+
+    .detail-history {
+      width: 100%;
+      height: 100%;
+      min-width: 1550px;
+      border-radius: 15px;
+      background-color: #fff;
+      border: 0px;
+
+      .history{
+        margin-top: 30px;
+        border-radius: 10px;
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 22px 29px;
+
+          .group-left {
+            display: flex;
+
+            .icon-size {
+              font-size: 25px;
+              margin-right: 18px;
+              color: #1a456b;
+            }
+
+            .name {
+              margin-top: 5px;
+              color: #1a456b;
+              font-weight: bold;
+              font-size: 18px;
+            }
+          }
+        }
+
+        .content {
+          padding: 22px 29px;
+
+          .content-head {
+            display: flex;
+            margin-left: 20px;
+
+            .icon-size {
+              font-size: 18px;
+              margin-right: 10px;
+              color: #1a456b;
+            }
+
+            div {
+              font-size: 18px;
+              color: #1a456b;
+              padding: 10px 15px;
+            }
+
+            div.active {
+              background-color: #1a456b;
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              color: #ffffff;
+
+              .icon-size {
+                color: #ffffff;
+              }
+            }
+          }
+
+          .content-detail.first {
+            border-top: 2px solid #e2ebf7;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+          }
+
+          .content-detail.end {
+            border-bottom: 2px solid #e2ebf7;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+          }
+
+          .content-detail {
+            padding: 22px;
+            border-left: 2px solid #e2ebf7;
+            border-right: 2px solid #e2ebf7;
+
+            .detail-head {
+              display: flex;
+
+              .number {
+                font-size: 18px;
+                background-color: #1a456b;
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: #ffffff;
+              }
+
+              .topic {
+                border-radius: 20px;
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .topic.blue {
+                background-color: #a8d0f1;
+              }
+
+              .topic.yellow {
+                background-color: #faee85;
+              }
+
+              .topic.green {
+                background-color: #aaf1a8;
+              }
+
+              .create {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 20px;
+                font-size: 18px;
+                margin-top: -5px;
+
+                .icon-size {
+                  font-size: 22px;
+                }
+              }
+
+              .date {
+                color: #15466e;
+                padding: 5px 10px;
+                margin-left: 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+
+              .time {
+                color: #15466e;
+                padding: 5px 10px;
+                font-size: 18px;
+
+                .icon-size {
+                  font-size: 18px;
+                }
+              }
+            }
+
+            .button-file {
+              margin-bottom: 10px;
+              color: #fff;
+              font-size: 18px;
+              background-color: #0f324e;
+              border-color: #0d2b43;
+              padding: 8px 12px;
+              border-radius: 10px;
+            }
+
+            .detail-list {
+              font-size: 18px;
+              margin-top: 20px;
+              margin-left: 30px;
+            }
+            
+
+            .detail-signager {
+              margin-left: 30px;
+              font-size: 18px;
+              width: 200px;
+              text-align: center;
+
+
+              .image-size {
+                width: 200px;
+              }
+            }
+
+            .line {
+              margin-top: 30px;
+            }
+          }
         }
       }
     }
