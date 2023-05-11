@@ -119,12 +119,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'my-work.booking-receive-create',
+        name: 'my-work.waiting-booking-receive-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'my-work.booking-receive-edit',
+        name: 'my-work.waiting-booking-receive-edit',
         params: {
           id: item.id,
         },
