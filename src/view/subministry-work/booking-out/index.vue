@@ -29,6 +29,9 @@
           <table class="table-booking-out-inex">
             <thead class="thead">
               <tr class="thead-row">
+                <th class="col0">
+                  <button @click="selectedAll($event)"><i class="bi bi-plus-lg"></i></button>
+                </th>
                 <th class="col1">ความเร่งด่วน</th>
                 <th class="col2">เลขที่หนังสือออก</th>
                 <th class="col3">ชื่อเรื่อง</th>
@@ -41,6 +44,10 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
+                <td class="col0">
+                  <button v-if="item.select" @click="selected($event, item)"><i class="bi bi-dash-lg"></i></button>
+                  <button v-else @click="selected($event, item)"><i class="bi bi-plus-lg"></i></button>
+                </td>
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNoN}}</td>
                 <td class="col3">{{item.bookingSubject}}</td>
@@ -60,7 +67,7 @@
                 <td class="col8">{{item.statusName}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="8">ไม่มีข้อมูล</td>
+                <td colspan="9">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -108,6 +115,20 @@ export default {
     }
   },
   methods: {
+    selectedAll(event) {
+      event.stopPropagation();
+      this.data.select = !this.data.select;
+      this.data.table.filter((row) => {
+        row.select = this.data.select;
+      })
+    },
+    selected(event, item) {
+      event.stopPropagation();
+      item.select = !item.select
+      this.data.select = this.data.table.every((row) => {
+        return row.select;
+      })
+    },
     addClick() {
       this.$router.push({ 
         name: 'subministry-work.booking-out-create',
@@ -348,10 +369,25 @@ export default {
               }
             }
 
+            .col0 {
+              min-width: 70px;
+              max-width: 70px;
+              width: 0px;
+              padding-left: 28px !important;
+
+              button {
+                border: 0;
+                border-radius: 5px;
+                background-color: #1a456b;
+                font-size: 16px;
+                font-weight: bold;
+                color: #ffffff;
+              }
+            }
+
             .col1 {
               min-width: 170px;
               width: 15%;
-              padding-left: 28px !important;
             }
 
             .col2 {
@@ -407,6 +443,22 @@ export default {
 
               td {
                 padding: 0 10px;
+              }
+              
+              .col0 {
+                min-width: 70px;
+                max-width: 70px;
+                width: 0px;
+                padding-left: 28px !important;
+                
+                button {
+                  border: 0;
+                  border-radius: 5px;
+                  background-color: transparent;
+                  font-size: 16px;
+                  font-weight: bold;
+                  color: #1a456b;
+                }
               }
 
               .col3 {
