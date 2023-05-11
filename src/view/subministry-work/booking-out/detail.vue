@@ -260,6 +260,9 @@
                       <input type="file" @change="file_booking_registers_change(`main_docs${index}${index2}`, index, index2, 'main_docs')" :name="`main_docs${index}${index2}`" style="display:none;" accept="application/pdf">
                     </div>
                     <button type="button" @click="download_file({filename: item2.main_filename, type: item2.main_type, filepath: item2.main_filepath, link: item2.main_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" class="del-department-3" @click="item2.main_filename = '', item2.main_filepath = ''">
+                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                    </button>
                   </div>
                   <div class="d-flex mt-3">
                     <div class="group-input-file">
@@ -272,6 +275,9 @@
                       <input multiple type="file" @change="file_booking_registers_change(`dupplicate_copy${index}${index2}`, index, index2, 'dupplicate_copy')" :name="`dupplicate_copy${index}${index2}`" style="display:none;" >
                     </div>
                     <button type="button" @click="download_file({filename: item2.attach_filename, type: item2.attach_type, filepath: item2.attach_filepath, link: item2.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" class="del-department-3" @click="item2.attach_filename = '', item2.attach_filepath = ''">
+                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                    </button>
                   </div>
                 </div>
                 <div class="w-100 ms-4 m-auto">
@@ -646,13 +652,13 @@
                 <li>
                   {{item2.remark}}
                   {{item2.comment}}
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img " alt="" class="image-size">
+                    <!-- <div class="name">({{item2.fullname}})</div>
+                    <div class="position">{{item2.positionName}}</div> -->
+                  </div>
                 </li>
               </ul>
-              <div class="detail-signager" v-if="item.signature_img">
-                <img :src="item.signature_img " alt="" class="image-size">
-                <div class="name">({{item.fullname}})</div>
-                <div class="position">{{item.positionName}}</div>
-              </div>
               <div v-if="index != (data.history.data.length-1)" class="line"></div>
             </div>
             <div v-else class="content-detail first end">
@@ -1493,7 +1499,7 @@ export default {
         item.booking_registers.filter(item2 => {
           let check_main = false
           let check_attach = false
-          if (item2.main_file) {
+          if (item2.main_file && item2.main_filename) {
             let formDataFile = new FormData();
             formDataFile.append('file', item2.main_file);
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -1517,7 +1523,7 @@ export default {
           } else {
             check_main = true
           }
-          if (item2.attach_file) {
+          if (item2.attach_file && item2.attach_filename) {
             let formDataFile = new FormData();
             formDataFile.append('file', item2.attach_file);
             formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
@@ -1793,7 +1799,7 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/book-type` ,{
+      const request1 = this.axios.get(`/master-data/book-type`, {
         params: {
           book_type : 1
         }
@@ -1803,7 +1809,7 @@ export default {
       const request4 = this.axios.get(`/master-data/process-type`)
       const request5 = this.axios.get(`/master-data/permission-type`)
       const request6 = this.axios.get(`/user`)
-      const request7 = this.axios.get(`/user`)
+      const request7 = this.axios.get(`/user/signer`)
       const request8 = this.axios.get(`/master-data/book-category` ,{
         params: {
           book_type : 2
@@ -2283,6 +2289,7 @@ export default {
 
       .del-department-3 {
         width: 45px;
+        min-width: 45px;
         height: 45px;
         color: #212529;
         background-color: #ffffff;
