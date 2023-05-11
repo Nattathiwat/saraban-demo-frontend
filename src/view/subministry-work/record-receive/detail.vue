@@ -1020,7 +1020,7 @@ export default {
       const request7 = this.axios.get('/master-data/department')
       const request8 = this.axios.get(`/master-data/book-category` ,{
         params: {
-          book_type : 3
+          book_type : 1
         }
       })
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)

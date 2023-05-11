@@ -137,10 +137,9 @@
               </div>
             </div>
             <div class="group-input left">
-              <div class="name">เรียน <span class="required">*</span></div>
+              <div class="name">เรียน </div>
               <cpn-textArea v-model="data.send_to"
                             name="send_to"
-                            rules="required"
                             rows="1"
                             :disabled="edit" />
             </div>
@@ -508,7 +507,7 @@ export default {
         this.showLoading = false
         this.data.history.data = response.data.data
         this.data.history.data.filter((item, index) => {
-          item.bookingRemarks.filter((item2, index2) =>{
+          item.booking_remarks.filter((item2, index2) =>{
             item2.link = item2.filepath ? this.backendport+'/'+item2.filepath : ''
             if (item2.signature_img) {
               this.axios({ method:'get', url: this.backendport+'/'+item2.signature_img, baseURL: '', responseType: 'blob',})
