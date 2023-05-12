@@ -482,7 +482,7 @@ export default {
         sendToFile: [{ filename: ''}],
         main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
-        sendTo: [{ filename: ''}],
+        sendTo: [],
         booking_follows: [],
         comment: '',
         process_type_id: '12',
@@ -1048,7 +1048,7 @@ export default {
       this.showLoading = true
       this.axios.get(`/booking-receive/${this.$route.params.id}`, {
         params:{
-          book_type : this.$route.query.book_type ,
+          book_type : this.$route.query.book_type,
           regis_id: this.$route.query.regis_id,
         }
       })
@@ -1238,6 +1238,7 @@ export default {
           confirm: true,
           msgSuccess: true,
           afterPressAgree() {
+<<<<<<< HEAD
             let groupdata = {
               // regis_id: parseInt(_this.data.book_category_id),
               book_type: 1,
@@ -1258,11 +1259,30 @@ export default {
                 msgSuccess: true, 
                 afterPressAgree() { 
                   _this.back() }}
+=======
+            let groupdata = [{
+              regis_id: parseInt(_this.$route.query.regis_id),
+              book_type: parseInt(_this.$route.query.book_type),
+              id: parseInt(_this.$route.params.id),
+              user_id: parseInt(localStorage.getItem('user_id'))  
+            }]
+            _this.showLoading = true
+            _this.axios.put(`/booking-receive/multi-receive`, groupdata)
+            .then(() => { 
+            _this.showLoading = false
+            _this.modalAlert = {
+              showModal: true, 
+              type: 'success', 
+              title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+              msgSuccess: true, 
+              afterPressAgree() { 
+                _this.back() }}
             })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+>>>>>>> 5e2ad9c766e0331bbcae56fcc1a2d2b56b2ba62a
+            })
           }
         }
     },
