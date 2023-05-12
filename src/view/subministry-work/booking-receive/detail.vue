@@ -1240,8 +1240,8 @@ export default {
           afterPressAgree() {
             let groupdata = {
               // regis_id: parseInt(_this.data.book_category_id),
-              book_type: 4,
-              human_flag: _this.data.human_flag,
+              book_type: 1,
+              // human_flag: _this.data.human_flag,
               response_id: parseInt(_this.data.response_id),
               user_id: parseInt(localStorage.getItem('user_id')),
               regis_id : parseInt(_this.$route.query.regis_id),

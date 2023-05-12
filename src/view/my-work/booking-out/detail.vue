@@ -1152,6 +1152,9 @@ export default {
                 signer_id: this.optionSelectDefault.signer_id,
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
+              human_flag: item.human_flag,
+                response_id: parseInt(item.value),
+                response_type: item.type,
             })
           }
         } else {
@@ -1558,7 +1561,6 @@ export default {
                   response_type: item2.type,
                   response_id: item2.id
                 })
-                  console.log(item2.type,'3')
               })
             }).catch((error) => {
               this.showLoading = false
@@ -2610,6 +2612,7 @@ export default {
 
           .button-success {
             width: 175px;
+            margin-right: 20px;
           }
 
           .button-primary {
