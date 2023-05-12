@@ -224,7 +224,6 @@ export default {
             if (row.has_sub) {
               this.axios.get(`/booking-receive/sub/${row.book_type}/${row.id}`)
               .then((response2) => {
-                response2.data.data.push({})
                 row.sub = response2.data.data
               })
             }
