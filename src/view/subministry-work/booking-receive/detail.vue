@@ -478,7 +478,7 @@ export default {
         sendToFile: [{ filename: ''}],
         main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
-        sendTo: [{ filename: ''}],
+        sendTo: [],
         booking_follows: [],
         comment: '',
         process_type_id: '12',
@@ -775,7 +775,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'my-work.booking-receive',
+        name: 'subministry-work.booking-receive',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -1044,7 +1044,7 @@ export default {
       this.showLoading = true
       this.axios.get(`/booking-receive/${this.$route.params.id}`, {
         params:{
-          book_type : this.$route.query.book_type ,
+          book_type : this.$route.query.book_type,
           regis_id: this.$route.query.regis_id,
         }
       })
@@ -1234,31 +1234,28 @@ export default {
           confirm: true,
           msgSuccess: true,
           afterPressAgree() {
-            let groupdata = {
-              regis_id: parseInt(_this.data.book_category_id),
-              book_type: 4,
-              human_flag: _this.data.human_flag,
-              response_id: parseInt(_this.data.response_id),
+            let groupdata = [{
+              regis_id: parseInt(_this.$route.query.regis_id),
+              book_type: parseInt(_this.$route.query.book_type),
+              id: parseInt(_this.$route.params.id),
               user_id: parseInt(localStorage.getItem('user_id'))  
-              // receive_regis_id : parseInt(_this.$route.query.regis_id),
-              // receive_document_number: _this.data.receive_document_number
-            }
-              _this.showLoading = true
-              _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {
-                showModal: true, 
-                type: 'success', 
-                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
-                msgSuccess: true, 
-                afterPressAgree() { 
-                  _this.back() }}
+            }]
+            _this.showLoading = true
+            _this.axios.put(`/booking-receive/multi-receive`, groupdata)
+            .then(() => { 
+            _this.showLoading = false
+            _this.modalAlert = {
+              showModal: true, 
+              type: 'success', 
+              title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
+              msgSuccess: true, 
+              afterPressAgree() { 
+                _this.back() }}
             })
-              .catch((error) => {
-                _this.showLoading = false
-                _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-              })
+            .catch((error) => {
+              _this.showLoading = false
+              _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+            })
           }
         }
     },

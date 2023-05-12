@@ -254,7 +254,7 @@ export default {
                 if (_this.checkedList.length > 0) {
                   let groupdata = { 
                     id: row.id,
-                    regis_id: row.regis_id,
+                    regis_id: parseInt(row.regis_id),
                     book_type: parseInt(row.book_type),
                     user_id: parseInt(localStorage.getItem('user_id'))
                   }
