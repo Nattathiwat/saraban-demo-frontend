@@ -170,11 +170,6 @@ export default {
       .then((response) => {
         this.showLoading = false
         if (response.data.data) {
-          let loop = [this.data.response_name]
-          let detail = ''
-          loop.filter(arr => {
-            detail += (arr + ',')
-          })
             response.data.data.filter(row => {
             row.speedName = row.speed_name
             row.bookingNo = row.receive_document_number
