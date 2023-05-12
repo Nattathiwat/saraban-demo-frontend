@@ -760,7 +760,7 @@ export default {
             fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], file_attachments)
+            this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -774,7 +774,7 @@ export default {
             file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
-            this.call_api_save([...fileMain_docs, ...fileMain_docs_old], file_attachments)
+            this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
@@ -782,7 +782,7 @@ export default {
         })
       }
       if (axiosArray1.length<1 && axiosArray2.length<1) {
-        this.call_api_save([...fileMain_docs_old],[])
+        this.upload_file_all2(file_attachments)
       }
     },
     upload_file_all2(file_attachments) {
@@ -804,14 +804,14 @@ export default {
             filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == filemain_docs.length) {
-            this.call_api_save(filemain_docs,file_attachments)
+            this.upload_file_all3(filemain_docs,file_attachments)
           }
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.call_api_save(filemain_docs,file_attachments)
+        this.upload_file_all3(filemain_docs,file_attachments)
       }
     },
     upload_file_all3(filemain_docs,file_attachments) {
