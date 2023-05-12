@@ -29,6 +29,9 @@
           <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
+                <th class="col0">
+                  <button @click="selectedAll($event)"><i class="bi bi-plus-lg"></i></button>
+                </th>
                 <th class="col1">ความเร่งด่วน</th>
                 <th class="col2">เลขรับ</th>
                 <th class="col3">เลขที่หนังสือ</th>
@@ -40,36 +43,53 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNo}}</td>
-                <td class="col3">{{item.referBookno}}</td>
-                <td class="col4">
-                  <div class="group-show none-bg">
-                    <span class="span">
-                      {{item.bookingSubject}}
-                    </span>
-                    <div class="show-detail">{{item.bookingSubject}}
-                      <div v-if="false" class="image-size"></div>
+              <template v-for="(item, index) in data.table" :key="index">
+                <tr class="tbody-row pointer" :class="index%2 !=0 ? 'color-tr1': 'color-tr2'" @click="editClick(item)">
+                  <td class="col0" @click="selected($event, item)">
+                    <button v-if="item.select && item.has_sub"><i class="bi bi-dash-lg"></i></button>
+                    <button v-if="!item.select && item.has_sub"><i class="bi bi-plus-lg"></i></button>
+                  </td>
+                  <td class="col1">{{item.speedName}}</td>
+                  <td class="col2">{{item.bookingNo}}</td>
+                  <td class="col3">{{item.referBookno}}</td>
+                  <td class="col4">
+                    <div class="group-show none-bg">
+                      <span class="span">
+                        {{item.bookingSubject}}
+                      </span>
+                      <div class="show-detail">{{item.bookingSubject}}
+                        <div v-if="false" class="image-size"></div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="col5">{{item.typename}}</td>
-                <td class="col6">{{item.date}}</td>
-                <td class="col7">
-                  <div class="group-show">
-                    <span class="span">
-                      {{item.response}}
-                    </span>
-                    <div class="show-detail">{{item.response}}
-                      <div v-if="false" class="image-size"></div>
+                  </td>
+                  <td class="col5">{{item.typename}}</td>
+                  <td class="col6">{{item.date}}</td>
+                  <td class="col7">
+                    <div class="group-show">
+                      <span class="span">
+                        {{item.response}}
+                      </span>
+                      <div class="show-detail">{{item.response}}
+                        <div v-if="false" class="image-size"></div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="col8">{{item.statusName}}</td>
-              </tr>
+                  </td>
+                  <td class="col8">{{item.statusName}}</td>
+                </tr>
+                <template v-if="item.select" v-for="(item2, index2) in item.sub" :key="index2">
+                  <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
+                    <td class="col0">{{index2+1}}</td>
+                    <td class="col1">{{item2.speed_name}}</td>
+                    <td class="col2 text-start" colspan="6">{{item2.department_name}}</td>
+                    <td class="col8">{{item2.status}}</td>
+                  </tr>
+                </template>
+                <tr v-if="item.select">
+                  <td colspan="9" style="border-bottom: solid 1px #c1cfe3;"></td>
+                </tr>
+              </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="8">ไม่มีข้อมูล</td>
+                <td colspan="9">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -100,6 +120,7 @@ export default {
       },
       showLoading: false,
       data: {
+        select: false,
         search: '',
         table: [],
         page: 1,
@@ -117,6 +138,20 @@ export default {
     }
   },
   methods: {
+    selectedAll(event) {
+      event.stopPropagation();
+      this.data.select = !this.data.select;
+      this.data.table.filter((row) => {
+        row.select = this.data.select;
+      })
+    },
+    selected(event, item) {
+      event.stopPropagation();
+      item.select = !item.select
+      this.data.select = this.data.table.every((row) => {
+        return row.select;
+      })
+    },
     addClick() {
       this.$router.push({ 
         name: 'my-work.booking-receive-create',
@@ -170,7 +205,8 @@ export default {
       .then((response) => {
         this.showLoading = false
         if (response.data.data) {
-            response.data.data.filter(row => {
+
+          response.data.data.filter(row => {
             row.speedName = row.speed_name
             row.bookingNo = row.receive_document_number
             row.referBookno = row.document_number
@@ -179,11 +215,19 @@ export default {
             row.date = row.as_of_date
             row.response = row.response_name
             row.statusName = row.status
-            row.person = detail
             this.data.total = row.total
           })
           this.data.table = response.data.data
           this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
+
+          this.data.table.filter(row => {
+            if (row.has_sub) {
+              this.axios.get(`/booking-receive/sub/${row.book_type}/${row.id}`)
+              .then((response2) => {
+                row.sub = response2.data.data
+              })
+            }
+          })
         }
       })
       .catch((error) => {
@@ -326,11 +370,11 @@ export default {
         overflow: auto;
         margin-bottom: 1px;
 
-        table tbody tr:nth-child(odd) {
+        .color-tr1 {
           background-color: #ffffff;
         }
 
-        table tbody tr:nth-child(even) {
+        .color-tr2 {
           background-color: #f1f5fa;
         }
 
@@ -357,10 +401,25 @@ export default {
               }
             }
 
+            .col0 {
+              min-width: 70px;
+              max-width: 70px;
+              width: 0px;
+              padding-left: 28px !important;
+
+              button {
+                border: 0;
+                border-radius: 5px;
+                background-color: #1a456b;
+                font-size: 16px;
+                font-weight: bold;
+                color: #ffffff;
+              }
+            }
+
             .col1 {
               min-width: 170px;
               width: 15%;
-              padding-left: 28px !important;
             }
 
             .col2 {
@@ -417,6 +476,22 @@ export default {
 
               td {
                 padding: 0 10px;
+              }
+              
+              .col0 {
+                min-width: 70px;
+                max-width: 70px;
+                width: 0px;
+                padding-left: 28px !important;
+                
+                button {
+                  border: 0;
+                  border-radius: 5px;
+                  background-color: transparent;
+                  font-size: 16px;
+                  font-weight: bold;
+                  color: #1a456b;
+                }
               }
 
               .col4 {
