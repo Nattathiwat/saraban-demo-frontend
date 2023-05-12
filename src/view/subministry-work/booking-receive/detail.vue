@@ -352,7 +352,11 @@
             </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-primary" @click="flagSave=1">
+              <button type="submit" class="button-success" @click="flagSave=2" v-show="edit">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                บันทึก
+              </button>
+              <button type="submit" class="button-primary" @click="flagSave=1" v-show="!edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
@@ -775,7 +779,7 @@ export default {
     },
     back() {
       this.$router.push({ 
-        name: 'my-work.booking-receive',
+        name: 'subministry-work.booking-receive',
         query: {
           page: this.$route.query.page,
           perPage: this.$route.query.perPage
@@ -1235,12 +1239,12 @@ export default {
           msgSuccess: true,
           afterPressAgree() {
             let groupdata = {
-              regis_id: parseInt(_this.data.book_category_id),
+              // regis_id: parseInt(_this.data.book_category_id),
               book_type: 4,
               human_flag: _this.data.human_flag,
               response_id: parseInt(_this.data.response_id),
-              user_id: parseInt(localStorage.getItem('user_id'))  
-              // receive_regis_id : parseInt(_this.$route.query.regis_id),
+              user_id: parseInt(localStorage.getItem('user_id')),
+              regis_id : parseInt(_this.$route.query.regis_id),
               // receive_document_number: _this.data.receive_document_number
             }
               _this.showLoading = true
@@ -1794,6 +1798,7 @@ export default {
 
           .button-success {
             width: 175px;
+            margin-right: 20px;
           }
 
           .button-primary {
