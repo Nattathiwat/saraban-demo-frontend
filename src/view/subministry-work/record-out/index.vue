@@ -276,13 +276,11 @@ export default {
       })
     },
     async on_submit_modal() {
-      console.log('str')
         let data = {
           book_category_id: parseInt(this.data.book_category_id),
           user_id: parseInt(localStorage.getItem('user_id')),
           as_of_date: this.data.as_of_date
         }
-        console.log(this.data.book_category_id)
         this.showLoading = true
         this.axios.post(`/booking-note/quick`, data)
         .then(() => { 

@@ -262,7 +262,6 @@ export default {
           item1.rowspan = sum
         })
         this.data.table = response.data.data.meta
-        console.log(this.data.table)
         this.data.total = response.data.data.total
         this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
       })
