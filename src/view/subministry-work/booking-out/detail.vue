@@ -1109,6 +1109,7 @@ export default {
       }
     },
     async add_booking_registers(item) {
+      console.log('tt')
       for (let i = 0; i < item.num; i++) {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
