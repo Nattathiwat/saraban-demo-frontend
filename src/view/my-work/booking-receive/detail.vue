@@ -346,7 +346,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" @click="flagSave=2" v-show="edit">
+              <button type="submit" class="button-success" @click="flagSave ? 1 : 2" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -458,8 +458,8 @@ export default {
         document_number: '',
         as_of_date: this.assetsUtils.currentDate(),
         subject: '',
-        secret_id: '',
-        speed_id: '',
+        secret_id: '13',
+        speed_id: '12',
         send_to: '',
         book_desc: '',
         tag: [],
@@ -642,7 +642,8 @@ export default {
       this.optionSelect.department_id = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          type : 1
         }
       })
       .then((response) => {

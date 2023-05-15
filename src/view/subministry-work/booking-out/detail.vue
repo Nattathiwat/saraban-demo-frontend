@@ -135,11 +135,11 @@
           </div>
           <div class="line"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="add-send" @click="modal_number()">
+            <button type="button" class="add-send" @click="modal_number()" v-show="edit">
                 <i class="bi bi-list-ol me-2"></i>
                 ออกเลขทั้งหมด
             </button>
-            <button type="button" class="add-send" @click="modal_send()">
+            <button type="button" class="add-send" @click="modal_send()" v-show="edit">
                 <i class="bi bi-send"></i>
                 เลือกวิธีการส่ง
             </button>
@@ -427,7 +427,7 @@
               </button>
             </div>
             <div class="footer-right" v-show="data.booking_register_details.length>0">
-              <button type="submit" class="button-success" @click="flagSave=2" v-show="edit">
+              <button type="submit" class="button-success" @click="flagSave ? 1 : 2 " v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -984,6 +984,7 @@ export default {
         }
       })
       .then((response) => {
+        console.log('tt')
         this.showLoading = false
         this.data.history.data = response.data.data
         this.data.history.data.filter((item, index) => {

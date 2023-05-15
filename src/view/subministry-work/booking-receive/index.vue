@@ -256,7 +256,8 @@ export default {
                     id: row.id,
                     regis_id: parseInt(row.regis_id),
                     book_type: parseInt(row.book_type),
-                    user_id: parseInt(localStorage.getItem('user_id'))
+                    user_id: parseInt(localStorage.getItem('user_id')),
+                    page_flag : 'owner'
                   }
                   if (row.selected) {
                     axiosArray.push(groupdata)

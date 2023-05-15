@@ -352,7 +352,7 @@
             </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" @click="flagSave=2" v-show="edit">
+              <button type="submit" class="button-success" @click="flagSave ? 1 : 2" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -1238,33 +1238,12 @@ export default {
           confirm: true,
           msgSuccess: true,
           afterPressAgree() {
-<<<<<<< HEAD
-            let groupdata = {
-              // regis_id: parseInt(_this.data.book_category_id),
-              book_type: 1,
-              // human_flag: _this.data.human_flag,
-              response_id: parseInt(_this.data.response_id),
-              user_id: parseInt(localStorage.getItem('user_id')),
-              regis_id : parseInt(_this.$route.query.regis_id),
-              // receive_document_number: _this.data.receive_document_number
-            }
-              _this.showLoading = true
-              _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
-              .then(() => { 
-              _this.showLoading = false
-              _this.modalAlert = {
-                showModal: true, 
-                type: 'success', 
-                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
-                msgSuccess: true, 
-                afterPressAgree() { 
-                  _this.back() }}
-=======
             let groupdata = [{
               regis_id: parseInt(_this.$route.query.regis_id),
               book_type: parseInt(_this.$route.query.book_type),
               id: parseInt(_this.$route.params.id),
-              user_id: parseInt(localStorage.getItem('user_id'))  
+              user_id: parseInt(localStorage.getItem('user_id')),
+              page_flag : 'owner'
             }]
             _this.showLoading = true
             _this.axios.put(`/booking-receive/multi-receive`, groupdata)
@@ -1281,7 +1260,6 @@ export default {
             .catch((error) => {
               _this.showLoading = false
               _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
->>>>>>> 5e2ad9c766e0331bbcae56fcc1a2d2b56b2ba62a
             })
           }
         }
