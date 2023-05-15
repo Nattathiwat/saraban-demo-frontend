@@ -431,7 +431,7 @@
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
-              <button type="submit" class="button-primary" @click="flagSave=1" v-show=!edit>
+              <button type="submit" class="button-primary" @click="flagSave=1" v-show="!edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
@@ -837,6 +837,7 @@ export default {
               department_id: parseInt(localStorage.getItem('department_id')), 
               year: this.assetsUtils.currentDate().split('/')[2]-543,
               user_id: parseInt(localStorage.getItem('user_id')),
+              regis_id: parseInt(row.regis_id),
             })
             .then((response) => {
               this.showLoading = false
@@ -856,6 +857,7 @@ export default {
                 department_id: parseInt(localStorage.getItem('department_id')), 
                 year: this.assetsUtils.currentDate().split('/')[2]-543,
                 user_id: parseInt(localStorage.getItem('user_id')),
+                regis_id: parseInt(row.regis_id),
               })
               .then((response) => {
                 this.showLoading = false
