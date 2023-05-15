@@ -29,7 +29,7 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">เลขทะเบียนหนังสือ</th>
+                <th class="col1">รหัสทะเบียนหนังสือ</th>
                 <th class="col2">ชื่อทะเบียนหนังสือ</th>
                 <th class="col3">ทะเบียน</th>
                 <th class="col4">วันที่สร้าง</th>

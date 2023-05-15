@@ -1242,7 +1242,8 @@ export default {
               regis_id: parseInt(_this.$route.query.regis_id),
               book_type: parseInt(_this.$route.query.book_type),
               id: parseInt(_this.$route.params.id),
-              user_id: parseInt(localStorage.getItem('user_id'))  
+              user_id: parseInt(localStorage.getItem('user_id')),
+              page_flag : 'owner'
             }]
             _this.showLoading = true
             _this.axios.put(`/booking-receive/multi-receive`, groupdata)
