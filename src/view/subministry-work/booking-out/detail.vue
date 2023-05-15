@@ -135,11 +135,11 @@
           </div>
           <div class="line"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="add-send" @click="modal_number()">
+            <button type="button" class="add-send" @click="modal_number()" v-show="edit">
                 <i class="bi bi-list-ol me-2"></i>
                 ออกเลขทั้งหมด
             </button>
-            <button type="button" class="add-send" @click="modal_send()">
+            <button type="button" class="add-send" @click="modal_send()" v-show="edit">
                 <i class="bi bi-send"></i>
                 เลือกวิธีการส่ง
             </button>
@@ -982,6 +982,7 @@ export default {
         }
       })
       .then((response) => {
+        console.log('tt')
         this.showLoading = false
         this.data.history.data = response.data.data
         this.data.history.data.filter((item, index) => {
@@ -1109,7 +1110,6 @@ export default {
       }
     },
     async add_booking_registers(item) {
-      console.log('tt')
       for (let i = 0; i < item.num; i++) {
         if (item.book_out_num_type == 0) {
           if (item.booking_registers.length < 1) {
