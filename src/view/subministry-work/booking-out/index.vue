@@ -29,6 +29,9 @@
           <table class="table-booking-out-inex">
             <thead class="thead">
               <tr class="thead-row">
+                <th class="col0">
+                  <button @click="selectedAll($event)"><i class="bi bi-plus-lg"></i></button>
+                </th>
                 <th class="col1">ความเร่งด่วน</th>
                 <th class="col2">เลขที่หนังสือออก</th>
                 <th class="col3">ชื่อเรื่อง</th>
@@ -40,27 +43,58 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
-                <td class="col1">{{item.speedName}}</td>
-                <td class="col2">{{item.bookingNoN}}</td>
-                <td class="col3">{{item.bookingSubject}}</td>
-                <td class="col4">{{item.department_name}}</td>
-                <td class="col5">{{item.date}}</td>
-                <td class="col6">{{item.typename}}</td>
-                <td class="col7">
-                  <div class="group-show">
-                    <span class="span">
-                      {{item.creater_name}}
-                    </span>
-                    <div class="show-detail">{{item.creater_name}}
-                      <div v-if="false" class="image-size"></div>
+              <template v-for="(item, index) in data.table" :key="index">
+                <tr class="tbody-row pointer" :class="index%2 !=0 ? 'color-tr1': 'color-tr2'" @click="editClick(item)">
+                  <td class="col0" @click="item.booking_follows.length > 1 ? selected($event, item) : ''">
+                    <button v-if="item.select && item.booking_follows.length > 1"><i class="bi bi-dash-lg"></i></button>
+                    <button v-if="!item.select && item.booking_follows.length > 1"><i class="bi bi-plus-lg"></i></button>
+                  </td>
+                  <td class="col1">{{item.speed_name}}</td>
+                  <td class="col2">{{item.book_out_num}}</td>
+                  <td class="col3">{{item.subject}}</td>
+                  <td class="col4">{{item.booking_follows.length > 1 ? item.booking_follows.length : item.department_name}}</td>
+                  <td class="col5">{{item.regis_date}}</td>
+                  <td class="col6">{{item.book_type}}</td>
+                  <td class="col7">
+                    <div class="group-show">
+                      <span class="span">
+                        {{item.creater_name}}
+                      </span>
+                      <div class="show-detail">{{item.creater_name}}
+                        <div v-if="false" class="image-size"></div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="col8">{{item.statusName}}</td>
-              </tr>
+                  </td>
+                  <td class="col8">{{item.status_name}}</td>
+                </tr>
+                <template v-if="item.select && item.booking_follows.length > 1" v-for="(item2, index2) in item.booking_follows" :key="index2">
+                  <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
+                    <td class="col0">{{index2+1}}</td>
+                    <td class="col1">{{item2.speed_name}}</td>
+                    <td class="col2">{{item2.book_out_num}}</td>
+                    <td class="col3">{{item2.subject}}</td>
+                    <td class="col4">{{item2.department_name}}</td>
+                    <td class="col5">{{item2.regis_date}}</td>
+                    <td class="col6">{{item2.book_type}}</td>
+                    <td class="col7">
+                      <div class="group-show">
+                        <span class="span">
+                          {{item2.creater_name}}
+                        </span>
+                        <div class="show-detail">{{item2.creater_name}}
+                          <div v-if="false" class="image-size"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="col8">{{item2.status_name}}</td>
+                  </tr>
+                </template>
+                <tr v-if="item.select && item.booking_follows.length > 1">
+                  <td colspan="9" style="border-bottom: solid 1px #c1cfe3;"></td>
+                </tr>
+              </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="8">ไม่มีข้อมูล</td>
+                <td colspan="9">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -91,23 +125,32 @@ export default {
       },
       showLoading: false,
       data: {
+        select: false,
         search: '',
         table: [],
         page: 1,
         total: 0,
         lastPage: 0,
         perPage: 10,
-        // desc:'',
-        // receive_date_str:'',
-        // receive_date_end:'',
-        // as_of_date_str:'',
-        // as_of_date_end:'',
-        // booktype:'',
         tag:'',
       },
     }
   },
   methods: {
+    selectedAll(event) {
+      event.stopPropagation();
+      this.data.select = !this.data.select;
+      this.data.table.filter((row) => {
+        row.select = this.data.select;
+      })
+    },
+    selected(event, item) {
+      event.stopPropagation();
+      item.select = !item.select
+      this.data.select = this.data.table.every((row) => {
+        return row.select;
+      })
+    },
     addClick() {
       this.$router.push({ 
         name: 'subministry-work.booking-out-create',
@@ -132,12 +175,6 @@ export default {
       this.data.status = true
       this.data.perPage = 10
       this.data.page = 1
-      // this.data.desc = ''
-      // this.data.receive_date_str = ''
-      // this.data.receive_date_end = ''
-      // this.data.as_of_date_str = ''
-      // this.data.as_of_date_end = ''
-      // this.data.booktype = ''
       this.data.tag = ''
       this.apigetexport()
     },
@@ -151,12 +188,6 @@ export default {
           page_size: this.data.perPage,
           page: this.data.page,
           user_id: localStorage.getItem('user_id'),
-          // desc: this.data.desc,
-          // receive_date_str: this.data.receive_date_str,
-          // receive_date_end: this.data.receive_date_end,
-          // as_of_date_str: this.data.as_of_date_str,
-          // as_of_date_end: this.data.as_of_date_end,
-          // book_type_id: this.data.booktype,
           tag: this.data.tag,
         }
       })
@@ -164,13 +195,6 @@ export default {
         this.showLoading = false
         if (response.data.data ) {
           response.data.data.filter(row => {
-            row.speedName = row.speed_name
-            row.bookingNoN = row.book_out_num
-            row.bookingSubject = row.subject
-            row.department_name = row.department_name
-            row.date = row.regis_date
-            row.typename = row.book_type
-            row.statusName = row.status_name
             this.data.total = row.total
           })
           this.data.table = response.data.data
@@ -290,11 +314,6 @@ export default {
         .group-end {
           display: flex;
 
-          .date {
-            margin-right: 25px;
-            width: 230px;
-          }
-
           .search {
             min-width: 480px;
           }
@@ -317,11 +336,11 @@ export default {
         overflow: auto;
         margin-bottom: 1px;
 
-        table tbody tr:nth-child(odd) {
+        .color-tr1 {
           background-color: #ffffff;
         }
 
-        table tbody tr:nth-child(even) {
+        .color-tr2 {
           background-color: #f1f5fa;
         }
 
@@ -345,6 +364,22 @@ export default {
                 border-bottom: solid 1px #c1cfe3;
                 padding: 0 10px;
                 text-align: center !important;
+              }
+            }
+
+            .col0 {
+              min-width: 70px;
+              max-width: 70px;
+              width: 0px;
+              padding-left: 28px !important;
+
+              button {
+                border: 0;
+                border-radius: 5px;
+                background-color: #1a456b;
+                font-size: 16px;
+                font-weight: bold;
+                color: #ffffff;
               }
             }
 
@@ -407,6 +442,22 @@ export default {
 
               td {
                 padding: 0 10px;
+              }
+              
+              .col0 {
+                min-width: 70px;
+                max-width: 70px;
+                width: 0px;
+                padding-left: 28px !important;
+                
+                button {
+                  border: 0;
+                  border-radius: 5px;
+                  background-color: transparent;
+                  font-size: 16px;
+                  font-weight: bold;
+                  color: #1a456b;
+                }
               }
 
               .col3 {
