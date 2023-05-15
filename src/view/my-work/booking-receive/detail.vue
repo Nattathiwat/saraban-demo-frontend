@@ -458,8 +458,8 @@ export default {
         document_number: '',
         as_of_date: this.assetsUtils.currentDate(),
         subject: '',
-        secret_id: '',
-        speed_id: '',
+        secret_id: '13',
+        speed_id: '12',
         send_to: '',
         book_desc: '',
         tag: [],
@@ -642,7 +642,8 @@ export default {
       this.optionSelect.department_id = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          type : 1
         }
       })
       .then((response) => {

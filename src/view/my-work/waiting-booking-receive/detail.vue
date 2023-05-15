@@ -642,7 +642,8 @@ export default {
       this.optionSelect.department_id = []
       this.axios.get('/master-data/department-user', {
         params: {
-          keyword: e.target.value
+          keyword: e.target.value,
+          type : 1
         }
       })
       .then((response) => {
