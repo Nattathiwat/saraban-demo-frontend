@@ -882,7 +882,8 @@ export default {
                 send_style_id: parseInt(this.modalSend.send_style_id),
                 book_id: parseInt(row2.book_id),
                 book_regis_id: parseInt(row2.regis_id),
-                user_id: parseInt(localStorage.getItem('user_id'))
+                user_id: parseInt(localStorage.getItem('user_id')),
+                book_regis_sub_id: parseInt(row2.id),
               }
               axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
             }
