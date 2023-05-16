@@ -76,9 +76,9 @@
                   <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
                     <td class="col0">{{index2+1}}</td>
                     <td class="col1">{{item2.speed_name}}</td>
-                    <td class="col2">{{item2.booking_note_number}}</td>
+                    <td class="col2">{{item2.department_name}}</td>
                     <td class="col3">{{item2.subject}}</td>
-                    <td class="col4">{{item2.department_name}}</td>
+                    <td class="col4">{{  }}</td>
                     <td class="col5">{{item2.as_of_date}}</td>
                     <td class="col6">{{item2.book_type}}</td>
                     <td class="col7">
