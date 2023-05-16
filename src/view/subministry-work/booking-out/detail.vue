@@ -135,11 +135,11 @@
           </div>
           <div class="line"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="add-send" @click="modal_number()" v-show="edit">
+            <button type="button" class="add-send" @click="modal_number()" v-if="data.booking_register_details.length>0">
                 <i class="bi bi-list-ol me-2"></i>
                 ออกเลขทั้งหมด
             </button>
-            <button type="button" class="add-send" @click="modal_send()" v-show="edit">
+            <button type="button" class="add-send" @click="modal_send()" v-if="data.booking_register_details.length>0">
                 <i class="bi bi-send"></i>
                 เลือกวิธีการส่ง
             </button>
