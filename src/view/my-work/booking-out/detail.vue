@@ -873,20 +873,18 @@ export default {
     sendMailClick() {
       let axiosArray = []
       this.modalSend.booking_register_details.filter((row) => {
-        if (row.select) {
-          row.booking_registers.filter((row2) => {
-            if(row2.select && (row2.book_id || row2.book_id == 0) && (row2.regis_id || row2.regis_id == 0)) {
-              let dataSave = {
-                send_style_id: parseInt(this.modalSend.send_style_id),
-                book_id: parseInt(row2.book_id),
-                book_regis_id: parseInt(row2.regis_id),
-                user_id: parseInt(localStorage.getItem('user_id')),
-                book_regis_sub_id: parseInt(row2.id),
-              }
-              axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+        row.booking_registers.filter((row2) => {
+          if(row2.select && (row2.book_id || row2.book_id == 0) && (row2.regis_id || row2.regis_id == 0)) {
+            let dataSave = {
+              send_style_id: parseInt(this.modalSend.send_style_id),
+              book_id: parseInt(row2.book_id),
+              book_regis_id: parseInt(row.id),
+              user_id: parseInt(localStorage.getItem('user_id')),
+              book_regis_sub_id: parseInt(row2.id),
             }
-          })
-        }
+            axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+          }
+        })
       })
       if (axiosArray.length>0) {
         this.axios.all([...axiosArray])
