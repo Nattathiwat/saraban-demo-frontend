@@ -1096,6 +1096,7 @@ export default {
             .then((response) => {
               this.showLoading = false
               item.booking_registers.push({
+                ...item,
                 book_out_num: response.data.data.out_document_number,
                 greeting: '',
                 department_dest_id: '',
@@ -1118,6 +1119,7 @@ export default {
             })
           } else {
             item.booking_registers.push({
+              ...item,
               book_out_num: item.booking_registers[0].book_out_num,
               greeting: '',
               department_dest_id: '',
@@ -1131,8 +1133,8 @@ export default {
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
               human_flag: item.human_flag,
-                response_id: parseInt(item.value),
-                response_type: item.type,
+              response_id: parseInt(item.value),
+              response_type: item.type,
             })
           }
         } else {
@@ -1145,6 +1147,7 @@ export default {
           .then((response) => {
             this.showLoading = false
             item.booking_registers.push({
+              ...item,
               book_out_num: response.data.data.out_document_number,
               greeting: '',
               department_dest_id: '',
@@ -1158,8 +1161,8 @@ export default {
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
               human_flag: item.human_flag,
-            response_id: parseInt(item.value),
-            response_type: item.type,
+              response_id: parseInt(item.value),
+              response_type: item.type,
             })
           }).catch((error) => {
             this.showLoading = false
@@ -1195,6 +1198,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -1524,6 +1528,7 @@ export default {
               this.showLoading = false
               item.department_dest_id.filter(item2 => {
                 data.booking_registers.push({
+                  ...item2,
                   book_out_num: response.data.data.out_document_number,
                   greeting: '',
                   department_dest_id: item2.value,
