@@ -116,10 +116,10 @@
                   <td class="col9">{{item.from }}</td>
                   <td class="col10">{{item.to}}</td>
                   <td class="col11">
-                    <div class="group-icon">
+                    <!-- <div class="group-icon">
                       <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
                       <img @click="sendmailClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
-                    </div>
+                    </div> -->
                   </td>
                 </tr>
                 <template v-for="(item2, index2) in item.book_series" :key="index2">

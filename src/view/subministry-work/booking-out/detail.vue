@@ -41,14 +41,6 @@
               </div>
             </div>
             <div class="group-between">
-              <!-- <div class="group-input left">
-                <div class="name">ประเภท <span class="required">*</span></div>
-                <cpn-select v-model="data.book_category_id"
-                            name="book_category_id"
-                            rules="required"
-                            :optionSelect="optionSelect.book_category_id"
-                            placeholder="กรุณาระบุ" />
-              </div> -->
               <div class="group-input left">
                 <div class="name">ชนิดของหนังสือ <span class="required">*</span></div>
                 <cpn-autoComplete v-model="data.book_type_id"
@@ -75,24 +67,6 @@
                             placeholder="กรุณาระบุ" />
               </div>
             </div>
-            <!-- <div class="group-between">
-              <div class="group-input left">
-                <div class="name">ชั้นความลับ <span class="required">*</span></div>
-                <cpn-select v-model="data.secret_id"
-                            name="secret_id"
-                            rules="required"
-                            :optionSelect="optionSelect.secret_id"
-                            placeholder="กรุณาระบุ" />
-              </div>
-              <div class="group-input">
-                <div class="name">ความเร่งด่วน <span class="required">*</span></div>
-                <cpn-select v-model="data.speed_id"
-                            name="speed_id"
-                            rules="required"
-                            :optionSelect="optionSelect.speed_id"
-                            placeholder="กรุณาระบุ" />
-              </div>
-            </div> -->
             <div class="group-input d-flex align-items-center">
               <div class="name">อ้างอิงถึง</div>
               <button type="button" class="add-booking-out" @click="add_booking_refers()">
@@ -154,7 +128,7 @@
               <div class="col-center">
                 <div class="row">
                   <div class="col-lg-auto col-md-auto mb-3">
-                    <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                    <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
                   </div>
                   <div class="group-date col-lg-auto col-md-auto mb-3">
                     <div class="name">ลงวันที่ :</div>
@@ -163,7 +137,7 @@
                                     class="size-date" />
                   </div>
                 </div>
-                <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                <div>ทะเบียนส่ง : {{item.regis_name}}</div>
               </div>
               <div class="col-end">
                 <div class="d-flex justify-content-end">
@@ -427,7 +401,7 @@
               </button>
             </div>
             <div class="footer-right" v-show="data.booking_register_details.length>0">
-              <button type="submit" class="button-success" @click="flagSave ? 1 : 2 " v-show="edit">
+              <button type="submit" class="button-success" @click="updateclick()" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -562,13 +536,13 @@
                   <div class="col-center">
                     <div class="row">
                       <div class="col-lg-auto col-md-auto mb-3">
-                        <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                        <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
                       </div>
                       <div class="col-lg-auto col-md-auto mb-3">
                         <div class="name">ลงวันที่ : {{item.regis_date}}</div>
                       </div>
                     </div>
-                    <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                    <div>ทะเบียนส่ง : {{item.regis_name}}</div>
                   </div>
                 </div>
                 <div class="detail-sub">
@@ -642,13 +616,13 @@
                   <div class="col-center">
                     <div class="row">
                       <div class="col-lg-auto col-md-auto mb-3">
-                        <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                        <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
                       </div>
                       <div class="col-lg-auto col-md-auto mb-3">
                         <div class="name">ลงวันที่ : {{item.regis_date}}</div>
                       </div>
                     </div>
-                    <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                    <div>ทะเบียนส่ง : {{item.regis_name}}</div>
                   </div>
                 </div>
                 <div class="detail-sub">
@@ -882,8 +856,7 @@ export default {
                 send_style_id: parseInt(this.modalSend.send_style_id),
                 book_id: parseInt(row2.book_id),
                 book_regis_id: parseInt(row2.regis_id),
-                user_id: parseInt(localStorage.getItem('user_id')),
-                book_regis_sub_id: parseInt(row2.id),
+                user_id: parseInt(localStorage.getItem('user_id'))
               }
               axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
             }
@@ -1516,23 +1489,23 @@ export default {
     async on_submit_modal() {
       for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
         let item = this.modalRegiter.booking_register_details[i]
-        let regis_id_desc = ''
-        let book_out_num_type_desc = ''
-        let send_method_id_desc = ''
-        item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_id_desc = item2.name}})
-        item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_desc = item2.name}})
-        item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_id_desc = item2.name}})
+        let regis_name = ''
+        let book_out_num_type_name = ''
+        let send_method_name = ''
+        item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_name = item2.name}})
+        item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_name = item2.name}})
+        item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_name = item2.name}})
         let data = {
           optionSelect: {
             signer_id: this.optionSelectDefault.signer_id
           },
           book_out_num_type: parseInt(item.book_out_num_type),
-          book_out_num_type_desc: book_out_num_type_desc,
+          book_out_num_type_name: book_out_num_type_name,
           send_method_id: parseInt(item.send_method_id),
-          send_method_id_desc: send_method_id_desc,
+          send_method_name: send_method_name,
           regis_date: item.regis_date,
           regis_id: parseInt(item.regis_id),
-          regis_id_desc: regis_id_desc,
+          regis_name: regis_name,
           num: '1',
           signer_id: '',
           is_signed: false,
@@ -2097,6 +2070,96 @@ export default {
         }
       })
     },
+    updateclick(data){
+      console.log('test')
+      let fileAttachments = data
+      let _this = this
+      let tag = ''
+      this.data.tag.filter(item => {
+        tag += item.name+','
+      })
+      tag = tag.slice(0, -1)
+      this.data.sendTo.filter(item => {
+        if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
+          let data = {
+            ...item,
+            department_id: parseInt(item.value),
+            department_name: item.name,
+            comment: this.data.comment,
+            process_type_id: parseInt(this.data.process_type_id),
+            process_type_name: '',
+            permission_id: parseInt(this.data.permission_id),
+            permission_name: '',
+            flag: 'add',
+            human_flag: item.human_flag,
+            response_id: parseInt(item.value),
+            response_type: item.type,
+            attach_filepath: this.data.attach_filepath,
+            attach_filename: this.data.attach_filename,
+            sendToFile :{filename : this.data.attach_filename}
+          }
+          this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
+          this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
+          this.data.booking_follows.push(data)
+        }
+      })
+      let dataSave = {
+        create_type: parseInt(this.data.create_type),
+        creater_id: this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')),
+        book_category_id: parseInt(this.data.book_category_id),
+        book_type_id: parseInt(this.data.book_type_id),
+        secret_id: parseInt(this.data.secret_id),
+        speed_id: parseInt(this.data.speed_id),
+        subject: this.data.subject,
+        user_id: parseInt(localStorage.getItem('user_id')),
+        tag: tag,
+        attachments: fileAttachments,
+        booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
+        booking_follows: this.data.booking_follows,
+        booking_register_details: this.data.booking_register_details.filter(item => {
+          item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
+          item.booking_registers.filter(item2 => {
+            item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
+            item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
+            item2.optionSelect.department_dest_id.find(item3 => {
+              if(item3.value == item2.department_dest_id) {
+                item2.human_flag = item3.human_flag 
+                item2.response_id = item3.id}
+              })
+            return item2
+          })
+          return item
+        }),
+        flag: 'update',
+      }
+      this.showLoading = false
+      if (this.edit) {
+        if (this.flagSave == 1) {
+          console.log('test2')
+          this.showLoading = true
+          this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
+          .then(() => { 
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : '', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        } else {
+          this.showLoading = true
+          this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
+          .then(() => { 
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          })
+          .catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        }
+      } 
+    }
   },
   mounted () {
     this.api_master()
