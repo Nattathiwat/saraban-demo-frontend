@@ -45,14 +45,14 @@
             <tbody class="tbody">
               <template v-for="(item, index) in data.table" :key="index">
                 <tr class="tbody-row pointer" :class="index%2 !=0 ? 'color-tr1': 'color-tr2'" @click="editClick(item)">
-                  <td class="col0" @click="item.booking_follows.length > 1 ? selected($event, item) : ''">
-                    <button v-if="item.select && item.booking_follows.length > 1"><i class="bi bi-dash-lg"></i></button>
-                    <button v-if="!item.select && item.booking_follows.length > 1"><i class="bi bi-plus-lg"></i></button>
+                  <td class="col0" @click="item.register_count > 1 ? selected($event, item) : ''">
+                    <button v-if="item.select && item.register_count > 1"><i class="bi bi-dash-lg"></i></button>
+                    <button v-if="!item.select && item.register_count > 1"><i class="bi bi-plus-lg"></i></button>
                   </td>
                   <td class="col1">{{item.speed_name}}</td>
                   <td class="col2">{{item.book_out_num}}</td>
                   <td class="col3">{{item.subject}}</td>
-                  <td class="col4">{{item.booking_follows.length > 1 ? item.booking_follows.length : item.department_name}}</td>
+                  <td class="col4">{{item.register_count > 1 ? item.register_count : item.department_name}}</td>
                   <td class="col5">{{item.regis_date}}</td>
                   <td class="col6">{{item.book_type}}</td>
                   <td class="col7">
@@ -67,7 +67,7 @@
                   </td>
                   <td class="col8">{{item.status_name}}</td>
                 </tr>
-                <template v-if="item.select && item.booking_follows.length > 1" v-for="(item2, index2) in item.booking_follows" :key="index2">
+                <template v-if="item.select && item.register_count > 1" v-for="(item2, index2) in item.booking_registers" :key="index2">
                   <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
                     <td class="col0">{{index2+1}}</td>
                     <td class="col1">{{item2.speed_name}}</td>
@@ -89,7 +89,7 @@
                     <td class="col8">{{item2.status_name}}</td>
                   </tr>
                 </template>
-                <tr v-if="item.select && item.booking_follows.length > 1">
+                <tr v-if="item.select && item.register_count > 1">
                   <td colspan="9" style="border-bottom: solid 1px #c1cfe3;"></td>
                 </tr>
               </template>

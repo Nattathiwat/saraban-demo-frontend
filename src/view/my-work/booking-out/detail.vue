@@ -154,7 +154,7 @@
               <div class="col-center">
                 <div class="row">
                   <div class="col-lg-auto col-md-auto mb-3">
-                    <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                    <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
                   </div>
                   <div class="group-date col-lg-auto col-md-auto mb-3">
                     <div class="name">ลงวันที่ :</div>
@@ -163,7 +163,7 @@
                                     class="size-date" />
                   </div>
                 </div>
-                <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                <div>ทะเบียนส่ง : {{item.regis_name}}</div>
               </div>
               <div class="col-end">
                 <div class="d-flex justify-content-end">
@@ -290,15 +290,13 @@
                     <div class="d-flex">
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2.optionSelect.signer_id"  
-                                        @change="change_signer_id(index)(index2)"/>
+                                        :optionSelect="item2.optionSelect.signer_id" />
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
                                     class="cpn-select"
                                     label="ลายเซ็น"
-                                    :disabled="!rule.user6"
-                                    @change="change_signer_id(index)(index2)" />
+                                    :disabled="!rule.user6" />
                     </div>
                   </div>
                 </div>
@@ -562,13 +560,13 @@
                   <div class="col-center">
                     <div class="row">
                       <div class="col-lg-auto col-md-auto mb-3">
-                        <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                        <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
                       </div>
                       <div class="col-lg-auto col-md-auto mb-3">
                         <div class="name">ลงวันที่ : {{item.regis_date}}</div>
                       </div>
                     </div>
-                    <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                    <div>ทะเบียนส่ง : {{item.regis_name}}</div>
                   </div>
                 </div>
                 <div class="detail-sub">
@@ -642,13 +640,13 @@
                   <div class="col-center">
                     <div class="row">
                       <div class="col-lg-auto col-md-auto mb-3">
-                        <span class="span">การออกเลข : {{item.book_out_num_type_desc}}</span><span>รูปแบบการส่ง : {{item.send_method_id_desc}}</span>
+                        <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
                       </div>
                       <div class="col-lg-auto col-md-auto mb-3">
                         <div class="name">ลงวันที่ : {{item.regis_date}}</div>
                       </div>
                     </div>
-                    <div>ทะเบียนส่ง : {{item.regis_id_desc}}</div>
+                    <div>ทะเบียนส่ง : {{item.regis_name}}</div>
                   </div>
                 </div>
                 <div class="detail-sub">
@@ -1512,23 +1510,23 @@ export default {
     async on_submit_modal() {
       for (let i = 0; i < this.modalRegiter.booking_register_details.length; i++) {
         let item = this.modalRegiter.booking_register_details[i]
-        let regis_id_desc = ''
-        let book_out_num_type_desc = ''
-        let send_method_id_desc = ''
-        item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_id_desc = item2.name}})
-        item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_desc = item2.name}})
-        item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_id_desc = item2.name}})
+        let regis_name = ''
+        let book_out_num_type_name = ''
+        let send_method_name = ''
+        item.optionSelect.regis_id.find(item2 => {if(item2.value == item.regis_id) {regis_name = item2.name}})
+        item.optionSelect.book_out_num_type.find(item2 => {if(item2.value == item.book_out_num_type) {book_out_num_type_name = item2.name}})
+        item.optionSelect.send_method_id.find(item2 => {if(item2.value == item.send_method_id) {send_method_name = item2.name}})
         let data = {
           optionSelect: {
             signer_id: this.optionSelectDefault.signer_id
           },
           book_out_num_type: parseInt(item.book_out_num_type),
-          book_out_num_type_desc: book_out_num_type_desc,
+          book_out_num_type_name: book_out_num_type_name,
           send_method_id: parseInt(item.send_method_id),
-          send_method_id_desc: send_method_id_desc,
+          send_method_name: send_method_name,
           regis_date: item.regis_date,
           regis_id: parseInt(item.regis_id),
-          regis_id_desc: regis_id_desc,
+          regis_name: regis_name,
           num: '1',
           signer_id: '',
           is_signed: false,
@@ -1926,10 +1924,10 @@ export default {
           item.optionSelect = {signer_id: this.optionSelectDefault.signer_id}
           item.signer_id = ''
           item.num = '1'
-          item.flag = 'add'
+          item.flag = 'edit'
           item.booking_registers.filter(item2 => {
             item2.optionSelect = {signer_id: this.optionSelectDefault.signer_id, department_dest_id: this.optionSelectDefault.department_dest_id}
-            item2.flag = 'add'
+            item2.flag = 'edit'
             item2.main_link = item2.main_filepath? this.backendport+'/'+item2.main_filepath : ''
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
             item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id 
@@ -1938,12 +1936,12 @@ export default {
           return item
         })
         this.data.attachments.filter(item => {
-          item.flag = 'add'
+          item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.booking_follows.filter(item => {
-          item.flag = 'add'
+          item.flag = 'edit'
           return item
         })
         this.data.booking_follows = []
