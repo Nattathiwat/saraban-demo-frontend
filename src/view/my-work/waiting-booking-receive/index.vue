@@ -9,7 +9,7 @@
             <button type="button" class="add-booking-receive" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                สร้างหนังสือรอรับเข้า
+                สร้างหนังสือรับเข้า
               </div>
             </button>
           </div>

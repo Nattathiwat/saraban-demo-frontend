@@ -1017,7 +1017,7 @@ export default {
       } else {
         if (this.flagSave == 1) {
           this.showLoading = true
-          this.axios.post(`/booking-receive/waiting-receive`, dataSave)
+          this.axios.post(`/booking-receive`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -1028,7 +1028,7 @@ export default {
           })
         } else {
           this.showLoading = true
-          this.axios.post(`/booking-receive/waiting-receive`, dataSave)
+          this.axios.post(`/booking-receive`, dataSave)
           .then(() => { 
             this.showLoading = false
             this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
