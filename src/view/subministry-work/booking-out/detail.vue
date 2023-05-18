@@ -573,7 +573,7 @@
               <button type="button" @click="modalSend.showModal = false" class="btn button-danger">
                 <div class="group-name">
                   <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon"/>
-                  <div class="name">ยกเลิก</div>
+                  <div class="name">ปิด</div>
                 </div>
               </button>
               <button type="button" class="btn button-success" @click="sendMailClick()">
