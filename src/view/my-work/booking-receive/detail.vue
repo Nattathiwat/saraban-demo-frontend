@@ -387,7 +387,9 @@
                el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
                :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
               <div class="detail-head">
-                <div class="number">#{{index+1}}</div>
+                <div class="number">#{{data.history.data.filter(
+              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+              (el.type == 0 || el.type == 1) : el).length-index}}</div>
                 <div class="topic" :class="item.bookaction_name == 'ความเห็นคำสั่ง' ? 'blue' : item.bookaction_name == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
                   <i class="bi icon-size" :class="item.bookaction_name == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookaction_name == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
                   {{item.bookaction_name}}
@@ -1046,6 +1048,7 @@ export default {
         params:{
           book_type : this.$route.query.book_type ,
           regis_id: this.$route.query.regis_id,
+          response_id: this.$route.query.response_id
         }
       })
       .then((response) => { 

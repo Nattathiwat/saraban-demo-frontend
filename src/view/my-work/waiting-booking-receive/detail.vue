@@ -387,7 +387,9 @@
                el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
                :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
               <div class="detail-head">
-                <div class="number">#{{index+1}}</div>
+                <div class="number">#{{data.history.data.filter(
+              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+              (el.type == 0 || el.type == 1) : el).length-index}}</div>
                 <div class="topic" :class="item.bookaction_name == 'ความเห็นคำสั่ง' ? 'blue' : item.bookaction_name == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
                   <i class="bi icon-size" :class="item.bookaction_name == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookaction_name == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
                   {{item.bookaction_name}}
@@ -957,8 +959,6 @@ export default {
             response_type: item.type,
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
-            sendToFile :{filename : this.data.attach_filename},
-            // page_flag : ''
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -985,10 +985,11 @@ export default {
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         user_id: parseInt(localStorage.getItem('user_id')),
-        flag: this.flagSave == 1 ? "draft" : '',
+        flag: this.flagSave == 1 ? '"draft"' : '',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
-        page_flag : ''
+        page_flag : '',
+        // is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
       }
       if (this.edit) {
         if (this.flagSave == 1) {
@@ -1042,10 +1043,12 @@ export default {
     },
     api_detail() {
       this.showLoading = true
+      console.log('dd')
       this.axios.get(`/booking-receive/waiting-receive/${this.$route.params.id}`, {
         params:{
           book_type : this.$route.query.book_type ,
           regis_id: this.$route.query.regis_id,
+          response_id: this.$route.query.response_id,
         }
       })
       .then((response) => { 

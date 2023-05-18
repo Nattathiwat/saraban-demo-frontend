@@ -129,6 +129,7 @@ export default {
           localStorage.setItem('lname', response.data.data?.lname || '')
           localStorage.setItem('login', 'true')
           localStorage.setItem('data_rule', JSON.stringify(response3.data.data.roles))
+          localStorage.setItem('subministry_id', response3.data.data?.subministry_id || '')
           let rule = {}
           response3.data.data.roles.filter(row => {
             rule[`user${row.role_id}`] = true

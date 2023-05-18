@@ -135,7 +135,7 @@ export default {
           book_type:item.book_type,   
           regis_id:item.regis_id,
           human_flag:item.human_flag,
-          response_id:item.response,
+          response_id:item.response_id,
           page: this.data.page,
           perPage: this.data.perPage
         }

@@ -964,7 +964,6 @@ export default {
             attach_filepath: this.data.attach_filepath,
             attach_filename: this.data.attach_filename,
             sendToFile :{filename : this.data.attach_filename},
-            // page_flag: 'owner'
           }
           this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
           this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
@@ -991,7 +990,7 @@ export default {
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         user_id: parseInt(localStorage.getItem('user_id')),
-        flag: this.flagSave == 1 ? "draft" : '',
+        flag: this.flagSave == 1 ? '' : 'confirm',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
         page_flag: 'owner'
@@ -1052,6 +1051,7 @@ export default {
         params:{
           book_type : this.$route.query.book_type,
           regis_id: this.$route.query.regis_id,
+          response_id: this.$route.query.response_id
         }
       })
       .then((response) => { 
@@ -1245,7 +1245,8 @@ export default {
               book_type: parseInt(_this.$route.query.book_type),
               id: parseInt(_this.$route.params.id),
               user_id: parseInt(localStorage.getItem('user_id')),
-              page_flag : 'owner'
+              page_flag : 'owner',
+              flag: this.flagSave == 1 ? '' : 'confirm',
             }]
             _this.showLoading = true
             _this.axios.put(`/booking-receive/multi-receive`, groupdata)

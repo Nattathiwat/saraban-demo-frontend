@@ -137,6 +137,7 @@ export default {
         query:{
           book_type:item.book_type,   
           regis_id:item.regis_id,
+          response_id:item.response_id,
           page: this.data.page,
           perPage: this.data.perPage
         }

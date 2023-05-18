@@ -328,7 +328,9 @@
                el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
                :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
               <div class="detail-head">
-                <div class="number">#{{index+1}}</div>
+                <div class="number">#{{data.history.data.filter(
+              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+              (el.type == 0 || el.type == 1) : el).length-index}}</div>
                 <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
                   <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
                   {{item.bookactionname}}
@@ -1034,7 +1036,11 @@ export default {
           book_type : 1
         }
       })
-      const request9 = this.axios.get('master-data/department-user/booking-note-out')
+      const request9 = this.axios.get('master-data/department-user/booking-note-out' ,{
+        params:{
+          subministry_id : parseInt(localStorage.getItem('subministry_id'))
+        }
+      })
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
