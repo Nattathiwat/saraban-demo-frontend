@@ -302,6 +302,7 @@
                 </div>
               </div>
               <div class="name mt-3 ms-2 required" v-show="item2.send_style_desc">วิธีการส่ง : {{item2.send_style_desc}}</div>
+              <div class="text-end"> 
                 <button type="button" class="del-department-2" @click="delete_booking_registers(item2, item, index2)">
                   <i class="bi bi-trash-fill image-trash pointer"></i>
                 </button>
@@ -707,9 +708,7 @@
               el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
               :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
             <div class="detail-head">
-              <div class="number">#{{data.history.data.filter(
-              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
-              (el.type == 0 || el.type == 1) : el).length-index}}</div>
+              <div class="number">#{{index+1}}</div>
               <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
                 <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
                 {{item.bookactionname}}
@@ -2058,96 +2057,6 @@ export default {
         }
       })
     },
-    updateclick(data){
-      console.log('test')
-      let fileAttachments = data
-      let _this = this
-      let tag = ''
-      this.data.tag.filter(item => {
-        tag += item.name+','
-      })
-      tag = tag.slice(0, -1)
-      this.data.sendTo.filter(item => {
-        if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
-          let data = {
-            ...item,
-            department_id: parseInt(item.value),
-            department_name: item.name,
-            comment: this.data.comment,
-            process_type_id: parseInt(this.data.process_type_id),
-            process_type_name: '',
-            permission_id: parseInt(this.data.permission_id),
-            permission_name: '',
-            flag: 'add',
-            human_flag: item.human_flag,
-            response_id: parseInt(item.value),
-            response_type: item.type,
-            attach_filepath: this.data.attach_filepath,
-            attach_filename: this.data.attach_filename,
-            sendToFile :{filename : this.data.attach_filename}
-          }
-          this.optionSelect.process_type_id.find(item => {if(item.value == this.data.process_type_id) {data.process_type_name = item.name}})
-          this.optionSelect.permission_id.find(item => {if(item.value == this.data.permission_id) {data.permission_name = item.name}})
-          this.data.booking_follows.push(data)
-        }
-      })
-      let dataSave = {
-        create_type: parseInt(this.data.create_type),
-        creater_id: this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')),
-        book_category_id: parseInt(this.data.book_category_id),
-        book_type_id: parseInt(this.data.book_type_id),
-        secret_id: parseInt(this.data.secret_id),
-        speed_id: parseInt(this.data.speed_id),
-        subject: this.data.subject,
-        user_id: parseInt(localStorage.getItem('user_id')),
-        tag: tag,
-        attachments: fileAttachments,
-        booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
-        booking_follows: this.data.booking_follows,
-        booking_register_details: this.data.booking_register_details.filter(item => {
-          item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
-          item.booking_registers.filter(item2 => {
-            item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
-            item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
-            item2.optionSelect.department_dest_id.find(item3 => {
-              if(item3.value == item2.department_dest_id) {
-                item2.human_flag = item3.human_flag 
-                item2.response_id = item3.id}
-              })
-            return item2
-          })
-          return item
-        }),
-        flag: 'update',
-      }
-      this.showLoading = false
-      if (this.edit) {
-        if (this.flagSave == 1) {
-          console.log('test2')
-          this.showLoading = true
-          this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : '', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      } 
-    }  
   },
   mounted () {
     this.api_master()
