@@ -301,7 +301,7 @@
                   </div>
                 </div>
               </div>
-              <div class="text-end"> 
+              <div class="name mt-3 ms-2 required" v-show="item2.send_style_desc">วิธีการส่ง : {{item2.send_style_desc}}</div>
                 <button type="button" class="del-department-2" @click="delete_booking_registers(item2, item, index2)">
                   <i class="bi bi-trash-fill image-trash pointer"></i>
                 </button>
@@ -425,7 +425,7 @@
               </button>
             </div>
             <div class="footer-right" v-show="data.booking_register_details.length>0">
-              <button type="submit" class="button-success button-save" @click="flagSave ? 1 : 2" v-show="edit">
+              <button type="submit" class="button-success button-save" @click="flagSave=3" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -584,9 +584,10 @@
                                   :name="`department_dest_name${index}${index2}`" />
                     </div>
                     <div class="group-input w-50">
-                      <cpn-input  v-model="item2.email"
-                                  :name="`email${index}${index2}`"
-                                  :disabled="true" />
+                      <cpn-select v-model="item2.send_style_id"
+                                  :name="`send_style_id${index}${index2}`"
+                                  :optionSelect="modalSend.optionSelect.send_style"
+                                  :disabled="true"  />
                     </div>
                   </div>
                 </div> 
@@ -810,10 +811,10 @@ export default {
       modalSend: {
         showModal: false,
         select: false,
-        send_style_id: 0,
+        send_style_id: 6,
         booking_register_details: [],
         optionSelect: {
-          send_style: [{value: 1, name:'eMail(อัตโนมัติ)'}]
+          send_style: [{value: 1, name:'eMail(อัตโนมัติ)'}, {value: 2, name:'ไปรษณีย์'}, {value: 3, name:'รถนำส่ง'}, {value: 4, name:'รับด้วยตนเอง'}, {value: 5, name:'เจ้าของเรื่องส่งเอง'}, {value: 6, name:'ส่งผ่านระบบสารบรรณ'}, {value: 7, name:'ไม่ระบุ'}]
         }
       },
       modalNumber: {
@@ -868,13 +869,17 @@ export default {
           }
         }
       }
+      this.flagSave = 4
+      this.upload_file_all()
       this.modalNumber.showModal = false
     },
     sendMailClick() {
       let axiosArray = []
-      this.modalSend.booking_register_details.filter((row) => {
-        row.booking_registers.filter((row2) => {
+      this.modalSend.booking_register_details.filter((row, index) => {
+        row.booking_registers.filter((row2, index2) => {
           if(row2.select && (row2.book_id || row2.book_id == 0) && (row2.regis_id || row2.regis_id == 0)) {
+            this.data.booking_register_details[index].booking_registers[index2].send_style_id = this.modalSend.send_style_id
+            this.data.booking_register_details[index].booking_registers[index2].send_style_desc = this.modalSend.optionSelect.send_style.filter(row=>row.value == this.modalSend.send_style_id)[0]?.name || ''
             let dataSave = {
               send_style_id: parseInt(this.modalSend.send_style_id),
               book_id: parseInt(row2.book_id),
@@ -1496,7 +1501,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : 'บันทึกและส่งต่อ'}หรือไม่`,
+        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 3 ? 'บันทึกแบบ' : 'บันทึกและส่งต่อ'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -1837,59 +1842,21 @@ export default {
           })
           return item
         }),
-        flag: this.flagSave == 1 ? "draft" : '',
-        is_draft: this.flagSave == 1 || this.flagSave == 3 ? 1 : 0,
+        flag: this.flagSave == 1 ? "draft" : (this.flagSave == 3 || this.flagSave == 4) ? "update" : '',
+        is_draft: this.flagSave == 1 ? 1 : 0,
       }
-      this.showLoading = false
-      if (this.edit) {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : '', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.put(`/booking-out/${this.$route.params.id}`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
+      this.showLoading = true
+      this.axios[_this.edit ? 'put' : 'post'](`/booking-out${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
+      .then(() => { 
+        this.showLoading = false
+        if (this.flagSave != 4) {
+          this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
         }
-      } else {
-        if (this.flagSave == 1) {
-          this.showLoading = true
-          this.axios.post(`/booking-out`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกแบบร่างสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        } else {
-          this.showLoading = true
-          this.axios.post(`/booking-out`, dataSave)
-          .then(() => { 
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'success', title: 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
-          })
-          .catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
-        }
-      }
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
     },
     api_detail() {
       this.showLoading = true
