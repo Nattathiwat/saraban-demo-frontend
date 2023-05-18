@@ -425,7 +425,7 @@
               </button>
             </div>
             <div class="footer-right" v-show="data.booking_register_details.length>0">
-              <button type="submit" class="button-success" @click="flagSave ? 1 : 2" v-show="edit">
+              <button type="submit" class="button-success button-save" @click="flagSave ? 1 : 2" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -2611,6 +2611,11 @@ export default {
 
           .button-success {
             width: 175px;
+            margin-right: 20px;
+          }
+
+          .button-save {
+            width: 120px;
             margin-right: 20px;
           }
 

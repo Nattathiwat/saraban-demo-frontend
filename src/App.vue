@@ -13,7 +13,7 @@
               ระบบสารบรรณอิเล็กทรอนิกส์
             </div>
           </div>
-          <div class="group-list-head" v-if="routePath('/automail/')">
+          <div class="group-list-head" v-if="routePath('/automail/') && false">
             <div class="list-navbar-group">
               <div class="list-navbar pointer" :class="routePath('/automail/sendmail') ? 'active' : ''" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
                 <div class="group-image">
@@ -72,7 +72,7 @@
                 งานของกอง
               </div>
             </div>
-            <div class="list-navbar-group" >
+            <div class="list-navbar-group" v-if="false">
               <div class="list-navbar pointer" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
                 <div class="group-image">
                   <img src="@/assets/images/navbar/square.svg" class="icon-square">
@@ -87,6 +87,25 @@
                 รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
               </div>
               <div v-show="iconAngle.automail" class="list-navbar-sub pointer" @click="automailClick('automail-sendmail-logs')">
+                <div class="icon-circle" />
+                บันทึกการส่งอีเมล
+              </div>
+            </div>
+            <div class="list-navbar-group">
+              <div class="list-navbar pointer" :class="routePath('/automail/sendmail') ? 'active' : ''" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
+                <div class="group-image">
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
+                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
+                </div>
+                รายการส่งอีเมล
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
+              </div>
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail' || $route.name == 'automail-sendmail-list' || $route.name == 'automail-sendmail-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail'})">
+                <div class="icon-circle" />
+                รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
+              </div>
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail-logs' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail-logs'})">
                 <div class="icon-circle" />
                 บันทึกการส่งอีเมล
               </div>
