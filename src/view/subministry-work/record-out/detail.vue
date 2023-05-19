@@ -501,6 +501,7 @@ export default {
         params: {
           keyword: e.target.value,
           department_id: localStorage.getItem('department_id'),
+          subministry_id : parseInt(localStorage.getItem('subministry_id'))
         }
       })
       .then((response) => {
@@ -513,26 +514,6 @@ export default {
             return item
           })
           this.optionSelect.sendTo = response.data.data
-        }
-      })
-    },
-    keyupDepartment(e, data) {
-      data.optionSelect.department_dest_id = []
-      this.axios.get('master-data/department-user/booking-note-out', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.desc
-            item.human_flag = item.human_flag
-            item.response_type = item.type
-            return item
-          })
-          data.optionSelect.department_dest_id = response.data.data
         }
       })
     },
