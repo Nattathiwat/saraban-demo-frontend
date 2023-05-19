@@ -113,7 +113,7 @@
                 <i class="bi bi-list-ol me-2"></i>
                 ออกเลขทั้งหมด
             </button>
-            <button type="button" class="add-send" @click="modal_send()" v-if="data.booking_register_details.length>0">
+            <button type="button" class="add-send" @click="modal_send()" v-if="data.booking_register_details.length>0 && data.is_show_send_style_button">
                 <i class="bi bi-send"></i>
                 เลือกวิธีการส่ง
             </button>
@@ -408,7 +408,11 @@
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
-              <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo.length<1">
+              <button type="submit" class="button-success" @click="flagSave=5" v-if="button_send_bookout">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                ส่งหนังสือออก
+              </button>
+              <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo.length<1" v-if="!button_send_bookout">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกและส่งต่อ
               </button>
@@ -798,7 +802,8 @@ export default {
         showModal: false,
         select: false,
         booking_register_details: [],
-      }
+      },
+      button_send_bookout: false
     }
   },
   methods: {
@@ -819,6 +824,7 @@ export default {
               this.showLoading = false
               this.data.booking_register_details[index].booking_registers.filter(row2 => {
                 row2.book_out_num = response.data.data.out_document_number
+                row2.is_real_book_out_num = true
               })
             }).catch((error) => {
               this.showLoading = false
@@ -838,6 +844,7 @@ export default {
               .then((response) => {
                 this.showLoading = false
                 this.data.booking_register_details[index].booking_registers[index2].book_out_num = response.data.data.out_document_number
+                this.data.booking_register_details[index].booking_registers[index2].is_real_book_out_num = true
               }).catch((error) => {
                 this.showLoading = false
                 this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -871,7 +878,9 @@ export default {
       if (axiosArray.length>0) {
         this.axios.all([...axiosArray])
         .then(this.axios.spread(() => {
-         this.modalSend.showModal = false
+          this.modalSend.showModal = false
+          this.flagSave = 6
+          this.upload_file_all()
         })).catch((error) => {
           this.showLoading = false
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -1486,7 +1495,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 3 ? 'บันทึกแบบ' : 'บันทึกและส่งต่อ'}หรือไม่`,
+        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 3 ? 'บันทึกแบบ' : this.flagSave == 5 ? 'ส่งหนังสือออก' : 'บันทึกและส่งต่อ'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -1828,15 +1837,18 @@ export default {
           })
           return item
         }),
-        flag: this.flagSave == 1 ? "draft" : (this.flagSave == 3 || this.flagSave == 4) ? "update" : '',
+        flag: this.flagSave == 1 ? "draft" : (this.flagSave == 3 || this.flagSave == 4 || this.flagSave == 5 || this.flagSave == 6) ? "update" : '',
         is_draft: this.flagSave == 1 ? 1 : 0,
+        is_show_send_style_button: this.data.booking_follows ? true : this.flagSave == 5
       }
       this.showLoading = true
       this.axios[_this.edit ? 'put' : 'post'](`/booking-out${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
       .then(() => { 
         this.showLoading = false
-        if (this.flagSave != 4) {
+        if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
           this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        } else {
+          this.api_detail()
         }
       })
       .catch((error) => {
@@ -1871,21 +1883,29 @@ export default {
             this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
           })
         })
+        let button_send_bookout = []
         this.data.booking_register_details.filter(item=>{
           item.optionSelect = {signer_id: this.optionSelectDefault.signer_id}
           item.signer_id = ''
           item.num = '1'
           item.flag = 'edit'
           item.booking_registers.filter(item2 => {
+            if (item2.is_real_book_out_num && item2.department_dest_id && item2.is_signed) {
+              button_send_bookout.push(true)
+            } else {
+              button_send_bookout.push(false)
+            }
             item2.optionSelect = {signer_id: this.optionSelectDefault.signer_id, department_dest_id: this.optionSelectDefault.department_dest_id}
             item2.flag = 'edit'
             item2.main_link = item2.main_filepath? this.backendport+'/'+item2.main_filepath : ''
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
             item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id 
+            item2.send_style_desc = this.modalSend.optionSelect.send_style.filter(row=>row.value == item2.send_style_id)[0]?.name || ''
             return item2
           })
           return item
         })
+        this.button_send_bookout = button_send_bookout.every(status => status)
         this.data.attachments.filter(item => {
           item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
@@ -1931,12 +1951,7 @@ export default {
           book_type : 2
         }
       })
-      const request9 = this.axios.get('/master-data/department-user/booking-out' , {
-        params:{
-          subministry_id : parseInt(localStorage.getItem('subministry_id')),
-          department_id : parseInt(localStorage.getItem('department_id'))
-        }
-      })
+      const request9 = this.axios.get('/master-data/department-user')
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
