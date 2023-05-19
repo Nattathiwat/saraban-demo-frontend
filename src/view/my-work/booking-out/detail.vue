@@ -1860,12 +1860,20 @@ export default {
       }
       this.showLoading = true
       this.axios[_this.edit ? 'put' : 'post'](`/booking-out${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
-      .then(() => { 
+      .then((response) => { 
         this.showLoading = false
         if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
           this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
         } else {
-          this.api_detail()
+          this.$router.push({ 
+            name: 'subministry-work.booking-out-edit',
+            params: {id: response.data.data.id},
+            query: {
+              page: this.$route.query.page,
+              perPage: this.$route.query.perPage
+            }
+          }).catch(()=>{});
+          this.api_detail(response.data.data.id)
         }
       })
       .catch((error) => {
@@ -1873,9 +1881,9 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    api_detail() {
+    api_detail(id) {
       this.showLoading = true
-      this.axios.get(`/booking-out/${this.$route.params.id}`)
+      this.axios.get(`/booking-out/${id ? id : this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data, ...JSON.parse(JSON.stringify(response.data.data))}
