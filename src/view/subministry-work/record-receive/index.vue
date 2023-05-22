@@ -214,7 +214,7 @@ export default {
                     regis_id: row.regis_id,
                     book_type: parseInt(row.book_type),
                     human_flag: row.human_flag,
-                    response_id: parseInt(row.response)
+                    response_id: parseInt(row.response_id)
                   }
                   if (row.selected) {
                     axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))

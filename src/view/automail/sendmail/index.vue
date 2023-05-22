@@ -124,28 +124,29 @@
                 </tr>
                 <template v-for="(item2, index2) in item.book_series" :key="index2">
                   <tr class="tbody-row" :class="(index%2 == 0) ? 'color-tr3': 'color-tr3'">
-                    <td colspan="10" class="col2" style="text-align: left;">ชุดที่{{item2.no}}</td>
+                    <td colspan="9" class="col2" style="text-align: left;">ชุดที่ #{{item2.no}}</td>
+                    <td class="col11">
+                      <div class="group-icon">
+                        <img @click="listClick(item2)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
+                      </div>
+                    </td>
                   </tr>
                   <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"  :class="(index3%2 != 0) ? 'color-tr1': 'color-tr2'">
                     <td class="col1">
-                      <div>{{index3+1}} {{item3.book_out_document_number}}</div>
                       <div>{{item3.book_regis_name}}</div>
                     </td>
                     <td class="col2">
-                      <div>{{item3.as_of_date}}</div>
-                      <div>{{item3.from}} ถึง {{item3.to}}</div>
                     </td>
-                    <td class="col3"></td>
-                    <td class="col4"></td>
+                    <td class="col3">{{item3.book_out_document_number}}</td>
+                    <td class="col4">{{item3.book_regis_name}}</td>
                     <td class="col5"></td>
                     <td class="col6"></td>
-                    <td class="col7"></td>
-                    <td class="col8"></td>
-                    <td class="col9"></td>
+                    <td class="col7">{{item3.as_of_date}}</td>
+                    <td class="col8">{{item3.from}}</td>
+                    <td class="col9">{{item3.to}}</td>
                     <td class="col11">
                       <div class="group-icon">
-                        <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
-                        <img @click="sendmailClick(item)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
+                        <img @click="sendmailClick(item3)" src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send pointer">
                       </div>
                     </td>
                   </tr>
@@ -207,20 +208,20 @@ export default {
     }
   },
   methods: {
-    sendmailClick(item) {
+    sendmailClick(item3) {
       this.$router.push({ 
         name: 'automail-sendmail-edit',
-        params: {id: item.id},
+        params: {id: item3.id},
         query: {
           page: this.data.page,
           perPage: this.data.perPage
         }
       }).catch(()=>{});
     },
-    listClick(item) {
+    listClick(item2) {
       this.$router.push({ 
         name: 'automail-sendmail-list',
-        params: {id: item.id},
+        params: {id: item2.book_regis_id},
         query: {
           page: this.data.page,
           perPage: this.data.perPage
