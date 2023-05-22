@@ -1149,6 +1149,9 @@ export default {
                   signer_id: this.optionSelectDefault.signer_id,
                   department_dest_id: this.optionSelectDefault.department_dest_id
                 },
+                human_flag: item.human_flag,
+                response_id: parseInt(item.value),
+                response_type: item.type,
               })
             }).catch((error) => {
               this.showLoading = false
@@ -1169,8 +1172,8 @@ export default {
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
               human_flag: item.human_flag,
-                response_id: parseInt(item.value),
-                response_type: item.type,
+              response_id: parseInt(item.value),
+              response_type: item.type,
             })
           }
         } else {
@@ -1196,8 +1199,8 @@ export default {
                 department_dest_id: this.optionSelectDefault.department_dest_id
               },
               human_flag: item.human_flag,
-            response_id: parseInt(item.value),
-            response_type: item.type,
+              response_id: parseInt(item.value),
+              response_type: item.type,
             })
           }).catch((error) => {
             this.showLoading = false
@@ -1233,6 +1236,7 @@ export default {
       this.data.sendTo.filter(item => {
         if (!this.data.booking_follows.some(el => el.department_id === item.value && el.flag != 'delete')) {
           let data = {
+            ...item,
             department_id: parseInt(item.value),
             department_name: item.name,
             comment: this.data.comment,
@@ -1859,7 +1863,7 @@ export default {
         is_show_send_style_button: this.data.booking_follows ? true : this.flagSave == 5
       }
       this.showLoading = true
-      this.axios[_this.edit ? 'put' : 'post'](`/booking-out${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
+      this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then((response) => { 
         this.showLoading = false
         if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
@@ -1873,7 +1877,10 @@ export default {
               perPage: this.$route.query.perPage
             }
           }).catch(()=>{});
-          this.api_detail(response.data.data.id)
+          if (response.data.data.id) {
+            this.edit = true
+            this.api_detail(response.data.data.id)
+          }
         }
       })
       .catch((error) => {
