@@ -133,7 +133,7 @@
                   </tr>
                   <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"  :class="(index3%2 != 0) ? 'color-tr1': 'color-tr2'">
                     <td class="col1">
-                      <div>{{item3.book_regis_name}}</div>
+                      <div></div>
                     </td>
                     <td class="col2">
                     </td>

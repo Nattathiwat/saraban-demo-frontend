@@ -167,7 +167,8 @@
                     <cpn-autoComplete v-model="item.signer_id"
                                       :name="`signer_id${index}`"
                                       :optionSelect="item.optionSelect.signer_id"
-                                      @change="change_signer_id(index)" />
+                                      @change="change_signer_id(index)" 
+                                      @keyup="keyup_signer"/>
 
                     <cpn-checkbox v-model="item.is_signed"
                                   :name="`is_signed${index}`"
@@ -264,7 +265,8 @@
                     <div class="d-flex">
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
-                                        :optionSelect="item2.optionSelect.signer_id" />
+                                        :optionSelect="item2.optionSelect.signer_id" 
+                                        @keyup="keyup_signer($event,item2)"/>
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
@@ -1028,6 +1030,24 @@ export default {
           })
         }
       }
+    },
+    keyup_signer(e,item2){
+      this.axios.get('/user/signer', {
+        params: {
+          keyword: e.target.value,
+          user_id : localStorage.getItem('user_id')
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item2.id
+            item.name = item2.fname + ' ' + item2.lname
+            return item
+          })
+          tem2.optionSelect.signer_id = response.data.data
+        }
+      })
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
@@ -1842,7 +1862,7 @@ export default {
       this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then((response) => { 
         this.showLoading = false
-        if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
+        if (this.flagSave != 4  && this.flagSave != 6) {
           this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
         } else {
           this.$router.push({ 

@@ -574,32 +574,13 @@ export default {
         }
       }
     },
-    keyup_department(e) {
-      this.optionSelect.department_id = []
-      this.axios.get('/master-data/department-user', {
-        params: {
-          keyword: e.target.value
-        }
-      })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.desc
-            item.human_flag = item.human_flag
-            item.response_type = item.type
-            return item
-          })
-          this.optionSelect.department_id = response.data.data
-        }
-      })
-    },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department-user', {
+      this.axios.get('/master-data/department-user/receive-note', {
         params: {
           keyword: e.target.value,
-          user_id: parseInt(localStorage.getItem('user_id'))
+          user_id: parseInt(localStorage.getItem('user_id')),
+          subministry_id: parseInt(localStorage.getItem('subministry_id')),
         }
       })
       .then((response) => {
@@ -1116,10 +1097,10 @@ export default {
               regis_id: parseInt(_this.data.book_category_id),
               book_type: 4,
               human_flag: _this.data.human_flag,
-              response_id: parseInt(_this.data.response_id),
-              user_id: parseInt(localStorage.getItem('user_id'))  
-              // receive_regis_id : parseInt(_this.$route.query.regis_id),
-              // receive_document_number: _this.data.receive_document_number
+              response_id: parseInt(_this.$route.query.response_id),
+              user_id: parseInt(localStorage.getItem('user_id')),
+              page_flag : 'owner',
+              flag: 'confirm',
             }
               _this.showLoading = true
               _this.axios.put(`/booking-receive/${_this.$route.params.id}`, groupdata)
