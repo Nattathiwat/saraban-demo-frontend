@@ -1113,7 +1113,6 @@ export default {
             .then((response) => {
               this.showLoading = false
               item.booking_registers.push({
-                ...item,
                 book_out_num: response.data.data.out_document_number,
                 greeting: '',
                 department_dest_id: '',
@@ -1136,7 +1135,6 @@ export default {
             })
           } else {
             item.booking_registers.push({
-              ...item,
               book_out_num: item.booking_registers[0].book_out_num,
               greeting: '',
               department_dest_id: '',
@@ -1164,7 +1162,6 @@ export default {
           .then((response) => {
             this.showLoading = false
             item.booking_registers.push({
-              ...item,
               book_out_num: response.data.data.out_document_number,
               greeting: '',
               department_dest_id: '',
@@ -1842,7 +1839,7 @@ export default {
         is_show_send_style_button: this.data.booking_follows ? true : this.flagSave == 5
       }
       this.showLoading = true
-      this.axios[_this.edit ? 'put' : 'post'](`/booking-out${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
+      this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then((response) => { 
         this.showLoading = false
         if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
@@ -1856,7 +1853,10 @@ export default {
               perPage: this.$route.query.perPage
             }
           }).catch(()=>{});
-          this.api_detail(response.data.data.id)
+          if (response.data.data.id) {
+            this.edit = true
+            this.api_detail(response.data.data.id)
+          }
         }
       })
       .catch((error) => {
