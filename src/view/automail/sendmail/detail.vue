@@ -788,7 +788,7 @@ export default {
         is_draft: this.flag == 1,
         user_id: parseInt(localStorage.getItem('user_id'))
       }
-      this.axios.post(`/book-out-external/email-information/${this.data.id}`, dataSave)
+      this.axios.post(`/book-out-external/email-information`, dataSave)
       .then((response) => { 
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'success', title: this.flag == 1 ? 'ทำการบันทึกร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.apiDetail() }}
