@@ -1499,7 +1499,6 @@ export default {
     },
     add_booking_register_details_modal() {
       this.modalRegiter.booking_register_details.push({
-        ...item,
         regis_id: '',
         regis_date: this.assetsUtils.currentDate(),
         book_out_num_type: '0',
@@ -1510,8 +1509,6 @@ export default {
           book_out_num_type: this.optionSelectDefault.book_out_num_type,
           send_method_id: this.optionSelectDefault.send_method_id
         },
-        response_id: item.id,
-        response_type:item.type,
         flag: 'add',
       })
     },
