@@ -974,7 +974,6 @@ export default {
         }
       })
       .then((response) => {
-        console.log('tt')
         this.showLoading = false
         this.data.history.data = response.data.data
         this.data.history.data.filter((item, index) => {
