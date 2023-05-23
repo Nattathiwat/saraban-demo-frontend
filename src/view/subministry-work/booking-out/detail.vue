@@ -974,7 +974,6 @@ export default {
         }
       })
       .then((response) => {
-        console.log('tt')
         this.showLoading = false
         this.data.history.data = response.data.data
         this.data.history.data.filter((item, index) => {
@@ -1872,8 +1871,8 @@ export default {
           })
           return item
         }),
-        flag: this.flagSave == 1 ? "draft" : (this.flagSave == 3 || this.flagSave == 4 || this.flagSave == 5 || this.flagSave == 6) ? "update" : '',
-        is_draft: this.flagSave == 1 ? 1 : 0,
+        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : (this.flagSave == 3 || this.flagSave == 5) ? 'update' : ((this.flagSave == 4 || this.flagSave == 6) && this.edit) ? 'update' : 'draft',
+        is_draft: this.flagSave == 2 ? 0 : 1,
         is_show_send_style_button: this.data.booking_follows ? true : this.flagSave == 5
       }
       this.showLoading = true

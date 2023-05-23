@@ -1003,7 +1003,6 @@ export default {
     },
     api_detail() {
       this.showLoading = true
-      console.log('dd')
       this.axios.get(`/booking-receive/waiting-receive/${this.$route.params.id}`, {
         params:{
           book_type : this.$route.query.book_type ,
