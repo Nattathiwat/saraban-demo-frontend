@@ -81,8 +81,8 @@
                         <span class="span">
                           {{item2.department_name}}
                         </span>
-                        <div v-if="item2.receive_date" class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
-                        <div v-else class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div>
+                        <!-- <div v-if="item2.receive_date" class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
+                        <div v-else class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div> -->
                       </div>
                     </td>
                     <td class="col3">{{item2.subject}}</td>
@@ -99,7 +99,15 @@
                         </div>
                       </div>
                     </td>
-                    <td class="col8">{{item2.status_name}}</td>
+                    <td class="col8">{{}}
+                      <div class="group-show date">
+                        <span class="span">
+                          {{item2.status_name}}
+                        </span>
+                        <div v-if="item2.receive_date" class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
+                        <div v-else class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div>
+                      </div>
+                    </td>
                   </tr>
                 </template>
                 <tr v-if="item.select && item.booking_follows.length > 1">
