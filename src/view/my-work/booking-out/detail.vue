@@ -436,7 +436,7 @@
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
-              <button type="submit" class="button-success" @click="flagSave=5" v-if="button_send_bookout">
+              <button type="submit" class="button-success" @click="flagSave=5" v-if="button_send_bookout && !data.is_show_send_style_button">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ส่งหนังสือออก
               </button>
@@ -1898,7 +1898,7 @@ export default {
         }),
         flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : (this.flagSave == 3 || this.flagSave == 5) ? 'update' : ((this.flagSave == 4 || this.flagSave == 6) && this.edit) ? 'update' : 'draft',
         is_draft: this.flagSave == 2 ? 0 : 1,
-        is_show_send_style_button: this.data.booking_follows ? true : this.flagSave == 5
+        is_show_send_style_button: this.data.booking_follows.length > 0 ? true : this.flagSave == 5 || this.data.is_show_send_style_button
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
