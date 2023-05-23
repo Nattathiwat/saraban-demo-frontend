@@ -663,11 +663,12 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department-user', {
+      this.axios.get('/master-data/department-user/booking-note-out', {
         params: {
           keyword: e.target.value,
           department_id: localStorage.getItem('department_id'),
-          user_id: localStorage.getItem('user_id'),
+          subministry_id : localStorage.getItem('subministry_id'),
+          // user_id: localStorage.getItem('user_id'),
         }
       })
       .then((response) => {

@@ -168,7 +168,7 @@
                                       :name="`signer_id${index}`"
                                       :optionSelect="item.optionSelect.signer_id"
                                       @change="change_signer_id(index)" 
-                                      @keyup="keyup_signer"/>
+                                      @keyup="keyup_signer($event,item)"/>
 
                     <cpn-checkbox v-model="item.is_signed"
                                   :name="`is_signed${index}`"
@@ -266,7 +266,7 @@
                       <cpn-autoComplete v-model="item2.signer_id"
                                         :name="`signer_id${index}${index2}`"
                                         :optionSelect="item2.optionSelect.signer_id" 
-                                        @keyup="keyup_signer($event,item2)"/>
+                                        @keyup="keyup_signer2($event,item2)"/>
 
                       <cpn-checkbox v-model="item2.is_signed"
                                     :name="`is_signed${index}${index2}`"
@@ -1031,7 +1031,7 @@ export default {
         }
       }
     },
-    keyup_signer(e,item2){
+    keyup_signer2(e,item2){
       this.axios.get('/user/signer', {
         params: {
           keyword: e.target.value,
@@ -1041,11 +1041,29 @@ export default {
       .then((response) => {
         if(response.data.data) {
           response.data.data.filter(item => {
-            item.value = item2.id
-            item.name = item2.fname + ' ' + item2.lname
+            item.value = item.id
+            item.name = item.fname + ' ' + item.lname
             return item
           })
-          tem2.optionSelect.signer_id = response.data.data
+          item2.optionSelect.signer_id = response.data.data
+        }
+      })
+    },
+    keyup_signer(e,item){
+      this.axios.get('/user/signer', {
+        params: {
+          keyword: e.target.value,
+          user_id : localStorage.getItem('user_id')
+        }
+      })
+      .then((response) => {
+        if(response.data.data) {
+          response.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.fname + ' ' + item.lname
+            return item
+          })
+          item.optionSelect.signer_id = response.data.data
         }
       })
     },
