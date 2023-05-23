@@ -58,11 +58,9 @@
                   <td class="col7">
                     <div class="group-show">
                       <span class="span">
-                        {{item.creater_name}}
+                        {{item.booking_follows.length > 0 ? item.booking_follows[0].department_name+'...' : ''}}
                       </span>
-                      <div class="show-detail">{{item.creater_name}}
-                        <div v-if="false" class="image-size"></div>
-                      </div>
+                      <div class="show-detail" v-show="item.booking_follows.length > 0">{{creater_name(item.booking_follows)}}</div>
                     </div>
                   </td>
                   <td class="col8">{{item.status_name}}</td>
@@ -81,9 +79,7 @@
                         <span class="span">
                           {{item2.creater_name}}
                         </span>
-                        <div class="show-detail">{{item2.creater_name}}
-                          <div v-if="false" class="image-size"></div>
-                        </div>
+                        <div class="show-detail">{{item2.creater_name}}</div>
                       </div>
                     </td>
                     <td class="col8">{{item2.status_name}}</td>
@@ -137,6 +133,13 @@ export default {
     }
   },
   methods: {
+    creater_name(data) {
+      let text = ''
+      data.filter(row=>{
+        text += row.department_name + ', '
+      })
+      return text.slice(0, -2)
+    },
     selectedAll(event) {
       event.stopPropagation();
       this.data.select = !this.data.select;
@@ -420,7 +423,7 @@ export default {
             }
 
             .col7 {
-              min-width: 170px;
+              min-width: 200px;
               width: 15%;
             }
 
