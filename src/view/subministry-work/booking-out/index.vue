@@ -58,7 +58,7 @@
                   <td class="col7">
                     <div class="group-show">
                       <span class="span">
-                        {{item.booking_follows.length > 0 ? item.booking_follows[0].department_name+'...' : ''}}
+                        {{item.booking_follows.length > 0 ? item.booking_follows[0].response_name+'...' : ''}}
                       </span>
                       <div class="show-detail" v-show="item.booking_follows.length > 0">{{creater_name(item.booking_follows)}}</div>
                     </div>
@@ -67,8 +67,8 @@
                 </tr>
                 <template v-if="item.select && item.register_count > 1" v-for="(item2, index2) in item.booking_registers" :key="index2">
                   <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
-                    <td class="col0">{{index2+1}}</td>
-                    <td class="col1">{{item2.speed_name}}</td>
+                    <td class="col0">{{}}</td>
+                    <td class="col1">{{index2+1}}</td>
                     <td class="col2">{{item2.book_out_num}}</td>
                     <td class="col3">{{item2.subject}}</td>
                     <td class="col4">{{item2.department_name}}</td>
@@ -136,7 +136,7 @@ export default {
     creater_name(data) {
       let text = ''
       data.filter(row=>{
-        text += row.department_name + ', '
+        text += row.response_name + ', '
       })
       return text.slice(0, -2)
     },
