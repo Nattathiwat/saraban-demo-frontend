@@ -287,7 +287,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" @click="flagSave ? 1 : 2" v-show="edit">
+              <button type="submit" class="button-success" @click="flagSave=4" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -756,7 +756,7 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 2 ? 'บันทึกและส่งต่อ' : 'ออกเลขบันทึกภายใน'}หรือไม่`,
+        title: `คุณยืนยันการ${this.flagSave == 1 ? 'บันทึกแบบร่าง' : this.flagSave == 2 ? 'บันทึกและส่งต่อ' : this.flagSave == 3 ? 'ออกเลขบันทึกภายใน' : 'บันทึก'}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
@@ -933,7 +933,7 @@ export default {
         main_docs: filemain_docs,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
-        flag: this.flagSave == 1 ? "draft" : '',
+        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 3 || this.flagSave == 4 ? 'update' : '',
         greeting: this.data.greeting,
         desc: this.data.desc,
         regis_date: this.assetsUtils.currentDate(),
@@ -945,7 +945,7 @@ export default {
       this.axios[this.edit ? 'put' : 'post'](`/booking-note${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then(() => { 
         this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3 ? 'ทำการออกเลขบันทึกภายในสำเร็จ' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+        this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3 ? 'ทำการออกเลขบันทึกภายในสำเร็จแล้ว' : this.flagSave == 4 ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
       })
       .catch((error) => {
         this.showLoading = false

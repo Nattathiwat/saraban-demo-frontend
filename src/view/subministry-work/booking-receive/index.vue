@@ -271,7 +271,7 @@ export default {
               _this.modalAlert = {
                 showModal: true, 
                 type: 'success', 
-                title: 'ยืนยันรับเข้าสำเร็จ', 
+                title: 'ยืนยันรับเข้าสำเร็จแล้ว', 
                 msgSuccess: true, 
                 afterPressAgree() { 
                   _this.apigetimport() 
