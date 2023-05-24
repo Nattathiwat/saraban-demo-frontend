@@ -62,10 +62,18 @@
                             </div>
                             <div style="line-height: 2.0; font-size: 12px; color: #333333; font-family: Arial, sans-serif; margin-bottom: 20px; margin-top: 20px;">
                               <p style="font-size: 16px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0; margin-bottom: 15px;">
-                                {{ .Reply_message }}
+                                {{ if .Reply_message }}
+                                  {{ .Reply_message }}
+                                {{ else }}
+                                  “หากท่านได้รับอีเมลนี้แล้วกรุณาแจ้งการได้รับกลับมายังที่อยู่อีเมลนี้ด้วยจะขอบคุณยิ่ง”
+                                {{ end }}
                               </p>
                               <p id="Disclaimer" style="font-size: 15px; line-height: 2.0; color: #15466e; font-style: italic; word-break: break-word; text-align: left; margin: 0;  margin-bottom: 10px">
-                                {{ .Disclaimer }}
+                                {{ if .Disclaimer }}
+                                  {{ .Disclaimer }}
+                                {{ else }}
+                                  **อีเมล(และ/หรือเอกสารแนบ) นี้เป็นข้อมูลที่เป็นความลับและอาจเป็นข้อมูลที่เป็นเอกสิทธิ์เฉพาะบุคคล การนำข้อมูลดังกล่าวไปใช้หรือเปิดเผยให้บุคคลอื่นใดล่วงรู้เป็นการกระทำที่ไม่ได้รับอนุญาติหากท่านมิได้เป็นบุคคลที่อีเมลฉบับนี้ระบุถึงแล้ว กรุณาลบอีเมลนี้ออกจากคอมพิวเตอร์ที่ท่านได้รับทั้งนี้ ขอขอบคุณหากท่านได้แจ้งผู้ส่งถึงการจัดส่งอีเมลที่ผิดพลาดด้วย\n\t**This e-mail (and/or attachments) is confidential and may be privileged. Use or disclosure of it by anyone other than a designated address is unauthorized. If you are not intented recipient, please deleate this e-mail from computer on which you received it. We thank you for notifying us immediately.
+                                {{ end }}
                               </p>
                             </div>
                           </div>
