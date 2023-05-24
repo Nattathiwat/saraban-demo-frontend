@@ -1904,17 +1904,21 @@ export default {
         if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
           this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
         } else {
-          this.$router.push({ 
-            name: 'subministry-work.booking-out-edit',
-            params: {id: response.data.data.id},
-            query: {
-              page: this.$route.query.page,
-              perPage: this.$route.query.perPage
+          if (this.edit) {
+            this.api_detail()
+          } else {
+            this.$router.push({ 
+              name: 'subministry-work.booking-out-edit',
+              params: {id: response.data.data.id},
+              query: {
+                page: this.$route.query.page,
+                perPage: this.$route.query.perPage
+              }
+            }).catch(()=>{});
+            if (response.data.data.id) {
+              this.edit = true
+              this.api_detail(response.data.data.id)
             }
-          }).catch(()=>{});
-          if (response.data.data.id) {
-            this.edit = true
-            this.api_detail(response.data.data.id)
           }
         }
       })
