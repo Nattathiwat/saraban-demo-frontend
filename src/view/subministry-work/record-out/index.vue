@@ -70,7 +70,15 @@
                       </div>
                     </div>
                   </td>
-                  <td class="col8">{{item.status_name}}</td>
+                  <td class="col8">
+                    <div class="group-show date">
+                        <span class="span">
+                          {{item.status_name}}
+                        </span>
+                        <div v-if="item.receive_date" class="show-detail date">วันที่รับเข้า: {{item.receive_date}}</div>
+                        <div v-else class="show-detail date">วันที่ส่งออก: {{item.created_at}}</div>
+                      </div>
+                  </td>
                 </tr>
                 <template v-if="item.select && item.booking_follows.length > 1" v-for="(item2, index2) in item.booking_follows" :key="index2">
                   <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
@@ -104,8 +112,8 @@
                         <span class="span">
                           {{item2.status_name}}
                         </span>
-                        <div v-if="item2.receive_date" class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
-                        <div v-else class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div>
+                        <div class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
+                        <div  class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div>
                       </div>
                     </td>
                   </tr>

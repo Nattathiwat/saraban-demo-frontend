@@ -581,6 +581,7 @@ export default {
           keyword: e.target.value,
           user_id: parseInt(localStorage.getItem('user_id')),
           subministry_id: parseInt(localStorage.getItem('subministry_id')),
+          type : 0
         }
       })
       .then((response) => {
