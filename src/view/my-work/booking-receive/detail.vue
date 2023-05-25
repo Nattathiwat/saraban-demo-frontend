@@ -987,7 +987,7 @@ export default {
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
         user_id: parseInt(localStorage.getItem('user_id')),
-        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? 'confirm' : '',
+        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : '',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
         page_flag : ''
