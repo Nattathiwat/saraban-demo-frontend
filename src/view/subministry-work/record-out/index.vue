@@ -65,8 +65,7 @@
                       <span class="span">
                         {{item.response_name}}
                       </span>
-                      <div class="show-detail">{{item.response_name}}
-                        <div v-if="false" class="image-size"></div>
+                      <div class="show-detail" v-if="item.response_name">{{item.response_name}}
                       </div>
                     </div>
                   </td>
@@ -75,8 +74,14 @@
                         <span class="span">
                           {{item.status_name}}
                         </span>
-                        <div v-if="item.receive_date" class="show-detail date">วันที่รับเข้า: {{item.receive_date}}</div>
-                        <div v-else class="show-detail date">วันที่ส่งออก: {{item.created_at}}</div>
+                        <div class="show-detail date">
+                          <div v-if="item.receive_date">
+                            วันที่รับเข้า: {{item.receive_date}}
+                          </div>
+                          <div v-if="item.created_at">
+                            วันที่ส่งออก: {{item.created_at}}
+                          </div>
+                        </div>
                       </div>
                   </td>
                 </tr>
@@ -89,8 +94,6 @@
                         <span class="span">
                           {{item2.department_name}}
                         </span>
-                        <!-- <div v-if="item2.receive_date" class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
-                        <div v-else class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div> -->
                       </div>
                     </td>
                     <td class="col3">{{item2.subject}}</td>
@@ -102,8 +105,7 @@
                         <span class="span">
                           {{item2.creater_name}}
                         </span>
-                        <div class="show-detail">{{item2.creater_name}}
-                          <div v-if="false" class="image-size"></div>
+                        <div class="show-detail" v-if="item2.creater_name">{{item2.creater_name}}
                         </div>
                       </div>
                     </td>
@@ -112,8 +114,14 @@
                         <span class="span">
                           {{item2.status_name}}
                         </span>
-                        <div class="show-detail date">วันที่รับเข้า: {{item2.receive_date}}</div>
-                        <div  class="show-detail date">วันที่ส่งออก: {{item2.created_at}}</div>
+                        <div class="show-detail date">
+                          <div v-if="item2.receive_date">
+                            วันที่รับเข้า: {{item2.receive_date}}
+                          </div>
+                          <div v-if="item2.created_at">
+                            วันที่ส่งออก: {{item2.created_at}}
+                          </div>
+                        </div>
                       </div>
                     </td>
                   </tr>
