@@ -1068,7 +1068,7 @@ export default {
     },
     keyup_send_to(e) {
       this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department-user/booking-out', {
+      this.axios.get('/master-data/department-user/booking-out/subministry', {
         params: {
           keyword: e.target.value,
           department_id: localStorage.getItem('department_id'),
@@ -1495,6 +1495,8 @@ export default {
           send_method_id: this.optionSelectDefault.send_method_id,
           department_dest_id: [],
         },
+        // response_type: item.type,
+        // response_id: item.id
       }]
     },
     add_booking_register_details_modal() {
@@ -1510,6 +1512,8 @@ export default {
           send_method_id: this.optionSelectDefault.send_method_id
         },
         flag: 'add',
+        // response_type: item.type,
+        // response_id: item.id
       })
     },
     back() {
@@ -1575,7 +1579,7 @@ export default {
               this.showLoading = false
               item.department_dest_id.filter(item2 => {
                 data.booking_registers.push({
-                  ...item2,
+                  ...item2,  
                   book_out_num: response.data.data.out_document_number,
                   greeting: '',
                   department_dest_id: item2.value,

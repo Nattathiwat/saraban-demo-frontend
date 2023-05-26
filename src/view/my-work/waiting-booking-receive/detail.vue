@@ -620,7 +620,7 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/booking-receive/waiting-receive/${_this.$route.params.id}`)
+          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
