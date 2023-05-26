@@ -135,11 +135,11 @@
           </div>
           <div class="line"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="add-send" @click="modal_number()" v-if="data.booking_register_details.length>0">
+            <button type="button" class="add-send" @click="modal_number()" v-if="check_modal_number()">
                 <i class="bi bi-list-ol me-2"></i>
                 ออกเลขทั้งหมด
             </button>
-            <button type="button" class="add-send" @click="modal_send()" v-if="data.booking_register_details.length>0 && data.is_show_send_style_button">
+            <button type="button" class="add-send" @click="modal_send()" v-if="check_modal_send()">
                 <i class="bi bi-send"></i>
                 เลือกวิธีการส่ง
             </button>
@@ -553,10 +553,11 @@
                   <div class="name">วิธีการส่ง</div>
                   <cpn-select v-model="modalSend.send_style_id"
                               name="send_style_id"
+                              placeholder="กรุณาเลือกวิธีการส่งหนังสือ"
                               :optionSelect="modalSend.optionSelect.send_style" />
                 </div>
               </div>
-              <div class="message" v-for="(item, index) in modalSend.booking_register_details" :key="index">
+              <div class="message" v-for="(item, index) in modalSend.booking_register_details.filter(el => el.flag != 'delete')" :key="index">
                 <div class="d-flex">
                   <div class="col-checkbox">
                     <cpn-checkbox v-model="item.select"
@@ -578,7 +579,7 @@
                 </div>
                 <div class="detail-sub">
                   <div class="mb-3">หน่วยงานปลายทาง</div>
-                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers" :key="index2">
+                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers.filter(el => el.flag != 'delete')" :key="index2">
                     <div class="group-input checkbox">
                     <cpn-checkbox v-model="item2.select"
                                   @change="selected2(item, item2)"
@@ -637,7 +638,7 @@
                                 label="ทั้งหมด" />
                 </div>
               </div>
-              <div class="message" v-for="(item, index) in modalNumber.booking_register_details" :key="index">
+              <div class="message" v-for="(item, index) in modalNumber.booking_register_details.filter(el => el.flag != 'delete')" :key="index">
                 <div class="d-flex">
                   <div class="col-checkbox">
                     <cpn-checkbox v-model="item.select"
@@ -659,7 +660,7 @@
                 </div>
                 <div class="detail-sub">
                   <div class="mb-3">หน่วยงานปลายทาง</div>
-                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers" :key="index2">
+                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers.filter(el => el.flag != 'delete')" :key="index2">
                     <div class="group-input index">{{index2+1}}.</div>
                     <div class="group-input">
                       <cpn-input  v-model="item2.department_dest_name"
@@ -820,10 +821,10 @@ export default {
       modalSend: {
         showModal: false,
         select: false,
-        send_style_id: 6,
+        send_style_id: '',
         booking_register_details: [],
         optionSelect: {
-          send_style: [{value: 1, name:'eMail(อัตโนมัติ)'}, {value: 2, name:'ไปรษณีย์'}, {value: 3, name:'รถนำส่ง'}, {value: 4, name:'รับด้วยตนเอง'}, {value: 5, name:'เจ้าของเรื่องส่งเอง'}, {value: 6, name:'ส่งผ่านระบบสารบรรณ'}, {value: 7, name:'ไม่ระบุ'}]
+          send_style: [{value: 1, name:'Email'}, {value: 2, name:'ไปรษณีย์'}, {value: 3, name:'รถนำส่ง'}, {value: 4, name:'รับด้วยตนเอง'}, {value: 5, name:'เจ้าของเรื่องส่งเอง'}, {value: 6, name:'ส่งผ่านระบบสารบรรณ'}, {value: 7, name:'ไม่ระบุ'}]
         }
       },
       modalNumber: {
@@ -835,6 +836,26 @@ export default {
     }
   },
   methods: {
+    check_modal_number() {
+      let show = false
+      this.data.booking_register_details.filter(el => el.flag != 'delete').filter(row => {
+        row.booking_registers.filter(el => el.flag != 'delete').filter(row2 => {
+          if (!row2.is_real_book_out_num) {
+            show = true
+          }
+        })
+      })
+      return show
+    },
+    check_modal_send() {
+      let show = false
+      this.data.booking_register_details.filter(el => el.flag != 'delete').filter(row => {
+        row.booking_registers.filter(el => el.flag != 'delete').filter(row2 => {
+          show = true
+        })
+      })
+      return this.data.is_show_send_style_button ? show : false
+    },
     async sendNumberClick() {
       for (let i = 0; i < this.modalNumber.booking_register_details.length; i++) {
         let row = this.modalNumber.booking_register_details[i]
@@ -906,7 +927,7 @@ export default {
       if (axiosArray.length>0) {
         this.axios.all([...axiosArray])
         .then(this.axios.spread(() => {
-          this.modalSend.showModal = false
+          // this.modalSend.showModal = false
           this.flagSave = 6
           this.upload_file_all()
         })).catch((error) => {
@@ -914,7 +935,7 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       } else {
-        this.modalSend.showModal = false
+        // this.modalSend.showModal = false
       }
     },
     selectedAll(name) {
@@ -1165,7 +1186,7 @@ export default {
     async add_booking_registers(item) {
       for (let i = 0; i < item.num; i++) {
         if (item.book_out_num_type == 0) {
-          if (item.booking_registers.length < 1) {
+          if (item.booking_registers.filter(el => el.flag != 'delete').length < 1) {
             this.showLoading = true
             await this.axios.post(`/booking-out/generate-number-draft`, {
               department_id: parseInt(localStorage.getItem('department_id')), 
@@ -1190,6 +1211,7 @@ export default {
                 human_flag: item.human_flag,
                 response_id: parseInt(item.value),
                 response_type: item.type,
+                is_real_book_out_num: false
               })
             }).catch((error) => {
               this.showLoading = false
@@ -1212,6 +1234,7 @@ export default {
               human_flag: item.human_flag,
               response_id: parseInt(item.value),
               response_type: item.type,
+              is_real_book_out_num: item.booking_registers[0].is_real_book_out_num
             })
           }
         } else {
@@ -1239,6 +1262,7 @@ export default {
               human_flag: item.human_flag,
               response_id: parseInt(item.value),
               response_type: item.type,
+              is_real_book_out_num: false
             })
           }).catch((error) => {
             this.showLoading = false
@@ -1881,51 +1905,59 @@ export default {
         booking_follows: this.data.booking_follows,
         booking_register_details: this.data.booking_register_details.filter(item => {
           item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
+          item.optionSelect.signer_id = []
           item.booking_registers.filter(item2 => {
             item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
             item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
             item2.optionSelect.department_dest_id.find(item3 => {
               if(item3.value == item2.department_dest_id) {
                 item2.human_flag = item3.human_flag 
-                item2.response_id = item3.id}
-              })
+                item2.response_type = item3.response_type 
+                item2.response_id = item3.id
+              }
+            })
+            item2.optionSelect.department_dest_id = []
+            item2.optionSelect.signer_id = []
             return item2
           })
           return item
         }),
         flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : (this.flagSave == 3 || this.flagSave == 5) ? 'update' : ((this.flagSave == 4 || this.flagSave == 6) && this.edit) ? 'update' : 'draft',
         is_draft: this.flagSave == 2 ? 0 : 1,
-        is_show_send_style_button: this.data.booking_follows.length > 0 ? true : this.flagSave == 5 || this.data.is_show_send_style_button
+        is_show_send_style_button: this.flagSave == 5 || this.data.is_show_send_style_button
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then((response) => { 
         this.showLoading = false
         if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
-          this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
+          this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.checkPage(response) }}
         } else {
-          if (this.edit) {
-            this.api_detail()
-          } else {
-            this.$router.push({ 
-              name: 'subministry-work.booking-out-edit',
-              params: {id: response.data.data.id},
-              query: {
-                page: this.$route.query.page,
-                perPage: this.$route.query.perPage
-              }
-            }).catch(()=>{});
-            if (response.data.data.id) {
-              this.edit = true
-              this.api_detail(response.data.data.id)
-            }
-          }
+          this.checkPage(response)
         }
       })
       .catch((error) => {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
+    },
+    checkPage(response) {
+      if (this.edit) {
+        this.api_detail()
+      } else {
+        this.$router.push({ 
+          name: 'subministry-work.booking-out-edit',
+          params: {id: response.data.data.id},
+          query: {
+            page: this.$route.query.page,
+            perPage: this.$route.query.perPage
+          }
+        }).catch(()=>{});
+        if (response.data.data.id) {
+          this.edit = true
+          this.api_detail(response.data.data.id)
+        }
+      }
     },
     api_detail(id) {
       this.showLoading = true
