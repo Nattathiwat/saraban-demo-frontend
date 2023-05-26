@@ -157,7 +157,7 @@
                                 :optionSelect="optionSelect.send_type_id"/>
                   </div>
                   <div class="new-line">
-                    <div class="name">ลิงค์ดาวน์โหลดเอกสาร</div>
+                    <div class="name">ลิงก์ดาวน์โหลดเอกสาร</div>
                     <div class="group-recommend">
                       <cpn-input  v-model="item.link"
                                   :name="'link'+index"
@@ -205,7 +205,7 @@
                         <cpn-input  v-model="item2.filename"
                                     :name="'filename'+index2"
                                     :disabled="true"/>
-                        <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : ''})">
+                        <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : item2.link})">
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
                         <button type="button" class="button-del" @click="deleteFile(item, item2, index2)">
@@ -306,12 +306,13 @@ export default {
       data: {
         greeting: '',
         signature: '',
-        contact: 'โทร. 0 2280 9000 ต่อ .... (ชื่อผู้ติดต่อ ...)',
+        // contact: 'โทร. 0 2280 9000 ต่อ .... (ชื่อผู้ติดต่อ ...)',
+        contact: '',
         table: [],
         fileType: []
       },
       optionSelect: {
-        send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
+        send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงก์ข้างล่างนี้แทน'}]
       },
       indexTable: 0,
       flgTable: false
@@ -529,6 +530,7 @@ export default {
           row.attachments.filter(row2 => {
             row2.flag = 'edit'
           })
+          row.send_type_id = row.send_type_id ? row.send_type_id : 1
         })
         this.data.table = response.data.data
       })

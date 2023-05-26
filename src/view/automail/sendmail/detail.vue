@@ -170,7 +170,7 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ชื่อส่วนราชการที่ส่งหนังสือ <span class="required">*</span></div>
+                <div class="name">ชื่อหน่วยงานที่ส่งหนังสือ <span class="required">*</span></div>
                 <cpn-input  v-model="data.department_name"
                             name="department_name"
                             rules="required"
@@ -222,7 +222,7 @@
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">ลิงค์ดาวน์โหลดเอกสาร</div>
+                <div class="name">ลิงก์ดาวน์โหลดเอกสาร</div>
                 <div class="group-recommend">
                   <cpn-input v-model="data.link"
                               name="link"
@@ -366,7 +366,7 @@
                                           <br>
                                           <div style="line-height: 1.5; font-size: 12px; color: #333333; font-family: Arial, sans-serif;" v-show="data.send_type_id != 1">
                                             <p style="font-size: 16px; line-height: 1.5; word-break: break-word; text-align: left; margin: 0;">
-                                              <a :href="data.link" title="ลิงค์ดาวน์โหลดเอกสาร">{{ data.link }}</a>
+                                              <a :href="data.link" title="ลิงก์ดาวน์โหลดเอกสาร">{{ data.link }}</a>
                                             </p>
                                           </div>
                                           <div style="line-height: 2.0; font-size: 12px; color: #333333; font-family: Arial, sans-serif; margin-bottom: 5px; margin-top: 20px;">
@@ -561,7 +561,7 @@ export default {
       no_copy_file_name: 'ไม่มีสำเนาคู่ฉบับ',
       no_attachments: 'ไม่มีสิ่งที่แนบมาด้วย',
       optionSelect: {
-        send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงค์ข้างล่างนี้แทน'}]
+        send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงก์ข้างล่างนี้แทน'}]
       },
     }
   },
