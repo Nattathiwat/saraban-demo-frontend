@@ -1856,19 +1856,24 @@ export default {
         booking_follows: this.data.booking_follows,
         booking_register_details: this.data.booking_register_details.filter(item => {
           item.signer_id = item.signer_id ? parseInt(item.signer_id) : null
+          item.optionSelect.signer_id = []
           item.booking_registers.filter(item2 => {
             item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
             item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
             item2.optionSelect.department_dest_id.find(item3 => {
               if(item3.value == item2.department_dest_id) {
                 item2.human_flag = item3.human_flag 
-                item2.response_id = item3.id}
-              })
+                item2.response_type = item3.response_type 
+                item2.response_id = item3.id
+              }
+            })
+            item2.optionSelect.department_dest_id = []
+            item2.optionSelect.signer_id = []
             return item2
           })
           return item
         }),
-        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : (this.flagSave == 3 || this.flagSave == 5) ? 'update' : ((this.flagSave == 4 || this.flagSave == 6) && this.edit) ? 'update' : 'draft',
+        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : this.flagSave == 3 ? 'update' : this.flagSave == 5 ? 'update_send_style' : ((this.flagSave == 4 || this.flagSave == 6) && this.edit) ? 'update' : 'draft',
         is_draft: this.flagSave == 2 ? 0 : 1,
         is_show_send_style_button: this.data.booking_follows.length > 0 ? true : this.flagSave == 5 || this.data.is_show_send_style_button
       }
@@ -1947,6 +1952,7 @@ export default {
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
             item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id 
             item2.send_style_desc = this.modalSend.optionSelect.send_style.filter(row=>row.value == item2.send_style_id)[0]?.name || ''
+            item2.department_dest_id = item2.department_dest_id == 0 ? '' : item2.department_dest_id
             return item2
           })
           return item
