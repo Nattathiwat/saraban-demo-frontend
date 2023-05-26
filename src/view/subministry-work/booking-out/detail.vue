@@ -1902,7 +1902,7 @@ export default {
           return item
         }),
         flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : (this.flagSave == 3 || this.flagSave == 5) ? 'update' : this.flagSave == 6 ? 'update_send_style' : (this.flagSave == 4 && this.edit) ? 'update' : 'draft',
-        is_draft: this.flagSave == 2 ? 0 : 1,
+        is_draft: this.flagSave == 2 || this.flagSave == 6 ? 0 : 1,
         is_show_send_style_button: this.flagSave == 5 || this.data.is_show_send_style_button
       }
       this.showLoading = true
