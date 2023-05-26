@@ -5,7 +5,7 @@
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
-            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}}</div>
+            <div class="name">{{edit ? 'แก้ไขหนังสือรับเข้า' : 'สร้างหนังสือรับเข้า'}} <label>{{data.receive_document_number}}</label></div>
           </div>
         </div>
         <div class="line"></div>
@@ -667,7 +667,7 @@ export default {
         params: {
           keyword: e.target.value,
           department_id: localStorage.getItem('department_id'),
-          subministry_id : localStorage.getItem('subministry_id'),
+          // subministry_id : localStorage.getItem('subministry_id'),
           // user_id: localStorage.getItem('user_id'),
         }
       })
@@ -1279,6 +1279,11 @@ export default {
             color: #1a456b;
             font-weight: bold;
             font-size: 18px;
+
+            label {
+              margin-left: 10px;
+              font-size: 22px;
+            }
           }
         }
 

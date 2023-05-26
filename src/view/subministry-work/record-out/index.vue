@@ -75,8 +75,8 @@
                           {{item.status_name}}
                         </span>
                         <div class="show-detail date">
-                          <div v-if="item.receive_date">
-                            วันที่รับเข้า: {{item.receive_date}}
+                          <div v-if="item.send_to_date">
+                            วันที่รับเข้า: {{item.send_to_date}}
                           </div>
                           <div v-if="item.created_at">
                             วันที่ส่งออก: {{item.created_at}}
