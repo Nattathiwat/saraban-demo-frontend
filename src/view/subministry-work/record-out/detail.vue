@@ -8,7 +8,7 @@
               <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-size">
               <div class="name">{{edit ? 'แก้ไขบันทึกส่งออก' : 'สร้างบันทึกส่งออก'}} <label>{{data.booking_note_number}}</label></div> 
             </div>
-            <button type="submit" class="add-booking-out" @click="flagSave=3" v-show="!data.booking_note_number">
+            <button type="submit" class="add-booking-out" @click="flagSave = 3" v-show="!data.booking_note_number">
                 <div class="group-image">
                   ออกเลขบันทึกภายใน
                 </div>
@@ -287,15 +287,15 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" @click="flagSave=4" v-show="edit">
+              <button type="submit" class="button-success" @click="flagSave = 4" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
-              <button type="submit" class="button-primary" @click="flagSave=1" v-show="!edit">
+              <button type="submit" class="button-primary" @click="flagSave = 1" v-show="!edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
-              <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo.length<1">
+              <button type="submit" class="button-success" @click="flagSave = 2" :disabled="data.sendTo.length<1">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกและส่งต่อ
               </button>

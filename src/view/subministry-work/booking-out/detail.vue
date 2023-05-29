@@ -402,19 +402,19 @@
               </button>
             </div>
             <div class="footer-right" v-show="data.booking_register_details.length>0">
-              <button type="submit" class="button-success button-save" @click="flagSave=3" v-show="edit">
+              <button type="submit" class="button-success button-save" @click="flagSave = 3" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
-              <button type="submit" class="button-primary" @click="flagSave=1" v-show="!edit">
+              <button type="submit" class="button-primary" @click="flagSave = 1" v-show="!edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกแบบร่าง
               </button>
-              <button type="submit" class="button-success" @click="flagSave=5" v-if="button_send_bookout && !data.is_show_send_style_button">
+              <button type="submit" class="button-success" @click="flagSave = 5" v-if="button_send_bookout && !data.is_show_send_style_button">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ส่งหนังสือออก
               </button>
-              <button type="submit" class="button-success" @click="flagSave=2" :disabled="data.sendTo.length<1" v-if="!button_send_bookout">
+              <button type="submit" class="button-success" @click="flagSave = 2" :disabled="data.sendTo.length<1" v-if="!button_send_bookout">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึกและส่งต่อ
               </button>
@@ -1902,14 +1902,14 @@ export default {
           return item
         }),
         flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : (this.flagSave == 3 || this.flagSave == 5) ? 'update' : this.flagSave == 6 ? 'update_send_style' : (this.flagSave == 4 && this.edit) ? 'update' : 'draft',
-        is_draft: this.flagSave == 2 || this.flagSave == 6 ? 0 : 1,
+        is_draft: this.flagSave == 1 ? 1 : 0,
         is_show_send_style_button: this.flagSave == 5 || this.data.is_show_send_style_button
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then((response) => { 
         this.showLoading = false
-        if (this.flagSave != 4  && this.flagSave != 6) {
+        if (this.flagSave != 4 && this.flagSave != 5 && this.flagSave != 6) {
           this.modalAlert = {showModal: true, type: 'success', title: this.flagSave == 1  ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : this.flagSave == 3  ? 'ทำการบันทึกสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.checkPage(response) }}
         } else {
           this.checkPage(response)
