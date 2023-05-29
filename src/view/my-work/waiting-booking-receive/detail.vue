@@ -989,6 +989,7 @@ export default {
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
         page_flag : '',
+        response_id: parseInt(this.$route.query.response_id)
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-receive${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
