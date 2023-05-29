@@ -286,16 +286,6 @@ export default {
           name: 'file',
           component: () => import("./view/master/file/index.vue"),
         },
-        { 
-          path: 'file/create', 
-          name: 'file-create',
-          // component: () => import("./view/master/file/detail.vue"),
-        },
-        { 
-          path: 'file/:id', 
-          name: 'file-edit',
-          // component: () => import("./view/master/file/detail.vue"),
-        },
       ]
     },
     {

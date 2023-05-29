@@ -22,8 +22,14 @@
               <div class="group-input left">
                 <div class="name">รหัสหน่วยงาน <span class="required">*</span></div>
                 <cpn-input  v-model="data.code"
-                            name="department_id"
+                            name="code"
                             rules="required"
+                            placeholder="กรุณาระบุ" />
+              </div>
+              <div class="group-input left">
+                <div class="name">เลขโรมัน</div>
+                <cpn-input  v-model="data.roman_number"
+                            name="roman_number"
                             placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
@@ -121,6 +127,7 @@ export default {
       edit: false,
       data: {
         code: '',
+        roman_number: '',
         department_short_name: '',
         department_full_name: '',
         desc: '',
@@ -166,9 +173,14 @@ export default {
     cancelClick() {
       this.back()
       this.data.code = ''
+      this.data.roman_number = ''
       this.data.department_short_name = ''
       this.data.department_full_name = ''
       this.data.desc = ''
+      this.data.organization_id = ''
+      this.data.filename = ''
+      this.data.filepath = ''
+      this.data.active_flag = true
     },
     callApiDepartment() {
       this.axios.get(`/department/${localStorage.getItem('department_id')}`)
@@ -197,6 +209,7 @@ export default {
               _this.data.filepath = responses.data.data.path
               let groupdata = {
                 code: _this.data.code,
+                roman_number: _this.data.roman_number,
                 department_full_name: _this.data.department_full_name,
                 department_short_name: _this.data.department_short_name,
                 organization_id: _this.data.organization_id,
@@ -223,6 +236,7 @@ export default {
           } else {
             let groupdata = {
               code: _this.data.code,
+              roman_number: _this.data.roman_number,
               department_full_name: _this.data.department_full_name,
               department_short_name: _this.data.department_short_name,
               organization_id: _this.data.organization_id,
