@@ -355,7 +355,7 @@
                                         <div style="color:#666; font-family: 'Arial', sans-serif; line-height:1.5; padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
                                           <div style="line-height: 2.0; font-size: 12px; color: #15466e; font-family: Arial, sans-serif; margin-bottom: 5px;">
                                             <p style="font-size: 14px; line-height: 2.0; word-break: break-word; text-align: left; margin: 0;">
-                                              <strong><span style="font-size: 20px; font-weight: 600;">{{ data.greeting }} {{ data.receive_name }}</span></strong>
+                                              <strong><span style="font-size: 20px; font-weight: 600;">{{ data.greeting }} {{ data.bookout.greeting }}</span></strong>
                                             </p>
                                           </div>
                                           <div style="line-height: 1.5; font-size: 12px; color: #333333; font-family: Arial, sans-serif;">
@@ -785,6 +785,7 @@ export default {
       let _this = this
       let dataSave = {
         ... this.data,
+        greeting2: this.data.bookout.greeting,
         is_draft: this.flag == 1,
         user_id: parseInt(localStorage.getItem('user_id'))
       }

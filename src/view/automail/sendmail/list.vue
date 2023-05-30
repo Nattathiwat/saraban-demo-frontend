@@ -374,6 +374,7 @@ export default {
       this.data.table.filter(row=> {
         row.user_id = parseInt(localStorage.getItem('user_id'))
         row.flag = flag == 1 ? 'draft' : ''
+        row.greeting2 = row.bookout.greeting
       })
       this.axios.post(`/book-out-external/book-out-automail/series`, this.data.table)
       .then(() => { 
