@@ -530,6 +530,9 @@ export default {
         response.data.data.filter(row=> {
           row.attachments.filter(row2 => {
             row2.flag = 'edit'
+            row2.file = {
+              size: row2.file_size * 1024 * 1024
+            }
           })
           row.send_type_id = row.send_type_id ? row.send_type_id : 1
         })

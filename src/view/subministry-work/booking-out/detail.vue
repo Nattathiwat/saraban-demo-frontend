@@ -583,7 +583,7 @@
                   <div class="name">ปิด</div>
                 </div>
               </button>
-              <button type="button" class="btn button-success" @click="sendMailClick()">
+              <button type="button" class="btn button-success" :disabled="!modalSend.send_style_id" @click="sendMailClick()">
                 <div class="group-name">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon"/>
                   <div class="name">ตกลง</div>

@@ -810,6 +810,9 @@ export default {
         this.data.attachments.filter(item => {
           item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
+          item.file = {
+              size: item.file_size * 1024 * 1024
+            }
           return item
         })
 
