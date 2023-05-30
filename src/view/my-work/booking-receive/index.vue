@@ -80,7 +80,7 @@
                   <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
                     <td class="col0">{{index2+1}}</td>
                     <td class="col1">{{item2.speed_name}}</td>
-                    <td class="col2 text-start" colspan="6">{{item2.sub_ministry_name}}</td>
+                    <td class="col2 text-start ps-5" colspan="6">{{item2.sub_ministry_name}}</td>
                     <td class="col8">{{item2.status}}</td>
                   </tr>
                 </template>
