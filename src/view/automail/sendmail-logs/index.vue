@@ -113,7 +113,7 @@
                 <th class="col1">ลำดับ</th>
                 <th class="col2">สถานะ</th>
                 <th class="col3">วันและเวลาที่ส่ง</th>
-                <th class="col4">เลขออกสลค.</th>
+                <th class="col4">เลขที่หนังสือส่งออก</th>
                 <th class="col5">ทะเบียนหนังสือ</th>
                 <th class="col6">ความเร่งด่วน</th>
                 <th class="col7">ชื่อเรื่อง</th>
@@ -130,7 +130,7 @@
                 <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
                 <td class="col2">{{item.status_name}}</td>
                 <td class="col3">{{item.send_date}}</td>
-                <td class="col4">{{item.book_out_document_number}}</td>
+                <td class="col4" @click="detail_click(item)">{{item.book_out_document_number}}</td>
                 <td class="col5">{{item.book_regis_name}}</td>
                 <td class="col6">{{item.speed_name}}</td>
                 <td class="col7">{{item.subject}}</td>
@@ -198,6 +198,12 @@ export default {
     }
   },
   methods: {
+    detail_click(item) {
+      this.$router.push({ 
+        name: 'subministry-work.booking-out-edit',
+        params: {id: item.book_id},
+      }).catch(()=>{});
+    },
     cancelClick() {
       this.data.regis_id = ''
       this.data.book_out_document_number = ''
@@ -535,8 +541,8 @@ export default {
             }
 
             .col4 {
-              min-width: 150px;
-              max-width: 150px;
+              min-width: 180px;
+              max-width: 180px;
               width: 0%;
             }
 
@@ -614,9 +620,10 @@ export default {
                 text-align: left;
               }
 
-              .col3 {
+              .col4 {
                 color: #15466e;
                 text-decoration: underline;
+                cursor: pointer;
               }
 
               .col1 {
