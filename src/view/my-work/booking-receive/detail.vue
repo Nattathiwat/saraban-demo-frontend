@@ -31,7 +31,7 @@
                   <cpn-datepicker v-model="data.receive_date"
                                   name="receive_date"
                                   rules="required"
-                                  :disabled="edit"
+                                  :disabled="(edit && data.book_type != 0) || (data.status == 2 || data.status == 3)"
                                   placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
@@ -39,6 +39,7 @@
                   <cpn-time v-model="data.receive_time"
                             name="receive_time"
                             rules="required"
+                            :disabled="(data.status == 2 || data.status == 3)"
                             placeholder="กรุณาระบุ" />
                 </div>
               </div>
@@ -59,7 +60,7 @@
                   <cpn-input v-model="data.document_number"
                                   name="document_number"
                                   rules="required"
-                                  :disabled="edit"
+                                  :disabled="edit && data.book_type != 0"
                                   placeholder="กรุณาระบุ" />
                 </div>
                 <div class="group-input">
@@ -67,7 +68,7 @@
                   <cpn-datepicker v-model="data.as_of_date"
                                   name="as_of_date"
                                   rules="required"
-                                  :disabled="edit"
+                                  :disabled="edit && data.book_type != 0"
                                   placeholder="กรุณาระบุ" />
                 </div>
               </div>
@@ -112,7 +113,7 @@
                 <cpn-textArea v-model="data.subject"
                               name="subject"
                               rules="required"
-                              :disabled="edit"
+                              :disabled="edit && data.book_type != 0"
                               rows="3" />
               </div>
               <div class="group-between">
@@ -123,7 +124,7 @@
                               rules="required"
                               :optionSelect="optionSelect.secret_id"
                               placeholder="กรุณาระบุ"
-                              :disabled="edit" />
+                              :disabled="edit && data.book_type != 0" />
                 </div>
                 <div class="group-input">
                   <div class="name">ความเร่งด่วน <span class="required">*</span></div>
@@ -132,7 +133,7 @@
                               rules="required"
                               :optionSelect="optionSelect.speed_id"
                               placeholder="กรุณาระบุ"
-                              :disabled="edit" />
+                              :disabled="edit && data.book_type != 0" />
                 </div>
               </div>
             </div>
@@ -141,7 +142,7 @@
               <cpn-textArea v-model="data.send_to"
                             name="send_to"
                             rows="1"
-                            :disabled="edit" />
+                            :disabled="edit && data.book_type != 0" />
             </div>
             <div class="group-input left">
               <div class="name">รายละเอียดหนังสือ</div>
@@ -163,7 +164,7 @@
                 <cpn-autoComplete v-model="item.department_id"
                                   :name="`${index}department_id`"
                                   rules="required"
-                                  :disabled="edit"
+                                  :disabled="edit && data.book_type != 0"
                                   @keyup="keyup_department($event)"
                                   :optionSelect="optionSelect.department_id" />
               </div>
@@ -172,7 +173,7 @@
                 <cpn-select v-model="item.receive_type"
                             :name="`${index}receive_type`"
                             rules="required"
-                            :disabled="edit"
+                            :disabled="edit && data.book_type != 0"
                             :optionSelect="optionSelect.receive_type" />
               </div>
             </div>
@@ -182,7 +183,7 @@
                 <cpn-input v-model="item.department_other"
                                   :name="`${index}department_other`"
                                   :rules="item.department_id == 1860 ? 'required' : ''"
-                                  :disabled="edit" />
+                                  :disabled="edit && data.book_type != 0" />
               </div>
               <div class="group-input"></div>
             </div>
@@ -191,7 +192,7 @@
                 <div class="name">ผู้ติดต่อ</div>
                 <cpn-input  v-model="item.contract_name"
                             :name="`${index}contract_name`"
-                            :disabled="edit" />
+                            :disabled="edit && data.book_type != 0" />
               </div>
               <div class="group-between">
                 <div class="group-input left">
@@ -200,14 +201,14 @@
                               :isNumber="true"
                               maxlength="10"
                               :name="`${index}contract_phone`"
-                              :disabled="edit" />
+                              :disabled="edit && data.book_type != 0" />
                 </div>
                 <div class="group-input">
                   <div class="name">E-mail</div>
                   <cpn-input  v-model="item.contract_mail"
                               rules="email"
                               :name="`${index}contract_mail`"
-                              :disabled="edit" />
+                              :disabled="edit && data.book_type != 0" />
                 </div>
               </div>
             </div>
@@ -219,16 +220,16 @@
                 <div class="name">หนังสือต้นเรื่อง</div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
+                    <button type="button" :class="edit && data.book_type != 0 ? 'none-pointer':''" class="button-file" @click="edit && data.book_type != 0 ? '' : upload_file(`main_docs${index}`)" >
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'หนังสือต้นเรื่อง'}}
                       </span>
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                    <div :class="edit && data.book_type != 0 ? 'text disabled' : 'text pointer'" @click="edit && data.book_type != 0 ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3" :disabled="edit && data.book_type != 0" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -236,7 +237,7 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" :disabled="edit" @click="add_attachments()" >
+                  <button type="button" class="add-booking-receive" :disabled="edit && data.book_type != 0" @click="add_attachments()" >
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
@@ -245,16 +246,16 @@
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
-                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
+                    <button type="button" :class="edit && data.book_type != 0 ? 'none-pointer':''" class="button-file" @click="edit && data.book_type != 0 ? '' : upload_file(`attachments${index}`)">
                       <span :class="item.filename ? '' : 'no-data'">
                         {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
                       </span>
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                    <div :class="edit && data.book_type != 0 ? 'text disabled' : 'text pointer'" @click="edit && data.book_type != 0 ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
                     <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
+                  <button type="button" class="del-department-3" :disabled="edit && data.book_type != 0" @click="delete_attachments(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -485,7 +486,8 @@ export default {
         permission_id: '9',
         book_type:'',
         regis_id:'',
-        FileType: []
+        FileType: [],
+        status: 0,
       },
       optionSelect: {
         receive_regis_id: [],
@@ -1007,7 +1009,7 @@ export default {
       this.showLoading = true
       this.axios.get(`/booking-receive/${this.$route.params.id}`, {
         params:{
-          book_type : this.$route.query.book_type ,
+          book_type : this.$route.query.book_type,
           regis_id: this.$route.query.regis_id,
           response_id: this.$route.query.response_id
         }
@@ -1064,6 +1066,7 @@ export default {
         if (this.data.attachments?.length < 1 || !this.data.attachments) this.data.attachments = [{ filename: '', flag: 'add'}]
         if (this.data.contracts?.length < 1 || !this.data.contracts) this.data.contracts = [{ department_id: '', receive_type: '', contract_name: '', contract_phone: '', contract_mail: '', department_other: '', flag: 'add'}]
         if (response.data.data.booking_refers?.length < 1 || !response.data.data.booking_refers) this.data.booking_refers = [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: '', flag: 'add'}]
+        this.data.book_type = this.data.book_type ? this.data.book_type : this.$route.query.book_type
       })
       .catch((error) => {
         this.showLoading = false
