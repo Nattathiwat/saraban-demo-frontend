@@ -83,14 +83,14 @@
                 <td class="col3">
                   <div class="new-line">
                     <div class="name">ถึง</div>
-                    <cpn-input  v-model="item.contact_name"
-                                :name="'contact_name'+index"
+                    <cpn-input  v-model="item.bookout.to"
+                                :name="'bookout-to'+index"
                                 :disabled="true"  />
                   </div>
                   <div class="new-line">
                     <div class="name">เรียน</div>
-                    <cpn-input  v-model="item.receive_name"
-                                :name="'receive_name'+index"
+                    <cpn-input  v-model="item.bookout.greeting"
+                                :name="'bookout-greeting'+index"
                                 class="input-recommend"
                                 placeholder="ผู้รับหนังสือ" />
                   </div>
