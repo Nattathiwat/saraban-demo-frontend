@@ -492,7 +492,7 @@ export default {
         permission_id: '9',
         book_type:'',
         regis_id:'',
-        FileType: []
+        FileType: [],
         status: 0,
       },
       optionSelect: {
