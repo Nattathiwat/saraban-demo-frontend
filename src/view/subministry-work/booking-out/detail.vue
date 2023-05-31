@@ -811,29 +811,15 @@ export default {
   },
   methods: {
     clear_data() {
-      this.data = {
-        create_type: '0',
-        creater_id: '',
-        book_category_id: '',
-        book_type_id: '',
-        secret_id: '13',
-        speed_id: '12',
-        booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
-        subject: '',
-        booking_register_details: [],
-        tag: [],
-        attachments: [{ filename: ''}],
-        sendTo: [],
-        booking_follows: [],
-        comment: '',
-        process_type_id: '13',
-        permission_id: '8',
-        history: {
-          hide: false,
-          data: [],
-          tab: 1
-        },
-        FileType: []
+      this.data.sendTo = []
+      this.data.booking_follows = []
+      this.data.comment = ''
+      this.data.process_type_id = '12'
+      this.data.permission_id = '8'
+      this.data.history = {
+        hide: false,
+        data: [],
+        tab: 1
       }
     },
     check_modal_number() {
