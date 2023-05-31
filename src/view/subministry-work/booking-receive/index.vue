@@ -41,15 +41,15 @@
               </tr>
             </thead>
             <tbody class="tbody">
-              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index">
-                <td class="col0"><cpn-checkbox  v-model="item.selected"
+              <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
+                <td class="col0" @click="$event.stopPropagation();"><cpn-checkbox  v-model="item.selected"
                                                 name="selected"
                                                 @change="selected($event, item)" />
                 </td>
-                <td class="col1" @click="editClick(item)">{{item.speedName}}</td>
-                <td class="col2" @click="editClick(item)">{{item.bookingNo}}</td>
-                <td class="col3" @click="editClick(item)">{{item.referBookno}}</td>
-                <td class="col4" @click="editClick(item)">
+                <td class="col1">{{item.speedName}}</td>
+                <td class="col2">{{item.bookingNo}}</td>
+                <td class="col3">{{item.referBookno}}</td>
+                <td class="col4">
                   <div class="group-show none-bg">
                     <span class="span">
                       {{item.bookingSubject}}
