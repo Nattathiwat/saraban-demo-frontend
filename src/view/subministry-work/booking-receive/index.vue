@@ -29,27 +29,27 @@
           <table class="table-booking-receive-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1"></th>
-                <th class="col2">ความเร่งด่วน</th>
-                <th class="col3">เลขรับ</th>
-                <th class="col4">เลขที่หนังสือ</th>
-                <th class="col5">ชื่อเรื่อง</th>
-                <th class="col6">ชนิด</th>
-                <th class="col7">ลงวันที่</th>
-                <th class="col8">ผู้รับผิดชอบ</th>
-                <th class="col9">สถานะ</th>
+                <th class="col0"></th>
+                <th class="col1">ความเร่งด่วน</th>
+                <th class="col2">เลขรับ</th>
+                <th class="col3">เลขที่หนังสือ</th>
+                <th class="col4">ชื่อเรื่อง</th>
+                <th class="col5">ชนิด</th>
+                <th class="col6">ลงวันที่</th>
+                <th class="col7">ผู้รับผิดชอบ</th>
+                <th class="col8">สถานะ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index">
-                <td class="col1"><cpn-checkbox  v-model="item.selected"
+                <td class="col0"><cpn-checkbox  v-model="item.selected"
                                                 name="selected"
                                                 @change="selected($event, item)" />
                 </td>
-                <td class="col2" @click="editClick(item)">{{item.speedName}}</td>
-                <td class="col3" @click="editClick(item)">{{item.bookingNo}}</td>
-                <td class="col4" @click="editClick(item)">{{item.referBookno}}</td>
-                <td class="col5" @click="editClick(item)">
+                <td class="col1" @click="editClick(item)">{{item.speedName}}</td>
+                <td class="col2" @click="editClick(item)">{{item.bookingNo}}</td>
+                <td class="col3" @click="editClick(item)">{{item.referBookno}}</td>
+                <td class="col4" @click="editClick(item)">
                   <div class="group-show none-bg">
                     <span class="span">
                       {{item.bookingSubject}}
@@ -59,10 +59,10 @@
                     </div>
                   </div>
                 </td>
-                <td class="col6">{{item.typename}}</td>
-                <td class="col7">{{item.date}}</td>
-                <td class="col8">
-                  <div class="group-show">
+                <td class="col5">{{item.typename}}</td>
+                <td class="col6">{{item.date}}</td>
+                <td class="col7">
+                  <div class="group-show" v-show="item.response">
                     <span class="span">
                       {{item.response}}
                     </span>
@@ -71,10 +71,10 @@
                     </div>
                   </div>
                 </td>
-                <td class="col9">{{item.statusName}}</td>
+                <td class="col8">{{item.statusName}}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="8">ไม่มีข้อมูล</td>
+                <td colspan="9">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -445,14 +445,20 @@ export default {
               }
             }
 
-            .col1 {
-              min-width: 50px;
-              width: 2%;
+            .col0 {
+              min-width: 70px;
+              max-width: 70px;
+              width: 0px;
               padding-left: 28px !important;
             }
 
+            .col1 {
+              min-width: 170px;
+              width: 15%;
+            }
+
             .col2 {
-              min-width: 150px;
+              min-width: 170px;
               width: 15%;
             }
 
@@ -462,12 +468,12 @@ export default {
             }
 
             .col4 {
-              min-width: 150px;
+              min-width: 300px;
               width: 30%;
             }
 
             .col5 {
-              min-width: 300px;
+              min-width: 250px;
               width: 25%;
             }
 
@@ -483,11 +489,6 @@ export default {
             }
 
             .col8 {
-              min-width: 200px;
-              width: 20%;
-              padding-right: 28px !important;
-            }
-            .col9 {
               min-width: 200px;
               width: 20%;
               padding-right: 28px !important;
@@ -516,7 +517,7 @@ export default {
                 text-align: left;
               }
 
-              .col1 {
+              .col0 {
                 padding-left: 28px;
               }
 

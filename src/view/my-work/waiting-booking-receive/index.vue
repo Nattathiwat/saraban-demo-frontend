@@ -67,7 +67,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="col8">{{item.statusName}}</td>
+                  <td class="col8">{{item.statusName == 'ร่าง' ? 'รอรับเข้า' : item.statusName}}</td>
                 </tr>
               </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
