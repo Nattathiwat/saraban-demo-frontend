@@ -1921,13 +1921,17 @@ export default {
           item.booking_registers.filter(item2 => {
             item2.signer_id = item2.signer_id ? parseInt(item2.signer_id) : null
             item2.department_dest_id = item2.department_dest_id ? parseInt(item2.department_dest_id) : null
-            item2.optionSelect.department_dest_id.find(item3 => {
-              if(item3.value == item2.department_dest_id) {
-                item2.human_flag = item3.human_flag 
-                item2.response_type = item3.response_type 
-                item2.response_id = item3.id
-              }
-            })
+            if (item2.department_dest_id) {
+              item2.optionSelect.department_dest_id.find(item3 => {
+                if(item3.value == item2.department_dest_id) {
+                  item2.human_flag = item3.human_flag 
+                  item2.response_type = item3.type
+                  item2.response_id = item3.id
+                }
+              })
+            } else {
+              item2.response_type = 1
+            }
             item2.optionSelect.department_dest_id = []
             item2.optionSelect.signer_id = []
             return item2
@@ -2017,6 +2021,7 @@ export default {
             item2.attach_link = item2.attach_filepath ? this.backendport+'/'+item2.attach_filepath : ''
             item2.signer_id = item2.signer_id == 0 ? '' : item2.signer_id
             item2.send_style_desc = this.modalSend.optionSelect.send_style.filter(row=>row.value == item2.send_style_id)[0]?.name || ''
+            item2.department_dest_id = item2.department_dest_id == 0 ? '' : item2.department_dest_id
             return item2
           })
           return item
@@ -2067,7 +2072,7 @@ export default {
           book_type : 2
         }
       })
-      const request9 = this.axios.get('/master-data/department-user')
+      const request9 = this.axios.get(`/master-data/department-user?type=1`)
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
