@@ -836,6 +836,32 @@ export default {
     }
   },
   methods: {
+    clear_data() {
+      this.data = {
+        create_type: '0',
+        creater_id: '',
+        book_category_id: '',
+        book_type_id: '',
+        secret_id: '13',
+        speed_id: '12',
+        booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
+        subject: '',
+        booking_register_details: [],
+        tag: [],
+        attachments: [{ filename: ''}],
+        sendTo: [],
+        booking_follows: [],
+        comment: '',
+        process_type_id: '12',
+        permission_id: '8',
+        history: {
+          hide: false,
+          data: [],
+          tab: 1
+        },
+        FileType: []
+      }
+    },
     check_modal_number() {
       let show = false
       this.data.booking_register_details.filter(el => el.flag != 'delete').filter(row => {
@@ -1942,6 +1968,7 @@ export default {
       })
     },
     checkPage(response) {
+      this.clear_data()
       if (this.edit) {
         this.api_detail()
       } else {
