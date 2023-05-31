@@ -58,7 +58,7 @@
                   <td class="col5">{{item.typename}}</td>
                   <td class="col6">{{item.date}}</td>
                   <td class="col7">
-                    <div class="group-show">
+                    <div class="group-show" v-show="item.response">
                       <span class="span">
                         {{item.response}}
                       </span>

@@ -1,5 +1,5 @@
  <template>
-  <div class="booking-receive-inex">
+  <div class="sub-booking-receive-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
@@ -296,7 +296,7 @@ export default {
 
 </script>
 <style lang="scss">
-  .booking-receive-inex {
+  .sub-booking-receive-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -453,7 +453,7 @@ export default {
             }
 
             .col1 {
-              min-width: 170px;
+              min-width: 180px;
               width: 15%;
             }
 
