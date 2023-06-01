@@ -134,7 +134,7 @@
                   </button>
                 </div>
                 <cpn-input  v-model="data.bookout.greeting"
-                            name="receive_name"
+                            name="bookout-greeting"
                             rules="required"
                             placeholder="ผู้รับหนังสือ" />
               </div>
@@ -533,10 +533,10 @@ export default {
           as_of_date: '',
           from: '',
           to: '',
-          subject: ''
+          subject: '',
+          greeting: ''
         },
         greeting: '',
-        receive_name: '',
         message: '',
         detail: '',
         signature: '',
@@ -664,7 +664,7 @@ export default {
         })
         .then((response) => {
           this.data.greeting = response.data.data.title_name
-          this.data.receive_name = response.data.data.receive_person_name
+          this.data.bookout.greeting = response.data.data.receive_person_name
           this.data.signature = response.data.data.signature
           this.modal.showModal = false
         })
