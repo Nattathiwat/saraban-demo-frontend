@@ -1915,7 +1915,7 @@ export default {
           })
           return item
         }),
-        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? 'update_send_to' : this.flagSave == 3 ? 'update' : this.flagSave == 5 ? 'update' : this.flagSave == 6 ? 'update_send_style' : (this.flagSave == 4 && this.edit) ? 'update' : 'draft',
+        flag: this.flagSave == 1 ? 'draft' : this.flagSave == 2 ? '' : this.flagSave == 3 ? 'update' : this.flagSave == 5 ? 'update_send_to' : this.flagSave == 6 ? 'update_send_style' : (this.flagSave == 4 && this.edit) ? 'update' : 'draft',
         is_draft: this.flagSave == 1 ? 1 : this.flagSave == 3 && this.data.is_draft == 1 ? 1 : 0,
         is_show_send_style_button: this.flagSave == 5 || this.data.is_show_send_style_button
       }

@@ -125,11 +125,11 @@
                 <div class="icon-circle" />
                 ตั้งค่าประเภทไฟล์
               </div>
-              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-mail-addresses' ? 'active2' : ''" @click="$router.push({name: 'automail-mail-addresses'})">
+              <div v-show="iconAngle.master && false" class="list-navbar-sub pointer" :class="$route.name == 'automail-mail-addresses' ? 'active2' : ''" @click="$router.push({name: 'automail-mail-addresses'})">
                 <div class="icon-circle" />
                 ข้อมูลติดต่อหน่วยงาน
               </div>
-              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-receiver-profile' || $route.name == 'automail-receiver-profile-create' || $route.name == 'automail-receiver-profile-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-receiver-profile'})">
+              <div v-show="iconAngle.master && false" class="list-navbar-sub pointer" :class="$route.name == 'automail-receiver-profile' || $route.name == 'automail-receiver-profile-create' || $route.name == 'automail-receiver-profile-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-receiver-profile'})">
                 <div class="icon-circle" />
                 ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย
               </div>
