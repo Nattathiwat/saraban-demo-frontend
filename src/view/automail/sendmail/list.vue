@@ -113,9 +113,14 @@
                                 :name="'signature'+index"/>
                   </div>
                   <div class="new-line">
+                    <div class="name">ชื่อหน่วยงานที่ส่งหนังสือ</div>
+                    <cpn-input  v-model="item.department_name"
+                                :name="'department_name'+index" />
+                  </div>
+                  <div class="new-line">
                     <div class="name">ข้อมูลผู้ติดต่อ</div>
                     <cpn-input  v-model="item.contact_name"
-                                :name="'contact'+index"
+                                :name="'contact_name'+index"
                                 placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ" />
                   </div>
                   <div class="new-line">
