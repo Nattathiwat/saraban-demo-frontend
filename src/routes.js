@@ -315,35 +315,35 @@ export default {
           name: 'automail-sendmail-logs',
           component: () => import("./view/automail/sendmail-logs/index.vue"),
         },
-        // {
-        //   path: 'master', 
-        //   name: 'automail-master',
-        //   redirect: {
-        //     name: 'automail-mail-addresses'
-        //   },
-        //   children: [
-        //     { 
-        //       path: 'mail-addresses', 
-        //       name: 'automail-mail-addresses',
-        //       component: () => import("./view/automail/master/mail-addresses/index.vue"),
-        //     },
-        //     { 
-        //       path: 'receiver-profile', 
-        //       name: 'automail-receiver-profile',
-        //       component: () => import("./view/automail/master/receiver-profile/index.vue"),
-        //     },
-        //     { 
-        //       path: 'receiver-profile/create', 
-        //       name: 'automail-receiver-profile-create',
-        //       component: () => import("./view/automail/master/receiver-profile/detail.vue"),
-        //     },
-        //     { 
-        //       path: 'receiver-profile/:id', 
-        //       name: 'automail-receiver-profile-edit',
-        //       component: () => import("./view/automail/master/receiver-profile/detail.vue"),
-        //     },
-        //   ]
-        // },
+        {
+          path: 'master', 
+          name: 'automail-master',
+          redirect: {
+            name: 'automail-mail-addresses'
+          },
+          children: [
+            { 
+              path: 'mail-addresses', 
+              name: 'automail-mail-addresses',
+              component: () => import("./view/automail/master/mail-addresses/index.vue"),
+            },
+            { 
+              path: 'receiver-profile', 
+              name: 'automail-receiver-profile',
+              component: () => import("./view/automail/master/receiver-profile/index.vue"),
+            },
+            { 
+              path: 'receiver-profile/create', 
+              name: 'automail-receiver-profile-create',
+              component: () => import("./view/automail/master/receiver-profile/detail.vue"),
+            },
+            { 
+              path: 'receiver-profile/:id', 
+              name: 'automail-receiver-profile-edit',
+              component: () => import("./view/automail/master/receiver-profile/detail.vue"),
+            },
+          ]
+        },
       ]
     }
   ]

@@ -13,47 +13,7 @@
               ระบบสารบรรณอิเล็กทรอนิกส์
             </div>
           </div>
-          <div class="group-list-head" v-if="routePath('/automail/') && false">
-            <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="routePath('/automail/sendmail') ? 'active' : ''" @click="removeSelect('automail'), iconAngle.automail = !iconAngle.automail">
-                <div class="group-image">
-                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
-                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list">
-                </div>
-                รายการส่งอีเมล
-                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
-                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
-              </div>
-              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail' || $route.name == 'automail-sendmail-list' || $route.name == 'automail-sendmail-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail'})">
-                <div class="icon-circle" />
-                รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
-              </div>
-              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail-logs' ? 'active2' : ''" @click="$router.push({name: 'automail-sendmail-logs'})">
-                <div class="icon-circle" />
-                บันทึกการส่งอีเมล
-              </div>
-            </div>
-            <div class="list-navbar-group">
-              <div class="list-navbar pointer" :class="routePath('/master/') ? 'active' : ''" @click="removeSelect('master'), iconAngle.master = !iconAngle.master">
-                <div class="group-image">
-                  <img src="@/assets/images/navbar/square.svg" class="icon-square">
-                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg">
-                </div>
-                มาสเตอร์
-                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.master"></i>
-                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.master"></i>
-              </div>
-              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-mail-addresses' ? 'active2' : ''" @click="$router.push({name: 'automail-mail-addresses'})">
-                <div class="icon-circle" />
-                ข้อมูลติดต่อหน่วยงาน
-              </div>
-              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-receiver-profile' || $route.name == 'automail-receiver-profile-create' || $route.name == 'automail-receiver-profile-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-receiver-profile'})">
-                <div class="icon-circle" />
-                ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย
-              </div>
-            </div>
-          </div>
-          <div class="group-list-head" v-else>
+          <div class="group-list-head">
             <div  class="list-navbar-group" >
               <div class="list-navbar pointer" :class="routePath('/my-work/') ? 'active': ''" @click="removeSelect(), $router.push({name: 'my-work'})">
                 <div class="group-image">
@@ -164,6 +124,14 @@
               <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'file' || $route.name == 'file-create' || $route.name == 'file-edit' ? 'active2': ''" @click="$router.push({name: 'file'})">
                 <div class="icon-circle" />
                 ตั้งค่าประเภทไฟล์
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-mail-addresses' ? 'active2' : ''" @click="$router.push({name: 'automail-mail-addresses'})">
+                <div class="icon-circle" />
+                ข้อมูลติดต่อหน่วยงาน
+              </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'automail-receiver-profile' || $route.name == 'automail-receiver-profile-create' || $route.name == 'automail-receiver-profile-edit' ? 'active2' : ''" @click="$router.push({name: 'automail-receiver-profile'})">
+                <div class="icon-circle" />
+                ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย
               </div>
             </div>
           </div>

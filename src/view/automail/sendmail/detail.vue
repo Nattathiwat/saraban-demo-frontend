@@ -142,7 +142,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <div class="name">ข้อความ <span class="required">*</span></div>
                   <div>
-                    <button type="button" class="button-template" @click="templateClick()">
+                    <button type="button" class="button-template" @click="templateClick()" v-show="false">
                       <i class="bi bi-question icon-question"></i>
                       เลือกเทมเพลต
                     </button>
