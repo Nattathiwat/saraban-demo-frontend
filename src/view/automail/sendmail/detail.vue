@@ -133,6 +133,9 @@
                     แนะนำ
                   </button>
                 </div>
+              </div>
+              <div class="group-input">
+                <div class="name">เรียน <span class="required">*</span></div>
                 <cpn-input  v-model="data.bookout.greeting"
                             name="bookout-greeting"
                             rules="required"

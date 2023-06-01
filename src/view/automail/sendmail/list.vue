@@ -114,8 +114,14 @@
                   </div>
                   <div class="new-line">
                     <div class="name">ข้อมูลผู้ติดต่อ</div>
+                    <cpn-input  v-model="item.contact_name"
+                                :name="'contact'+index"
+                                placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ" />
+                  </div>
+                  <div class="new-line">
                     <cpn-input  v-model="item.contact"
-                                :name="'contact'+index"/>
+                                :name="'contact'+index"
+                                placeholder="เบอร์โทร และชื่อผู้ติดต่อ" />
                   </div>
                 </td>
                 <td class="col4">
