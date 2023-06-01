@@ -250,22 +250,6 @@
                               :disabled="true"/>
                 </div>
               </div>
-              <div class="group-input">
-                <div class="name">สำเนาคู่ฉบับ</div>
-                <div class="d-flex" v-if="data.copy_file_name">
-                  <cpn-input  v-model="data.copy_file_name"
-                              name="copy_file_name"
-                              :disabled="true"/>
-                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_file_name, link: data.copy_file_link})">
-                    <i class="bi bi-eye icon-eye"></i>
-                  </button>
-                </div>
-                <div v-else>
-                  <cpn-input  v-model="no_copy_file_name"
-                              name="no_copy_file_name"
-                              :disabled="true"/>
-                </div>
-              </div>
               <div class="line"></div>
               <div class="group-input">
                 <div class="name d-flex justify-content-between align-items-center mb-3 mt-3">
@@ -276,7 +260,15 @@
                     แนบเอกสาร
                   </button>
                 </div>
-                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0">
+                <div class="d-flex mb-2" v-if="data.copy_main_file_name">
+                  <cpn-input  v-model="data.copy_main_file_name"
+                              name="copy_main_file_name"
+                              :disabled="true"/>
+                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_main_file_name, link: data.copy_file_link})">
+                    <i class="bi bi-eye icon-eye"></i>
+                  </button>
+                </div>
+                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0 || data.copy_main_file_name">
                   <div class="d-flex mb-2">
                     <cpn-input  v-model="item.filename"
                                 :name="'filename'+index"
@@ -548,7 +540,7 @@ export default {
         send_type_id: '',
         link: '',
         main_file_name: '',
-        copy_file_name: '',
+        copy_main_file_name: '',
         attachments: [],
         subject: '',
         to: '',
@@ -558,7 +550,6 @@ export default {
         logoImage: new URL(`@/assets/images/default/department.png`, import.meta.url).href
       },
       no_main_file_name: 'ไม่มีหนังสือต้นเรื่อง',
-      no_copy_file_name: 'ไม่มีสำเนาคู่ฉบับ',
       no_attachments: 'ไม่มีสิ่งที่แนบมาด้วย',
       optionSelect: {
         send_type_id: [{value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้'}, {value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงก์ข้างล่างนี้แทน'}]

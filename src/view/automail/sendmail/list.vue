@@ -181,17 +181,6 @@
                     </div>
                   </div>
                   <div class="new-line">
-                    <div class="name">สำเนาคู่ฉบับ</div>
-                    <div class="d-flex">
-                      <cpn-input  v-model="item.copy_main_file_name"
-                                  :name="'copy_main_file_name'+index"
-                                  :disabled="true"/>
-                      <button type="button" class="button-view" @click="previewFile({filename: item.copy_main_file_name, link: item.copy_main_file_path ? backendport+'/'+item.copy_main_file_path : ''})">
-                        <i class="bi bi-eye icon-eye"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="new-line">
                     <div class="name d-flex justify-content-between align-items-center mb-2">
                       <div>สิ่งที่แนบมาด้วย</div>
                       <input type="file" multiple @change="fileChange('attachments', item)" name="attachments" style="display:none;" accept="application/pdf">
@@ -200,7 +189,15 @@
                         แนบเอกสาร
                       </button>
                     </div>
-                    <div v-for="(item2, index2) in item.attachments.filter(el => el.flag != 'delete')" :key="index2" v-if="item?.attachments?.length > 0">
+                    <div class="d-flex mb-2" v-if="item.copy_main_file_name">
+                      <cpn-input  v-model="item.copy_main_file_name"
+                                  :name="'copy_main_file_name'+index"
+                                  :disabled="true"/>
+                      <button type="button" class="button-view" @click="previewFile({filename: item.copy_main_file_name, link: item.copy_main_file_path ? backendport+'/'+item.copy_main_file_path : ''})">
+                        <i class="bi bi-eye icon-eye"></i>
+                      </button>
+                    </div>
+                    <div v-for="(item2, index2) in item.attachments.filter(el => el.flag != 'delete')" :key="index2" v-if="item?.attachments?.length > 0 || item.copy_main_file_name">
                       <div class="d-flex mb-2">
                         <cpn-input  v-model="item2.filename"
                                     :name="'filename'+index2"
