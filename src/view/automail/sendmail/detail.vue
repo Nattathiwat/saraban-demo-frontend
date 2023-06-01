@@ -133,7 +133,7 @@
                     แนะนำ
                   </button>
                 </div>
-                <cpn-input  v-model="data.receive_name"
+                <cpn-input  v-model="data.bookout.greeting"
                             name="receive_name"
                             rules="required"
                             placeholder="ผู้รับหนังสือ" />
