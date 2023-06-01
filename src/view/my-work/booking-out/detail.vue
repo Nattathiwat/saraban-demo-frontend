@@ -1932,8 +1932,6 @@ export default {
             } else {
               item2.response_type = 1
             }
-            item2.optionSelect.department_dest_id = []
-            item2.optionSelect.signer_id = []
             return item2
           })
           return item
@@ -1942,6 +1940,12 @@ export default {
         is_draft: this.flagSave == 1 ? 1 : this.flagSave == 3 && this.data.is_draft == 1 ? 1 : 0,
         is_show_send_style_button: this.flagSave == 5 || this.data.is_show_send_style_button
       }
+      dataSave = JSON.parse(JSON.stringify(dataSave))
+      dataSave.booking_register_details.filter(item => {
+        item.booking_registers.filter(item2 => {
+          item2.optionSelect = {}
+        })
+      })
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-out${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
       .then((response) => { 
