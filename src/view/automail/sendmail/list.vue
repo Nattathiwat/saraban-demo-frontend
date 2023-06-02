@@ -204,7 +204,7 @@
                   </div>
                   <div class="new-line">
                     <div class="name d-flex justify-content-between align-items-center mb-2">
-                      <div>สิ่งที่แนบมาด้วย</div>
+                      <div>เอกสารแนบเพิ่มเติม</div>
                       <input type="file" multiple @change="fileChange('attachments', item)" name="attachments" style="display:none;" accept="application/pdf">
                       <button type="button" class="button-file"  @click="uploadFile('attachments')">
                         <i class="bi bi-plus icon-plus"></i>
