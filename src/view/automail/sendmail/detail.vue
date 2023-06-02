@@ -782,7 +782,7 @@ export default {
       let dataSave = {
         ... this.data,
         greeting2: this.data.bookout.greeting,
-        is_draft: this.flag == 1,
+        is_draft: this.flag == 1 ? 'draft' : '',
         user_id: parseInt(localStorage.getItem('user_id'))
       }
       this.axios.post(`/book-out-external/email-information`, dataSave)
