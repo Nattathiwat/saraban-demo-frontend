@@ -309,7 +309,7 @@
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, index)" :name="`fileAttachment${index}`" style="display:none;">
+                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, index, item)" :name="`fileAttachment${index}`" style="display:none;">
               </div>
               <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
               <button type="button" class="del-department-3" @click="delete_attachments(item, index)">
@@ -1401,6 +1401,7 @@ export default {
               type: file.type,
               link: URL.createObjectURL(file),
               size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              filesize: file.size.toString(),
               file: file,
             }
             this.data[name][index] = {...this.data[name][index], ...dataFile}
@@ -1412,6 +1413,7 @@ export default {
             type: file.type,
             link: URL.createObjectURL(file),
             size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            filesize: file.size.toString(),
             file: file,
           }
           this.data.sendToFile = dataFile
@@ -1421,6 +1423,7 @@ export default {
             type: file.type,
             link: URL.createObjectURL(file),
             size: (file.size /1024 /1024).toFixed(2) + ' MB',
+            filesize: file.size.toString(),
             file: file,
           }
           this.data[name][index] = {...this.data[name][index], ...dataFile}
@@ -1428,21 +1431,19 @@ export default {
         }
       }
     },
-    file_attachment_change(data, index) {
+    file_attachment_change(data, index, item) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
         if ((this.data.FileType.indexOf(file.type)==-1)) {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        let dataFile = {
-          filename: file.name,
-          type: file.type,
-          link: URL.createObjectURL(file),
-          size: (file.size /1024 /1024).toFixed(2) + ' MB',
-          file: file,
-        }
-        this.data.attachments[index] = {...this.data.attachments[index], ...dataFile}
+        item.filename = file.name
+        item.type = file.type
+        item.link = URL.createObjectURL(file),
+        item.size = (file.size /1024 /1024).toFixed(2) + ' MB',
+        item.filesize = file.size.toString()
+        item.file = file
         document.querySelector(`[name="${data}"]`).value=null;
       }
     },
@@ -1460,6 +1461,7 @@ export default {
               main_type: file.type,
               main_link: URL.createObjectURL(file),
               main_size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              main_filesize: file.size.toString(),
               main_file: file,
             }
             this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
@@ -1474,6 +1476,7 @@ export default {
               attach_type: file.type,
               attach_link: URL.createObjectURL(file),
               attach_size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              attach_filesize: file.size.toString(),
               attach_file: file,
             }
             this.data.booking_register_details[index] = {...this.data.booking_register_details[index], ...dataFile}
@@ -1498,6 +1501,7 @@ export default {
               main_type: file.type,
               main_link: URL.createObjectURL(file),
               main_size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              main_filesize: file.size.toString(),
               main_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
@@ -1509,6 +1513,7 @@ export default {
               attach_type: file.type,
               attach_link: URL.createObjectURL(file),
               attach_size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              attach_filesize: file.size.toString(),
               attach_file: file,
             }
             this.data.booking_register_details[index].booking_registers[index2] = {...this.data.booking_register_details[index].booking_registers[index2], ...dataFile}
@@ -1712,7 +1717,7 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            fileAttachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
+            fileAttachments.push({...this.data.attachments.filter(el => el.file)[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == fileAttachments.length) {
             this.upload_file_all2(fileAttachments)
@@ -1850,8 +1855,13 @@ export default {
       }
     },
     call_api_save(data) {
-      let fileAttachments = data
       let _this = this
+      let fileAttachments = data
+      this.data.attachments.filter(item => {
+        if (item.flag == 'delete') {
+          fileAttachments.push(item)
+        }
+      })
       let tag = ''
       this.data.tag.filter(item => {
         tag += item.name+','

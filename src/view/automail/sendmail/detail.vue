@@ -253,6 +253,22 @@
                               :disabled="true"/>
                 </div>
               </div>
+              <div class="group-input">
+                <div class="name">สิ่งที่แนบมาด้วย</div>
+                <div class="d-flex" v-if="data.copy_main_file_name">
+                  <cpn-input  v-model="data.copy_main_file_name"
+                              name="copy_main_file_name"
+                              :disabled="true"/>
+                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_main_file_name, link: data.copy_file_link})">
+                    <i class="bi bi-eye icon-eye"></i>
+                  </button>
+                </div>
+                <div v-else>
+                  <cpn-input  v-model="no_attachments"
+                              name="no_attachments2"
+                              :disabled="true"/>
+                </div>
+              </div>
               <div class="line"></div>
               <div class="group-input">
                 <div class="name d-flex justify-content-between align-items-center mb-3 mt-3">
@@ -263,15 +279,7 @@
                     แนบเอกสาร
                   </button>
                 </div>
-                <div class="d-flex mb-2" v-if="data.copy_main_file_name">
-                  <cpn-input  v-model="data.copy_main_file_name"
-                              name="copy_main_file_name"
-                              :disabled="true"/>
-                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_main_file_name, link: data.copy_file_link})">
-                    <i class="bi bi-eye icon-eye"></i>
-                  </button>
-                </div>
-                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0 || data.copy_main_file_name">
+                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0">
                   <div class="d-flex mb-2">
                     <cpn-input  v-model="item.filename"
                                 :name="'filename'+index"
@@ -581,7 +589,7 @@ export default {
                 type: file.type,
                 link: URL.createObjectURL(file),
                 size: (file.size /1024 /1024).toFixed(2) + ' MB',
-                file_size: (file.size /1024 /1024).toFixed(2),
+                file_size: file.size,
                 file: file,
                 flag: 'add'
               }
@@ -618,8 +626,10 @@ export default {
     },
     sumfile() {
       let size = 0
+      size += this.data.copy_main_file_size ? +this.data.copy_main_file_size : 0
+      size += this.data.main_file_size ? + this.data.main_file_size : 0
       this.data.attachments?.filter(row => {
-        size += row.file.size
+        size += +row.file_size
       })
       return (size /1024 /1024).toFixed(2)
     },
@@ -805,8 +815,8 @@ export default {
           item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           item.file = {
-              size: item.file_size * 1024 * 1024
-            }
+            size: item.file_size * 1024 * 1024
+          }
           return item
         })
 
