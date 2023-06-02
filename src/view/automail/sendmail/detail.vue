@@ -253,9 +253,17 @@
                               :disabled="true"/>
                 </div>
               </div>
+              <div class="line"></div>
               <div class="group-input">
-                <div class="name">สิ่งที่แนบมาด้วย</div>
-                <div class="d-flex" v-if="data.copy_main_file_name">
+                <div class="name d-flex justify-content-between align-items-center mb-3 mt-3">
+                  <div>สิ่งที่แนบมาด้วย</div>
+                  <input type="file" multiple @change="fileChange('attachments')" name="attachments" style="display:none;" accept="application/pdf">
+                  <button type="button" class="button-file" @click="uploadFile('attachments')">
+                    <i class="bi bi-plus icon-plus"></i>
+                    แนบเอกสาร
+                  </button>
+                </div>
+                <div class="d-flex mb-2" v-if="data.copy_main_file_name">
                   <cpn-input  v-model="data.copy_main_file_name"
                               name="copy_main_file_name"
                               :disabled="true"/>
@@ -263,23 +271,7 @@
                     <i class="bi bi-eye icon-eye"></i>
                   </button>
                 </div>
-                <div v-else>
-                  <cpn-input  v-model="no_attachments"
-                              name="no_attachments2"
-                              :disabled="true"/>
-                </div>
-              </div>
-              <div class="line"></div>
-              <div class="group-input">
-                <div class="name d-flex justify-content-between align-items-center mb-3 mt-3">
-                  <div>เอกสารแนบเพิ่มเติม</div>
-                  <input type="file" multiple @change="fileChange('attachments')" name="attachments" style="display:none;" accept="application/pdf">
-                  <button type="button" class="button-file" @click="uploadFile('attachments')">
-                    <i class="bi bi-plus icon-plus"></i>
-                    แนบเอกสาร
-                  </button>
-                </div>
-                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0">
+                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0 || data.copy_main_file_name">
                   <div class="d-flex mb-2">
                     <cpn-input  v-model="item.filename"
                                 :name="'filename'+index"
