@@ -638,37 +638,39 @@
                                 label="ทั้งหมด" />
                 </div>
               </div>
-              <div class="message" v-for="(item, index) in modalNumber.booking_register_details.filter(el => el.flag != 'delete')" :key="index">
-                <div class="d-flex">
-                  <div class="col-checkbox">
-                    <cpn-checkbox v-model="item.select"
-                                  @change="selected1(item, 'number')"
-                                  :name="`select${index}`" />
-                  </div>
-                  <div class="col-start">ชุดที่ #{{index+1}}</div>
-                  <div class="col-center">
-                    <div class="row">
-                      <div class="col-lg-auto col-md-auto mb-3">
-                        <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
+              <div v-for="(item, index) in data.booking_register_details.filter(el => el.flag != 'delete')" :key="index">
+                <div class="message" v-if="check_all_gen_number(item)">
+                  <div class="d-flex">
+                    <div class="col-checkbox">
+                      <cpn-checkbox v-model="item.select"
+                                    @change="selected1(item, 'number')"
+                                    :name="`select${index}`" />
+                    </div>
+                    <div class="col-start">ชุดที่ #{{index+1}}</div>
+                    <div class="col-center">
+                      <div class="row">
+                        <div class="col-lg-auto col-md-auto mb-3">
+                          <span class="span">การออกเลข : {{item.book_out_num_type_name}}</span><span>รูปแบบการส่ง : {{item.send_method_name}}</span>
+                        </div>
+                        <div class="col-lg-auto col-md-auto mb-3">
+                          <div class="name">ลงวันที่ : {{item.regis_date}}</div>
+                        </div>
                       </div>
-                      <div class="col-lg-auto col-md-auto mb-3">
-                        <div class="name">ลงวันที่ : {{item.regis_date}}</div>
+                      <div>ทะเบียนส่ง : {{item.regis_name}}</div>
+                    </div>
+                  </div>
+                  <div class="detail-sub">
+                    <div class="mb-3">หน่วยงานปลายทาง</div>
+                    <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers.filter(el => el.flag != 'delete')" :key="index2">
+                      <div class="group-input index">{{index2+1}}.</div>
+                      <div class="group-input">
+                        <cpn-input  v-model="item2.department_dest_name"
+                                    :disabled="true"
+                                    :name="`department_dest_name${index}${index2}`" />
                       </div>
                     </div>
-                    <div>ทะเบียนส่ง : {{item.regis_name}}</div>
-                  </div>
+                  </div> 
                 </div>
-                <div class="detail-sub">
-                  <div class="mb-3">หน่วยงานปลายทาง</div>
-                  <div class="d-flex justify-content-between align-items-center" v-for="(item2, index2) in item.booking_registers.filter(el => el.flag != 'delete')" :key="index2">
-                    <div class="group-input index">{{index2+1}}.</div>
-                    <div class="group-input">
-                      <cpn-input  v-model="item2.department_dest_name"
-                                  :disabled="true"
-                                  :name="`department_dest_name${index}${index2}`" />
-                    </div>
-                  </div>
-                </div> 
               </div>
             </div>
             <div class="line"></div>
@@ -836,6 +838,15 @@ export default {
     }
   },
   methods: {
+    check_all_gen_number(item) {
+      let show = false
+      item.booking_registers.filter(el => el.flag != 'delete').filter(row2 => {
+        if (!row2.is_real_book_out_num) {
+          show = true
+        }
+      })
+      return show
+    },
     clear_data() {
       this.data.sendTo = []
       this.data.booking_follows = []
@@ -869,9 +880,8 @@ export default {
       return this.data.is_show_send_style_button ? show : false
     },
     async sendNumberClick() {
-      for (let i = 0; i < this.modalNumber.booking_register_details.length; i++) {
-        let row = this.modalNumber.booking_register_details[i]
-        let index = i
+      for (let i = 0; i < this.data.booking_register_details.filter(el => el.flag != 'delete').length; i++) {
+        let row = this.data.booking_register_details.filter(el => el.flag != 'delete')[i]
         if (row.select) {
           if (row.book_out_num_type != 1) {
             this.showLoading = true
@@ -883,7 +893,7 @@ export default {
             })
             .then((response) => {
               this.showLoading = false
-              this.data.booking_register_details[index].booking_registers.filter(row2 => {
+              row.booking_registers.filter(row2 => {
                 row2.book_out_num = response.data.data.out_document_number
                 row2.is_real_book_out_num = true
               })
@@ -892,9 +902,8 @@ export default {
               this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
           } else {
-            for (let i2 = 0; i2 < row.booking_registers.length; i2++) {
-              let row2 = row.booking_registers[i2]
-              let index2 = i2
+            for (let i2 = 0; i2 < row.booking_registers.filter(el => el.flag != 'delete').length; i2++) {
+              let row2 = row.booking_registers.filter(el => el.flag != 'delete')[i2]
               this.showLoading = true
               await this.axios.post(`/booking-out/generate-number`, {
                 department_id: parseInt(localStorage.getItem('department_id')), 
@@ -904,8 +913,8 @@ export default {
               })
               .then((response) => {
                 this.showLoading = false
-                this.data.booking_register_details[index].booking_registers[index2].book_out_num = response.data.data.out_document_number
-                this.data.booking_register_details[index].booking_registers[index2].is_real_book_out_num = true
+                row2.book_out_num = response.data.data.out_document_number
+                row2.is_real_book_out_num = true
               }).catch((error) => {
                 this.showLoading = false
                 this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
@@ -952,7 +961,7 @@ export default {
     },
     selectedAll(name) {
       if (name == 'number') {
-        this.modalNumber.booking_register_details.filter((row) => {
+        this.data.booking_register_details.filter((row) => {
           row.select = this.modalNumber.select;
           row.booking_registers.filter((row2) => {
             row2.select = this.modalNumber.select;
@@ -969,7 +978,7 @@ export default {
     },
     selected1(item, name) {
       if (name == 'number') {
-        this.modalNumber.select = this.modalNumber.booking_register_details.every((row) => {
+        this.modalNumber.select = this.data.booking_register_details.every((row) => {
           return row.select;
         })
         item.booking_registers.filter((row2) => {
@@ -1010,8 +1019,7 @@ export default {
     },
     modal_number() {
       this.modalNumber.select = false
-      this.modalNumber.booking_register_details = this.data.booking_register_details
-      this.modalNumber.booking_register_details.filter(item => {
+      this.data.booking_register_details.filter(item => {
         item.select = false
         item.booking_registers.filter(item2 => {
           item2.select = false
@@ -1250,38 +1258,107 @@ export default {
             })
           }
         } else {
-          this.showLoading = true
-          await this.axios.post(`/booking-out/generate-number-draft`, {
-            department_id: parseInt(localStorage.getItem('department_id')),
-             year: this.assetsUtils.currentDate().split('/')[2]-543,
-             user_id: parseInt(localStorage.getItem('user_id'))
+          if (item.booking_registers.filter(el => el.flag != 'delete').length < 1) {
+            this.showLoading = true
+            await this.axios.post(`/booking-out/generate-number-draft`, {
+              department_id: parseInt(localStorage.getItem('department_id')),
+              year: this.assetsUtils.currentDate().split('/')[2]-543,
+              user_id: parseInt(localStorage.getItem('user_id'))
+              })
+            .then((response) => {
+              this.showLoading = false
+              item.booking_registers.push({
+                book_out_num: response.data.data.out_document_number,
+                greeting: '',
+                department_dest_id: '',
+                main_filename: '',
+                attach_filename: '',
+                signer_id: '',
+                is_signed: false,
+                flag: 'add',
+                optionSelect: {
+                  signer_id: this.optionSelectDefault.signer_id,
+                  department_dest_id: this.optionSelectDefault.department_dest_id
+                },
+                human_flag: item.human_flag,
+                response_id: parseInt(item.value),
+                response_type: item.type,
+                is_real_book_out_num: false
+              })
+            }).catch((error) => {
+              this.showLoading = false
+              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
             })
-          .then((response) => {
-            this.showLoading = false
-            item.booking_registers.push({
-              book_out_num: response.data.data.out_document_number,
-              greeting: '',
-              department_dest_id: '',
-              main_filename: '',
-              attach_filename: '',
-              signer_id: '',
-              is_signed: false,
-              flag: 'add',
-              optionSelect: {
-                signer_id: this.optionSelectDefault.signer_id,
-                department_dest_id: this.optionSelectDefault.department_dest_id
-              },
-              human_flag: item.human_flag,
-              response_id: parseInt(item.value),
-              response_type: item.type,
-              is_real_book_out_num: false
-            })
-          }).catch((error) => {
-            this.showLoading = false
-            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          })
+          } else {
+            if (item.booking_registers[0].is_real_book_out_num) {
+              this.showLoading = true
+              await this.axios.post(`/booking-out/generate-number`, {
+                department_id: parseInt(localStorage.getItem('department_id')), 
+                year: this.assetsUtils.currentDate().split('/')[2]-543,
+                user_id: parseInt(localStorage.getItem('user_id')),
+                regis_id: parseInt(item.regis_id),
+              })
+              .then((response) => {
+                this.showLoading = false
+                item.booking_registers.push({
+                  book_out_num: response.data.data.out_document_number,
+                  greeting: '',
+                  department_dest_id: '',
+                  main_filename: '',
+                  attach_filename: '',
+                  signer_id: '',
+                  is_signed: false,
+                  flag: 'add',
+                  optionSelect: {
+                    signer_id: this.optionSelectDefault.signer_id,
+                    department_dest_id: this.optionSelectDefault.department_dest_id
+                  },
+                  human_flag: item.human_flag,
+                  response_id: parseInt(item.value),
+                  response_type: item.type,
+                  is_real_book_out_num: true
+                })
+              }).catch((error) => {
+                this.showLoading = false
+                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+            } else {
+              this.showLoading = true
+              await this.axios.post(`/booking-out/generate-number-draft`, {
+                department_id: parseInt(localStorage.getItem('department_id')),
+                year: this.assetsUtils.currentDate().split('/')[2]-543,
+                user_id: parseInt(localStorage.getItem('user_id'))
+                })
+              .then((response) => {
+                this.showLoading = false
+                item.booking_registers.push({
+                  book_out_num: response.data.data.out_document_number,
+                  greeting: '',
+                  department_dest_id: '',
+                  main_filename: '',
+                  attach_filename: '',
+                  signer_id: '',
+                  is_signed: false,
+                  flag: 'add',
+                  optionSelect: {
+                    signer_id: this.optionSelectDefault.signer_id,
+                    department_dest_id: this.optionSelectDefault.department_dest_id
+                  },
+                  human_flag: item.human_flag,
+                  response_id: parseInt(item.value),
+                  response_type: item.type,
+                  is_real_book_out_num: false
+                })
+              }).catch((error) => {
+                this.showLoading = false
+                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+            }
+          }
         }
       }
+      this.flagSave = 4
+      this.upload_file_all()
     },
     delete_booking_registers(item2, item, index2) {
       if (item2.flag == 'edit') {
