@@ -355,21 +355,23 @@ export default {
       if (axiosArray.length > 0) {
         this.data.table.filter(row => {
           row.attachments.filter(row2 => {
-            let formDataFile = new FormData();
-            formDataFile.append('file', row2.file);
-            formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-            this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
-            .then((responses) => {
-              row2.filename = responses.data.data.filename
-              row2.filepath = responses.data.data.path
-              fileAttachments.push(true)
-              if (axiosArray.length == fileAttachments.length) {
-                this.callApiSave(flag)
-              }
-            }).catch((error) => {
-              this.showLoading = false
-              this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-            })
+            if (row2.file && row2.flag == 'add') {
+              let formDataFile = new FormData();
+              formDataFile.append('file', row2.file);
+              formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
+              this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}})
+              .then((responses) => {
+                row2.filename = responses.data.data.filename
+                row2.filepath = responses.data.data.path
+                fileAttachments.push(true)
+                if (axiosArray.length == fileAttachments.length) {
+                  this.callApiSave(flag)
+                }
+              }).catch((error) => {
+                this.showLoading = false
+                this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+              })
+            }
           })
         })
       } else {
@@ -381,6 +383,7 @@ export default {
       this.showLoading = true
       this.data.table.filter(row=> {
         row.user_id = parseInt(localStorage.getItem('user_id'))
+        row.is_draft = flag == 1
         row.flag = flag == 1 ? 'draft' : ''
         row.greeting2 = row.bookout.greeting
       })
