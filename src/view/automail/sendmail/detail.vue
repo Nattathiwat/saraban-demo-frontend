@@ -787,7 +787,7 @@ export default {
         user_id: parseInt(localStorage.getItem('user_id'))
       }
       dataSave.attachments.filter(row => {
-        row.flag = row.flag == 'edit' ? 'add' : row.flag
+        row.flag = row.flag == 'edit' ? dataSave.id == 0 ? 'add' : '' : row.flag
       })
       this.axios.post(`/book-out-external/email-information`, dataSave)
       .then((response) => { 

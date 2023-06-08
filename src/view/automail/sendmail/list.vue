@@ -387,7 +387,7 @@ export default {
         row.flag = flag == 1 ? 'draft' : ''
         row.greeting2 = row.bookout.greeting
         row.attachments.filter(row2 => {
-          row2.flag = row2.flag == 'edit' ? 'add' : row2.flag
+          row2.flag = row2.flag == 'edit' ? row.id == 0 ? 'add' : '' : row2.flag
         })
       })
       this.axios.post(`/book-out-external/book-out-automail/series`, this.data.table)
