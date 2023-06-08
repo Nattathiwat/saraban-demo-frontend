@@ -287,7 +287,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" @click="flagSave = 4" v-show="edit">
+              <button type="submit" class="button-success button-save" @click="flagSave = 4" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -550,6 +550,7 @@ export default {
           type: file.type,
           link: URL.createObjectURL(file),
           size: (file.size /1024 /1024).toFixed(2) + ' MB',
+          filesize: file.size.toString(),
           file: file,
           flag: 'add'
         }
@@ -562,6 +563,12 @@ export default {
         item.flag = 'delete'
       } else {
         this.data.attachments.splice(index,1)
+      }
+      if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
+        this.data.attachments.push({ 
+          filename: '',
+          flag: 'add'
+        })
       }
     },
     delete_main_docs(item, index) {
@@ -1687,6 +1694,11 @@ export default {
 
           .button-success {
             width: 175px;
+            margin-right: 20px;
+          }
+
+          .button-save {
+            width: 120px;
             margin-right: 20px;
           }
 

@@ -237,12 +237,13 @@
               <div class="group-input">
                 <div class="group-input d-flex align-items-center">
                   <div class="name">สิ่งที่ส่งมาด้วย</div>
-                  <button type="button" class="add-booking-receive" :disabled="edit && data.book_type != 0" @click="add_attachments()" >
+                  <button type="button" class="add-booking-receive" :disabled="edit && data.book_type != 0" @click="upload_file('fileAttachment')">
                     <div class="group-image">
                       <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                       เพิ่มไฟล์
                     </div>
                   </button>
+                  <input type="file" multiple @change="file_attachment_add_change(`fileAttachment`)" :name="`fileAttachment`" style="display:none;">
                 </div>
                 <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
                   <div class="group-input-file">
@@ -347,7 +348,7 @@
               </button>
             </div>
             <div class="footer-right">
-              <button type="submit" class="button-success" @click="flagSave=3" v-show="edit">
+              <button type="submit" class="button-success button-save" @click="flagSave=3" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
               </button>
@@ -537,12 +538,6 @@ export default {
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
     },
-    add_attachments() {
-      this.data.attachments.push({ 
-        filename: '',
-        flag: 'add'
-      })
-    },
     delete_attachments(item, index) {
       if (item.flag == 'edit') {
         item.flag = 'delete'
@@ -550,7 +545,10 @@ export default {
         this.data.attachments.splice(index,1)
       }
       if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
-        this.add_attachments()
+        this.data.attachments.push({ 
+          filename: '',
+          flag: 'add'
+        })
       }
     },
     add_booking_refers() {
@@ -736,6 +734,26 @@ export default {
     },
     upload_file(data) {
       document.querySelector(`[name="${data}"]` ).click()
+    },
+    file_attachment_add_change(data) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        let dataFile = {
+          filename: file.name,
+          type: file.type,
+          link: URL.createObjectURL(file),
+          size: (file.size /1024 /1024).toFixed(2) + ' MB',
+          filesize: file.size.toString(),
+          file: file,
+          flag: 'add'
+        }
+        this.data.attachments.push(dataFile)
+      }
+      document.querySelector(`[name="${data}"]`).value=null;
     },
     file_set_change(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
@@ -1766,6 +1784,11 @@ export default {
 
           .button-success {
             width: 175px;
+            margin-right: 20px;
+          }
+
+          .button-save {
+            width: 120px;
             margin-right: 20px;
           }
 

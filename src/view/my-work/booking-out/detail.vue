@@ -320,12 +320,13 @@
             </div>
             <div class="group-input d-flex align-items-center mt-4">
               <div class="name">สิ่งที่แนบมาด้วย</div>
-              <button type="button" class="add-booking-out" @click="add_attachments()">
+              <button type="button" class="add-booking-out" @click="upload_file('fileAttachment')">
                 <div class="group-image">
                   <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
                   เพิ่มไฟล์
                 </div>
               </button>
+              <input type="file" multiple @change="file_attachment_add_change(`fileAttachment`)" :name="`fileAttachment`" style="display:none;">
             </div>
             <div v-if="data.booking_register_details.length>0" class="d-flex mb-3 group-input-file-all" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
               <div class="group-input-file">
@@ -1367,12 +1368,6 @@ export default {
         item.booking_registers.splice(index2,1)
       }
     },
-    add_attachments() {
-      this.data.attachments.push({ 
-        filename: '',
-        flag: 'add'
-      })
-    },
     delete_attachments(item, index) {
       if (item.flag == 'edit') {
         item.flag = 'delete'
@@ -1380,7 +1375,10 @@ export default {
         this.data.attachments.splice(index,1)
       }
       if ((this.data.attachments.length - this.data.attachments.filter(item => item.flag == 'delete').length) < 1) {
-        this.add_attachments()
+        this.data.attachments.push({ 
+          filename: '',
+          flag: 'add'
+        })
       }
     },
     add_booking_follows() {
@@ -1534,6 +1532,26 @@ export default {
         }
       }
     },
+    file_attachment_add_change(data) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        let dataFile = {
+          filename: file.name,
+          type: file.type,
+          link: URL.createObjectURL(file),
+          size: (file.size /1024 /1024).toFixed(2) + ' MB',
+          filesize: file.size.toString(),
+          file: file,
+          flag: 'add'
+        }
+        this.data.attachments.push(dataFile)
+      }
+      document.querySelector(`[name="${data}"]`).value=null;
+    },
     file_attachment_change(data, index) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
@@ -1543,8 +1561,8 @@ export default {
         }
         item.filename = file.name
         item.type = file.type
-        item.link = URL.createObjectURL(file),
-        item.size = (file.size /1024 /1024).toFixed(2) + ' MB',
+        item.link = URL.createObjectURL(file)
+        item.size = (file.size /1024 /1024).toFixed(2) + ' MB'
         item.filesize = file.size.toString()
         item.file = file
         document.querySelector(`[name="${data}"]`).value=null;
