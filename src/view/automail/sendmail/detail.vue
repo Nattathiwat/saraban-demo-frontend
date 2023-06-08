@@ -786,6 +786,9 @@ export default {
         flag: this.flag == 1 ? 'draft' : '',
         user_id: parseInt(localStorage.getItem('user_id'))
       }
+      dataSave.attachments.filter(row => {
+        row.flag = row.flag == 'edit' ? 'add' : row.flag
+      })
       this.axios.post(`/book-out-external/email-information`, dataSave)
       .then((response) => { 
         this.showLoading = false
