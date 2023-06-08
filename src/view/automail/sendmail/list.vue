@@ -216,7 +216,7 @@
                         <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : item2.link})">
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
-                        <button type="button" class="button-del" @click="deleteFile(item, item2, index2)">
+                        <button type="button" class="button-del" @click="deleteFile(item, item2, index2)" v-show="!item2.original_flag">
                           <i class="bi bi-trash icon-trash"></i>
                         </button>
                       </div>
@@ -427,7 +427,8 @@ export default {
                 size: (file.size /1024 /1024).toFixed(2) + ' MB',
                 file_size: file.size,
                 file: file,
-                flag: 'add'
+                flag: 'add',
+                original_flag: false
               }
               item.attachments.push(dataFile)
             } else {
@@ -543,6 +544,7 @@ export default {
         response.data.data.filter(row=> {
           row.attachments.filter(row2 => {
             row2.flag = 'edit'
+            row2.file_size = parseInt(row2.file_size)
             row2.file = {
               size: row2.file_size * 1024 * 1024
             }

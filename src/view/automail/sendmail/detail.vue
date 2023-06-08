@@ -279,7 +279,7 @@
                     <button type="button" class="button-view" @click="previewFile(item)">
                       <i class="bi bi-eye icon-eye"></i>
                     </button>
-                    <button type="button" class="button-del" @click="deleteFile(item, index)">
+                    <button type="button" class="button-del" @click="deleteFile(item, index)"  v-show="!item.original_flag">
                       <i class="bi bi-trash icon-trash"></i>
                     </button>
                   </div>
@@ -583,7 +583,8 @@ export default {
                 size: (file.size /1024 /1024).toFixed(2) + ' MB',
                 file_size: file.size,
                 file: file,
-                flag: 'add'
+                flag: 'add',
+                original_flag: false
               }
               this.data.attachments.push(dataFile)
             } else {
@@ -806,6 +807,7 @@ export default {
         this.data.attachments.filter(item => {
           item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
+          item.file_size = parseInt(item.file_size)
           item.file = {
             size: item.file_size * 1024 * 1024
           }
