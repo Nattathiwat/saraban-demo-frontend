@@ -916,7 +916,11 @@ export default {
               user_id: parseInt(localStorage.getItem('user_id')),
               book_regis_sub_id: parseInt(row2.id),
             }
-            axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+            if (this.modalSend.send_style_id == 1) {
+              axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+            } else {
+              axiosArray.push('')
+            }
           }
         })
       })
@@ -983,7 +987,6 @@ export default {
       })
     },
     modal_send() {
-      console.log('logs')
       this.modalSend.select = false
       this.modalSend.booking_register_details = this.data.booking_register_details
       this.modalSend.booking_register_details.filter(item => {

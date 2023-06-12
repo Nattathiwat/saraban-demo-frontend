@@ -942,7 +942,11 @@ export default {
               user_id: parseInt(localStorage.getItem('user_id')),
               book_regis_sub_id: parseInt(row2.id),
             }
-            axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+            if (this.modalSend.send_style_id == 1) {
+              axiosArray.push(this.axios.post(`/book-out-external`, dataSave))
+            } else {
+              axiosArray.push('')
+            }
           }
         })
       })
