@@ -242,7 +242,7 @@
                   <cpn-input  v-model="data.main_file_name"
                               name="main_file_name"
                               :disabled="true"/>
-                  <button type="button" class="button-view" @click="previewFile({filename: data.main_file_name, link: data.main_file_link})">
+                  <button type="button" class="button-view" @click="previewFile({filename: data.main_file_name, link: data.main_file_path ? backendport+'/'+data.main_file_path : ''})">
                     <i class="bi bi-eye icon-eye"></i>
                   </button>
                 </div>
@@ -266,7 +266,8 @@
                   <cpn-input  v-model="data.copy_main_file_name"
                               name="copy_main_file_name"
                               :disabled="true"/>
-                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_main_file_name, link: data.copy_file_link})">
+
+                  <button type="button" class="button-view" @click="previewFile({filename: data.copy_main_file_name, link: data.copy_main_file_path ? backendport+'/'+data.copy_main_file_path : ''})">
                     <i class="bi bi-eye icon-eye"></i>
                   </button>
                 </div>
@@ -804,8 +805,6 @@ export default {
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data, ...response.data.data}
-        this.data.main_file_link = this.data.main_file_path ? this.backendport+'/'+this.data.main_file_path : ''
-        this.data.copy_file_link = this.data.copy_file_path ? this.backendport+'/'+this.data.copy_file_path : ''
         this.data.attachments.filter(item => {
           item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
