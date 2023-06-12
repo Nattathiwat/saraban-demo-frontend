@@ -194,8 +194,8 @@
                   <div class="new-line">
                     <div class="name d-flex justify-content-between align-items-center mb-2">
                       <div>สิ่งที่แนบมาด้วย</div>
-                      <input type="file" multiple @change="fileChange('attachments', item)" name="attachments" style="display:none;" accept="application/pdf">
-                      <button type="button" class="button-file"  @click="uploadFile('attachments')">
+                      <input type="file" multiple @change="fileChange('attachments'+index, item)" :name="'attachments'+index" style="display:none;" accept="application/pdf">
+                      <button type="button" class="button-file"  @click="uploadFile('attachments'+index)">
                         <i class="bi bi-plus icon-plus"></i>
                         แนบเอกสาร
                       </button>
@@ -412,32 +412,30 @@ export default {
     uploadFile(data) {
       document.querySelector(`[name="${data}"]` ).click()
     },
-    fileChange(data,item) {
+    fileChange(data, item) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
         if ((this.data.fileType.indexOf(file.type)==-1)) {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        if (data == 'attachments') {
-          item?.attachments ? '' : (item.attachments = [])
-          if (file.type == 'application/pdf') {
-            if ((+this.sumfile(item) + +(file.size /1024 /1024).toFixed(2)) <= 25) { 
-              let dataFile = {
-                filename: file.name,
-                type: file.type,
-                link: URL.createObjectURL(file),
-                size: (file.size /1024 /1024).toFixed(2) + ' MB',
-                file_size: file.size,
-                file: file,
-                flag: 'add',
-                original_flag: false
-              }
-              item.attachments.push(dataFile)
-            } else {
-              this.modalAlert = {showModal: true, type: 'error', message: 'ขนาดไฟล์รวมเกิน 25MB'}
-              document.querySelector(`[name="${data}"]`).value=null;
+        item?.attachments ? '' : (item.attachments = [])
+        if (file.type == 'application/pdf') {
+          if ((+this.sumfile(item) + +(file.size /1024 /1024).toFixed(2)) <= 25) { 
+            let dataFile = {
+              filename: file.name,
+              type: file.type,
+              link: URL.createObjectURL(file),
+              size: (file.size /1024 /1024).toFixed(2) + ' MB',
+              file_size: file.size,
+              file: file,
+              flag: 'add',
+              original_flag: false
             }
+            item.attachments.push(dataFile)
+          } else {
+            this.modalAlert = {showModal: true, type: 'error', message: 'ขนาดไฟล์รวมเกิน 25MB'}
+            document.querySelector(`[name="${data}"]`).value=null;
           }
         }
       }
