@@ -983,6 +983,7 @@ export default {
       })
     },
     modal_send() {
+      console.log('logs')
       this.modalSend.select = false
       this.modalSend.booking_register_details = this.data.booking_register_details
       this.modalSend.booking_register_details.filter(item => {
