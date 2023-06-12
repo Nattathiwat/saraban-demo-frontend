@@ -921,15 +921,21 @@ export default {
         })
       })
       if (axiosArray.length>0) {
-        this.axios.all([...axiosArray])
-        .then(this.axios.spread(() => {
+        if (this.modalSend.send_style_id == 1) {
+          this.axios.all([...axiosArray])
+          .then(this.axios.spread(() => {
+            // this.modalSend.showModal = false
+            this.flagSave = 6
+            this.upload_file_all()
+          })).catch((error) => {
+            this.showLoading = false
+            this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+          })
+        } else {
           // this.modalSend.showModal = false
           this.flagSave = 6
           this.upload_file_all()
-        })).catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
+        }
       } else {
         // this.modalSend.showModal = false
       }
