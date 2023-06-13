@@ -661,7 +661,7 @@ export default {
         })
         .then((response) => {
           this.data.greeting = response.data.data.title_name
-          this.data.bookout.greeting = response.data.data.receive_person_name
+          // this.data.bookout.greeting = response.data.data.receive_person_name
           this.data.signature = response.data.data.signature
           this.modal.showModal = false
         })
