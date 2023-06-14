@@ -489,7 +489,7 @@ export default {
         })
         .then((response) => {
           if (this.flgTable) {
-            this.data.table[this.indexTable].bookout.greeting = response.data.data.receive_person_name
+            // this.data.table[this.indexTable].bookout.greeting = response.data.data.receive_person_name
             this.data.table[this.indexTable].greeting = response.data.data.title_name
             this.data.table[this.indexTable].signature = response.data.data.signature
           } else {

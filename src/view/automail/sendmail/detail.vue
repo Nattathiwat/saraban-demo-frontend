@@ -344,7 +344,7 @@
                                       </div>
                                       <div style="color:#666; font-family: 'Arial', sans-serif; line-height:1.5; padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
                                         <div style="line-height: 2.0; font-size: 12px; color: #15466e; font-family: Arial, sans-serif; margin-bottom: 20px;">
-                                          <p style="font-size: 14px; line-height: 2.0; word-break: break-word; text-align: center; margin: 0;"><strong><span style="font-size: 16px; font-weight: 500;">พีเคเอ็ม คอนซัลติ้ง กรุ๊ป จำกัด</span></strong></p>
+                                          <p style="font-size: 14px; line-height: 2.0; word-break: break-word; text-align: center; margin: 0;"><strong><span style="font-size: 16px; font-weight: 500;">{{ data.department_name }}</span></strong></p>
                                           <p style="font-size: 14px; line-height: 1.0; word-break: break-word; text-align: center; margin: 0;"><strong><span style="font-size: 14px; font-weight: 400;">ระบบสารบรรณอิเล็กทรอนิกส์</span></strong></p>
                                         </div>
                                         <div style="color:#666; font-family: 'Arial', sans-serif; line-height:1.5; padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
@@ -661,7 +661,7 @@ export default {
         })
         .then((response) => {
           this.data.greeting = response.data.data.title_name
-          this.data.bookout.greeting = response.data.data.receive_person_name
+          // this.data.bookout.greeting = response.data.data.receive_person_name
           this.data.signature = response.data.data.signature
           this.modal.showModal = false
         })
