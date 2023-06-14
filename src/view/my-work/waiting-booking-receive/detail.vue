@@ -229,7 +229,7 @@
                     <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit && data.book_type != 0" @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" class="del-department-3" :disabled="edit && data.book_type != 0" @click="delete_main_doc(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -478,7 +478,6 @@ export default {
         main_docs: [{ filename: ''}],
         attachments: [{ filename: ''}],
         sendToFile: [{ filename: ''}],
-        main_docs_del: [],
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         sendTo: [],
         booking_follows: [],
@@ -537,6 +536,19 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
+    },
+    delete_main_doc(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.main_docs.splice(index,1)
+      }
+      if ((this.data.main_docs.length - this.data.main_docs.filter(item => item.flag == 'delete').length) < 1) {
+        this.data.main_docs.push({ 
+          filename: '',
+          flag: 'add'
+        })
+      }
     },
     delete_attachments(item, index) {
       if (item.flag == 'edit') {
@@ -820,22 +832,9 @@ export default {
     },
     upload_file_all() {
       let currentDate = this.assetsUtils.currentDate()
-      let axiosArray1 = []
       let axiosArray2 = []
-      let fileMain_docs = []
       let file_attachments = []
-      let fileMain_docs_old = []
 
-      this.data.main_docs.filter((item) => {
-        if (item.file) {
-          let formDataFile = new FormData();
-          formDataFile.append('file', item.file);
-          formDataFile.append('dst', `${currentDate.split('/')[0]+'-'+currentDate.split('/')[1]+'-'+currentDate.split('/')[2]}`)
-          axiosArray1.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
-        } else if (item.id) {
-          fileMain_docs_old.push({filename: item.filename, filepath: item.filepath})
-        }
-      });
       this.data.attachments.filter((item) => {
         if (item.file) {
           let formDataFile = new FormData();
@@ -844,27 +843,13 @@ export default {
           axiosArray2.push(this.axios.post(`/upload/single`, formDataFile, {headers: {'Content-Type': 'multipart/form-data'}}))
         }
       });
-      if (axiosArray1.length>0) {
-        this.axios.all([...axiosArray1])
-        .then(this.axios.spread((...responses) => {
-          responses.filter((item, index) => {
-            fileMain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
-          })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
-            this.upload_file_all2(file_attachments)
-          }
-        })).catch((error) => {
-          this.showLoading = false
-          this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-        })
-      }
       if (axiosArray2.length>0) {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
             file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
           })
-          if (axiosArray1.length == fileMain_docs.length && axiosArray2.length == file_attachments.length) {
+          if (axiosArray2.length == file_attachments.length) {
             this.upload_file_all2(file_attachments)
           }
         })).catch((error) => {
@@ -872,7 +857,7 @@ export default {
           this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
         })
       }
-      if (axiosArray1.length<1 && axiosArray2.length<1) {
+      if (axiosArray2.length<1) {
         this.upload_file_all2(file_attachments)
       }
     },
@@ -985,6 +970,16 @@ export default {
           this.data.booking_follows.push(data)
         }
       })
+      this.data.main_docs.filter(item => {
+        if (item.flag == 'delete') {
+          fileMain_docs.push(item)
+        }
+      })
+      this.data.attachments.filter(item => {
+        if (item.flag == 'delete') {
+          file_attachments.push(item)
+        }
+      })
       let dataSave = {
         original_flag: this.data.original_flag,
         receive_regis_id: parseInt(this.data.receive_regis_id),
@@ -1000,7 +995,7 @@ export default {
         book_desc: this.data.book_desc,
         tag: tag,
         contracts: this.data.contracts,
-        main_docs: [...fileMain_docs, ...this.data.main_docs_del],
+        main_docs: fileMain_docs,
         attachments: file_attachments,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
         booking_follows: this.data.booking_follows,
@@ -1033,11 +1028,7 @@ export default {
       })
       .then((response) => { 
         this.showLoading = false
-        let main_docs_del = []
-        response.data.data.main_docs.filter(item => {
-          main_docs_del.push({...item,flag: 'delete'})
-        })
-        response.data.data = {...this.data,...response.data.data, main_docs_del}
+        response.data.data = {...this.data,...response.data.data}
         this.data = JSON.parse(JSON.stringify(response.data.data))
         this.data.tag = []
         response.data.data.tag?.split(',').filter(item => {
@@ -1061,21 +1052,13 @@ export default {
           })
         })
         this.data.main_docs.filter(item => {
-          item.flag = 'add'
+          item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.attachments.filter(item => {
-          item.flag = 'add'
+          item.flag = 'edit'
           item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
-          return item
-        })
-        this.data.contracts.filter(item => {
-          item.flag = 'add'
-          return item
-        })
-        this.data.booking_follows.filter(item => {
-          item.flag = 'add'
           return item
         })
         this.data.booking_follows = []
