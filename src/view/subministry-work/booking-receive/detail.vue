@@ -987,6 +987,7 @@ export default {
         }
       })
       let dataSave = {
+        ...this.data,
         original_flag: this.data.original_flag,
         receive_regis_id: parseInt(this.data.receive_regis_id),
         book_type_id: parseInt(this.data.book_type_id),
