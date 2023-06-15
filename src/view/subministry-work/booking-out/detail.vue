@@ -306,7 +306,7 @@
               <div class="group-input-file">
                 <button type="button" class="button-file" @click="upload_file(`fileAttachment${index}`)">
                   <span :class="item.filename ? '' : 'no-data'">
-                    {{item.filename ? item.filename : 'หนังสือต้นเรื่อง'}}
+                    {{item.filename ? item.filename : 'สิ่งที่แนบมาด้วย'}}
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
