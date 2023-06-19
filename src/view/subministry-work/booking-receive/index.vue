@@ -254,11 +254,12 @@ export default {
               _this.data.table.filter((row) => {
                 if (_this.checkedList.length > 0) {
                   let groupdata = { 
-                    id: row.id,
+                    id: parseInt(row.id),
                     regis_id: parseInt(row.regis_id),
                     book_type: parseInt(row.book_type),
                     user_id: parseInt(localStorage.getItem('user_id')),
-                    page_flag : 'owner'
+                    page_flag : 'owner',
+                    flag: 'confirm',
                   }
                   if (row.selected) {
                     axiosArray.push(groupdata)

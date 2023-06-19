@@ -1208,9 +1208,9 @@ export default {
           msgSuccess: true,
           afterPressAgree() {
             let groupdata = [{
+              id: parseInt(_this.$route.params.id),
               regis_id: parseInt(_this.$route.query.regis_id),
               book_type: parseInt(_this.$route.query.book_type),
-              id: parseInt(_this.$route.params.id),
               user_id: parseInt(localStorage.getItem('user_id')),
               page_flag : 'owner',
               flag: 'confirm',
