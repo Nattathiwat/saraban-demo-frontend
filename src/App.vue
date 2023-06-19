@@ -133,6 +133,10 @@
                 <div class="icon-circle" />
                 ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย
               </div>
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'email-agency' || $route.name == 'email-agency-create' || $route.name == 'email-agency-edit' ? 'active2': ''" @click="$router.push({name: 'email-agency'})">
+                <div class="icon-circle" />
+                ตั้งค่าอีเมลสำหรับส่งหนังสือ
+              </div>
             </div>
           </div>
           <div class="version">
@@ -325,6 +329,12 @@ export default {
         return [{name: 'รายการส่งอีเมล', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-list', query: this.$route.query}]
       } else if (this.$route.name == 'automail-sendmail-edit') {
         return [{name: 'รายการส่งอีเมล', path: ''}, {name: 'รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail'}, {name: 'ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ', path: 'automail-sendmail-edit', query: this.$route.query}]
+      } else if (this.$route.name == 'email-agency') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าอีเมลสำหรับส่งหนังสือ', path: 'email-agency'}]
+      } else if (this.$route.name == 'email-agency-create') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าอีเมลสำหรับส่งหนังสือ', path: 'email-agency'}, {name: 'สร้างอีเมลสำหรับส่งหนังสือของหน่วยงาน', path: 'email-agency-create'}]
+      } else if (this.$route.name == 'email-agency-edit') {
+        return [{name: 'มาสเตอร์', path: ''}, {name: 'ตั้งค่าอีเมลสำหรับส่งหนังสือ', path: 'email-agency'}, {name: 'แก้ไขอีเมลสำหรับส่งหนังสือของหน่วยงาน', path: 'email-agency-edit', query: this.$route.query}]
       } else {
         return [{name: this.$route.name , path: this.$route.name }]
       }

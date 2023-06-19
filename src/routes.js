@@ -286,6 +286,21 @@ export default {
           name: 'file',
           component: () => import("./view/master/file/index.vue"),
         },
+        { 
+          path: 'email-agency', 
+          name: 'email-agency',
+          component: () => import("./view/master/email-agency/index.vue"),
+        },
+        { 
+          path: 'email-agency/create', 
+          name: 'email-agency-create',
+          component: () => import("./view/master/email-agency/detail.vue"),
+        },
+        { 
+          path: 'email-agency/:id', 
+          name: 'email-agency-edit',
+          component: () => import("./view/master/email-agency/detail.vue"),
+        }
       ]
     },
     {

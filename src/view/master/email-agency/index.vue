@@ -1,15 +1,15 @@
 <template>
-  <div class="master-submin-inex">
+  <div class="master-email-agency-inex">
     <div class="group-overflow">
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
             <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
-            <div class="name">กอง</div>
+            <div class="name">ตั้งค่าอีเมลสำหรับส่งหนังสือ</div>
             <button type="button" class="add-department" @click="addClick()">
               <div class="group-image">
                 <img src="@/assets/images/icon/plus-circle-duotone.svg" alt="" class="icon-plus">
-                เพิ่มกอง
+                เพิ่มอีเมลหน่วยงาน
               </div>
             </button>
           </div>
@@ -29,31 +29,24 @@
           <table class="table-department-inex">
             <thead class="thead">
               <tr class="thead-row">
-                <th class="col1">รหัสกอง</th>
-                <th class="col2">ชื่อย่อกอง</th>
-                <th class="col3">ชื่อกอง</th>
-                <th class="col4">รายละเอียด</th>
-                <th class="col5">วันที่สร้าง</th>
-                <th class="col7">เครื่องมือ</th>
+                <th class="col1">ชื่อหน่วยงาน</th>
+                <th class="col2">วันที่สร้าง</th>
+                <th class="col3">เครื่องมือ</th>
               </tr>
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.code}}</td>
-                <td class="col2">{{item.short_name}}</td>
-                <td class="col3">{{item.Name}}</td>
-                <td class="col4">{{item.desc}}</td>
-                <td class="col5">{{item.created_at}}</td>
-                <td class="col7">
+                <td class="col1">{{item.name}}</td>
+                <td class="col2">{{item.created_at}}</td>
+                <td class="col3">
                   <div class="group-icon">
-                    <div  class="image-status" :class="item.active_flag == 1 ? 'active' : '' "></div>
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
                     <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
                   </div>
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="6">ไม่มีข้อมูล</td>
+                <td colspan="3">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
@@ -74,7 +67,7 @@
 </template>
 <script>
 export default {
-  name: 'agency-inex',
+  name: 'email-agency-inex',
   data() {
     return {
       modalAlert: {
@@ -96,12 +89,12 @@ export default {
   methods: {
     addClick() {
       this.$router.push({ 
-        name: 'subministry-create',
+        name: 'email-agency-create',
       }).catch(()=>{});
     },
     editClick(item) {
       this.$router.push({ 
-        name: 'subministry-edit',
+        name: 'email-agency-edit',
         params: {id: item.id},
         query: {
           page: this.data.page,
@@ -112,18 +105,18 @@ export default {
     pageChange(data) {
       this.data.perPage = data.perPage
       this.data.page = data.page
-      this.apisubminist()
+      this.apiEmailAgency()
     },
     search() {
       this.data.status = true
       this.data.perPage = 10
       this.data.page = 1
-      this.apisubminist()
+      this.apiEmailAgency()
     },
-    apisubminist() {
+    apiEmailAgency() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/subministry', {
+      this.axios.get('/group', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -148,22 +141,22 @@ export default {
       this.modalAlert = {
         showModal: true,
         type: 'confirm',
-        title: `คุณยืนยันการลบกอง`,
-        message: `“${data.Name}” ใช่หรือไม่`,
+        title: `คุณยืนยันการลบหน่วยงาน`,
+        message: `“${data.name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/subministry/${data.id}`)
+          _this.axios.delete(`/group/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
               showModal: true,
               type: 'success',
-              title: 'ทำการลบกองสำเร็จแล้ว',
+              title: 'ทำการลบหน่วยงานสำเร็จแล้ว',
               msgSuccess: true,
               afterPressAgree() {
-                _this.apisubminist()
+                _this.apiEmailAgency()
               }
             }
           })
@@ -178,13 +171,13 @@ export default {
   mounted() {
     this.data.page = this.$route.query?.page || this.data.page
     this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.apisubminist()
+    this.apiEmailAgency()
   },
 }
 
 </script>
 <style lang="scss">
-  .master-submin-inex {
+  .master-email-agency-inex {
     .group-overflow {
       // overflow: auto;
     }
@@ -311,38 +304,18 @@ export default {
 
             .col1 {
               min-width: 250px;
-              width: 15%;
+              width: 25%;
               padding-left: 28px !important;
             }
 
             .col2 {
-              min-width: 170px;
+              min-width: 150px;
               width: 15%;
             }
 
             .col3 {
-              min-width: 170px;
-              width: 15%;
-            }
-
-            .col4 {
-              min-width: 170px;
-              width: 15%;
-            }
-
-            .col5 {
-              min-width: 170px;
-              width: 15%;
-            }
-
-            .col6 {
-              min-width: 170px;
-              width: 15%;
-            }
-
-            .col7 {
-              min-width: 170px;
-              width: 15%;
+              min-width: 100px;
+              width: 10%;
               padding-right: 28px !important;
             }
           }
@@ -366,14 +339,14 @@ export default {
               }
 
               .text-left {
-                text-align: left;
               }
 
               .col1 {
-                padding-left: 28px;
+                padding-left: 60px;
+                text-align: left;
               }
 
-              .col7 {
+              .col3 {
                 padding-right: 28px;
 
                 .group-icon {
@@ -381,18 +354,6 @@ export default {
                   height: 70px;
                   align-items: center;
                   justify-content: center;
-
-                  .image-status{
-                    width: 21px;
-                    height: 21px;
-                    margin-right: 28px;
-                    border-radius: 50%;
-                    background-color: grey;
-                  }
-
-                  .active{
-                    background-color: green;
-                  }
 
                   .image-pencil {
                     width: 21px;

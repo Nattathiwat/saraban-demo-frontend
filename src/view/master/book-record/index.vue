@@ -53,7 +53,7 @@
                 </td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="4">ไม่มีข้อมูล</td>
+                <td colspan="6">ไม่มีข้อมูล</td>
               </tr>
             </tbody>
           </table>
