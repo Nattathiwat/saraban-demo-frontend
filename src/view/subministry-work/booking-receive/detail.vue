@@ -476,7 +476,7 @@ export default {
         contracts: [{
           department_id: '',
           department_other: '',
-          receive_type: '',
+          receive_type: '20',
           contract_name: '',
           contract_phone: '',
           contract_mail: '',
