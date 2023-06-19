@@ -260,6 +260,7 @@ export default {
                     user_id: parseInt(localStorage.getItem('user_id')),
                     page_flag : 'owner',
                     flag: 'confirm',
+                    response_id: parseInt(row.response_id),
                   }
                   if (row.selected) {
                     axiosArray.push(groupdata)

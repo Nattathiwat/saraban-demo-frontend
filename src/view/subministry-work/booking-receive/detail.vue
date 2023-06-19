@@ -1214,6 +1214,7 @@ export default {
               user_id: parseInt(localStorage.getItem('user_id')),
               page_flag : 'owner',
               flag: 'confirm',
+              response_id: parseInt(_this.$route.query.response_id),
             }]
             _this.showLoading = true
             _this.axios.put(`/booking-receive/multi-receive`, groupdata)
