@@ -14,6 +14,7 @@
               :placeholder="placeholder"
               v-on:keyup="onKeyup($event.target.value)"
               @keydown="onKeydown"
+              @focusout="handleFocusout"
               />
     </div>
     <ErrorMessage :name="name+'InputTags'" v-slot="{ message }">
@@ -39,6 +40,24 @@ export default {
   },
   props: ['name', 'placeholder', 'modelValue', 'class', 'style', 'disabled', 'rules', 'errorMessage', 'optionSelect', 'flagSearch'],
   methods: {
+    handleFocusout(e) {
+      if (this.flagSearch) {
+        this.value = ''
+      } else {
+        if (e.target.value) {
+          if (!this.data.some(el => el.name === e.target.value)) {
+            this.data.push({name: e.target.value, value: ''})
+            this.$emit('update:modelValue', this.data)
+          }
+          this.value = ''
+        }
+        e.stopPropagation();
+        e.preventDefault();  
+        e.returnValue = false;
+        e.cancelBubble = true;
+        return false
+      }
+    },
     onKeyup(data) {
       this.$emit('keyupData', data)
       if (this.flagSearch) {
@@ -53,6 +72,11 @@ export default {
       if (this.flagSearch) {
         if (e.key === 'Enter' || e.keyCode === 13) {
           this.value = ''
+          e.stopPropagation();
+          e.preventDefault();  
+          e.returnValue = false;
+          e.cancelBubble = true;
+          return false
         }
       } else {
         if (e.key === 'Enter' || e.keyCode === 13) {
