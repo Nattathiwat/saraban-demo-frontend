@@ -226,7 +226,7 @@
                       </span>
                     </button>
                     <div :class="edit && data.book_type != 0 ? 'text disabled' : 'text pointer'" @click="edit && data.book_type != 0 ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
+                    <input type="file" @change="file_set_change2(`main_docs${index}`, item, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   <button type="button" class="del-department-3" :disabled="edit && data.book_type != 0" @click="delete_main_doc(item, index)">
@@ -253,7 +253,7 @@
                       </span>
                     </button>
                     <div :class="edit && data.book_type != 0 ? 'text disabled' : 'text pointer'" @click="edit && data.book_type != 0 ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    <input type="file" @change="file_set_change2(`attachments${index}`, item, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   <button type="button" class="del-department-3" :disabled="edit && data.book_type != 0" @click="delete_attachments(item, index)">
@@ -277,7 +277,7 @@
               <div class="name d-flex justify-content-between">
                 <div>ความเห็น / คำสั่ง</div>
                 <div>
-                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <input type="file" @change="file_set_change1('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
                   <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
                     <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
                     แนบเอกสาร
@@ -767,26 +767,14 @@ export default {
       }
       document.querySelector(`[name="${data}"]`).value=null;
     },
-    file_set_change(data, index, name) {
+    file_set_change1(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
         if ((this.data.FileType.indexOf(file.type)==-1)) {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        if (name == 'main_docs') {
-          if (file.type == 'application/pdf') {
-            let dataFile = {
-              filename: file.name,
-              type: file.type,
-              link: URL.createObjectURL(file),
-              size: (file.size /1024 /1024).toFixed(2) + ' MB',
-              file: file,
-            }
-            this.data[name][index] = {...this.data[name][index], ...dataFile}
-            document.querySelector(`[name="${data}"]`).value=null;
-          }
-        } else if (name == 'sendTo') {
+        if (name == 'sendTo') {
           let dataFile = {
             filename: file.name,
             type: file.type,
@@ -795,15 +783,46 @@ export default {
             file: file,
           }
           this.data.sendToFile = dataFile
-        } else {
-          let dataFile = {
-            filename: file.name,
-            type: file.type,
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
+        }
+      }
+    },
+    file_set_change2(data, item, name) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
+            if (item.flag == 'edit') {
+              item.flag = 'delete'
+              this.data.main_docs.push({ 
+                filename: file.name,
+                type: file.type,
+                link: URL.createObjectURL(file),
+                size: (file.size /1024 /1024).toFixed(2) + ' MB',
+                filesize: file.size.toString(),
+                file: file,
+                flag: 'add'
+              })
+            } else {
+              item.filename = file.name
+              item.type = file.type
+              item.link = URL.createObjectURL(file)
+              item.size = (file.size /1024 /1024).toFixed(2) + ' MB'
+              item.filesize = file.size.toString()
+              item.file = file
+            }
+            document.querySelector(`[name="${data}"]`).value=null;
           }
-          this.data[name][index] = {...this.data[name][index], ...dataFile}
+        } else {
+          item.filename = file.name
+          item.type = file.type
+          item.link = URL.createObjectURL(file)
+          item.size = (file.size /1024 /1024).toFixed(2) + ' MB'
+          item.filesize = file.size.toString()
+          item.file = file
           document.querySelector(`[name="${data}"]`).value=null;
         }
       }
@@ -835,7 +854,6 @@ export default {
       let currentDate = this.assetsUtils.currentDate()
       let axiosArray2 = []
       let file_attachments = []
-
       this.data.attachments.filter((item) => {
         if (item.file) {
           let formDataFile = new FormData();
@@ -848,7 +866,7 @@ export default {
         this.axios.all([...axiosArray2])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
+            file_attachments.push({...this.data.attachments.filter(el => el.file)[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray2.length == file_attachments.length) {
             this.upload_file_all2(file_attachments)
@@ -878,7 +896,7 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+            filemain_docs.push({...this.data.main_docs.filter(el => el.file)[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == filemain_docs.length) {
             this.upload_file_all3(filemain_docs,file_attachments)

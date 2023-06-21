@@ -169,10 +169,10 @@
                       </span>
                     </button>
                     <div :class="data.is_disable ? 'text' : 'text pointer'" @click="data.is_disable ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change(`main_docs${index}`, index, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
+                    <input type="file" @change="file_set_change2(`main_docs${index}`, item, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" :disabled="data.is_disable" class="del-department-3"  @click="data.main_docs.length > 1 ? data.main_docs.splice(index,1) : item.filename = ''">
+                  <button type="button" :disabled="data.is_disable" class="del-department-3"  @click="delete_main_doc(item, index)">
                     <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                   </button>
                 </div>
@@ -196,7 +196,7 @@
                       </span>
                     </button>
                     <div :class="data.is_disable ? 'text' : 'text pointer'" @click="data.is_disable ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change(`attachments${index}`, index, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    <input type="file" @change="file_set_change2(`attachments${index}`, item, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
                   <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
                   <button type="button" :disabled="data.is_disable" class="del-department-3"   @click="delete_attachments(item, index)">
@@ -220,7 +220,7 @@
               <div class="name d-flex justify-content-between">
                 <div>ความเห็น / คำสั่ง</div>
                 <div>
-                  <input type="file" @change="file_set_change('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
+                  <input type="file" @change="file_set_change1('sendTo', 0, 'sendTo')" name="sendTo" style="display:none;">
                   <button v-if="!data.sendToFile?.filename" type="button" class="button-con pointer" @click="upload_file('sendTo')">
                     <img src="@/assets/images/icon/paperclip-solid.svg" alt="" class="icon-paperclip">
                     แนบเอกสาร
@@ -558,6 +558,19 @@ export default {
       }
       document.querySelector(`[name="${data}"]`).value=null;
     },
+    delete_main_doc(item, index) {
+      if (item.flag == 'edit') {
+        item.flag = 'delete'
+      } else {
+        this.data.main_docs.splice(index,1)
+      }
+      if ((this.data.main_docs.length - this.data.main_docs.filter(item => item.flag == 'delete').length) < 1) {
+        this.data.main_docs.push({ 
+          filename: '',
+          flag: 'add'
+        })
+      }
+    },
     delete_attachments(item, index) {
       if (item.flag == 'edit') {
         item.flag = 'delete'
@@ -690,26 +703,14 @@ export default {
     upload_file(data) {
       document.querySelector(`[name="${data}"]`).click()
     },
-    file_set_change(data, index, name) {
+    file_set_change1(data, index, name) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
         if ((this.data.FileType.indexOf(file.type)==-1)) {
           this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
           return false
         }
-        if (name == 'main_docs') {
-          if (file.type == 'application/pdf') {
-            let dataFile = {
-              filename: file.name,
-              type: file.type,
-              link: URL.createObjectURL(file),
-              size: (file.size /1024 /1024).toFixed(2) + ' MB',
-              file: file,
-            }
-            this.data[name][index] = {...this.data[name][index], ...dataFile}
-            document.querySelector(`[name="${data}"]`).value=null;
-          }
-        } else if (name == 'sendTo') {
+        if (name == 'sendTo') {
           let dataFile = {
             filename: file.name,
             type: file.type,
@@ -718,15 +719,33 @@ export default {
             file: file,
           }
           this.data.sendToFile = dataFile
-        } else {
-          let dataFile = {
-            filename: file.name,
-            type: file.type,
-            link: URL.createObjectURL(file),
-            size: (file.size /1024 /1024).toFixed(2) + ' MB',
-            file: file,
+        }
+      }
+    },
+    file_set_change2(data, item, name) {
+      for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
+        let file = document.querySelector(`[name="${data}"]`).files[i]
+        if ((this.data.FileType.indexOf(file.type)==-1)) {
+          this.modalAlert = {showModal: true, type: 'error', message: this.defaultMessageErrorFile}
+          return false
+        }
+        if (name == 'main_docs') {
+          if (file.type == 'application/pdf') {
+            item.filename = file.name
+            item.type = file.type
+            item.link = URL.createObjectURL(file)
+            item.size = (file.size /1024 /1024).toFixed(2) + ' MB'
+            item.filesize = file.size.toString()
+            item.file = file
+            document.querySelector(`[name="${data}"]`).value=null;
           }
-          this.data[name][index] = {...this.data[name][index], ...dataFile}
+        } else {
+          item.filename = file.name
+          item.type = file.type
+          item.link = URL.createObjectURL(file)
+          item.size = (file.size /1024 /1024).toFixed(2) + ' MB'
+          item.filesize = file.size.toString()
+          item.file = file
           document.querySelector(`[name="${data}"]`).value=null;
         }
       }
@@ -804,7 +823,7 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            file_attachments.push({...this.data.attachments[index], ...item.data.data, filepath: item.data.data.path})
+            file_attachments.push({...this.data.attachments.filter(el => el.file)[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == file_attachments.length) {
             this.upload_file_all2(file_attachments)
@@ -833,7 +852,7 @@ export default {
         this.axios.all([...axiosArray1])
         .then(this.axios.spread((...responses) => {
           responses.filter((item, index) => {
-            filemain_docs.push({...this.data.main_docs[index], ...item.data.data, filepath: item.data.data.path})
+            filemain_docs.push({...this.data.main_docs.filter(el => el.file)[index], ...item.data.data, filepath: item.data.data.path})
           })
           if (axiosArray1.length == filemain_docs.length) {
             this.upload_file_all3(filemain_docs,file_attachments)
@@ -926,6 +945,16 @@ export default {
           this.data.booking_follows.push(data)
         }
       })
+      this.data.main_docs.filter(item => {
+        if (item.flag == 'delete') {
+          filemain_docs.push(item)
+        }
+      })
+      this.data.attachments.filter(item => {
+        if (item.flag == 'delete') {
+          file_attachments.push(item)
+        }
+      })
       let dataSave = {
         create_type: parseInt(this.data.create_type),
         creater_id: this.data.creater_id ? parseInt(this.data.creater_id) : parseInt(localStorage.getItem('user_id')),
@@ -993,11 +1022,8 @@ export default {
           return item
         })
         this.data.main_docs.filter(item => {
-          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
-          return item
-        })
-        this.data.booking_follows.filter(item => {
           item.flag = 'edit'
+          item.link = item.filepath ? this.backendport+'/'+item.filepath : ''
           return item
         })
         this.data.booking_follows = []

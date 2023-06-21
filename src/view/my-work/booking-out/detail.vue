@@ -336,7 +336,7 @@
                   </span>
                 </button>
                 <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, index)" :name="`fileAttachment${index}`" style="display:none;">
+                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, item)" :name="`fileAttachment${index}`" style="display:none;">
               </div>
               <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
               <button type="button" class="del-department-3" @click="delete_attachments(item, index)">
@@ -1562,7 +1562,7 @@ export default {
       }
       document.querySelector(`[name="${data}"]`).value=null;
     },
-    file_attachment_change(data, index) {
+    file_attachment_change(data, item) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
         let file = document.querySelector(`[name="${data}"]`).files[i]
         if ((this.data.FileType.indexOf(file.type)==-1)) {
