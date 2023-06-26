@@ -164,7 +164,7 @@ export default {
       // // this.data.total = 1
       
       this.showLoading = true
-      this.axios.get('/booking-receive/waiting-receive', {
+      this.axios.get('/booking-receive/deliver/waiting-receive', {
         params: {
           keyword: this.data.search,
           page_size: this.data.perPage,
@@ -201,37 +201,6 @@ export default {
         this.showLoading = false
         this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
       })
-    },
-    deleteClick(data) {
-      let _this = this
-      this.modalAlert = {
-        showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการลบหนังสือรอรับเข้า`,
-        message: `“${data.name}” ใช่หรือไม่`,
-        confirm: true,
-        msgSuccess: true,
-        afterPressAgree() {
-          // _this.showLoading = true
-          // _this.axios.delete(`/v1/master_data/division/${data.id}`)
-          // .then(() => { 
-          //   _this.showLoading = false
-            _this.modalAlert = {
-              showModal: true,
-              type: 'success',
-              title: 'ทำการลบหนังสือรอรับเข้าสำเร็จแล้ว',
-              msgSuccess: true,
-              afterPressAgree() {
-                _this.apigetimport()
-              }
-            }
-          // })
-          // .catch((error) => {
-          //   _this.showLoading = false
-          //   _this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-          // })
-        }
-      }
     },
   },
   mounted() {
