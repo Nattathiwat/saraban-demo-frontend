@@ -21,11 +21,11 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">หน่วยงาน <span class="required">*</span></div>
-                <cpn-autoComplete v-model="data.department"
-                                  name="department"
+                <cpn-autoComplete v-model="data.department_id"
+                                  name="department_id"
                                   rules="required"
                                   placeholder="กรุณาระบุ"
-                                  :optionSelect="optionSelect.department"
+                                  :optionSelect="optionSelect.department_id"
                                   @keyup="keyupDepartment($event)" />
               </div>
               <div class="group-input left"></div>
@@ -33,45 +33,45 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">Email delivery method</div>
-                <cpn-select v-model="data.emailDelivery"
-                            name="emailDelivery"
+                <cpn-select v-model="data.deliver_method_id"
+                            name="deliver_method_id"
                             placeholder="กรุณาระบุ"
-                            :optionSelect="optionSelect.emailDelivery" />
+                            :optionSelect="optionSelect.deliver_method_id" />
               </div>
               <div class="group-input">
                 <div class="name">SMTP username</div>
-                <cpn-input  v-model="data.username"
-                            name="username"
+                <cpn-input  v-model="data.smtp_username"
+                            name="smtp_username"
                             placeholder="กรุณาระบุ"
                             type="text" />
               </div>
               <div class="group-input">
                 <div class="name">SMTP password</div>
-                <cpn-input  v-model="data.password"
-                            name="password"
+                <cpn-input  v-model="data.smtp_password"
+                            name="smtp_password"
                             placeholder="กรุณาระบุ"
-                            type="text" />
+                            type="password" />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">SMTP server</div>
-                <cpn-input  v-model="data.server"
-                            name="server"
+                <cpn-input  v-model="data.smtp_server"
+                            name="smtp_server"
                             placeholder="กรุณาระบุ"
                             type="text" />
               </div>
               <div class="group-input">
                 <div class="name">SMTP port</div>
-                <cpn-input  v-model="data.port"
-                            name="port"
+                <cpn-input  v-model="data.smtp_port"
+                            name="smtp_port"
                             placeholder="กรุณาระบุ"
                             type="text" />
               </div>
               <div class="group-input">
                 <div class="name">SMTP HELLO domain</div>
-                <cpn-input  v-model="data.domain"
-                            name="domain"
+                <cpn-input  v-model="data.smtp_hello_domain"
+                            name="smtp_hello_domain"
                             placeholder="กรุณาระบุ"
                             type="text" />
               </div>
@@ -79,19 +79,19 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">SMTP authentication</div>
-                <cpn-select v-model="data.authentication"
-                            name="authentication"
+                <cpn-select v-model="data.smtp_authen_id"
+                            name="smtp_authen_id"
                             placeholder="กรุณาระบุ"
-                            :optionSelect="optionSelect.authentication" />
+                            :optionSelect="optionSelect.smtp_authen_id" />
               </div>
               <div class="group-input d-flex align-items-center mb-0">
-                <cpn-checkbox v-model="data.automatically"
-                              name="automatically" />
+                <cpn-checkbox v-model="data.is_start_tls"
+                              name="is_start_tls" />
                 <div class="name mb-0">Automatically use STARTTLS if available</div>
               </div>
               <div class="group-input d-flex align-items-center mb-0">
-                <cpn-checkbox v-model="data.connection"
-                              name="connection" />
+                <cpn-checkbox v-model="data.is_ssl_connection"
+                              name="is_ssl_connection" />
                 <div class="name mb-0">Use SSL connection</div>
               </div>
             </div>
@@ -131,21 +131,21 @@ export default {
       showLoading: false,
       edit: false,
       data: {
-        department: '',
-        emailDelivery: '',
-        username: '',
-        password: '',
-        server: '',
-        port: '',
-        domain: '',
-        authentication: '',
-        automatically: '',
-        connection: ''
+        department_id: '',
+        deliver_method_id: '',
+        smtp_username: '',
+        smtp_password: '',
+        smtp_server: '',
+        smtp_port: '',
+        smtp_hello_domain: '',
+        smtp_authen_id: '',
+        is_start_tls: false,
+        is_ssl_connection: false
       },
       optionSelect:{
-          department:[],
-          emailDelivery: [],
-          authentication: []
+          department_id:[],
+          deliver_method_id: [],
+          smtp_authen_id: []
         }
     }
   },
@@ -161,16 +161,16 @@ export default {
     },
     cancelClick() {
       this.back()
-      this.data.department = ''
-      this.data.emailDelivery = ''
-      this.data.username = ''
-      this.data.password = ''
-      this.data.server = ''
-      this.data.port = ''
-      this.data.domain = ''
-      this.data.authentication = ''
-      this.data.automatically = ''
-      this.data.connection = ''
+      this.data.department_id = ''
+      this.data.deliver_method_id = ''
+      this.data.smtp_username = ''
+      this.data.smtp_password = ''
+      this.data.smtp_server = ''
+      this.data.smtp_port = ''
+      this.data.smtp_hello_domain = ''
+      this.data.smtp_authen_id = ''
+      this.data.is_start_tls = false
+      this.data.is_ssl_connection = false
     },
     onSubmit() {
       let _this = this
@@ -182,15 +182,21 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           let dataSave = {
-            desc: _this.data.desc,
-            name: _this.data.name,
-            short_name: _this.data.short_name,
-            subministry_id: _this.data.subministry_id,
-            organization_id: _this.data.organization_id,
-            department_id: _this.data.department_id
+            department_id: parseInt(_this.data.department_id),
+            department_name: _this.optionSelect.department_id.filter(item => item.value == _this.data.department_id)?.[0].name,
+            deliver_method_id: parseInt(_this.data.deliver_method_id),
+            smtp_username: _this.data.smtp_username,
+            smtp_server: _this.data.smtp_server,
+            smtp_password: _this.data.smtp_password,
+            smtp_port: _this.data.smtp_port,
+            smtp_hello_domain: _this.data.smtp_hello_domain,
+            smtp_authen_id: parseInt(_this.data.smtp_authen_id),
+            is_start_tls: _this.data.is_start_tls,
+            is_ssl_connection: _this.data.is_ssl_connection,
+            user_id: parseInt(localStorage.getItem('user_id'))
           }
           _this.showLoading = true
-          _this.axios[_this.edit ? 'put' : 'post'](`/group${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
+          _this.axios[_this.edit ? 'put' : 'post'](`/email-config${_this.edit ? '/' + _this.$route.params.id : ''}`, dataSave)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {showModal: true, type: 'success', title: _this.edit ? 'ทำการแก้ไขหน่วยงานสำเร็จแล้ว' : 'ทำการสร้างหน่วยงานสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() }}
@@ -204,7 +210,7 @@ export default {
     },
     apiDetail() {
       this.showLoading = true
-      this.axios.get(`/group/${this.$route.params.id}`)
+      this.axios.get(`/email-config/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
         this.data = {...this.data,...response.data.data}
@@ -217,37 +223,40 @@ export default {
     api_master() {
       this.showLoading = true
       const response1 = this.axios.get('/master-data/department')
-      const response2 = this.axios.get('/department')
-      const response3 = this.axios.get('/subministry')
+      // const response2 = this.axios.get('/department')
+      // const response3 = this.axios.get('/subministry')
 
-      this.axios.all([response1, response2, response3])
+      // this.axios.all([response1, response2, response3])
+      this.axios.all([response1])
       .then(this.axios.spread ((...responses) =>{
         this.showLoading = false;
         const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
+        // const response2 = responses[1]
+        // const response3 = responses[2]
 
         response1.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.name
-          return item
-        })
-
-        response2.data.data.filter(item => {
           item.value = item.id
           item.name = item.department_full_name
           return item
         })
 
-        response3.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.Name
-          return item
-        })
+        // response2.data.data.filter(item => {
+        //   item.value = item.id
+        //   item.name = item.name
+        //   return item
+        // })
 
-        this.optionSelect.department = response1.data.data
-        this.optionSelect.emailDelivery = response2.data.data
-        this.optionSelect.authentication = response3.data.data
+        // response3.data.data.filter(item => {
+        //   item.value = item.id
+        //   item.name = item.Name
+        //   return item
+        // })
+
+        this.optionSelect.department_id = response1.data.data
+        // this.optionSelect.deliver_method_id = response2.data.data
+        // this.optionSelect.smtp_authen_id = response3.data.data
+        this.optionSelect.deliver_method_id = [{ value: 1, name: 'smtp'}]
+        this.optionSelect.smtp_authen_id = [{ value: 1, name: 'login'}]
 
         if (this.$route.params.id) {
           this.edit = true
@@ -264,13 +273,10 @@ export default {
       })
     },
     keyupDepartment(e) {
-      this.optionSelect.department = []
+      this.optionSelect.department_id = []
       this.axios.get('/master-data/department', {
         params: {
           keyword: e.target.value,
-          organization_id: this.data.organization_id,
-          // subministry_id: this.data.subministry_id,
-          // group_id: this.data.group_id,
         }
       })
       .then((response) => {
@@ -280,7 +286,7 @@ export default {
             item.name = item.department_full_name
             return item
           })
-          this.optionSelect.department = response.data.data
+          this.optionSelect.department_id = response.data.data
         }
       })
     }

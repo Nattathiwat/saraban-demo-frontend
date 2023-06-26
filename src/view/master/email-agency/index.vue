@@ -36,7 +36,7 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{item.name}}</td>
+                <td class="col1">{{item.department_name}}</td>
                 <td class="col2">{{item.created_at}}</td>
                 <td class="col3">
                   <div class="group-icon">
@@ -116,11 +116,12 @@ export default {
     apiEmailAgency() {
       this.data.table = []
       this.showLoading = true
-      this.axios.get('/group', {
+      this.axios.get('/email-config', {
         params:{
           keyword: this.data.search,
           page_size: this.data.perPage,
           page: this.data.page,
+          user_id: parseInt(localStorage.getItem('user_id'))
         }
       })
       .then((response) => {
@@ -142,12 +143,12 @@ export default {
         showModal: true,
         type: 'confirm',
         title: `คุณยืนยันการลบหน่วยงาน`,
-        message: `“${data.name}” ใช่หรือไม่`,
+        message: `“${data.department_name}” ใช่หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/group/${data.id}`)
+          _this.axios.delete(`/email-config/${data.id}`)
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
