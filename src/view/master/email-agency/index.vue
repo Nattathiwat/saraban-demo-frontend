@@ -37,7 +37,7 @@
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                 <td class="col1">{{item.department_name}}</td>
-                <td class="col2">{{item.created_at}}</td>
+                <td class="col2">{{item.create_date}}</td>
                 <td class="col3">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
