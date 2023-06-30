@@ -1086,7 +1086,8 @@ export default {
       this.axios.get('/user/signer', {
         params: {
           keyword: e.target.value,
-          user_id : localStorage.getItem('user_id')
+          user_id : localStorage.getItem('user_id'),
+          department_id: parseInt(localStorage.getItem('department_id'))
         }
       })
       .then((response) => {
@@ -1104,7 +1105,8 @@ export default {
       this.axios.get('/user/signer', {
         params: {
           keyword: e.target.value,
-          user_id : localStorage.getItem('user_id')
+          user_id : localStorage.getItem('user_id'),
+          department_id: parseInt(localStorage.getItem('department_id'))
         }
       })
       .then((response) => {
@@ -2162,7 +2164,7 @@ export default {
       const request4 = this.axios.get(`/master-data/process-type`)
       const request5 = this.axios.get(`/master-data/permission-type`)
       const request6 = this.axios.get(`/user`)
-      const request7 = this.axios.get(`/user/signer`)
+      const request7 = this.axios.get(`/user/signer?user_id=${localStorage.getItem('user_id')}&department_id=${parseInt(localStorage.getItem('department_id'))}`)
       const request8 = this.axios.get(`/master-data/book-category` ,{
         params: {
           book_type : 2
