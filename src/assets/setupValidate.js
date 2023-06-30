@@ -37,6 +37,13 @@ export function setupValidate (app) {
     return true;
   });
 
+  defineRule("phone", (value) => {
+    if (!value.match('[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')) {
+      return '*กรุณากรอก เบอร์โทร ให้ครบ';
+    }
+    return true;
+  });
+
   defineRule("min", (value, [min]) => {
     if (value && value.length < min) {
       return `*กรุณากรอกข้อมูล ${min} อักษร`;

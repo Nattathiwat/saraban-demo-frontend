@@ -58,9 +58,21 @@ export default {
   watch: {
     'modelValue'() {
       this.value = this.modelValue
+    },
+    'value'(newValue) {
+      if (newValue && this.numberFormatComma) {
+        this.$nextTick(() => {
+          this.$emit('update:modelValue', this.assetsUtils.numberFormatComma(newValue))
+        })
+      }
+      if (newValue && this.phoneFormatDash) {
+        this.$nextTick(() => {
+          this.$emit('update:modelValue', this.assetsUtils.phoneFormatDash(newValue))
+        })
+      }
     }
   },
-  props: ['modelValue', 'rules', 'name', 'type', 'disabled', 'placeholder', 'class', 'errorMessage', 'searchFlag', 'isNumber', 'maxlength']
+  props: ['modelValue', 'rules', 'name', 'type', 'disabled', 'placeholder', 'class', 'errorMessage', 'searchFlag', 'isNumber', 'maxlength', 'numberFormatComma', 'phoneFormatDash']
 };
 </script>
 

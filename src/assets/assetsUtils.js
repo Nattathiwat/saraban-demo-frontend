@@ -91,5 +91,13 @@ export default {
     } else {
       return ''
     }
+  },
+  numberFormatComma(data) {
+    // data.replace(/,/g, ""))
+    return data.toString().replace(/,/g, "").replace(/^[+-]?\d+/, (int) => int.replace(/(\d)(?=(\d{3})+$)/g, '$1,'));
+  },
+  phoneFormatDash(data) {
+    // data.replace(/-/g, ""))
+    return data.toString().match(/\d*/g).join('').match(/(\d{0,3})(\d{0,3})(\d{0,4})/).slice(1).join('-').replace(/-*$/g, '');
   }
 }
