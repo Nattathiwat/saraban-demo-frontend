@@ -213,10 +213,6 @@ export default {
 </script>
 <style lang="scss">
   .my-work-waiting-booking-receive {
-    .group-overflow {
-      // overflow: auto;
-    }
-
     .detail {
       width: 100%;
       height: 100%;

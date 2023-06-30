@@ -247,10 +247,6 @@ export default {
 </script>
 <style lang="scss">
   .booking-receive-inex {
-    .group-overflow {
-      // overflow: auto;
-    }
-
     .detail {
       width: 100%;
       height: 100%;
