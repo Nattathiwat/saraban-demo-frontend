@@ -784,7 +784,8 @@ export default {
         greeting2: this.data.bookout.greeting,
         is_draft: this.flag == 1,
         flag: this.flag == 1 ? 'draft' : '',
-        user_id: parseInt(localStorage.getItem('user_id'))
+        user_id: parseInt(localStorage.getItem('user_id')),
+        department_id: parseInt(localStorage.getItem('department_id'))
       }
       dataSave.attachments.filter(row => {
         row.flag = row.flag == 'edit' ? dataSave.id == 0 ? 'add' : '' : row.flag

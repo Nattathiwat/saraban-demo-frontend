@@ -386,6 +386,7 @@ export default {
         row.is_draft = flag == 1
         row.flag = flag == 1 ? 'draft' : ''
         row.greeting2 = row.bookout.greeting
+        row.department_id = parseInt(localStorage.getItem('department_id'))
         row.attachments.filter(row2 => {
           row2.flag = row2.flag == 'edit' ? row.id == 0 ? 'add' : '' : row2.flag
         })
@@ -592,10 +593,6 @@ export default {
 </script>
 <style lang="scss">
   .automail-sendmail-list {
-    .group-overflow {
-      // overflow: auto;
-    }
-
     .detail {
       width: 100%;
       height: 100%;
