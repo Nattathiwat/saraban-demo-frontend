@@ -105,6 +105,9 @@
               </button>
             </div>
             <div class="footer-right">
+              <button type="button" class="button-primary" @click="testmailClick()">
+                Send a test email
+              </button>
               <button type="submit" class="button-success">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
@@ -150,6 +153,32 @@ export default {
     }
   },
   methods: {
+    testmailClick() {
+      this.showLoading = true
+      let dataSave = {
+        department_id: parseInt(this.data.department_id),
+        department_name: this.optionSelect.department_id.filter(item => item.value == this.data.department_id)?.[0].name,
+        deliver_method_id: parseInt(this.data.deliver_method_id),
+        smtp_username: this.data.smtp_username,
+        smtp_server: this.data.smtp_server,
+        smtp_password: this.data.smtp_password,
+        smtp_port: this.data.smtp_port,
+        smtp_hello_domain: this.data.smtp_hello_domain,
+        smtp_authen_id: parseInt(this.data.smtp_authen_id),
+        is_start_tls: this.data.is_start_tls,
+        is_ssl_connection: this.data.is_ssl_connection,
+        user_id: parseInt(localStorage.getItem('user_id'))
+      }
+      this.axios.post(`/email-config/testing`, dataSave)
+      .then((response) => { 
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'success', title: response.data.message,  message: response.data.data}
+      })
+      .catch((error) => {
+        this.showLoading = false
+        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
+      })
+    },
     back() {
       this.$router.push({ 
         name: 'email-agency',
@@ -476,8 +505,13 @@ export default {
         .footer-right {
           display: flex;
 
+          .button-primary {
+            width: 180px;
+            margin-right: 20px;
+          }
+
           .button-success {
-            width: 160px;
+            width: 150px;
           }
         }
 
