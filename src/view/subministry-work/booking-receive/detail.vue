@@ -1019,7 +1019,14 @@ export default {
         send_to: this.data.send_to,
         book_desc: this.data.book_desc,
         tag: tag,
-        contracts: this.data.contracts,
+        contracts: this.data.contracts.filter(row => {
+          this.optionSelect.department_id.find(row2 => {
+            if(row2.value == row.department_id) {
+              row.department_name = row2.name
+            }}
+          )
+          return row
+        }),
         main_docs: fileMain_docs,
         attachments: fileAttachments,
         booking_refers: this.data.booking_refers.filter(el => el.book_refer_id),
