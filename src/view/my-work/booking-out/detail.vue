@@ -933,6 +933,7 @@ export default {
       this.modalSend.booking_register_details.filter((row, index) => {
         row.booking_registers.filter((row2, index2) => {
           if(row2.select && (row2.book_id || row2.book_id == 0) && (row2.regis_id || row2.regis_id == 0)) {
+            row2.send_style_id = this.modalSend.send_style_id
             this.data.booking_register_details[index].booking_registers[index2].send_style_id = this.modalSend.send_style_id
             this.data.booking_register_details[index].booking_registers[index2].send_style_desc = this.modalSend.optionSelect.send_style.filter(row=>row.value == this.modalSend.send_style_id)[0]?.name || ''
             let dataSave = {
