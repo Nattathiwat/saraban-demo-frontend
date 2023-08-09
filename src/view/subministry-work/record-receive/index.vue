@@ -196,7 +196,7 @@ export default {
         return row.selected;
       });
     },
-    submitClick(){
+    submitClick(){  
       let _this = this
       if (this.data.table.length > 0) {
         this.modalAlert = {
@@ -214,7 +214,8 @@ export default {
                     regis_id: row.regis_id,
                     book_type: parseInt(row.book_type),
                     human_flag: row.human_flag,
-                    response_id: parseInt(row.response_id)
+                    response_id: parseInt(row.response_id),
+                    user_id: parseInt(localStorage.getItem('user_id')),
                   }
                   if (row.selected) {
                     axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))

@@ -397,7 +397,7 @@ export default {
         creater_id: '',
         book_category_id: '',
         book_type_id: '',
-        secret_id: '12',
+        secret_id: '13',
         speed_id: '12',
         booking_refers: [{ receive_document_number: '', desc: '', receive_date: '', book_refer_id: '', original_refer_id: '', book_type: ''}],
         subject: '',
