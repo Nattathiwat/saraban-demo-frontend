@@ -223,7 +223,11 @@ export default {
 
           this.data.table.filter(row => {
             if (row.has_sub) {
-              this.axios.get(`/booking-receive/sub/${row.book_type}/${row.id}`)
+              this.axios.get(`/booking-receive/sub/${row.book_type}/${row.id}`, {
+                params: {
+                  user_id: localStorage.getItem('user_id'),
+                }
+              })
               .then((response2) => {
                 row.sub = response2.data.data
               })
