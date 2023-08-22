@@ -74,7 +74,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="col8">{{item.sub.length > 0 ? item.statusName : ''}}</td>
+                  <td class="col8">{{item.has_sub ? item.statusName : ''}}</td>
                 </tr>
                 <template v-if="item.select" v-for="(item2, index2) in item.sub" :key="index2">
                   <tr class="tbody-row" :class="index%2 !=0 ? index2%2 !=0 ? 'color-tr1': 'color-tr2': index2%2 !=0 ? 'color-tr2': 'color-tr1'">
