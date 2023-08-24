@@ -2173,8 +2173,9 @@ export default {
       })
       const request9 = this.axios.get(`/master-data/department-user?type=1`)
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
+      const request11 = this.axios.get('/bookmethod')
 
-      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10])
+      this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10, request11])
       .then(this.axios.spread((...responses) => {
         this.showLoading = false
         const response1 = responses[0]
@@ -2187,6 +2188,7 @@ export default {
         const response8 = responses[7]
         const response9 = responses[8]
         const response10 = responses[9]
+        const response11 = responses[10]
         
         response1.data.data.filter(row => {
           row.value = row.id
@@ -2241,6 +2243,11 @@ export default {
             this.data.FileType.push(item.content_type)
           }
         })
+        response11.data.data.filter(item => {
+          item.value = item.id
+          item.name = item.name
+          return item
+        })
 
         this.optionSelect.book_type_id = response1.data.data
         this.optionSelect.speed_id = response2.data.data
@@ -2251,6 +2258,7 @@ export default {
         this.optionSelectDefault.signer_id = response7.data.data
         this.optionSelectDefault.regis_id = response8.data.data
         this.optionSelectDefault.department_dest_id = response9.data.data
+        this.modalSend.optionSelect.send_style = response11.data.data.filter(item => item.type == 1)
         
         if (this.$route.params.id) {
           this.edit = true
