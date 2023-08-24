@@ -45,7 +45,7 @@
                 <td class="col7">
                   <div class="group-icon">
                     <img @click="editClick(item)" src="@/assets/images/icon/pencil-alt-duotone.svg" alt="" class="image-pencil pointer">
-                    <img @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                    <img v-if="item.can_delete == 1" @click="deleteClick(item)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
                   </div>
                 </td>
               </tr>
@@ -382,12 +382,12 @@ export default {
                   .image-pencil {
                     width: 21px;
                     height: 21px;
-                    margin-right: 28px;
                   }
 
                   .image-trash {
                     width: 20px;
                     height: 23px;
+                    margin-left: 28px;
                   }
                 }
               }
