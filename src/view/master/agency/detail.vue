@@ -266,6 +266,10 @@ export default {
       this.axios.get(`/department/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
+        let checkOptionSelect = this.optionSelect.organization_id.every(item => item.id != response.data.data.organization_id) 
+        if (checkOptionSelect) {
+          this.optionSelect.organization_id.push({value: response.data.data.organization_id, name: response.data.data.organization_name})
+        }
         this.data = {...this.data,...response.data.data}
         this.data.active_flag = response.data.data.active_flag == 1
       })

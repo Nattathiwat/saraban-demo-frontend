@@ -206,6 +206,14 @@ export default {
       this.axios.get(`/subministry/${this.$route.params.id}`)
       .then((response) => { 
         this.showLoading = false
+        let checkDepartment_id = this.optionSelect.department_id.every(item => item.id != response.data.data.department_id) 
+        if (checkDepartment_id) {
+          this.optionSelect.department_id.push({value: response.data.data.department_id, name: response.data.data.department_name})
+        }
+        let checkOrganization_id = this.optionSelect.organization_id.every(item => item.id != response.data.data.organization_id) 
+        if (checkOrganization_id) {
+          this.optionSelect.organization_id.push({value: response.data.data.organization_id, name: response.data.data.organization_name})
+        }
         this.data = {...this.data,...response.data.data}
         this.data.active_flag = response.data.data.active_flag == 1
       })
