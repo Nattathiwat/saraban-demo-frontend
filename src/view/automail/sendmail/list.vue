@@ -2,252 +2,255 @@
   <div class="automail-sendmail-list">
     <div class="group-overflow">
       <div class="detail">
-        <div class="group-head">
-          <div class="group-first">
-            <i class="bi bi-envelope icon-envelope"></i>
-            <div class="name">ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ</div>
-          </div>
-          <div class="group-end">
-            <button type="button" class="button-back" @click="back()" >
-              <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back">
-              <img src="@/assets/images/icon/line-up.svg" class="icon-line">
-              ย้อนกลับ
-            </button>
-          </div>
-        </div>
-        <div class="line"></div>
-        <div class="group-detail">
-          <div class="group-between">
-            <div class="group-input w-50">
-              <div class="name">คำขึ้นต้น </div>
-              <div class="group-recommend">
-                <cpn-input v-model="data.greeting"
-                            name="greeting"
-                            class="input-recommend"
-                            placeholder="กรุณาระบุ" />
-                <button type="button" class="button-recommend" @click="recommendClick()">
-                  <i class="bi bi-question icon-question"></i>
-                  แนะนำ
-                </button>
-              </div>
+        <Form @submit="save(2)" @invalid-submit="onInvalidSubmit">
+          <div class="group-head">
+            <div class="group-first">
+              <i class="bi bi-envelope icon-envelope"></i>
+              <div class="name">ส่งหนังสือส่งออก ผ่านอีเมลอัตโนมัติ</div>
             </div>
-            <div class="group-input">
-              <div class="name">คำลงท้าย </div>
-              <div class="d-flex">
-                <cpn-input  v-model="data.signature"
-                            name="signature"
-                            placeholder="กรุณาระบุ" />
+            <div class="group-end">
+              <button type="button" class="button-back" @click="back()" >
+                <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back">
+                <img src="@/assets/images/icon/line-up.svg" class="icon-line">
+                ย้อนกลับ
+              </button>
+            </div>
+          </div>
+          <div class="line"></div>
+          <div class="group-detail">
+            <div class="group-between">
+              <div class="group-input w-50">
+                <div class="name">คำขึ้นต้น </div>
+                <div class="group-recommend">
+                  <cpn-input v-model="data.greeting"
+                              name="greeting"
+                              class="input-recommend"
+                              placeholder="กรุณาระบุ" />
+                  <button type="button" class="button-recommend" @click="recommendClick()">
+                    <i class="bi bi-question icon-question"></i>
+                    แนะนำ
+                  </button>
+                </div>
+              </div>
+              <div class="group-input">
+                <div class="name">คำลงท้าย </div>
+                <div class="d-flex">
+                  <cpn-input  v-model="data.signature"
+                              name="signature"
+                              placeholder="กรุณาระบุ" />
 
-                <button type="button" class="button-check" @click="amendClick(1)">
-                  <i class="bi bi-check icon-check"></i>
-                  ปรับปรุงทั้งหมด
-                </button>
+                  <button type="button" class="button-check" @click="amendClick(1)">
+                    <i class="bi bi-check icon-check"></i>
+                    ปรับปรุงทั้งหมด
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="group-between">
-            <div class="group-input">
-              <div class="name">ข้อมูลผู้ติดต่อ </div>
-              <div class="d-flex">
-                <cpn-input  v-model="data.contact"
-                            name="contact"
-                            placeholder="กรุณาระบุ" />
+            <div class="group-between">
+              <div class="group-input">
+                <div class="name">ข้อมูลผู้ติดต่อ </div>
+                <div class="d-flex">
+                  <cpn-input  v-model="data.contact"
+                              name="contact"
+                              placeholder="กรุณาระบุ" />
 
-                <button type="button" class="button-check" @click="amendClick(2)">
-                  <i class="bi bi-check icon-check"></i>
-                  ปรับปรุงทั้งหมด
-                </button>
+                  <button type="button" class="button-check" @click="amendClick(2)">
+                    <i class="bi bi-check icon-check"></i>
+                    ปรับปรุงทั้งหมด
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="line"></div>
-        <div class="group-body">
-          <table class="table-automail-sendmail-list">
-            <thead class="thead">
-              <tr class="thead-row">
-                <th class="col1">ลำดับ</th>
-                <th class="col2">เลขที่ออก สลค.<br><span>ลงวันที่</span></th>
-                <th class="col3" v-show="false">ถึง<br><span class="ms-2">เรียน</span><br><span class="ms-4">คำขึ้นต้น</span><br><span class="ms-6">คำลงท้าย</span><br><span class="ms-8">ข้อมูลผู้ติดต่อ</span></th>
-                <th class="col4" v-show="false">ส่งถึง (To)<br><span class="ms-2">สำเนาถึง (Cc)</span><br><span class="ms-4">สำเนาลับถึง (Bcc)</span><br><span class="ms-6">เรื่อง</span><br><span class="ms-8">ข้อความ</span></th>
-                <th class="col5" v-show="false">วิธีการส่งไฟล์<br><span class="ms-2">ไฟล์ต้นเรื่อง</span><br><span class="ms-4">ไฟล์แนบ</span></th>
-                <th class="col3">ข้อมูลผู้ติดต่อ</th>
-                <th class="col4"></th>
-                <th class="col5">วิธีส่งไฟล์</th>
-              </tr>
-            </thead>
-            <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
-              <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{index + 1}}</td>
-                <td class="col2">{{item.book_out_document_number}}<br>{{item.as_of_date}}</td>
-                <td class="col3">
-                  <div class="new-line">
-                    <div class="name">ถึง</div>
-                    <cpn-input  v-model="item.bookout.to"
-                                :name="'bookout-to'+index"
-                                :disabled="true"  />
-                  </div>
-                  <div class="new-line">
-                    <div class="name">เรียน</div>
-                    <cpn-input  v-model="item.bookout.greeting"
-                                :name="'bookout-greeting'+index"
-                                class="input-recommend"
-                                placeholder="ผู้รับหนังสือ" />
-                  </div>
-                  <div class="new-line">
-                    <div class="name">คำขึ้นต้น</div>
-                    <div class="group-recommend">
-                      <cpn-input  v-model="item.greeting"
-                                  :name="'greeting'+index"
+          <div class="line"></div>
+          <div class="group-body">
+            <table class="table-automail-sendmail-list">
+              <thead class="thead">
+                <tr class="thead-row">
+                  <th class="col1">ลำดับ</th>
+                  <th class="col2">เลขที่ออก สลค.<br><span>ลงวันที่</span></th>
+                  <th class="col3" v-show="false">ถึง<br><span class="ms-2">เรียน</span><br><span class="ms-4">คำขึ้นต้น</span><br><span class="ms-6">คำลงท้าย</span><br><span class="ms-8">ข้อมูลผู้ติดต่อ</span></th>
+                  <th class="col4" v-show="false">ส่งถึง (To)<br><span class="ms-2">สำเนาถึง (Cc)</span><br><span class="ms-4">สำเนาลับถึง (Bcc)</span><br><span class="ms-6">เรื่อง</span><br><span class="ms-8">ข้อความ</span></th>
+                  <th class="col5" v-show="false">วิธีการส่งไฟล์<br><span class="ms-2">ไฟล์ต้นเรื่อง</span><br><span class="ms-4">ไฟล์แนบ</span></th>
+                  <th class="col3">ข้อมูลผู้ติดต่อ</th>
+                  <th class="col4"></th>
+                  <th class="col5">วิธีส่งไฟล์</th>
+                </tr>
+              </thead>
+              <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
+                <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
+                  <td class="col1">{{index + 1}}</td>
+                  <td class="col2">{{item.book_out_document_number}}<br>{{item.as_of_date}}</td>
+                  <td class="col3">
+                    <div class="new-line">
+                      <div class="name">ถึง</div>
+                      <cpn-input  v-model="item.bookout.to"
+                                  :name="'bookout-to'+index"
+                                  :disabled="true"  />
+                    </div>
+                    <div class="new-line">
+                      <div class="name">เรียน</div>
+                      <cpn-input  v-model="item.bookout.greeting"
+                                  :name="'bookout-greeting'+index"
                                   class="input-recommend"
-                                  placeholder="กรุณาระบุ" />
-                      <button type="button" class="button-recommend" @click="recommendClick(), indexTable = index, flgTable = true">
-                        <i class="bi bi-question icon-question"></i>
-                        แนะนำ
-                      </button>
+                                  placeholder="ผู้รับหนังสือ" />
                     </div>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">คำลงท้าย</div>
-                    <cpn-input  v-model="item.signature"
-                                :name="'signature'+index"/>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">ชื่อหน่วยงานที่ส่งหนังสือ</div>
-                    <cpn-input  v-model="item.department_name"
-                                :name="'department_name'+index" />
-                  </div>
-                  <div class="new-line">
-                    <div class="name">ข้อมูลผู้ติดต่อ</div>
-                    <cpn-input  v-model="item.contact_name"
-                                :name="'contact_name'+index"
-                                placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ" />
-                  </div>
-                  <div class="new-line">
-                    <cpn-input  v-model="item.contact"
-                                :name="'contact'+index"
-                                placeholder="เบอร์โทร และชื่อผู้ติดต่อ" />
-                  </div>
-                </td>
-                <td class="col4">
-                  <div class="new-line">
-                    <div class="name">ส่งถึง (TO)</div>
-                    <cpn-input  v-model="item.to"
-                                :name="'to'+index"/>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">สำเนาถึง (Cc)</div>
-                    <cpn-input  v-model="item.cc"
-                                :name="'cc'+index"/>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">สำเนาลับถึง (Bcc)</div>
-                    <cpn-input  v-model="item.bcc"
-                                :name="'bcc'+index"/>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">เรื่อง</div>
-                    <cpn-input  v-model="item.subject"
-                                :name="'subject'+index"/>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">ข้อความ</div>
-                    <cpn-textArea v-model="item.message"
-                                  :name="'message'+index"
-                                  rows="5"/>
-                  </div>
-                </td>
-                <td class="col5">
-                  <div class="sum-size-file">
-                    <span>ขนาดไฟล์รวม {{sumfile(item)}}MB</span>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">วิธีการส่งไฟล์</div>
-                    <cpn-select v-model="item.send_type_id"
-                                :name="'send_type_id'+index"
-                                :optionSelect="optionSelect.send_type_id"/>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">ลิงก์ดาวน์โหลดเอกสาร</div>
-                    <div class="group-recommend">
-                      <cpn-input  v-model="item.link"
-                                  :name="'link'+index"
-                                  class="input-link"
-                                  :disabled="item.send_type_id == 1"
-                                  placeholder="กรุณาระบุ" />
-                      <button type="button" class="button-link none-pointer">
-                        <i class="bi bi-link-45deg icon-question"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="new-line">
-                    <div class="name">ไฟล์ต้นเรื่อง</div>
-                    <div class="d-flex">
-                      <cpn-input  v-model="item.main_file_name"
-                                  :name="'main_file_name'+index"
-                                  :disabled="true"/>
-                      <button type="button" class="button-view" @click="previewFile({filename: item.main_file_name, link: item.main_file_path ? backendport+'/'+item.main_file_path : ''})">
-                        <i class="bi bi-eye icon-eye"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="new-line">
-                    <div class="name d-flex justify-content-between align-items-center mb-2">
-                      <div>สิ่งที่แนบมาด้วย</div>
-                      <input type="file" multiple @change="fileChange('attachments'+index, item)" :name="'attachments'+index" style="display:none;" accept="application/pdf">
-                      <button type="button" class="button-file"  @click="uploadFile('attachments'+index)">
-                        <i class="bi bi-plus icon-plus"></i>
-                        แนบเอกสาร
-                      </button>
-                    </div>
-                    <div class="d-flex mb-2" v-if="item.copy_main_file_name">
-                      <cpn-input  v-model="item.copy_main_file_name"
-                                  :name="'copy_main_file_name'+index"
-                                  :disabled="true"/>
-                      <button type="button" class="button-view" @click="previewFile({filename: item.copy_main_file_name, link: item.copy_main_file_path ? backendport+'/'+item.copy_main_file_path : ''})">
-                        <i class="bi bi-eye icon-eye"></i>
-                      </button>
-                    </div>
-                    <div v-for="(item2, index2) in item.attachments.filter(el => el.flag != 'delete')" :key="index2" v-if="item?.attachments?.length > 0 || item.copy_main_file_name">
-                      <div class="d-flex mb-2">
-                        <cpn-input  v-model="item2.filename"
-                                    :name="'filename'+index2"
-                                    :disabled="true"/>
-                        <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : item2.link})">
-                          <i class="bi bi-eye icon-eye"></i>
-                        </button>
-                        <button type="button" class="button-del" @click="deleteFile(item, item2, index2)" v-show="!item2.original_flag">
-                          <i class="bi bi-trash icon-trash"></i>
+                    <div class="new-line">
+                      <div class="name">คำขึ้นต้น</div>
+                      <div class="group-recommend">
+                        <cpn-input  v-model="item.greeting"
+                                    :name="'greeting'+index"
+                                    class="input-recommend"
+                                    placeholder="กรุณาระบุ" />
+                        <button type="button" class="button-recommend" @click="recommendClick(), indexTable = index, flgTable = true">
+                          <i class="bi bi-question icon-question"></i>
+                          แนะนำ
                         </button>
                       </div>
                     </div>
-                    <div v-else>
-                      <cpn-input  v-model="noData"
-                                  :name="'noData'+index"
-                                  :disabled="true"/>
+                    <div class="new-line">
+                      <div class="name">คำลงท้าย</div>
+                      <cpn-input  v-model="item.signature"
+                                  :name="'signature'+index"/>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr class="tbody-row" v-if="data.table.length == 0">
-                <td colspan="5">ไม่มีข้อมูล</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="line"></div>
-        <div class="group-footer">
-          <div class="footer-right">
-            <button type="button" class="button-primary" @click="save(1)">
-              <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-              บันทึกร่าง
-            </button>
-            <button type="button" class="button-success" @click="save(2)">
-              <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
-              บันทึกและส่ง
-            </button>
+                    <div class="new-line">
+                      <div class="name">ชื่อหน่วยงานที่ส่งหนังสือ</div>
+                      <cpn-input  v-model="item.department_name"
+                                  :name="'department_name'+index" />
+                    </div>
+                    <div class="new-line">
+                      <div class="name">ข้อมูลผู้ติดต่อ</div>
+                      <cpn-input  v-model="item.contact_name"
+                                  :name="'contact_name'+index"
+                                  placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ" />
+                    </div>
+                    <div class="new-line">
+                      <cpn-input  v-model="item.contact"
+                                  :name="'contact'+index"
+                                  placeholder="เบอร์โทร และชื่อผู้ติดต่อ" />
+                    </div>
+                  </td>
+                  <td class="col4">
+                    <div class="new-line">
+                      <div class="name">ส่งถึง (TO) <span class="required">*</span></div>
+                      <cpn-input  v-model="item.to"
+                                  rules="required"
+                                  :name="'to'+index"/>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">สำเนาถึง (Cc)</div>
+                      <cpn-input  v-model="item.cc"
+                                  :name="'cc'+index"/>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">สำเนาลับถึง (Bcc)</div>
+                      <cpn-input  v-model="item.bcc"
+                                  :name="'bcc'+index"/>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">เรื่อง</div>
+                      <cpn-input  v-model="item.subject"
+                                  :name="'subject'+index"/>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">ข้อความ</div>
+                      <cpn-textArea v-model="item.message"
+                                    :name="'message'+index"
+                                    rows="5"/>
+                    </div>
+                  </td>
+                  <td class="col5">
+                    <div class="sum-size-file">
+                      <span>ขนาดไฟล์รวม {{sumfile(item)}}MB</span>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">วิธีการส่งไฟล์</div>
+                      <cpn-select v-model="item.send_type_id"
+                                  :name="'send_type_id'+index"
+                                  :optionSelect="optionSelect.send_type_id"/>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">ลิงก์ดาวน์โหลดเอกสาร</div>
+                      <div class="group-recommend">
+                        <cpn-input  v-model="item.link"
+                                    :name="'link'+index"
+                                    class="input-link"
+                                    :disabled="item.send_type_id == 1"
+                                    placeholder="กรุณาระบุ" />
+                        <button type="button" class="button-link none-pointer">
+                          <i class="bi bi-link-45deg icon-question"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="new-line">
+                      <div class="name">ไฟล์ต้นเรื่อง</div>
+                      <div class="d-flex">
+                        <cpn-input  v-model="item.main_file_name"
+                                    :name="'main_file_name'+index"
+                                    :disabled="true"/>
+                        <button type="button" class="button-view" @click="previewFile({filename: item.main_file_name, link: item.main_file_path ? backendport+'/'+item.main_file_path : ''})">
+                          <i class="bi bi-eye icon-eye"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="new-line">
+                      <div class="name d-flex justify-content-between align-items-center mb-2">
+                        <div>สิ่งที่แนบมาด้วย</div>
+                        <input type="file" multiple @change="fileChange('attachments'+index, item)" :name="'attachments'+index" style="display:none;" accept="application/pdf">
+                        <button type="button" class="button-file"  @click="uploadFile('attachments'+index)">
+                          <i class="bi bi-plus icon-plus"></i>
+                          แนบเอกสาร
+                        </button>
+                      </div>
+                      <div class="d-flex mb-2" v-if="item.copy_main_file_name">
+                        <cpn-input  v-model="item.copy_main_file_name"
+                                    :name="'copy_main_file_name'+index"
+                                    :disabled="true"/>
+                        <button type="button" class="button-view" @click="previewFile({filename: item.copy_main_file_name, link: item.copy_main_file_path ? backendport+'/'+item.copy_main_file_path : ''})">
+                          <i class="bi bi-eye icon-eye"></i>
+                        </button>
+                      </div>
+                      <div v-for="(item2, index2) in item.attachments.filter(el => el.flag != 'delete')" :key="index2" v-if="item?.attachments?.length > 0 || item.copy_main_file_name">
+                        <div class="d-flex mb-2">
+                          <cpn-input  v-model="item2.filename"
+                                      :name="'filename'+index2"
+                                      :disabled="true"/>
+                          <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : item2.link})">
+                            <i class="bi bi-eye icon-eye"></i>
+                          </button>
+                          <button type="button" class="button-del" @click="deleteFile(item, item2, index2)" v-show="!item2.original_flag">
+                            <i class="bi bi-trash icon-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div v-else>
+                        <cpn-input  v-model="noData"
+                                    :name="'noData'+index"
+                                    :disabled="true"/>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="tbody-row" v-if="data.table.length == 0">
+                  <td colspan="5">ไม่มีข้อมูล</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
+          <div class="line"></div>
+          <div class="group-footer">
+            <div class="footer-right">
+              <button type="button" class="button-primary" @click="save(1)">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                บันทึกร่าง
+              </button>
+              <button type="submit" class="button-success">
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
+                บันทึกและส่ง
+              </button>
+            </div>
+          </div>
+        </Form>
       </div>
     </div>
     <div class="modal-recommend" v-show="modal.showModal">
