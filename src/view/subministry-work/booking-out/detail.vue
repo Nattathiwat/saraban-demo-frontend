@@ -2173,7 +2173,7 @@ export default {
       })
       const request9 = this.axios.get(`/master-data/department-user?type=1`)
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
-      const request11 = this.axios.get('/bookmethod')
+      const request11 = this.axios.get('/master-data/bookmethod')
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request9, request10, request11])
       .then(this.axios.spread((...responses) => {
