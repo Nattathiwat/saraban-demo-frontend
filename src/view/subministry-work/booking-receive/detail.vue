@@ -1121,7 +1121,11 @@ export default {
       const request5 = this.axios.get('/master-data/process-type')
       const request6 = this.axios.get('/master-data/permission-type')
       const request7 = this.axios.get('/master-data/department-user?type=1')
-      const request8 = this.axios.get('/bookmethod')
+      const request8 = this.axios.get('/master-data/bookmethod',{
+        params:{
+          book_type: 0
+        }
+      })
       const request10 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
 
       this.axios.all([request1, request2, request3, request4, request5, request6, request7, request8, request10])
@@ -1193,7 +1197,7 @@ export default {
         this.optionSelect.process_type_id = response5.data.data
         this.optionSelect.permission_id = response6.data.data
         this.optionSelect.department_id = response7.data.data
-        this.optionSelect.receive_type = response8.data.data.filter(item => item.type == 0 || item.type == 2)
+        this.optionSelect.receive_type = response8.data.data
 
         if (this.$route.params.id) {
           this.edit = true
