@@ -8,7 +8,7 @@
       </div>
       <Form @submit="onSubmit(false)" @invalid-submit="onInvalidSubmit">
         <div class="group-input">
-          <div :class="['input-name', !data.personNo && !focusPersonNo ? 'show-text' : '']">ชื่อผู้ใช้งาน หรือ Email</div>
+          <div :class="['input-name', !data.personNo && !focusPersonNo ? 'show-text' : '']" @click="nameClick">ชื่อผู้ใช้งาน หรือ Email</div>
           <cpn-input  v-model="data.personNo"
                       name="personNo"
                       type="text"
@@ -18,7 +18,7 @@
                       @focusout="focusPersonNo = false" />
         </div>
         <div class="group-input">
-          <div :class="['input-name', !data.password && !focusPassword? 'show-text' : '']">รหัสผ่าน</div>
+          <div :class="['input-name', !data.password && !focusPassword? 'show-text' : '']" @click="passClick">รหัสผ่าน</div>
           <cpn-input  v-model="data.password"
                       name="password"
                       type="password"
@@ -87,6 +87,14 @@ export default {
     }
   },
   methods: {
+    nameClick() {
+      this.focusPersonNo = true
+      document.querySelector(`[name="personNoInput"]`).focus()
+    },
+    passClick() {
+      this.focusPassword = true
+      document.querySelector(`[name="passwordInput"]`).focus()
+    },
     closeModalRepass() {
       this.modalRepass = false
     },
@@ -245,6 +253,8 @@ export default {
         margin-top: 25px;
         font-size: 17px;
         color: #919191;
+        margin-left: auto;
+        width: 100px;
       }
       .group-button {
         text-align: center;

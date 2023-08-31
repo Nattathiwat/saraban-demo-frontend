@@ -2258,7 +2258,7 @@ export default {
         this.optionSelectDefault.signer_id = response7.data.data
         this.optionSelectDefault.regis_id = response8.data.data
         this.optionSelectDefault.department_dest_id = response9.data.data
-        this.modalSend.optionSelect.send_style = response11.data.data.filter(item => item.type == 1)
+        this.modalSend.optionSelect.send_style = response11.data.data.filter(item => item.type == 1 || item.type == 2)
         
         if (this.$route.params.id) {
           this.edit = true

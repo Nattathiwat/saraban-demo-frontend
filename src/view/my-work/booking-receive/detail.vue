@@ -1189,7 +1189,7 @@ export default {
         this.optionSelect.process_type_id = response5.data.data
         this.optionSelect.permission_id = response6.data.data
         this.optionSelect.department_id = response7.data.data
-        this.optionSelect.receive_type = response8.data.data.filter(item => item.type == 0)
+        this.optionSelect.receive_type = response8.data.data.filter(item => item.type == 0 || item.type == 2)
 
         if (this.$route.params.id) {
           this.edit = true
