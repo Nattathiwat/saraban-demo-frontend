@@ -210,17 +210,19 @@
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
                       </div>
-                      <div v-for="(item2, index2) in item.attachments.filter(el => el.flag != 'delete')" :key="index2" v-if="item?.attachments?.length > 0 || item.copy_main_file_name">
-                        <div class="d-flex mb-2">
-                          <cpn-input  v-model="item2.filename"
-                                      :name="'filename'+index2"
-                                      :disabled="true"/>
-                          <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : item2.link})">
-                            <i class="bi bi-eye icon-eye"></i>
-                          </button>
-                          <button type="button" class="button-del" @click="deleteFile(item, item2, index2)" v-show="!item2.original_flag">
-                            <i class="bi bi-trash icon-trash"></i>
-                          </button>
+                      <div v-if="item?.attachments.filter(el => el.flag != 'delete')?.length > 0 || item.copy_main_file_name">
+                        <div v-for="(item2, index2) in item.attachments" :key="index2" v-show="item2.flag != 'delete'">
+                          <div class="d-flex mb-2">
+                            <cpn-input  v-model="item2.filename"
+                                        :name="'filename'+index2"
+                                        :disabled="true"/>
+                            <button type="button" class="button-view" @click="previewFile({filename: item2.filename, link: item2.filepath ? backendport+'/'+item2.filepath : item2.link})">
+                              <i class="bi bi-eye icon-eye"></i>
+                            </button>
+                            <button type="button" class="button-del" @click="deleteFile(item, item2, index2)" v-show="!item2.original_flag">
+                              <i class="bi bi-trash icon-trash"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <div v-else>
@@ -409,7 +411,9 @@ export default {
       size += item.copy_main_file_size ? +item.copy_main_file_size : 0
       size += item.main_file_size ? +item.main_file_size : 0
       item?.attachments?.filter(row => {
-        size += +row.file_size
+        if (row.flag != 'delete') {
+          size += +row.file_size
+        }
       })
       return (size /1024 /1024).toFixed(2)
     },
