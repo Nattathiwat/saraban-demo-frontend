@@ -389,17 +389,17 @@ export default {
 
             .col2 {
               min-width: 150px;
-              width: 10%;
+              width: 15%;
             }
 
             .col3 {
               min-width: 150px;
-              width: 10%;
+              width: 15%;
             }
 
             .col4 {
               min-width: 150px;
-              width: 10%;
+              width: 15%;
             }
 
             .col5 {
@@ -408,25 +408,24 @@ export default {
             }
 
             .col6 {
-              min-width: 150px;
-              width: 10%;
+              min-width: 250px;
+              width: 25%;
             }
 
             .col7 {
               min-width: 150px;
               max-width: 150px;
-              width: 10%;
+              width: 15%;
             }
 
             .col8 {
-              min-width: 200px;
-              width: 10%;
-              padding-right: 28px !important;
+              min-width: 250px;
+              width: 25%;
             }
             .col9 {
               min-width: 150px;
               max-width: 150px;
-              width: 10%;
+              width: 15%;
             }
 
             .col10 {
@@ -451,7 +450,7 @@ export default {
               font-size: 16px;
 
               td {
-                padding: 0 10px;
+                padding: 10px 10px;
               }
 
               .col4 {
@@ -541,7 +540,7 @@ export default {
                 }
               }
 
-              .col8 {
+              .col10 {
                 padding-right: 28px;
               }
             }

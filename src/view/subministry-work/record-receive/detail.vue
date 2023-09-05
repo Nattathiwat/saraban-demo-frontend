@@ -114,7 +114,7 @@
                 </div>
               </button>
             </div>
-            <div class="group-between" v-for="(item, index) in data.booking_refers.filter(el => el.flag != 'delete')" :key="index">
+            <div class="group-between" v-for="(item, index) in data.booking_refers" :key="index" v-show="item.flag != 'delete'">
               <div class="group-input left">
                 <cpn-input  v-model="item.receive_document_number"
                             :name="`codeRefers${index}`"
@@ -146,20 +146,22 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">บันทึกต้นเรื่อง</div>
-                <div class="d-flex mb-3" v-for="(item, index) in data.main_docs.filter(el => el.flag != 'delete')" :key="index">
-                  <div class="group-input-file">
-                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
-                      <span :class="item.filename ? '' : 'no-data'">
-                        {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
-                      </span>
+                <div v-for="(item, index) in data.main_docs" :key="index" v-show="item.flag != 'delete'">
+                  <div class="d-flex mb-3">
+                    <div class="group-input-file">
+                      <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`main_docs${index}`)" >
+                        <span :class="item.filename ? '' : 'no-data'">
+                          {{item.filename ? item.filename : 'บันทึกต้นเรื่อง'}}
+                        </span>
+                      </button>
+                      <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
+                      <input type="file" @change="file_set_change2(`main_docs${index}`, item, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
+                    </div>
+                    <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_doc(item, index)">
+                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`main_docs${index}`)" >แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change2(`main_docs${index}`, item, 'main_docs')" :name="`main_docs${index}`" style="display:none;" accept="application/pdf">
                   </div>
-                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_main_doc(item, index)">
-                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
-                  </button>
                 </div>
               </div>
               <div class="group-input">
@@ -173,20 +175,22 @@
                   </button>
                   <input type="file" multiple @change="file_attachment_add_change(`fileAttachment`)" :name="`fileAttachment`" style="display:none;">
                 </div>
-                <div class="d-flex mb-3" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
-                  <div class="group-input-file">
-                    <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
-                      <span :class="item.filename ? '' : 'no-data'">
-                        {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
-                      </span>
+                <div v-for="(item, index) in data.attachments" :key="index" v-show="item.flag != 'delete'">
+                  <div class="d-flex mb-3">
+                    <div class="group-input-file">
+                      <button type="button" :class="edit ? 'none-pointer':''" class="button-file" @click="edit ? '' : upload_file(`attachments${index}`)">
+                        <span :class="item.filename ? '' : 'no-data'">
+                          {{item.filename ? item.filename : 'สิ่งที่ส่งมาด้วย'}}
+                        </span>
+                      </button>
+                      <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
+                      <input type="file" @change="file_set_change2(`attachments${index}`, item, 'attachments')" :name="`attachments${index}`" style="display:none;">
+                    </div>
+                    <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                    <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
+                      <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
                     </button>
-                    <div :class="edit ? 'text disabled' : 'text pointer'" @click="edit ? '' : upload_file(`attachments${index}`)">แนบเอกสาร</div>
-                    <input type="file" @change="file_set_change2(`attachments${index}`, item, 'attachments')" :name="`attachments${index}`" style="display:none;">
                   </div>
-                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-                  <button type="button" class="del-department-3" :disabled="edit" @click="delete_attachments(item, index)">
-                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash">
-                  </button>
                 </div>
               </div>
             </div>
@@ -249,7 +253,7 @@
               </div>
             </div>
             <div class="line mt-3" v-if="data.booking_follows.length>0"></div>
-            <div class="group-add" v-for="(item, index) in data.booking_follows.filter(el => el.flag != 'delete')" :key="index">
+            <div class="group-add" v-for="(item, index) in data.booking_follows" :key="index" v-show="item.flag != 'delete'">
               <div class="d-flex justify-content-between">
                 <div class="title">#{{index+1}}</div>
                 <img @click="delete_booking_follows(item, index)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
@@ -305,45 +309,47 @@
               <div class="pointer" :class="data.history.tab == 2 ? 'active' : ''" @click="data.history.tab = 2, historyClick(2)"><i class="bi bi-chat-left icon-size"></i>ความเห็นคำสั่ง</div>
               <div class="pointer" :class="data.history.tab == 3 ? 'active' : ''" @click="data.history.tab = 3, historyClick(3)"><i class="bi bi-pencil-square icon-size"></i>แก้ไขข้อมูล</div>
             </div>
-            <div class="content-detail" v-if="data.history.data.filter(
+            <div v-if="data.history.data.filter(
               el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
-              (el.type == 0 || el.type == 1) : el).length > 0" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ?
-               el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
-               :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
-              <div class="detail-head">
-                <div class="number">#{{data.history.data.filter(
-              el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
-              (el.type == 0 || el.type == 1) : el).length-index}}</div>
-                <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
-                  <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
-                  {{item.bookactionname}}
-                </div>
-                <div class="create">
-                  <i class="bi bi-person icon-size"></i> 
-                  โดย {{item.updateBy}} / {{item.subName}}
-                </div>
-                <div class="date">
-                  วันที่ {{item.createDate}}
-                </div>
-                <div class="time">
-                  <i class="bi bi-clock icon-size"></i>
-                  {{item.createTime}}
-                </div>
-              </div>
-              <ul class="detail-list" v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
-                <button v-show="item2.filepath" class="button-file" 
-                @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
-                <li>
-                  {{item2.remark}}
-                  {{item2.comment}}
-                  <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
-                    <img :src="item2.signature_img" alt="" class="image-size">
-                    <!-- <div class="name">({{item.fullname}})</div>
-                    <div class="position">{{item.positionName}}</div> -->
+              (el.type == 0 || el.type == 1) : el).length > 0">
+              <div class="content-detail" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ?
+                el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
+                :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
+                <div class="detail-head">
+                  <div class="number">#{{data.history.data.filter(
+                el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+                (el.type == 0 || el.type == 1) : el).length-index}}</div>
+                  <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
+                    <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
+                    {{item.bookactionname}}
                   </div>
-                </li>
-              </ul>
-              <div v-if="index != (data.history.data.length-1)" class="line"></div>
+                  <div class="create">
+                    <i class="bi bi-person icon-size"></i> 
+                    โดย {{item.updateBy}} / {{item.subName}}
+                  </div>
+                  <div class="date">
+                    วันที่ {{item.createDate}}
+                  </div>
+                  <div class="time">
+                    <i class="bi bi-clock icon-size"></i>
+                    {{item.createTime}}
+                  </div>
+                </div>
+                <ul class="detail-list" v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
+                  <button v-show="item2.filepath" class="button-file" 
+                  @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
+                  <li>
+                    {{item2.remark}}
+                    {{item2.comment}}
+                    <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
+                      <img :src="item2.signature_img" alt="" class="image-size">
+                      <!-- <div class="name">({{item.fullname}})</div>
+                      <div class="position">{{item.positionName}}</div> -->
+                    </div>
+                  </li>
+                </ul>
+                <div v-if="index != (data.history.data.length-1)" class="line"></div>
+              </div>
             </div>
             <div v-else class="content-detail first end">
               <div class="detail-head">

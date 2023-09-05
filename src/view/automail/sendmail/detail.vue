@@ -271,17 +271,19 @@
                     <i class="bi bi-eye icon-eye"></i>
                   </button>
                 </div>
-                <div v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index" v-if="data?.attachments?.length > 0 || data.copy_main_file_name">
-                  <div class="d-flex mb-2">
-                    <cpn-input  v-model="item.filename"
-                                :name="'filename'+index"
-                                :disabled="true"/>
-                    <button type="button" class="button-view" @click="previewFile(item)">
-                      <i class="bi bi-eye icon-eye"></i>
-                    </button>
-                    <button type="button" class="button-del" @click="deleteFile(item, index)"  v-show="!item.original_flag">
-                      <i class="bi bi-trash icon-trash"></i>
-                    </button>
+                <div v-if="data?.attachments.filter(el => el.flag != 'delete')?.length > 0 || data.copy_main_file_name">
+                  <div v-for="(item, index) in data.attachments" :key="index" v-show="item.flag != 'delete'">
+                    <div class="d-flex mb-2">
+                      <cpn-input  v-model="item.filename"
+                                  :name="'filename'+index"
+                                  :disabled="true"/>
+                      <button type="button" class="button-view" @click="previewFile(item)">
+                        <i class="bi bi-eye icon-eye"></i>
+                      </button>
+                      <button type="button" class="button-del" @click="deleteFile(item, index)"  v-show="!item.original_flag">
+                        <i class="bi bi-trash icon-trash"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div v-else>
@@ -622,7 +624,9 @@ export default {
       size += this.data.copy_main_file_size ? +this.data.copy_main_file_size : 0
       size += this.data.main_file_size ? + this.data.main_file_size : 0
       this.data.attachments?.filter(row => {
-        size += +row.file_size
+        if (row.flag != 'delete') {
+          size += +row.file_size
+        }
       })
       return (size /1024 /1024).toFixed(2)
     },

@@ -102,7 +102,7 @@
                 </div>
               </button>
             </div>
-            <div class="group-between" v-for="(item, index) in data.booking_refers.filter(el => el.flag != 'delete')" :key="index">
+            <div class="group-between" v-for="(item, index) in data.booking_refers" :key="index" v-show="item.flag != 'delete'">
               <div class="group-input left">
                 <cpn-input  v-model="item.receive_document_number"
                             :name="`receive_document_number${index}`"
@@ -148,7 +148,7 @@
                 เพิ่มทะเบียน
             </button>
           </div>
-          <div class="group-detail-2" v-for="(item, index) in data.booking_register_details.filter(el => el.flag != 'delete')" :key="index">
+          <div class="group-detail-2" v-for="(item, index) in data.booking_register_details" :key="index" v-show="item.flag != 'delete'">
             <div class="d-flex">
               <div class="col-start">ชุดที่ #{{index+1}}</div>
               <div class="col-center">
@@ -231,7 +231,7 @@
               </div>
               <button type="button" @click="download_file({filename: item.attach_filename, type: item.attach_type, filepath: item.attach_filepath, link: item.attach_link})" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
             </div>
-            <div class="detail-sub" v-for="(item2, index2) in item.booking_registers.filter(el => el.flag != 'delete')" :key="index2">
+            <div class="detail-sub" v-for="(item2, index2) in item.booking_registers" :key="index2" v-show="item2.flag != 'delete'">
               <div class="group-between">
                 <div class="group-input left w-200">
                   <div class="name">เลข ส่งออก</div>
@@ -311,8 +311,8 @@
               </div>
             </div>
           </div>
-          <div v-if="data.booking_register_details.length>0" class="line"></div>
-          <div v-if="data.booking_register_details.length>0" class="tag">
+          <div v-if="data.booking_register_details.filter(el => el.flag != 'delete').length>0" class="line"></div>
+          <div v-if="data.booking_register_details.filter(el => el.flag != 'delete').length>0" class="tag">
             <div class="group-input">
               <div class="name">Tag สำหรับค้นหา (กรอกข้อมูลจบ 1 ประโยค ให้กด "Enter")</div>
               <cpn-input-tags v-model="data.tag"
@@ -328,24 +328,28 @@
               </button>
               <input type="file" multiple @change="file_attachment_add_change(`fileAttachment`)" :name="`fileAttachment`" style="display:none;">
             </div>
-            <div v-if="data.booking_register_details.length>0" class="d-flex mb-3 group-input-file-all" v-for="(item, index) in data.attachments.filter(el => el.flag != 'delete')" :key="index">
-              <div class="group-input-file">
-                <button type="button" class="button-file" @click="upload_file(`fileAttachment${index}`)">
-                  <span :class="item.filename ? '' : 'no-data'">
-                    {{item.filename ? item.filename : 'สิ่งที่แนบมาด้วย'}}
-                  </span>
-                </button>
-                <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
-                <input type="file" @change="file_attachment_change(`fileAttachment${index}`, item)" :name="`fileAttachment${index}`" style="display:none;">
+            <div v-if="data.booking_register_details.filter(el => el.flag != 'delete').length>0">
+              <div v-for="(item, index) in data.attachments" :key="index" v-show="item.flag != 'delete'">
+                <div class="d-flex mb-3 group-input-file-all">
+                  <div class="group-input-file">
+                    <button type="button" class="button-file" @click="upload_file(`fileAttachment${index}`)">
+                      <span :class="item.filename ? '' : 'no-data'">
+                        {{item.filename ? item.filename : 'สิ่งที่แนบมาด้วย'}}
+                      </span>
+                    </button>
+                    <div class="text pointer" @click="upload_file(`fileAttachment${index}`)">แนบเอกสาร</div>
+                    <input type="file" @change="file_attachment_change(`fileAttachment${index}`, item)" :name="`fileAttachment${index}`" style="display:none;">
+                  </div>
+                  <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
+                  <button type="button" class="del-department-3" @click="delete_attachments(item, index)">
+                    <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
+                  </button>
+                </div>
               </div>
-              <button type="button" @click="download_file(item)" class="button-eye"><i class="bi bi-eye icon-eye"></i></button>
-              <button type="button" class="del-department-3" @click="delete_attachments(item, index)">
-                <img src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
-              </button>
             </div>
           </div>
-          <div class="line mt-4" v-if="data.booking_register_details.length>0"></div>
-          <div class="send-to" v-if="data.booking_register_details.length>0">
+          <div class="line mt-4" v-if="data.booking_register_details.filter(el => el.flag != 'delete').length>0"></div>
+          <div class="send-to" v-if="data.booking_register_details.filter(el => el.flag != 'delete').length>0">
             <div class="group-input">
               <div class="name">ส่งต่อ(กรอกข้อมูล และคลิกเลือกรายชื่อ)</div>
               <cpn-input-tags v-model="data.sendTo"
@@ -402,7 +406,7 @@
               </div>
             </div>
             <div class="line mt-3" v-if="data.booking_follows.length>0"></div>
-            <div class="group-add" v-for="(item, index) in data.booking_follows.filter(el => el.flag != 'delete')" :key="index">
+            <div class="group-add" v-for="(item, index) in data.booking_follows" :key="index" v-show="item.flag != 'delete'">
               <div class="d-flex justify-content-between">
                 <div class="title">#{{index+1}}</div>
                 <img @click="delete_booking_follows(item, index)" src="@/assets/images/icon/trash-alt-duotone.svg" alt="" class="image-trash pointer">
@@ -428,7 +432,7 @@
                 ลบ
               </button>
             </div>
-            <div class="footer-right" v-show="data.booking_register_details.length>0">
+            <div class="footer-right" v-show="data.booking_register_details.filter(el => el.flag != 'delete').length>0">
               <button type="submit" class="button-success button-save" @click="flagSave = 3" v-show="edit">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 บันทึก
@@ -712,44 +716,46 @@
             <div class="pointer" :class="data.history.tab == 2 ? 'active' : ''" @click="data.history.tab = 2, historyClick(2)"><i class="bi bi-chat-left icon-size"></i>ความเห็นคำสั่ง</div>
             <div class="pointer" :class="data.history.tab == 3 ? 'active' : ''" @click="data.history.tab = 3, historyClick(3)"><i class="bi bi-pencil-square icon-size"></i>แก้ไขข้อมูล</div>
           </div>
-          <div class="content-detail" v-if="data.history.data.filter(
-            el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
-            (el.type == 0 || el.type == 1) : el).length > 0" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ?
-              el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
-              :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
-            <div class="detail-head">
-              <div class="number">#{{data.history.data.filter(
+          <div v-if="data.history.data.filter(
               el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
-              (el.type == 0 || el.type == 1) : el).length-index}}</div>
-              <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
-                <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
-                {{item.bookactionname}}
-              </div>
-              <div class="create">
-                <i class="bi bi-person icon-size"></i> 
-                โดย {{item.updateBy}} / {{item.subName}}
-              </div>
-              <div class="date">
-                วันที่ {{item.createDate}}
-              </div>
-              <div class="time">
-                <i class="bi bi-clock icon-size"></i>
-                {{item.createTime}}
-              </div>
-            </div>
-            <ul class="detail-list" v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
-              <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
-              <li>
-                {{item2.remark}}
-                {{item2.comment}}
-                <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
-                  <img :src="item2.signature_img " alt="" class="image-size">
-                  <!-- <div class="name">({{item2.fullname}})</div>
-                  <div class="position">{{item2.positionName}}</div> -->
+              (el.type == 0 || el.type == 1) : el).length > 0">
+            <div class="content-detail" v-for="(item, index) in data.history.data.filter(el => data.history.tab == 2 ?
+                el.type == 2 : data.history.tab == 3 ? (el.type == 0 || el.type == 1) : el)" 
+                :key="index" :class="index == 0 ? 'first' : index == (data.history.data.length-1) ? 'end' : ''">
+              <div class="detail-head">
+                <div class="number">#{{data.history.data.filter(
+                el => data.history.tab == 2 ? el.type == 2 : data.history.tab == 3 ? 
+                (el.type == 0 || el.type == 1) : el).length-index}}</div>
+                <div class="topic" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'blue' : item.bookactionname == 'แก้ไขหนังสือ' ? 'yellow' : 'green'">
+                  <i class="bi icon-size" :class="item.bookactionname == 'ความเห็นคำสั่ง' ? 'bi-chat-left' : item.bookactionname == 'แก้ไขหนังสือ' ? 'bi-pencil-square' : 'bi-plus-lg'"></i>
+                  {{item.bookactionname}}
                 </div>
-              </li>
-            </ul>
-            <div v-if="index != (data.history.data.length-1)" class="line"></div>
+                <div class="create">
+                  <i class="bi bi-person icon-size"></i> 
+                  โดย {{item.updateBy}} / {{item.subName}}
+                </div>
+                <div class="date">
+                  วันที่ {{item.createDate}}
+                </div>
+                <div class="time">
+                  <i class="bi bi-clock icon-size"></i>
+                  {{item.createTime}}
+                </div>
+              </div>
+              <ul class="detail-list" v-for="(item2, index2) in item.bookingRemarks" :key="index2" >
+                <button v-show="item2.filepath" class="button-file" @click="download_file({filename:item2.filepath.split('/').pop(),link:item2.link})">{{item2.filepath.split("/").pop()}}</button>
+                <li>
+                  {{item2.remark}}
+                  {{item2.comment}}
+                  <div class="detail-signager" v-if="item2.signature_img && item.bookactionname == 'ความเห็นคำสั่ง'">
+                    <img :src="item2.signature_img " alt="" class="image-size">
+                    <!-- <div class="name">({{item2.fullname}})</div>
+                    <div class="position">{{item2.positionName}}</div> -->
+                  </div>
+                </li>
+              </ul>
+              <div v-if="index != (data.history.data.length-1)" class="line"></div>
+            </div>
           </div>
           <div v-else class="content-detail first end">
             <div class="detail-head">
