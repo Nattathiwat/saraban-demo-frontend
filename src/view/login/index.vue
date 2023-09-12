@@ -143,9 +143,15 @@ export default {
             rule[`user${row.role_id}`] = true
           })
           this.ruleSet(rule)
-          this.$router.push({ 
-            name: 'my-work.waiting-booking-receive',
-          }).catch(()=>{});
+          if (rule?.user1 || rule?.user3) {
+            this.$router.push({ 
+              name: 'my-work.waiting-booking-receive',
+            }).catch(()=>{});
+          } else {
+            this.$router.push({ 
+              name: 'subministry-work.booking-receive',
+            }).catch(()=>{});
+          }
         }))
         .catch((error) => {
           this.showLoading = false

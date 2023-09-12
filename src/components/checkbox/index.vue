@@ -9,7 +9,7 @@
               />
       <span class="checkmark" :style="this.style"/>
     </label>
-    <div class="name-checkbox" v-bind:class="!disabled ? 'pointer' : 'none-pointer'" @click="!disable ? dvalue=!value : ''">{{label}}</div>
+    <div class="name-checkbox" v-bind:class="!disabled ? 'pointer' : 'none-pointer'" @click="!disable ? value=!value : ''">{{label}}</div>
   </div>
 
 </template>
