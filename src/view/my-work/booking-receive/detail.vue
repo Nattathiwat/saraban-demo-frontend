@@ -1037,7 +1037,8 @@ export default {
         flag: this.flagSave == 1 ? 'draft': this.flagSave == 2 ? 'confirm' : 'draft',
         book_type : parseInt(this.$route.query.book_type ),
         regis_id : parseInt(this.$route.query.regis_id ),
-        page_flag : ''
+        page_flag : '',
+        status: parseInt(this.data.status)
       }
       this.showLoading = true
       this.axios[this.edit ? 'put' : 'post'](`/booking-receive${this.edit ? '/' + this.$route.params.id : ''}`, dataSave)
