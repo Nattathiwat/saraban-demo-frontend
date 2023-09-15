@@ -351,7 +351,7 @@
                 ลบ
               </button>
               <button type="button" class="confirm-receive"  >
-              <div class="group-image" @click="submitClick()">
+              <div class="group-image" @click="submitClick()" v-if="rule?.user1 || rule?.user4">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
               </div>

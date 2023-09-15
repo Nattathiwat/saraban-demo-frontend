@@ -6,7 +6,7 @@
           <div class="group-first">
             <img src="@/assets/images/icon/ballot-duotone.svg" alt="" class="icon-users-cog">
             <div class="name">หนังสือรับเข้า</div>
-            <button type="button" class="confirm-receive" @click="submitClick()" :disabled="checkedList.length < 1" >
+            <button type="button" class="confirm-receive" @click="submitClick()" :disabled="checkedList.length < 1" v-if="rule?.user1 || rule?.user4" >
               <div class="group-image">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
@@ -44,7 +44,8 @@
               <tr class="tbody-row pointer" v-for="(item, index) in data.table" :key="index" @click="editClick(item)">
                 <td class="col0" @click="$event.stopPropagation();"><cpn-checkbox  v-model="item.selected"
                                                 name="selected"
-                                                @change="selected($event, item)" />
+                                                @change="selected($event, item)" 
+                                                v-if="rule?.user1 || rule?.user4"/>
                 </td>
                 <td class="col1">{{item.speedName}}</td>
                 <td class="col2">{{item.bookingNo}}</td>
@@ -300,9 +301,6 @@ export default {
 </script>
 <style lang="scss">
   .sub-booking-receive-inex {
-    .group-overflow {
-      // overflow: auto;
-    }
 
     .detail {
       width: 100%;
