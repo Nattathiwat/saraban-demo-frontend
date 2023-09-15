@@ -350,8 +350,8 @@
                 <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="icon-times-circle"/>
                 ลบ
               </button>
-              <button type="button" class="confirm-receive"  >
-              <div class="group-image" @click="submitClick()" v-if="rule?.user1 || rule?.user4">
+              <button type="button" class="confirm-receive"   v-if="rule?.user1 || rule?.user4">
+              <div class="group-image" @click="submitClick()">
                 <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle"/>
                 ยืนยันรับเข้า
               </div>
