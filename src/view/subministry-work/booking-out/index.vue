@@ -192,6 +192,7 @@ export default {
           page: this.data.page,
           user_id: localStorage.getItem('user_id'),
           tag: this.data.tag,
+          flag: 'subministry',
         }
       })
       .then((response) => {
