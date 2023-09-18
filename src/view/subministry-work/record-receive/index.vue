@@ -216,6 +216,7 @@ export default {
                     human_flag: row.human_flag,
                     response_id: parseInt(row.response_id),
                     user_id: parseInt(localStorage.getItem('user_id')),
+                    flag: 'confirm'
                   }
                   if (row.selected) {
                     axiosArray.push(_this.axios.put(`/booking-receive/receive-note/${row.id}`, groupdata))
