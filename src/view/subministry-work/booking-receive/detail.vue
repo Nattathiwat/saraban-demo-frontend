@@ -644,7 +644,14 @@ export default {
         msgSuccess: true,
         afterPressAgree() {
           _this.showLoading = true
-          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`)
+          _this.axios.delete(`/booking-receive/${_this.$route.params.id}`, {
+            params:{
+              book_type : parseInt(_this.$route.query.book_type) ,
+              regis_id: parseInt(_this.$route.query.regis_id),
+              response_id: parseInt(_this.$route.query.response_id),
+              user_id: parseInt(localStorage.getItem('user_id')),
+            }
+          })
           .then(() => { 
             _this.showLoading = false
             _this.modalAlert = {
