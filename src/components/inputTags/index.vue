@@ -38,7 +38,7 @@ export default {
       value: ''
     }
   },
-  props: ['name', 'placeholder', 'modelValue', 'class', 'style', 'disabled', 'rules', 'errorMessage', 'optionSelect', 'flagSearch'],
+  props: ['name', 'placeholder', 'modelValue', 'class', 'style', 'disabled', 'rules', 'errorMessage', 'optionSelect', 'flagSearch', 'duplicate'],
   methods: {
     handleFocusout(e) {
       if (this.flagSearch) {
@@ -123,7 +123,7 @@ export default {
       }
     },
     select(data) {
-      if (!this.data.some(el => el.name === data.name)) {
+      if (!this.data.some(el => el.name === data.name) || this.duplicate) {
         this.data.push(data)
         this.$emit('update:modelValue', this.data)
       }

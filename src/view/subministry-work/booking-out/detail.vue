@@ -478,6 +478,7 @@
                       <div class="name">หน่วยงานปลายทาง</div>
                       <cpn-input-tags v-model="item.department_dest_id"
                                       :flagSearch="true"
+                                      :duplicate="true"
                                       :optionSelect="item.optionSelect.department_dest_id"
                                       @keyup="keyupDepartment($event, item)"
                                       :name="`adddepartment_dest_id${index}`"/>
