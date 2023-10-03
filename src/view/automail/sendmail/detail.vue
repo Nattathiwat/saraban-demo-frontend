@@ -797,7 +797,7 @@ export default {
       this.axios.post(`/book-out-external/email-information`, dataSave)
       .then((response) => { 
         this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'success', title: this.flag == 1 ? 'ทำการบันทึกร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.apiDetail() }}
+        this.modalAlert = {showModal: true, type: 'success', title: this.flag == 1 ? 'ทำการบันทึกร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.flag == 1 ?_this.apiDetail() : _this.back() }}
       })
       .catch((error) => {
         this.showLoading = false
