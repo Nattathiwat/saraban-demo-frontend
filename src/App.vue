@@ -189,7 +189,8 @@
             <li v-for="(item, index) in breadcrumbs" :key="index">
               <span :class="[$route.name == item.path ? 'active' : '', item.path ? 'pointer' : 'none-pointer']"
                 @click="$router.push({ name: item.path, query: item.query })">{{ item.name }}</span>
-              <span v-show="breadcrumbs.length > 0 && index != (breadcrumbs.length - 1)" class="none-pointer space">/</span>
+              <span v-show="breadcrumbs.length > 0 && index != (breadcrumbs.length - 1)"
+                class="none-pointer space">/</span>
             </li>
           </ul>
         </div>
@@ -905,4 +906,5 @@ export default {
     padding-left: 310px;
     box-shadow: 7.4px 9.5px 15px 15px rgb(137 148 169 / 14%)
   }
-}</style>
+}
+</style>
