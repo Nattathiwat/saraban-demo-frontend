@@ -142,24 +142,25 @@
                     </div>
                   </td>
                   <td class="col5">
-                    <div class="sum-size-file-error" v-show="errorFileSize">
+                    <div class="sum-size-file-error" v-show="item.errorFileSize">
                       คำเตือน: ขนาดไฟล์แนบรวม {{ item.sumfile }}MB เกินกว่า 25MB
                       ระบบไม่สามารถส่งหนังสือโดยการแนบไฟล์ได้
                     </div>
-                    <div class="sum-size-file" v-show="!errorFileSize">
+                    <div class="sum-size-file" v-show="!item.errorFileSize">
                       <span>ขนาดไฟล์รวม {{ item.sumfile }}MB</span>
                     </div>
                     <div class="new-line">
                       <div class="name">วิธีการส่งไฟล์</div>
                       <cpn-select v-model="item.send_type_id" :name="'send_type_id' + index"
-                        :optionSelect="optionSelect.send_type_id" :disabled="errorFileSize" />
+                        :optionSelect="optionSelect.send_type_id" :disabled="item.errorFileSize" />
                     </div>
                     <div class="new-line">
                       <div class="name">ลิงก์ดาวน์โหลดเอกสาร</div>
                       <div class="group-recommend">
                         <cpn-input v-model="item.link" :name="'link' + index" class="input-link"
                           :disabled="item.send_type_id == 1"
-                          :rules="errorFileSize || item.send_type_id == 2 ? 'required' : ''" placeholder="กรุณาระบุ" />
+                          :rules="item.errorFileSize || item.send_type_id == 2 ? 'required' : ''"
+                          placeholder="กรุณาระบุ" />
                         <button type="button" class="button-link none-pointer">
                           <i class="bi bi-link-45deg icon-question"></i>
                         </button>
@@ -308,7 +309,6 @@ export default {
       },
       indexTable: 0,
       flgTable: false,
-      errorFileSize: false
     }
   },
   methods: {
@@ -400,10 +400,10 @@ export default {
         }
       })
       if ((size / 1024 / 1024) > 25) {
-        this.errorFileSize = true
+        item.errorFileSize = true
         item.send_type_id = 2
       } else {
-        this.errorFileSize = false
+        item.errorFileSize = false
       }
       item.sumfile = (size / 1024 / 1024).toFixed(2)
     },

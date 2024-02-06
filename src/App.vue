@@ -5,396 +5,213 @@
 
   <div class="index-templete" v-else>
     <div class="detail-index-page">
-      <transition
-        name="navigation-ham"
-        @enter="enter"
-        @after-enter="afterEnter"
-        @leave="leave"
-      >
+      <transition name="navigation-ham" @enter="enter" @after-enter="afterEnter" @leave="leave">
         <div v-if="!hamburger" class="navigation">
           <div class="group-image-logo">
-            <img
-              class="image-logo"
-              :src="data.logoImage"
-              alt="logo"
-              v-if="data.logoImage"
-            />
+            <img class="image-logo" :src="data.logoImage" alt="logo" v-if="data.logoImage" />
             <div class="title mt-3">ระบบสารบรรณอิเล็กทรอนิกส์</div>
           </div>
           <div class="group-list-head">
             <div class="list-navbar-group" v-if="rule?.user1 || rule?.user3">
-              <div
-                class="list-navbar pointer"
-                :class="routePath('/my-work/') ? 'active' : ''"
-                @click="removeSelect(), $router.push({ name: 'my-work' })"
-              >
+              <div class="list-navbar pointer" :class="routePath('/my-work/') ? 'active' : ''"
+                @click="removeSelect(), $router.push({ name: 'my-work' })">
                 <div class="group-image">
-                  <img
-                    class="icon-square"
-                    src="@/assets/images/navbar/square.svg"
-                  />
-                  <img
-                    class="icon-memo"
-                    src="@/assets/images/navbar/memo-pad-duotone.svg"
-                  />
+                  <img class="icon-square" src="@/assets/images/navbar/square.svg" />
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg" />
                 </div>
                 งานรับ-ส่งหนังสือ
               </div>
             </div>
-            <div
-              class="list-navbar-group"
-              v-if="rule?.user1 || rule?.user2 || rule?.user4"
-            >
-              <div
-                class="list-navbar pointer"
-                :class="routePath('/subministry-work/') ? 'active' : ''"
-                @click="
-                  removeSelect(), $router.push({ name: 'subministry-work' })
-                "
-              >
+            <div class="list-navbar-group" v-if="rule?.user1 || rule?.user2 || rule?.user4">
+              <div class="list-navbar pointer" :class="routePath('/subministry-work/') ? 'active' : ''" @click="
+                removeSelect(), $router.push({ name: 'subministry-work' })
+                ">
                 <div class="group-image">
-                  <img
-                    class="icon-square"
-                    src="@/assets/images/navbar/square.svg"
-                  />
-                  <img
-                    class="icon-memo"
-                    src="@/assets/images/navbar/memo-pad-duotone.svg"
-                  />
+                  <img class="icon-square" src="@/assets/images/navbar/square.svg" />
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg" />
                 </div>
                 งานของกอง
               </div>
             </div>
             <div class="list-navbar-group" v-if="false">
-              <div
-                class="list-navbar pointer"
-                @click="
-                  removeSelect('automail'),
-                    (iconAngle.automail = !iconAngle.automail)
-                "
-              >
+              <div class="list-navbar pointer" @click="
+                removeSelect('automail'),
+                (iconAngle.automail = !iconAngle.automail)
+                ">
                 <div class="group-image">
-                  <img
-                    src="@/assets/images/navbar/square.svg"
-                    class="icon-square"
-                  />
-                  <img
-                    class="icon-memo"
-                    src="@/assets/images/navbar/memo-pad-duotone.svg"
-                  />
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square" />
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg" />
                 </div>
                 รายการส่งอีเมล
-                <i
-                  class="bi bi-chevron-right icon-angle"
-                  v-show="!iconAngle.automail"
-                ></i>
-                <i
-                  class="bi bi-chevron-down icon-angle"
-                  v-show="iconAngle.automail"
-                ></i>
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
               </div>
-              <div
-                v-show="iconAngle.automail"
-                class="list-navbar-sub pointer"
-                @click="automailClick('automail-sendmail')"
-              >
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer"
+                @click="automailClick('automail-sendmail')">
                 <div class="icon-circle"></div>
                 รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
               </div>
-              <div
-                v-show="iconAngle.automail"
-                class="list-navbar-sub pointer"
-                @click="automailClick('automail-sendmail-logs')"
-              >
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer"
+                @click="automailClick('automail-sendmail-logs')">
                 <div class="icon-circle"></div>
                 บันทึกการส่งอีเมล
               </div>
             </div>
-            <div
-              class="list-navbar-group"
-              v-if="rule?.user1 || rule?.user2 || rule?.user4"
-            >
-              <div
-                class="list-navbar pointer"
-                :class="routePath('/automail/sendmail') ? 'active' : ''"
-                @click="
-                  removeSelect('automail'),
-                    (iconAngle.automail = !iconAngle.automail)
-                "
-              >
+            <div class="list-navbar-group" v-if="rule?.user1 || rule?.user2 || rule?.user4">
+              <div class="list-navbar pointer" :class="routePath('/automail/sendmail') ? 'active' : ''" @click="
+                removeSelect('automail'),
+                (iconAngle.automail = !iconAngle.automail)
+                ">
                 <div class="group-image">
-                  <img
-                    src="@/assets/images/navbar/square.svg"
-                    class="icon-square"
-                  />
-                  <img
-                    src="@/assets/images/navbar/users-cog.svg"
-                    class="icon-square-list"
-                  />
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square" />
+                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list" />
                 </div>
                 รายการส่งอีเมล
-                <i
-                  class="bi bi-chevron-right icon-angle"
-                  v-show="!iconAngle.automail"
-                ></i>
-                <i
-                  class="bi bi-chevron-down icon-angle"
-                  v-show="iconAngle.automail"
-                ></i>
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.automail"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.automail"></i>
               </div>
-              <div
-                v-show="iconAngle.automail"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'automail-sendmail' ||
-                  $route.name == 'automail-sendmail-list' ||
-                  $route.name == 'automail-sendmail-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'automail-sendmail' })"
-              >
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail' ||
+                $route.name == 'automail-sendmail-list' ||
+                $route.name == 'automail-sendmail-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'automail-sendmail' })">
                 <div class="icon-circle"></div>
                 รายการหนังสือส่งออกที่ส่งผ่านอีเมล (อัตโนมัติ)
               </div>
-              <div
-                v-show="iconAngle.automail"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'automail-sendmail-logs' ? 'active2' : ''
-                "
-                @click="$router.push({ name: 'automail-sendmail-logs' })"
-              >
+              <div v-show="iconAngle.automail" class="list-navbar-sub pointer" :class="$route.name == 'automail-sendmail-logs' ? 'active2' : ''
+                " @click="$router.push({ name: 'automail-sendmail-logs' })">
                 <div class="icon-circle"></div>
                 บันทึกการส่งอีเมล
               </div>
             </div>
             <div class="list-navbar-group" v-if="rule?.user1">
-              <div
-                class="list-navbar pointer"
-                :class="
-                  $route.name == 'user-manage' ||
-                  $route.name == 'user-manage-create' ||
-                  $route.name == 'user-manage-edit'
-                    ? 'active'
-                    : ''
-                "
-                @click="removeSelect(), $router.push({ name: 'user-manage' })"
-              >
+              <div class="list-navbar pointer" :class="$route.name == 'user-manage' ||
+                $route.name == 'user-manage-create' ||
+                $route.name == 'user-manage-edit'
+                ? 'active'
+                : ''
+                " @click="removeSelect(), $router.push({ name: 'user-manage' })">
                 <div class="group-image">
-                  <img
-                    src="@/assets/images/navbar/square.svg"
-                    class="icon-square"
-                  />
-                  <img
-                    src="@/assets/images/navbar/users-cog.svg"
-                    class="icon-square-list"
-                  />
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square" />
+                  <img src="@/assets/images/navbar/users-cog.svg" class="icon-square-list" />
                 </div>
                 จัดการผู้ใช้งาน
               </div>
             </div>
             <div class="list-navbar-group" v-if="rule?.user1">
-              <div
-                class="list-navbar pointer"
-                :class="routePath('/master/') ? 'active' : ''"
-                @click="
-                  removeSelect('master'), (iconAngle.master = !iconAngle.master)
-                "
-              >
+              <div class="list-navbar pointer" :class="routePath('/master/') ? 'active' : ''" @click="
+                removeSelect('master'), (iconAngle.master = !iconAngle.master)
+                ">
                 <div class="group-image">
-                  <img
-                    src="@/assets/images/navbar/square.svg"
-                    class="icon-square"
-                  />
-                  <img
-                    class="icon-memo"
-                    src="@/assets/images/navbar/memo-pad-duotone.svg"
-                  />
+                  <img src="@/assets/images/navbar/square.svg" class="icon-square" />
+                  <img class="icon-memo" src="@/assets/images/navbar/memo-pad-duotone.svg" />
                 </div>
                 มาสเตอร์
-                <i
-                  class="bi bi-chevron-right icon-angle"
-                  v-show="!iconAngle.master"
-                ></i>
-                <i
-                  class="bi bi-chevron-down icon-angle"
-                  v-show="iconAngle.master"
-                ></i>
+                <i class="bi bi-chevron-right icon-angle" v-show="!iconAngle.master"></i>
+                <i class="bi bi-chevron-down icon-angle" v-show="iconAngle.master"></i>
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'book-type' ||
-                  $route.name == 'book-type-create' ||
-                  $route.name == 'book-type-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'book-type' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-type' ||
+                $route.name == 'book-type-create' ||
+                $route.name == 'book-type-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'book-type' })">
                 <div class="icon-circle"></div>
                 ชนิดหนังสือ
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'record-type' ||
-                  $route.name == 'record-type-create' ||
-                  $route.name == 'record-type-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'record-type' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'record-type' ||
+                $route.name == 'record-type-create' ||
+                $route.name == 'record-type-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'record-type' })">
                 <div class="icon-circle"></div>
                 ชนิดบันทึกข้อความ
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'book-record' ||
-                  $route.name == 'book-record-create' ||
-                  $route.name == 'book-record-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'book-record' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-record' ||
+                $route.name == 'book-record-create' ||
+                $route.name == 'book-record-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'book-record' })">
                 <div class="icon-circle"></div>
                 ทะเบียนหนังสือ
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'organization' ||
-                  $route.name == 'organization-create' ||
-                  $route.name == 'organization-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'organization' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'organization' ||
+                $route.name == 'organization-create' ||
+                $route.name == 'organization-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'organization' })">
                 <div class="icon-circle"></div>
                 กระทรวง
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'agency' ||
-                  $route.name == 'agency-create' ||
-                  $route.name == 'agency-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'agency' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'agency' ||
+                $route.name == 'agency-create' ||
+                $route.name == 'agency-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'agency' })">
                 <div class="icon-circle"></div>
                 หน่วยงาน
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'subministry' ||
-                  $route.name == 'subministry-create' ||
-                  $route.name == 'subministry-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'subministry' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'subministry' ||
+                $route.name == 'subministry-create' ||
+                $route.name == 'subministry-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'subministry' })">
                 <div class="icon-circle"></div>
                 กอง
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'group' ||
-                  $route.name == 'group-create' ||
-                  $route.name == 'group-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'group' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'group' ||
+                $route.name == 'group-create' ||
+                $route.name == 'group-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'group' })">
                 <div class="icon-circle"></div>
                 กลุ่ม
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'book-method' ||
-                  $route.name == 'book-method-create' ||
-                  $route.name == 'book-method-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'book-method' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'book-method' ||
+                $route.name == 'book-method-create' ||
+                $route.name == 'book-method-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'book-method' })">
                 <div class="icon-circle"></div>
                 รูปแบบการรับ-ส่งหนังสือ
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'file' ||
-                  $route.name == 'file-create' ||
-                  $route.name == 'file-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'file' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'file' ||
+                $route.name == 'file-create' ||
+                $route.name == 'file-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'file' })">
                 <div class="icon-circle"></div>
                 ตั้งค่าประเภทไฟล์
               </div>
-              <div
-                v-show="iconAngle.master && false"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'automail-mail-addresses' ? 'active2' : ''
-                "
-                @click="$router.push({ name: 'automail-mail-addresses' })"
-              >
+              <div v-show="iconAngle.master && false" class="list-navbar-sub pointer" :class="$route.name == 'automail-mail-addresses' ? 'active2' : ''
+                " @click="$router.push({ name: 'automail-mail-addresses' })">
                 <div class="icon-circle"></div>
                 ข้อมูลติดต่อหน่วยงาน
               </div>
-              <div
-                v-show="iconAngle.master && false"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'automail-receiver-profile' ||
-                  $route.name == 'automail-receiver-profile-create' ||
-                  $route.name == 'automail-receiver-profile-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'automail-receiver-profile' })"
-              >
+              <div v-show="iconAngle.master && false" class="list-navbar-sub pointer" :class="$route.name == 'automail-receiver-profile' ||
+                $route.name == 'automail-receiver-profile-create' ||
+                $route.name == 'automail-receiver-profile-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'automail-receiver-profile' })">
                 <div class="icon-circle"></div>
                 ตั้งค่ารูปแบบข้อความตามผู้รับจดหมาย
               </div>
-              <div
-                v-show="iconAngle.master"
-                class="list-navbar-sub pointer"
-                :class="
-                  $route.name == 'email-agency' ||
-                  $route.name == 'email-agency-create' ||
-                  $route.name == 'email-agency-edit'
-                    ? 'active2'
-                    : ''
-                "
-                @click="$router.push({ name: 'email-agency' })"
-              >
+              <div v-show="iconAngle.master" class="list-navbar-sub pointer" :class="$route.name == 'email-agency' ||
+                $route.name == 'email-agency-create' ||
+                $route.name == 'email-agency-edit'
+                ? 'active2'
+                : ''
+                " @click="$router.push({ name: 'email-agency' })">
                 <div class="icon-circle"></div>
                 ตั้งค่าอีเมลสำหรับส่งหนังสือ
               </div>
@@ -405,40 +222,22 @@
       </transition>
       <div :style="hamburger ? 'padding-left: 0px;' : ''" class="header-index">
         <div class="header-index-left">
-          <img
-            src="@/assets/images/navbar/hamburger.svg"
-            class="icon-hamburger pointer"
-            alt="hamburger"
-            @click="hamburger = !hamburger"
-          />
+          <img src="@/assets/images/navbar/hamburger.svg" class="icon-hamburger pointer" alt="hamburger"
+            @click="hamburger = !hamburger" />
           <ul class="breadcrumbs">
             <li v-for="(item, index) in breadcrumbs" :key="index">
-              <span
-                :class="[
-                  $route.name == item.path ? 'active' : '',
-                  item.path ? 'pointer' : 'none-pointer',
-                ]"
-                @click="$router.push({ name: item.path, query: item.query })"
-                >{{ item.name }}</span
-              >
-              <span
-                v-show="
-                  breadcrumbs.length > 0 && index != breadcrumbs.length - 1
-                "
-                class="none-pointer space"
-                >/</span
-              >
+              <span :class="[
+                $route.name == item.path ? 'active' : '',
+                item.path ? 'pointer' : 'none-pointer',
+              ]" @click="$router.push({ name: item.path, query: item.query })">{{ item.name }}</span>
+              <span v-show="breadcrumbs.length > 0 && index != breadcrumbs.length - 1
+                " class="none-pointer space">/</span>
             </li>
           </ul>
         </div>
         <div class="header-index-right">
           <div class="group-user">
-            <img
-              class="image-user"
-              :src="dataUser.image"
-              alt="user-image"
-              v-if="dataUser.image"
-            />
+            <img class="image-user" :src="dataUser.image" alt="user-image" v-if="dataUser.image" />
             <div class="group-name">
               <div class="name">
                 {{ dataUser.name }}
@@ -448,17 +247,11 @@
               </div>
             </div>
           </div>
-          <i
-            class="bi bi-box-arrow-right icon-exit pointer"
-            @click="logoutClick()"
-          ></i>
+          <i class="bi bi-box-arrow-right icon-exit pointer" @click="logoutClick()"></i>
         </div>
       </div>
       <div :style="hamburger ? 'padding-left: 30px;' : ''" class="detail-index">
-        <router-view
-          @getLogoImage="getLogoImage"
-          @getUserImage="getUserImage"
-        />
+        <router-view @getLogoImage="getLogoImage" @getUserImage="getUserImage" />
       </div>
     </div>
     <div :style="hamburger ? 'padding-left: 0px;' : ''" class="foot-index">
@@ -473,7 +266,7 @@ export default {
   name: "App",
   data() {
     return {
-      version: "1.3.9",
+      version: import.meta.env.VITE_APP_VERSION,
       hamburger: false,
       showLoading: false,
       data: {
@@ -1232,13 +1025,13 @@ export default {
           .push({
             name: "my-work.waiting-booking-receive",
           })
-          .catch(() => {});
+          .catch(() => { });
       } else {
         this.$router
           .push({
             name: "subministry-work.booking-receive",
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     },
   },
