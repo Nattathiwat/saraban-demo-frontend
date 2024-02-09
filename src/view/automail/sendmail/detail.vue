@@ -776,6 +776,18 @@ export default {
       dataSave.attachments.filter(row => {
         row.flag = row.flag == 'edit' ? dataSave.id == 0 ? 'add' : '' : row.flag
       })
+
+      if (dataSave.send_type_id == 2) {
+        dataSave.attachments = []
+        dataSave.copy_main_file_name = ''
+        dataSave.copy_main_file_path = ''
+        dataSave.copy_main_file_size = ''
+        dataSave.main_file_name = ''
+        dataSave.main_file_path = ''
+        dataSave.main_file_size = ''
+      } else {
+        dataSave.link = ''
+      }
       this.axios.post(`/book-out-external/email-information`, dataSave)
         .then((response) => {
           this.showLoading = false

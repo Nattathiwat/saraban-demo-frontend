@@ -375,6 +375,18 @@ export default {
         row.attachments.filter(row2 => {
           row2.flag = row2.flag == 'edit' ? row.id == 0 ? 'add' : '' : row2.flag
         })
+
+        if (row.send_type_id == 2) {
+          row.attachments = []
+          row.copy_main_file_name = ''
+          row.copy_main_file_path = ''
+          row.copy_main_file_size = ''
+          row.main_file_name = ''
+          row.main_file_path = ''
+          row.main_file_size = ''
+        } else {
+          row.link = ''
+        }
       })
       this.axios.post(`/book-out-external/book-out-automail/series`, this.data.table)
         .then(() => {
