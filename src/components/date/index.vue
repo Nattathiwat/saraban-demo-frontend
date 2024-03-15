@@ -26,7 +26,7 @@
                 :closeOnAutoApply="true"
                 >
       <template #action-preview=""></template>
-      <template #year="{ year }">{{ year + 543 }}</template>
+      <template #year="{ value }">{{ value + 543 }}</template>
       <template #year-overlay-value="{ text }">{{ (+text + +543) }}</template>
       <template #input-icon>
         <div class="group-image" :class="[disabled? 'none-pointer' : '']">
