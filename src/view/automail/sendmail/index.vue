@@ -108,7 +108,7 @@
                   </td>
                 </tr>
                 <template v-for="(item2, index2) in item.book_series" :key="index2">
-                  <tr class="tbody-row" :class="(index % 2 != 0) ? 'color-tr1' : 'color-tr2'">
+                  <tr class="tbody-row" :class="(index % 2 == 0) ? 'color-tr1' : 'color-tr2'">
                     <td colspan="9" class="col2" style="text-align: left;">ชุดที่ #{{ item2.no }}</td>
                     <td class="col11">
                       <div class="group-icon">
@@ -118,7 +118,7 @@
                     </td>
                   </tr>
                   <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"
-                    :class="(index % 2 != 0) ? 'color-tr1' : 'color-tr2'">
+                    :class="(index3 % 2 != 0) ? (index % 2 == 0) ? 'color-tr1' : 'color-tr2' : (index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
                     <td class="col1">
                       <div></div>
                     </td>
@@ -138,7 +138,13 @@
                       </div>
                     </td>
                   </tr>
+                  <tr class="tbody-row-end2">
+                    <td colspan="11"></td>
+                  </tr>
                 </template>
+                <tr :class="index % 2 != 0 ? 'tbody-row-end1' : 'tbody-row-end2'">
+                  <td colspan="11"></td>
+                </tr>
               </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="11">ไม่มีข้อมูล</td>
@@ -238,7 +244,7 @@ export default {
               sum += item2.subs.length
             })
             sum += item1.book_series.length
-            sum += 1
+            sum += 2
             item1.rowspan = sum
           })
           this.data.table = response.data.data.meta
@@ -511,19 +517,12 @@ export default {
 
       .table-department-inex {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
         border-spacing: 0px;
         border-radius: 5px;
         border: solid 1px #c1cfe3;
         background-color: #fff;
-        overflow: auto;
-
-
-        th,
-        td {
-          border: 1px solid #c1cfe3;
-          border-collapse: collapse;
-        }
+        overflow: hidden;
 
         .thead {
           .thead-row {
