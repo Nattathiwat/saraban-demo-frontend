@@ -244,11 +244,7 @@ export default {
     },
     api_master() {
       this.showLoading = true
-      const request8 = this.axios.get(`/master-data/book-category`, {
-        params: {
-          book_type: 1
-        }
-      })
+      const request8 = this.axios.get(`/master-data/book-category`)
       const request9 = this.axios.get('/master-data/department-user')
 
       this.axios.all([request8, request9])

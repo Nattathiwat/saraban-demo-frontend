@@ -226,11 +226,13 @@
           <div class="group-footer">
             <div class="footer-right">
               <button type="button" class="button-primary" @click="save(1)">
-                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle" />
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle"
+                  class="icon-check-circle" />
                 บันทึกร่าง
               </button>
               <button type="submit" class="button-success">
-                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="icon-check-circle" />
+                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle"
+                  class="icon-check-circle" />
                 บันทึกและส่ง
               </button>
             </div>
@@ -251,7 +253,8 @@
               <div class="group-input">
                 <div class="name">ผู้รับหนังสือ </div>
                 <cpn-autoComplete v-model="modal.book_recipient" name="book_recipient"
-                  :optionSelect="modal.optionSelect.book_recipient" @keyup="keyupModal($event)" placeholder="กรุณาระบุ" />
+                  :optionSelect="modal.optionSelect.book_recipient" @keyup="keyupModal($event)"
+                  placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="line"></div>
@@ -824,8 +827,8 @@ export default {
           }
 
           .col1 {
-            min-width: 180px;
-            max-width: 180px;
+            min-width: 80px;
+            max-width: 80px;
             width: 0%;
             padding-left: 28px !important;
             text-align: center;

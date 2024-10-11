@@ -14,80 +14,58 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ทะเบียน </div>
-                <cpn-select v-model="data.regis_id"
-                            name="regis_id"
-                            :optionSelect="optionSelect.regis_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-select v-model="data.regis_id" name="regis_id" :optionSelect="optionSelect.regis_id"
+                  placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">เลขออก สลค. </div>
-                <cpn-input  v-model="data.book_out_document_number"
-                            name="book_out_document_number"
-                            placeholder="กรุณาระบุ" />
+                <cpn-input v-model="data.book_out_document_number" name="book_out_document_number"
+                  placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ความเร่งด่วน</div>
-                <cpn-select v-model="data.speed_id"
-                            name="speed_id"
-                            :optionSelect="optionSelect.speed_id"
-                            placeholder="กรุณาระบุ" />
+                <cpn-select v-model="data.speed_id" name="speed_id" :optionSelect="optionSelect.speed_id"
+                  placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-input">
               <div class="name">ชื่อเรื่อง </div>
-              <cpn-input  v-model="data.subject"
-                          name="subject"
-                          placeholder="กรุณาระบุ" />
+              <cpn-input v-model="data.subject" name="subject" placeholder="กรุณาระบุ" />
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">กอง/สำนัก </div>
-                <cpn-autoComplete v-model="data.mnst_id"
-                                  name="mnst_id"
-                                  :optionSelect="optionSelect.mnst_id"
-                                  @keyup="keyupSubministry($event)"
-                                  placeholder="เลือกกอง/สำนัก" />
+                <cpn-autoComplete v-model="data.mnst_id" name="mnst_id" :optionSelect="optionSelect.mnst_id"
+                  @keyup="keyupSubministry($event)" placeholder="เลือกกอง/สำนัก" />
               </div>
               <div class="group-input">
                 <div class="name">ถึง </div>
-                <cpn-autoComplete v-model="data.department_dest_id"
-                                  name="department_dest_id"
-                                  :optionSelect="optionSelect.department_dest_id"
-                                  @keyup="keyupDepartment($event)"
-                                  placeholder="เลือกหน่วยงานปลายทาง" />
+                <cpn-autoComplete v-model="data.department_dest_id" name="department_dest_id"
+                  :optionSelect="optionSelect.department_dest_id" @keyup="keyupDepartment($event)"
+                  placeholder="เลือกหน่วยงานปลายทาง" />
               </div>
             </div>
             <div class="group-input">
               <div class="name">ลงวันที่ตั้งแต่ - ถึง </div>
-              <cpn-datepickerRange  v-model="data.as_of_date"
-                                    name="as_of_date"
-                                    placeholder="เลือกวันที่ - ถึงวันที่" />
+              <cpn-datepickerRange v-model="data.as_of_date" name="as_of_date" placeholder="เลือกวันที่ - ถึงวันที่" />
             </div>
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ส่งถึง (TO) </div>
-                <cpn-input  v-model="data.to"
-                            name="to"
-                            placeholder="กรุณาระบุ" />
+                <cpn-input v-model="data.to" name="to" placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">สำเนาถึง (Cc) </div>
-                <cpn-input  v-model="data.cc"
-                            name="cc"
-                            placeholder="กรุณาระบุ" />
+                <cpn-input v-model="data.cc" name="cc" placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">สำเนาลับถึง (Bcc)</div>
-                <cpn-input  v-model="data.bcc"
-                            name="bcc"
-                            placeholder="กรุณาระบุ"  />
+                <cpn-input v-model="data.bcc" name="bcc" placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-input">
               <div class="name">วันที่ส่งตั้งแต่ - ถึง </div>
-              <cpn-datepickerRange  v-model="data.send_date"
-                                    name="send_date"
-                                    placeholder="เลือกวันที่ - ถึงวันที่" />
+              <cpn-datepickerRange v-model="data.send_date" name="send_date" placeholder="เลือกวันที่ - ถึงวันที่" />
             </div>
             <div class="group-button">
               <div class="button-left">
@@ -127,19 +105,19 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{index + 1 + (data.perPage * (data.page - 1))}}</td>
-                <td class="col2">{{item.status_name}}</td>
-                <td class="col3">{{item.send_date}}</td>
-                <td class="col4" @click="detail_click(item)">{{item.book_out_document_number}}</td>
-                <td class="col5">{{item.book_regis_name}}</td>
-                <td class="col6">{{item.speed_name}}</td>
-                <td class="col7">{{item.subject}}</td>
-                <td class="col8">{{item.as_of_date}}</td>
-                <td class="col9">{{item.from}}</td>
-                <td class="col10">{{item.department_dest_name}}</td>
-                <td class="col11">{{item.to}}</td>
-                <td class="col12">{{item.cc}}</td>
-                <td class="col13">{{item.bcc}}</td>
+                <td class="col1">{{ index + 1 + (data.perPage * (data.page - 1)) }}</td>
+                <td class="col2">{{ item.status_name }}</td>
+                <td class="col3">{{ item.send_date }}</td>
+                <td class="col4" @click="detail_click(item)">{{ item.book_out_document_number }}</td>
+                <td class="col5">{{ item.book_regis_name }}</td>
+                <td class="col6">{{ item.speed_name }}</td>
+                <td class="col7">{{ item.subject }}</td>
+                <td class="col8">{{ item.as_of_date }}</td>
+                <td class="col9">{{ item.from }}</td>
+                <td class="col10">{{ item.department_dest_name }}</td>
+                <td class="col11">{{ item.to }}</td>
+                <td class="col12">{{ item.cc }}</td>
+                <td class="col13">{{ item.bcc }}</td>
               </tr>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="13">ไม่มีข้อมูล</td>
@@ -148,16 +126,13 @@
           </table>
         </div>
         <div class="group-footer">
-          <cpn-pagination :page="data.page"
-                          :total="data.total"
-                          :lastPage="data.lastPage"
-                          :perPage="data.perPage"
-                          @pageChange="pageChange" />
+          <cpn-pagination :page="data.page" :total="data.total" :lastPage="data.lastPage" :perPage="data.perPage"
+            @pageChange="pageChange" />
         </div>
       </div>
     </div>
-    <cpn-modal-alert :modalAlert="modalAlert"/>
-    <cpn-loading :show="showLoading"/>
+    <cpn-modal-alert :modalAlert="modalAlert" />
+    <cpn-loading :show="showLoading" />
   </div>
 </template>
 <script>
@@ -199,10 +174,10 @@ export default {
   },
   methods: {
     detail_click(item) {
-      this.$router.push({ 
+      this.$router.push({
         name: 'subministry-work.booking-out-edit',
-        params: {id: item.book_id},
-      }).catch(()=>{});
+        params: { id: item.book_id },
+      }).catch(() => { });
     },
     cancelClick() {
       this.data.regis_id = ''
@@ -229,7 +204,7 @@ export default {
       this.data.table = []
       this.showLoading = true
       this.axios.get('/book-out-external/email-history', {
-        params:{
+        params: {
           regis_id: this.data.regis_id,
           book_out_document_number: this.data.book_out_document_number,
           speed_id: this.data.speed_id,
@@ -247,17 +222,17 @@ export default {
           page: this.data.page,
         }
       })
-      .then((response) => {
-        this.showLoading = false
-        response.data.data.meta.filter(row => row.disabled = true)
-        this.data.table = response.data.data.meta
-        this.data.total = response.data.data.total
-        this.data.lastPage = Math.ceil(this.data.total/this.data.perPage)
-      })
-      .catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
+        .then((response) => {
+          this.showLoading = false
+          response.data.data.meta.filter(row => row.disabled = true)
+          this.data.table = response.data.data.meta
+          this.data.total = response.data.data.total
+          this.data.lastPage = Math.ceil(this.data.total / this.data.perPage)
+        })
+        .catch((error) => {
+          this.showLoading = false
+          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
+        })
     },
     keyupDepartment(e) {
       this.optionSelect.department_dest_id = []
@@ -266,16 +241,16 @@ export default {
           keyword: e.target.value,
         }
       })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.department_full_name
-            return item
-          })
-          this.optionSelect.department_dest_id = response.data.data
-        }
-      })
+        .then((response) => {
+          if (response.data.data) {
+            response.data.data.filter(item => {
+              item.value = item.id
+              item.name = item.department_full_name
+              return item
+            })
+            this.optionSelect.department_dest_id = response.data.data
+          }
+        })
     },
     keyupSubministry(e) {
       this.optionSelect.mnst_id = []
@@ -284,63 +259,63 @@ export default {
           keyword: e.target.value,
         }
       })
-      .then((response) => {
-        if(response.data.data) {
-          response.data.data.filter(item => {
-            item.value = item.id
-            return item
-          })
-          this.optionSelect.mnst_id = response.data.data
-        }
-      })
+        .then((response) => {
+          if (response.data.data) {
+            response.data.data.filter(item => {
+              item.value = item.id
+              return item
+            })
+            this.optionSelect.mnst_id = response.data.data
+          }
+        })
     },
     api_master() {
       this.showLoading = true
-      const request1 = this.axios.get(`/master-data/book-type`)
+      const request1 = this.axios.get(`/master-data/book-category`)
       const request2 = this.axios.get(`/master-data/speed`)
       const request3 = this.axios.get(`/master-data/subministry`)
       const request4 = this.axios.get(`/master-data/department`)
 
       this.axios.all([request1, request2, request3, request4])
-      .then(this.axios.spread((...responses) => {
-        this.showLoading = false
-        const response1 = responses[0]
-        const response2 = responses[1]
-        const response3 = responses[2]
-        const response4 = responses[3]
+        .then(this.axios.spread((...responses) => {
+          this.showLoading = false
+          const response1 = responses[0]
+          const response2 = responses[1]
+          const response3 = responses[2]
+          const response4 = responses[3]
 
-        response1.data.data.filter(row => {
-          row.value = row.id
-          row.name = row.desc
-          return row
-        })
-        response2.data.data.filter(row => {
-          row.value = row.id
-          row.name = row.desc
-          return row
-        })
-        response3.data.data.filter(item => {
-          item.value = item.id
-          return item
-        })
-        response4.data.data.filter(item => {
-          item.value = item.id
-          item.name = item.department_full_name
-          return item
+          response1.data.data.filter(row => {
+            row.value = row.id
+            row.name = row.desc
+            return row
+          })
+          response2.data.data.filter(row => {
+            row.value = row.id
+            row.name = row.desc
+            return row
+          })
+          response3.data.data.filter(item => {
+            item.value = item.id
+            return item
+          })
+          response4.data.data.filter(item => {
+            item.value = item.id
+            item.name = item.department_full_name
+            return item
+          })
+
+          this.optionSelect.regis_id = response1.data.data
+          this.optionSelect.speed_id = response2.data.data
+          this.optionSelect.mnst_id = response3.data.data
+          this.optionSelect.department_dest_id = response4.data.data
+
+          this.apiSendmailLogs()
+
+        })).catch((error) => {
+          this.showLoading = false
+          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
         })
 
-        this.optionSelect.regis_id = response1.data.data
-        this.optionSelect.speed_id = response2.data.data
-        this.optionSelect.mnst_id = response3.data.data
-        this.optionSelect.department_dest_id = response4.data.data
-        
-        this.apiSendmailLogs()
-        
-      })).catch((error) => {
-        this.showLoading = false
-        this.modalAlert = {showModal: true, type: 'error', title: 'Error', message: error.response.data.message}
-      })
-      
     },
   },
   mounted() {
@@ -352,295 +327,304 @@ export default {
 
 </script>
 <style lang="scss">
-  .automail-sendmail-logs {
-    .group-overflow {
-      // overflow: auto;
+.automail-sendmail-logs {
+  .group-overflow {
+    // overflow: auto;
+  }
+
+  .detail {
+    width: 100%;
+    height: 100%;
+    min-width: 1550px;
+    min-height: 200px;
+    border-radius: 15px;
+    // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
+    background-color: #fff;
+    border: 0px;
+    padding-bottom: 22px;
+
+    .group-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 29px;
+
+      .group-first {
+        display: flex;
+        align-items: center;
+
+        .icon-envelope {
+          margin-right: 10px;
+          color: #0f3a64;
+          font-size: 26px;
+        }
+
+        .name {
+          color: #1a456b;
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
     }
 
-    .detail {
-      width: 100%;
-      height: 100%;
-      min-width: 1550px;
-      min-height: 200px;
-      border-radius: 15px;
-      // box-shadow: 7.4px 9.5px 13px 0 rgb(137 148 169 / 14%);
-      background-color: #fff;
-      border: 0px;
-      padding-bottom: 22px;
+    .group-detail {
+      padding: 20px 23px;
 
-      .group-head {
+      .group-between {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 22px 29px;
 
-        .group-first {
-          display: flex;
-          align-items: center;
-
-          .icon-envelope {
-            margin-right: 10px;
-            color: #0f3a64;
-            font-size: 26px;
-          }
-
-          .name {
-            color: #1a456b;
-            font-weight: bold;
-            font-size: 18px;
-          }
+        .left {
+          margin-right: 30px;
         }
       }
 
-      .group-detail {
-        padding: 20px 23px;
+      .group-input {
+        width: 100%;
+        padding: 0 10px;
+        margin-bottom: 30px;
 
-        .group-between {
-          display: flex;
+        .name {
+          font-size: 16px;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 7px;
+        }
+      }
 
-          .left {
-            margin-right: 30px;
+      .group-button {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 10px;
+
+        .button-left {
+          .button-warning {
+            width: 160px;
           }
         }
 
-        .group-input {
-          width: 100%;
-          padding: 0 10px;
-          margin-bottom: 30px;
-
-          .name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 7px;
-          }
-        }
-        .group-button {
+        .button-right {
           display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          padding: 0 10px;
+          margin-left: 10px;
 
-          .button-left {
-            .button-warning {
-              width: 160px;
-            }
-          }
-
-          .button-right {
-            display: flex;
-            margin-left: 10px;
-
-            .button-search {
-              background-color: #1a456b;
-              font-size: 16px;
-              font-weight: 500;
-              color: #ffffff;
-              min-width: 100px;
-              max-width: 100px;
-              height: 45px;
-              border: 0;
-              border-top-right-radius: 5px;
-              border-bottom-right-radius: 5px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              margin-left: -5px;
-            }
-          }
-
-          button {
-            height: 45px;
-            border-radius: 5px;
-            box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
-            border: 0;
+          .button-search {
+            background-color: #1a456b;
             font-size: 16px;
             font-weight: 500;
-            color: #fff;
+            color: #ffffff;
+            min-width: 100px;
+            max-width: 100px;
+            height: 45px;
+            border: 0;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-          }
-
-          .icon-clockwise {
-            font-size: 22px;
-            margin-right: 10px;
-          }
-
-          .icon-search {
-            font-size: 20px;
-            margin-right: 10px;
+            margin-left: -5px;
           }
         }
-      }
 
-      .line {
-        height: 2px;
-        width: 100%;
-        background-color: #e2ebf7;
-        margin-top: 5px;
-        margin-bottom: 5px;
-      }
-
-      .group-body {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 26px 30px;
-        overflow: auto;
-        margin-bottom: 1px;
-
-        table tbody tr:nth-child(odd) {
-          background-color: #ffffff;
-        }
-
-        table tbody tr:nth-child(even) {
-          background-color: #f1f5fa;
-        }
-
-        .table-automail-sendmail-logs {
-          width: 100%;
-          border-collapse: separate;
-          border-spacing: 0px;
+        button {
+          height: 45px;
           border-radius: 5px;
-          border: solid 1px #c1cfe3;
-          background-color: #fff;
-          overflow: hidden;
-          
-          .thead {
-            .thead-row {
-              font-weight: bold;
-              font-size: 16px;
-              color: #333333;
-              height: 71px;
+          box-shadow: 7.4px 9.5px 13px 0 rgba(137, 148, 169, 0.14);
+          border: 0;
+          font-size: 16px;
+          font-weight: 500;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
-              th {
-                border-bottom: solid 1px #c1cfe3;
-                padding: 0 10px;
-                text-align: center !important;
-              }
+        .icon-clockwise {
+          font-size: 22px;
+          margin-right: 10px;
+        }
+
+        .icon-search {
+          font-size: 20px;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .line {
+      height: 2px;
+      width: 100%;
+      background-color: #e2ebf7;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .group-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 26px 30px;
+      overflow: auto;
+      margin-bottom: 1px;
+
+      table tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+      }
+
+      table tbody tr:nth-child(even) {
+        background-color: #f1f5fa;
+      }
+
+      .table-automail-sendmail-logs {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0px;
+        border-radius: 5px;
+        border: solid 1px #c1cfe3;
+        background-color: #fff;
+        overflow: hidden;
+
+        .thead {
+          .thead-row {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333;
+            height: 71px;
+
+            th {
+              border-bottom: solid 1px #c1cfe3;
+              padding: 0 10px;
+              text-align: center !important;
+            }
+          }
+
+          .col1 {
+            min-width: 80px;
+            max-width: 80px;
+            width: 0%;
+            padding-left: 28px !important;
+          }
+
+          .col2 {
+            min-width: 100px;
+            max-width: 100px;
+            width: 0%;
+          }
+
+          .col3 {
+            min-width: 180px;
+            max-width: 180px;
+            width: 0%;
+          }
+
+          .col4 {
+            min-width: 180px;
+            max-width: 180px;
+            width: 0%;
+          }
+
+          .col5 {
+            min-width: 250px;
+            max-width: 250px;
+            width: 0%;
+          }
+
+          .col6 {
+            min-width: 150px;
+            max-width: 150px;
+            width: 0%;
+          }
+
+          .col7 {
+            min-width: 250px;
+            width: 10%;
+          }
+
+          .col8 {
+            min-width: 180px;
+            max-width: 180px;
+            width: 0%;
+          }
+
+          .col9 {
+            min-width: 150px;
+            max-width: 150px;
+            width: 0%;
+          }
+
+          .col10 {
+            min-width: 150px;
+            max-width: 150px;
+            width: 0%;
+          }
+
+          .col11 {
+            min-width: 250px;
+            width: 15%;
+          }
+
+          .col12 {
+            min-width: 250px;
+            width: 15%;
+          }
+
+          .col13 {
+            min-width: 250px;
+            width: 15%;
+            padding-right: 28px !important;
+          }
+        }
+
+        .tbody {
+          .color-tr {
+            background-color: #f1f5fa;
+          }
+
+          .tbody-row {
+            width: 100%;
+            height: 70px;
+            text-align: center;
+            color: #333333;
+            border-bottom: 0px;
+            font-weight: 500;
+            font-size: 16px;
+
+            td {
+              padding: 0 10px;
             }
 
-            .col1 {
-              min-width: 80px;
-              max-width: 80px;
-              width: 0%;
-              padding-left: 28px !important;
-            }
-
-            .col2 {
-              min-width: 100px;
-              max-width: 100px;
-              width: 0%;
-            }
-
-            .col3 {
-              min-width: 180px;
-              max-width: 180px;
-              width: 0%;
+            .col3,
+            .col5,
+            .col7,
+            .col8,
+            .col9,
+            .col10,
+            .col11,
+            .col12,
+            .col13 {
+              text-align: left;
             }
 
             .col4 {
-              min-width: 180px;
-              max-width: 180px;
-              width: 0%;
+              color: #15466e;
+              text-decoration: underline;
+              cursor: pointer;
             }
 
-            .col5 {
-              min-width: 250px;
-              max-width: 250px;
-              width: 0%;
-            }
-
-            .col6 {
-              min-width: 150px;
-              max-width: 150px;
-              width: 0%;
-            }
-
-            .col7 {
-              min-width: 250px;
-              width: 10%;
-            }
-
-            .col8 {
-              min-width: 180px;
-              max-width: 180px;
-              width: 0%;
-            }
-            
-            .col9 {
-              min-width: 150px;
-              max-width: 150px;
-              width: 0%;
-            }
-
-            .col10 {
-              min-width: 150px;
-              max-width: 150px;
-              width: 0%;
-            }
-
-            .col11 {
-              min-width: 250px;
-              width: 15%;
-            }
-
-            .col12 {
-              min-width: 250px;
-              width: 15%;
+            .col1 {
+              padding-left: 28px;
             }
 
             .col13 {
-              min-width: 250px;
-              width: 15%;
-              padding-right: 28px !important;
-            }
-          }
-
-          .tbody {
-            .color-tr {
-              background-color: #f1f5fa;
-            }
-
-            .tbody-row {
-              width: 100%;
-              height: 70px;
-              text-align: center;
-              color: #333333;
-              border-bottom: 0px;
-              font-weight: 500;
-              font-size: 16px;
-
-              td {
-                padding: 0 10px;
-              }
-
-              .col3, .col5, .col7, .col8, .col9, .col10, .col11, .col12, .col13 {
-                text-align: left;
-              }
-
-              .col4 {
-                color: #15466e;
-                text-decoration: underline;
-                cursor: pointer;
-              }
-
-              .col1 {
-                padding-left: 28px;
-              }
-
-              .col13 {
-                padding-right: 28px;
-              }
+              padding-right: 28px;
             }
           }
         }
       }
+    }
 
-      .group-footer {
-        margin: 0px 29px;
-      }
+    .group-footer {
+      margin: 0px 29px;
     }
   }
+}
 </style>
