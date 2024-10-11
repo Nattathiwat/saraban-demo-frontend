@@ -92,14 +92,9 @@
                     + 1 +
                     (data.perPage * (data.page - 1)) }}</td>
                   <td class="col2">{{ item.speed_name }}</td>
-                  <td class="col3">{{ item.secret_name }}</td>
-                  <td class="col4">{{ item.book_out_document_number }}</td>
-                  <td class="col5">{{ item.book_regis_name }}</td>
+                  <td class="col3" colspan="3">{{ item.secret_name }}</td>
                   <td class="col6">{{ item.subject }}</td>
-                  <td class="col7">{{ item.book_type_name }}</td>
-                  <td class="col8">{{ item.as_of_date }}</td>
-                  <td class="col9">{{ item.from }}</td>
-                  <td class="col10">{{ item.to }}</td>
+                  <td class="col7 text-start" colspan="4">{{ item.book_type_name }}</td>
                   <td class="col11">
                     <!-- <div class="group-icon">
                       <img @click="listClick(item)" src="@/assets/images/icon/share-from-square-solid.svg" alt="" class="icon-send pointer">
@@ -108,7 +103,7 @@
                   </td>
                 </tr>
                 <template v-for="(item2, index2) in item.book_series" :key="index2">
-                  <tr class="tbody-row" :class="(index % 2 == 0) ? 'color-tr1' : 'color-tr2'">
+                  <tr class="tbody-row" :class="(index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
                     <td colspan="9" class="col2" style="text-align: left;">ชุดที่ #{{ item2.no }}</td>
                     <td class="col11">
                       <div class="group-icon">
@@ -118,16 +113,13 @@
                     </td>
                   </tr>
                   <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"
-                    :class="(index3 % 2 != 0) ? (index % 2 == 0) ? 'color-tr1' : 'color-tr2' : (index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
-                    <td class="col1">
-                      <div></div>
+                    :class="(index3 % 2 != 0) ? (index % 2 == 0) ? 'color-tr2' : 'color-tr1' : (index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
+                    <td class="col3" colspan="3">
+                      <div style="width: 150px;" class="ms-auto">
+                        {{ item3.book_out_document_number }}
+                      </div>
                     </td>
-                    <td class="col2">
-                    </td>
-                    <td class="col3">{{ item3.book_out_document_number }}</td>
-                    <td class="col4">{{ item3.book_regis_name }}</td>
-                    <td class="col5"></td>
-                    <td class="col6"></td>
+                    <td class="col4 text-start" colspan="3">{{ item3.book_regis_name }}</td>
                     <td class="col7">{{ item3.as_of_date }}</td>
                     <td class="col8">{{ item3.from }}</td>
                     <td class="col9">{{ item3.to }}</td>
@@ -138,13 +130,7 @@
                       </div>
                     </td>
                   </tr>
-                  <tr class="tbody-row-end2">
-                    <td colspan="11"></td>
-                  </tr>
                 </template>
-                <tr :class="index % 2 != 0 ? 'tbody-row-end1' : 'tbody-row-end2'">
-                  <td colspan="11"></td>
-                </tr>
               </template>
               <tr class="tbody-row" v-if="data.table.length == 0">
                 <td colspan="11">ไม่มีข้อมูล</td>
@@ -244,7 +230,7 @@ export default {
               sum += item2.subs.length
             })
             sum += item1.book_series.length
-            sum += 2
+            sum += 1
             item1.rowspan = sum
           })
           this.data.table = response.data.data.meta
@@ -517,12 +503,20 @@ export default {
 
       .table-department-inex {
         width: 100%;
-        border-collapse: separate;
+        // border-collapse: separate;
+        border-collapse: collapse;
         border-spacing: 0px;
         border-radius: 5px;
         border: solid 1px #c1cfe3;
         background-color: #fff;
-        overflow: hidden;
+        // overflow: hidden;
+        overflow: auto;
+
+        th,
+        td {
+          border: 1px solid #c1cfe3;
+          border-collapse: collapse;
+        }
 
         .thead {
           .thead-row {
@@ -587,13 +581,13 @@ export default {
           }
 
           .col9 {
-            min-width: 150px;
-            width: 15%;
+            min-width: 200px;
+            width: 20%;
           }
 
           .col10 {
-            min-width: 150px;
-            width: 15%;
+            min-width: 200px;
+            width: 200%;
           }
 
           .col11 {
