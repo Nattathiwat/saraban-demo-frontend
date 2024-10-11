@@ -76,17 +76,9 @@
                 <template v-if="item.select" v-for="(item2, index2) in item.sub" :key="index2">
                   <tr class="tbody-row"
                     :class="index % 2 != 0 ? index2 % 2 != 0 ? 'color-tr1' : 'color-tr2' : index2 % 2 != 0 ? 'color-tr2' : 'color-tr1'">
+                    <td class="col0"></td>
                     <td class="col0">{{ index2 + 1 }}</td>
-                    <td class="col1">{{ item2.speed_name }}</td>
-                    <td class="col1"></td>
-                    <td class="col1"></td>
-                    <td class="col4" colspan="4">
-                      <div class="group-show none-bg">
-                        <span class="span">
-                          {{ item2.sub_ministry_name }}
-                        </span>
-                      </div>
-                    </td>
+                    <td class="col2 text-start ps-5" colspan="6">{{ item2.sub_ministry_name }}</td>
                     <td class="col8">{{ item2.status }}</td>
                   </tr>
                 </template>
