@@ -115,7 +115,7 @@
                   <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"
                     :class="(index3 % 2 != 0) ? (index % 2 == 0) ? 'color-tr2' : 'color-tr1' : (index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
                     <td class="col3" colspan="3">
-                      <div style="width: 150px;" class="ms-auto">
+                      <div style="width: 140px;" class="ms-auto">
                         {{ item3.book_out_document_number }}
                       </div>
                     </td>
