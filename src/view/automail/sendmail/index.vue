@@ -4,7 +4,7 @@
       <div class="detail">
         <div class="group-head">
           <div class="group-first">
-            <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog">
+            <img src="@/assets/images/icon/users-cog-duotone.svg" alt="" class="icon-users-cog" />
             <div class="name">รายการหนังสือส่งออก ที่ส่งผ่านอีเมลอัตโนมัติ</div>
           </div>
         </div>
@@ -13,13 +13,22 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input left">
-                <div class="name">ทะเบียน </div>
-                <cpn-autoComplete v-model="data.regis_id" name="regis_id" @keyup="keyup_regis_type"
-                  :optionSelect="optionSelect.regis_id" placeholder="กรุณาระบุ" />
+                <div class="name">ทะเบียน</div>
+                <cpn-autoComplete
+                  v-model="data.regis_id"
+                  name="regis_id"
+                  @keyup="keyup_regis_type"
+                  :optionSelect="optionSelect.regis_id"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
                 <div class="name">เลขออกหนังสือส่งออก</div>
-                <cpn-input v-model="data.document_number" name="document_number" placeholder="กรุณาระบุ" />
+                <cpn-input
+                  v-model="data.document_number"
+                  name="document_number"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
             </div>
             <div class="group-between">
@@ -31,19 +40,33 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">จาก</div>
-                <cpn-autoComplete v-model="data.department_id" name="department_id" @keyup="keyup_department"
-                  :optionSelect="optionSelect.department_id" placeholder="กรุณาระบุ" />
+                <cpn-autoComplete
+                  v-model="data.department_id"
+                  name="department_id"
+                  @keyup="keyup_department"
+                  :optionSelect="optionSelect.department_id"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
                 <div class="name">ถึง</div>
-                <cpn-autoComplete v-model="data.department_dest_id" name="department_dest_id" @keyup="keyup_department"
-                  :optionSelect="optionSelect.department_dest_id" placeholder="เลือกหน่วยงานปลายทาง" />
+                <cpn-autoComplete
+                  v-model="data.department_dest_id"
+                  name="department_dest_id"
+                  @keyup="keyup_department"
+                  :optionSelect="optionSelect.department_dest_id"
+                  placeholder="เลือกหน่วยงานปลายทาง"
+                />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">จากวันที่</div>
-                <cpn-datepicker v-model="data.start_date" name="start_date" placeholder="กรุณาระบุ" />
+                <cpn-datepicker
+                  v-model="data.start_date"
+                  name="start_date"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
                 <div class="name">ถึงวันที่</div>
@@ -81,16 +104,23 @@
                 <th class="col9">จาก</th>
                 <th class="col10">ถึง</th>
                 <th class="col11">
-                  <img src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send">
+                  <img src="@/assets/images/icon/envelope-solid.svg" alt="" class="icon-send" />
                 </th>
               </tr>
             </thead>
             <tbody class="tbody">
               <template v-for="(item, index) in data.table" :key="index">
-                <tr class="tbody-row tbody-row-index" :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'">
-                  <td class="col1" :rowspan="item.rowspan" :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'">{{ index
-                    + 1 +
-                    (data.perPage * (data.page - 1)) }}</td>
+                <tr
+                  class="tbody-row tbody-row-index"
+                  :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'"
+                >
+                  <td
+                    class="col1"
+                    :rowspan="item.rowspan"
+                    :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'"
+                  >
+                    {{ index + 1 + data.perPage * (data.page - 1) }}
+                  </td>
                   <td class="col2">{{ item.speed_name }}</td>
                   <td class="col3" colspan="3">{{ item.secret_name }}</td>
                   <td class="col6">{{ item.subject }}</td>
@@ -103,19 +133,37 @@
                   </td>
                 </tr>
                 <template v-for="(item2, index2) in item.book_series" :key="index2">
-                  <tr class="tbody-row" :class="(index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
-                    <td colspan="9" class="col2" style="text-align: left;">ชุดที่ #{{ item2.no }}</td>
+                  <tr class="tbody-row" :class="index % 2 == 0 ? 'color-tr2' : 'color-tr1'">
+                    <td colspan="9" class="col2" style="text-align: left">
+                      ชุดที่ #{{ item2.no }}
+                    </td>
                     <td class="col11">
                       <div class="group-icon">
-                        <img @click="listClick(item2)" src="@/assets/images/icon/share-from-square-solid.svg" alt=""
-                          class="icon-send pointer">
+                        <img
+                          @click="listClick(item2)"
+                          src="@/assets/images/icon/share-from-square-solid.svg"
+                          alt=""
+                          class="icon-send pointer"
+                        />
                       </div>
                     </td>
                   </tr>
-                  <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3"
-                    :class="(index3 % 2 != 0) ? (index % 2 == 0) ? 'color-tr2' : 'color-tr1' : (index % 2 == 0) ? 'color-tr2' : 'color-tr1'">
+                  <tr
+                    class="tbody-row"
+                    v-for="(item3, index3) in item2.subs"
+                    :key="index3"
+                    :class="
+                      index3 % 2 != 0
+                        ? index % 2 == 0
+                          ? 'color-tr2'
+                          : 'color-tr1'
+                        : index % 2 == 0
+                        ? 'color-tr2'
+                        : 'color-tr1'
+                    "
+                  >
                     <td class="col3" colspan="3">
-                      <div style="width: 140px;" class="ms-auto">
+                      <div style="width: 140px" class="ms-auto">
                         {{ item3.book_out_document_number }}
                       </div>
                     </td>
@@ -125,8 +173,12 @@
                     <td class="col9">{{ item3.to }}</td>
                     <td class="col11">
                       <div class="group-icon">
-                        <img @click="sendmailClick(item3)" src="@/assets/images/icon/envelope-solid.svg" alt=""
-                          class="icon-send pointer">
+                        <img
+                          @click="sendmailClick(item3)"
+                          src="@/assets/images/icon/envelope-solid.svg"
+                          alt=""
+                          class="icon-send pointer"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -139,8 +191,13 @@
           </table>
         </div>
         <div class="group-footer">
-          <cpn-pagination :page="data.page" :total="data.total" :lastPage="data.lastPage" :perPage="data.perPage"
-            @pageChange="pageChange" />
+          <cpn-pagination
+            :page="data.page"
+            :total="data.total"
+            :lastPage="data.lastPage"
+            :perPage="data.perPage"
+            @pageChange="pageChange"
+          />
         </div>
       </div>
     </div>
@@ -150,179 +207,211 @@
 </template>
 <script>
 export default {
-  name: 'mail-manage-inex',
+  name: "mail-manage-inex",
   data() {
     return {
       modalAlert: {
         showModal: false,
-        title: '',
-        message: ''
+        title: "",
+        message: "",
       },
       showLoading: false,
       data: {
-        search: '',
+        search: "",
         table: [],
         page: 1,
         total: 0,
         lastPage: 0,
         perPage: 10,
-        regis_id: '',
-        department_id: '',
-        department_dest_id: '',
+        regis_id: "",
+        department_id: "",
+        department_dest_id: "",
       },
       optionSelect: {
         regis_id: [],
         department_id: [],
         department_dest_id: [],
-      }
-    }
+      },
+    };
   },
   methods: {
     sendmailClick(item3) {
-      this.$router.push({
-        name: 'automail-sendmail-edit',
-        params: { id: item3.id },
-        query: {
-          page: this.data.page,
-          perPage: this.data.perPage
-        }
-      }).catch(() => { });
+      this.$router
+        .push({
+          name: "automail-sendmail-edit",
+          params: { id: item3.id },
+          query: {
+            page: this.data.page,
+            perPage: this.data.perPage,
+          },
+        })
+        .catch(() => {});
     },
     listClick(item2) {
-      this.$router.push({
-        name: 'automail-sendmail-list',
-        params: { id: item2.book_regis_id },
-        query: {
-          page: this.data.page,
-          perPage: this.data.perPage
-        }
-      }).catch(() => { });
+      this.$router
+        .push({
+          name: "automail-sendmail-list",
+          params: { id: item2.book_regis_id },
+          query: {
+            page: this.data.page,
+            perPage: this.data.perPage,
+          },
+        })
+        .catch(() => {});
     },
     pageChange(data) {
-      this.data.perPage = data.perPage
-      this.data.page = data.page
-      this.apiSendmailLists()
+      this.data.perPage = data.perPage;
+      this.data.page = data.page;
+      this.apiSendmailLists();
+    },
+    cancelClick() {
+      this.data.regis_id = "";
+      this.data.department_id = "";
+      this.data.department_dest_id = "";
+      this.data.document_number = "";
+      this.data.name = "";
+      this.data.start_date = "";
+      this.data.end_date = "";
     },
     search() {
-      this.data.status = true
-      this.data.perPage = 10
-      this.data.page = 1
-      this.apiSendmailLists()
+      this.data.status = true;
+      this.data.perPage = 10;
+      this.data.page = 1;
+      this.apiSendmailLists();
     },
     apiSendmailLists() {
-      this.data.table = []
-      this.showLoading = true
-      this.axios.get('/book-out-external/book-out-automail', {
-        params: {
-          regis_id: this.data.regis_id,
-          department_id: this.data.department_id,
-          department_dest_id: this.data.department_dest_id,
-          page_size: this.data.perPage,
-          page: this.data.page,
-          user_id: parseInt(localStorage.getItem('user_id'))
-        }
-      })
+      this.data.table = [];
+      this.showLoading = true;
+      this.axios
+        .get("/book-out-external/book-out-automail", {
+          params: {
+            regis_id: this.data.regis_id,
+            department_id: this.data.department_id,
+            department_dest_id: this.data.department_dest_id,
+            page_size: this.data.perPage,
+            page: this.data.page,
+            user_id: parseInt(localStorage.getItem("user_id")),
+            document_number: this.data.document_number,
+            name: this.data.name,
+            start_date: this.data.start_date,
+            end_date: this.data.end_date,
+          },
+        })
         .then((response) => {
-          this.showLoading = false
-          response.data.data.meta.filter(item1 => {
-            let sum = 0
-            item1.book_series.filter(item2 => {
-              sum += item2.subs.length
-            })
-            sum += item1.book_series.length
-            sum += 1
-            item1.rowspan = sum
-          })
-          this.data.table = response.data.data.meta
-          this.data.total = response.data.data.total
-          this.data.lastPage = Math.ceil(this.data.total / this.data.perPage)
+          this.showLoading = false;
+          response.data.data.meta.filter((item1) => {
+            let sum = 0;
+            item1.book_series.filter((item2) => {
+              sum += item2.subs.length;
+            });
+            sum += item1.book_series.length;
+            sum += 1;
+            item1.rowspan = sum;
+          });
+          this.data.table = response.data.data.meta;
+          this.data.total = response.data.data.total;
+          this.data.lastPage = Math.ceil(this.data.total / this.data.perPage);
         })
         .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
     },
     api_master() {
-      this.showLoading = true
-      const request8 = this.axios.get(`/master-data/book-category`)
-      const request9 = this.axios.get('/master-data/department-user')
+      this.showLoading = true;
+      const request8 = this.axios.get(`/master-data/book-category`);
+      const request9 = this.axios.get("/master-data/department-user");
 
-      this.axios.all([request8, request9])
-        .then(this.axios.spread((...responses) => {
-          this.showLoading = false
-          const response8 = responses[0]
-          const response9 = responses[1]
+      this.axios
+        .all([request8, request9])
+        .then(
+          this.axios.spread((...responses) => {
+            this.showLoading = false;
+            const response8 = responses[0];
+            const response9 = responses[1];
 
-          response8.data.data?.filter(row => {
-            row.value = row.id
-            row.name = row.name
-            return row
+            response8.data.data?.filter((row) => {
+              row.value = row.id;
+              row.name = row.name;
+              return row;
+            });
+            response9.data.data?.filter((item) => {
+              item.value = item.id;
+              item.name = item.desc;
+              item.human_flag = item.human_flag;
+              item.response_type = item.type;
+              return item;
+            });
+
+            this.optionSelect.regis_id = response8.data.data;
+            this.optionSelect.department_id = response9.data.data;
+            this.optionSelect.department_dest_id = response9.data.data;
+
+            this.apiSendmailLists();
           })
-          response9.data.data?.filter(item => {
-            item.value = item.id
-            item.name = item.desc
-            item.human_flag = item.human_flag
-            item.response_type = item.type
-            return item
-          })
-
-          this.optionSelect.regis_id = response8.data.data
-          this.optionSelect.department_dest_id = response9.data.data
-
-          this.apiSendmailLists()
-
-        })).catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
-
+        )
+        .catch((error) => {
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
     },
     keyup_regis_type(e) {
-      this.optionSelect.sendTo = []
-      this.axios.get('/master-data/book-category', {
-        params: {
-          keyword: e.target.value
-        }
-      })
+      this.optionSelect.sendTo = [];
+      this.axios
+        .get("/master-data/book-category", {
+          params: {
+            keyword: e.target.value,
+          },
+        })
         .then((response) => {
           if (response.data.data) {
-            response.data.data.filter(item => {
-              item.value = item.id
-              item.name = item.name
-              return item
-            })
-            this.optionSelect.regis_id = response.data.data
+            response.data.data.filter((item) => {
+              item.value = item.id;
+              item.name = item.name;
+              return item;
+            });
+            this.optionSelect.regis_id = response.data.data;
           }
-        })
+        });
     },
     keyup_department(e) {
-      this.optionSelect.sendTo = []
-      this.axios.get('/master-data/department-user', {
-        params: {
-          keyword: e.target.value
-        }
-      })
+      this.optionSelect.sendTo = [];
+      this.axios
+        .get("/master-data/department-user", {
+          params: {
+            keyword: e.target.value,
+          },
+        })
         .then((response) => {
           if (response.data.data) {
-            response.data.data.filter(item => {
-              item.value = item.id
-              item.name = item.desc
-              item.human_flag = item.human_flag
-              item.response_type = item.type
-              return item
-            })
-            this.optionSelect.regis_id = response.data.data
+            response.data.data.filter((item) => {
+              item.value = item.id;
+              item.name = item.desc;
+              item.human_flag = item.human_flag;
+              item.response_type = item.type;
+              return item;
+            });
+            this.optionSelect.department_id = response.data.data;
           }
-        })
+        });
     },
   },
   mounted() {
-    this.data.page = this.$route.query?.page || this.data.page
-    this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.api_master()
+    this.data.page = this.$route.query?.page || this.data.page;
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage;
+    this.api_master();
   },
-}
-
+};
 </script>
 <style lang="scss">
 .mail-inex {
@@ -635,7 +724,6 @@ export default {
             .col1 {
               padding-left: 28px;
             }
-
 
             .col11 {
               padding-right: 28px;
