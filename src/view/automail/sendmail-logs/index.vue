@@ -13,49 +13,73 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input">
-                <div class="name">ทะเบียน </div>
-                <cpn-select v-model="data.regis_id" name="regis_id" :optionSelect="optionSelect.regis_id"
-                  placeholder="กรุณาระบุ" />
+                <div class="name">ทะเบียน</div>
+                <cpn-select
+                  v-model="data.regis_id"
+                  name="regis_id"
+                  :optionSelect="optionSelect.regis_id"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
-                <div class="name">เลขออก สลค. </div>
-                <cpn-input v-model="data.book_out_document_number" name="book_out_document_number"
-                  placeholder="กรุณาระบุ" />
+                <div class="name">เลขออก สลค.</div>
+                <cpn-input
+                  v-model="data.book_out_document_number"
+                  name="book_out_document_number"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
                 <div class="name">ความเร่งด่วน</div>
-                <cpn-select v-model="data.speed_id" name="speed_id" :optionSelect="optionSelect.speed_id"
-                  placeholder="กรุณาระบุ" />
+                <cpn-select
+                  v-model="data.speed_id"
+                  name="speed_id"
+                  :optionSelect="optionSelect.speed_id"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
             </div>
             <div class="group-input">
-              <div class="name">ชื่อเรื่อง </div>
+              <div class="name">ชื่อเรื่อง</div>
               <cpn-input v-model="data.subject" name="subject" placeholder="กรุณาระบุ" />
             </div>
             <div class="group-between">
               <div class="group-input">
-                <div class="name">กอง/สำนัก </div>
-                <cpn-autoComplete v-model="data.mnst_id" name="mnst_id" :optionSelect="optionSelect.mnst_id"
-                  @keyup="keyupSubministry($event)" placeholder="เลือกกอง/สำนัก" />
+                <div class="name">กอง/สำนัก</div>
+                <cpn-autoComplete
+                  v-model="data.mnst_id"
+                  name="mnst_id"
+                  :optionSelect="optionSelect.mnst_id"
+                  @keyup="keyupSubministry($event)"
+                  placeholder="เลือกกอง/สำนัก"
+                />
               </div>
               <div class="group-input">
-                <div class="name">ถึง </div>
-                <cpn-autoComplete v-model="data.department_dest_id" name="department_dest_id"
-                  :optionSelect="optionSelect.department_dest_id" @keyup="keyupDepartment($event)"
-                  placeholder="เลือกหน่วยงานปลายทาง" />
+                <div class="name">ถึง</div>
+                <cpn-autoComplete
+                  v-model="data.department_dest_id"
+                  name="department_dest_id"
+                  :optionSelect="optionSelect.department_dest_id"
+                  @keyup="keyupDepartment($event)"
+                  placeholder="เลือกหน่วยงานปลายทาง"
+                />
               </div>
             </div>
             <div class="group-input">
-              <div class="name">ลงวันที่ตั้งแต่ - ถึง </div>
-              <cpn-datepickerRange v-model="data.as_of_date" name="as_of_date" placeholder="เลือกวันที่ - ถึงวันที่" />
+              <div class="name">ลงวันที่ตั้งแต่ - ถึง</div>
+              <cpn-datepickerRange
+                v-model="data.as_of_date"
+                name="as_of_date"
+                placeholder="เลือกวันที่ - ถึงวันที่"
+              />
             </div>
             <div class="group-between">
               <div class="group-input">
-                <div class="name">ส่งถึง (TO) </div>
+                <div class="name">ส่งถึง (TO)</div>
                 <cpn-input v-model="data.to" name="to" placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
-                <div class="name">สำเนาถึง (Cc) </div>
+                <div class="name">สำเนาถึง (Cc)</div>
                 <cpn-input v-model="data.cc" name="cc" placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
@@ -64,8 +88,12 @@
               </div>
             </div>
             <div class="group-input">
-              <div class="name">วันที่ส่งตั้งแต่ - ถึง </div>
-              <cpn-datepickerRange v-model="data.send_date" name="send_date" placeholder="เลือกวันที่ - ถึงวันที่" />
+              <div class="name">วันที่ส่งตั้งแต่ - ถึง</div>
+              <cpn-datepickerRange
+                v-model="data.send_date"
+                name="send_date"
+                placeholder="เลือกวันที่ - ถึงวันที่"
+              />
             </div>
             <div class="group-button">
               <div class="button-left">
@@ -105,10 +133,12 @@
             </thead>
             <tbody class="tbody">
               <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
-                <td class="col1">{{ index + 1 + (data.perPage * (data.page - 1)) }}</td>
+                <td class="col1">{{ index + 1 + data.perPage * (data.page - 1) }}</td>
                 <td class="col2">{{ item.status_name }}</td>
                 <td class="col3">{{ item.send_date }}</td>
-                <td class="col4" @click="detail_click(item)">{{ item.book_out_document_number }}</td>
+                <td class="col4" @click="detail_click(item)">
+                  {{ item.book_out_document_number }}
+                </td>
                 <td class="col5">{{ item.book_regis_name }}</td>
                 <td class="col6">{{ item.speed_name }}</td>
                 <td class="col7">{{ item.subject }}</td>
@@ -126,8 +156,13 @@
           </table>
         </div>
         <div class="group-footer">
-          <cpn-pagination :page="data.page" :total="data.total" :lastPage="data.lastPage" :perPage="data.perPage"
-            @pageChange="pageChange" />
+          <cpn-pagination
+            :page="data.page"
+            :total="data.total"
+            :lastPage="data.lastPage"
+            :perPage="data.perPage"
+            @pageChange="pageChange"
+          />
         </div>
       </div>
     </div>
@@ -137,27 +172,27 @@
 </template>
 <script>
 export default {
-  name: 'automail-sendmail-logs',
+  name: "automail-sendmail-logs",
   data() {
     return {
       modalAlert: {
         showModal: false,
-        title: '',
-        message: ''
+        title: "",
+        message: "",
       },
       showLoading: false,
       data: {
-        regis_id: '',
-        book_out_document_number: '',
-        speed_id: '',
-        subject: '',
-        mnst_id: '',
-        department_dest_id: '',
-        as_of_date: '',
-        to: '',
-        cc: '',
-        bcc: '',
-        send_date: '',
+        regis_id: "",
+        book_out_document_number: "",
+        speed_id: "",
+        subject: "",
+        mnst_id: "",
+        department_dest_id: "",
+        as_of_date: "",
+        to: "",
+        cc: "",
+        bcc: "",
+        send_date: "",
         table: [],
         page: 1,
         total: 0,
@@ -168,167 +203,183 @@ export default {
         regis_id: [],
         speed_id: [],
         mnst_id: [],
-        department_dest_id: []
-      }
-    }
+        department_dest_id: [],
+      },
+    };
   },
   methods: {
     detail_click(item) {
-      this.$router.push({
-        name: 'subministry-work.booking-out-edit',
-        params: { id: item.book_id },
-      }).catch(() => { });
+      this.$router
+        .push({
+          name: "subministry-work.booking-out-edit",
+          params: { id: item.book_id },
+        })
+        .catch(() => {});
     },
     cancelClick() {
-      this.data.regis_id = ''
-      this.data.book_out_document_number = ''
-      this.data.speed_id = ''
-      this.data.subject = ''
-      this.data.mnst_id = ''
-      this.data.department_dest_id = ''
-      this.data.as_of_date = ''
-      this.data.to = ''
-      this.data.cc = ''
-      this.data.bcc = ''
-      this.data.send_date = ''
-      this.data.perPage = 10
-      this.data.page = 1
-      this.apiSendmailLogs()
+      this.data.regis_id = "";
+      this.data.book_out_document_number = "";
+      this.data.speed_id = "";
+      this.data.subject = "";
+      this.data.mnst_id = "";
+      this.data.department_dest_id = "";
+      this.data.as_of_date = "";
+      this.data.to = "";
+      this.data.cc = "";
+      this.data.bcc = "";
+      this.data.send_date = "";
+      this.data.perPage = 10;
+      this.data.page = 1;
+      this.apiSendmailLogs();
     },
     pageChange(data) {
-      this.data.perPage = data.perPage
-      this.data.page = data.page
-      this.apiSendmailLogs()
+      this.data.perPage = data.perPage;
+      this.data.page = data.page;
+      this.apiSendmailLogs();
     },
     apiSendmailLogs() {
-      this.data.table = []
-      this.showLoading = true
-      this.axios.get('/book-out-external/email-history', {
-        params: {
-          regis_id: this.data.regis_id,
-          book_out_document_number: this.data.book_out_document_number,
-          speed_id: this.data.speed_id,
-          subject: this.data.subject,
-          mnst_id: this.data.mnst_id,
-          department_dest_id: this.data.department_dest_id,
-          as_of_date_from: this.data?.as_of_date[0],
-          as_of_date_to: this.data?.as_of_date[1],
-          to: this.data.to,
-          cc: this.data.cc,
-          bcc: this.data.bcc,
-          send_date_from: this.data?.send_date[0],
-          send_date_to: this.data?.send_date[1],
-          page_size: this.data.perPage,
-          page: this.data.page,
-        }
-      })
+      this.data.table = [];
+      this.showLoading = true;
+      this.axios
+        .get("/book-out-external/email-history", {
+          params: {
+            regis_id: this.data.regis_id,
+            book_out_document_number: this.data.book_out_document_number,
+            speed_id: this.data.speed_id,
+            subject: this.data.subject,
+            mnst_id: this.data.mnst_id,
+            department_dest_id: this.data.department_dest_id,
+            as_of_date_from: this.data?.as_of_date[0],
+            as_of_date_to: this.data?.as_of_date[1],
+            to: this.data.to,
+            cc: this.data.cc,
+            bcc: this.data.bcc,
+            send_date_from: this.data?.send_date[0],
+            send_date_to: this.data?.send_date[1],
+            page_size: this.data.perPage,
+            page: this.data.page,
+          },
+        })
         .then((response) => {
-          this.showLoading = false
-          response.data.data.meta.filter(row => row.disabled = true)
-          this.data.table = response.data.data.meta
-          this.data.total = response.data.data.total
-          this.data.lastPage = Math.ceil(this.data.total / this.data.perPage)
+          this.showLoading = false;
+          response.data.data.meta.filter((row) => (row.disabled = true));
+          this.data.table = response.data.data.meta;
+          this.data.total = response.data.data.total;
+          this.data.lastPage = Math.ceil(this.data.total / this.data.perPage);
         })
         .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
     },
     keyupDepartment(e) {
-      this.optionSelect.department_dest_id = []
-      this.axios.get('/master-data/department', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
+      this.optionSelect.department_dest_id = [];
+      this.axios
+        .get("/master-data/department", {
+          params: {
+            keyword: e.target.value,
+          },
+        })
         .then((response) => {
           if (response.data.data) {
-            response.data.data.filter(item => {
-              item.value = item.id
-              item.name = item.department_full_name
-              return item
-            })
-            this.optionSelect.department_dest_id = response.data.data
+            response.data.data.filter((item) => {
+              item.value = item.id;
+              item.name = item.department_full_name;
+              return item;
+            });
+            this.optionSelect.department_dest_id = response.data.data;
           }
-        })
+        });
     },
     keyupSubministry(e) {
-      this.optionSelect.mnst_id = []
-      this.axios.get('/master-data/subministry', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
+      this.optionSelect.mnst_id = [];
+      this.axios
+        .get("/master-data/subministry", {
+          params: {
+            keyword: e.target.value,
+          },
+        })
         .then((response) => {
           if (response.data.data) {
-            response.data.data.filter(item => {
-              item.value = item.id
-              return item
-            })
-            this.optionSelect.mnst_id = response.data.data
+            response.data.data.filter((item) => {
+              item.value = item.id;
+              return item;
+            });
+            this.optionSelect.mnst_id = response.data.data;
           }
-        })
+        });
     },
     api_master() {
-      this.showLoading = true
+      this.showLoading = true;
       const request1 = this.axios.get(`/master-data/book-category`, {
         params: {
-          book_type: 1
-        }
-      })
-      const request2 = this.axios.get(`/master-data/speed`)
-      const request3 = this.axios.get(`/master-data/subministry`)
-      const request4 = this.axios.get(`/master-data/department`)
+          book_type: 2,
+        },
+      });
+      const request2 = this.axios.get(`/master-data/speed`);
+      const request3 = this.axios.get(`/master-data/subministry`);
+      const request4 = this.axios.get(`/master-data/department`);
 
-      this.axios.all([request1, request2, request3, request4])
-        .then(this.axios.spread((...responses) => {
-          this.showLoading = false
-          const response1 = responses[0]
-          const response2 = responses[1]
-          const response3 = responses[2]
-          const response4 = responses[3]
+      this.axios
+        .all([request1, request2, request3, request4])
+        .then(
+          this.axios.spread((...responses) => {
+            this.showLoading = false;
+            const response1 = responses[0];
+            const response2 = responses[1];
+            const response3 = responses[2];
+            const response4 = responses[3];
 
-          response1.data.data.filter(row => {
-            row.value = row.id
-            row.name = row.desc
-            return row
+            response1.data.data.filter((row) => {
+              row.value = row.id;
+              row.name = row.desc;
+              return row;
+            });
+            response2.data.data.filter((row) => {
+              row.value = row.id;
+              row.name = row.desc;
+              return row;
+            });
+            response3.data.data.filter((item) => {
+              item.value = item.id;
+              return item;
+            });
+            response4.data.data.filter((item) => {
+              item.value = item.id;
+              item.name = item.department_full_name;
+              return item;
+            });
+
+            this.optionSelect.regis_id = response1.data.data;
+            this.optionSelect.speed_id = response2.data.data;
+            this.optionSelect.mnst_id = response3.data.data;
+            this.optionSelect.department_dest_id = response4.data.data;
+
+            this.apiSendmailLogs();
           })
-          response2.data.data.filter(row => {
-            row.value = row.id
-            row.name = row.desc
-            return row
-          })
-          response3.data.data.filter(item => {
-            item.value = item.id
-            return item
-          })
-          response4.data.data.filter(item => {
-            item.value = item.id
-            item.name = item.department_full_name
-            return item
-          })
-
-          this.optionSelect.regis_id = response1.data.data
-          this.optionSelect.speed_id = response2.data.data
-          this.optionSelect.mnst_id = response3.data.data
-          this.optionSelect.department_dest_id = response4.data.data
-
-          this.apiSendmailLogs()
-
-        })).catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
-
+        )
+        .catch((error) => {
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
     },
   },
   mounted() {
-    this.data.page = this.$route.query?.page || this.data.page
-    this.data.perPage = this.$route.query?.perPage || this.data.perPage
-    this.api_master()
+    this.data.page = this.$route.query?.page || this.data.page;
+    this.data.perPage = this.$route.query?.perPage || this.data.perPage;
+    this.api_master();
   },
-}
-
+};
 </script>
 <style lang="scss">
 .automail-sendmail-logs {
