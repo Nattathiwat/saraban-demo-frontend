@@ -14,29 +14,18 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ทะเบียน</div>
-                <cpn-select
-                  v-model="data.regis_id"
-                  name="regis_id"
-                  :optionSelect="optionSelect.regis_id"
-                  placeholder="กรุณาระบุ"
-                />
+                <cpn-autoComplete v-model="data.regis_id" name="regis_id" @keyup="keyup_regis_type"
+                  :optionSelect="optionSelect.regis_id" placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">เลขออก สลค.</div>
-                <cpn-input
-                  v-model="data.book_out_document_number"
-                  name="book_out_document_number"
-                  placeholder="กรุณาระบุ"
-                />
+                <cpn-input v-model="data.book_out_document_number" name="book_out_document_number"
+                  placeholder="กรุณาระบุ" />
               </div>
               <div class="group-input">
                 <div class="name">ความเร่งด่วน</div>
-                <cpn-select
-                  v-model="data.speed_id"
-                  name="speed_id"
-                  :optionSelect="optionSelect.speed_id"
-                  placeholder="กรุณาระบุ"
-                />
+                <cpn-select v-model="data.speed_id" name="speed_id" :optionSelect="optionSelect.speed_id"
+                  placeholder="กรุณาระบุ" />
               </div>
             </div>
             <div class="group-input">
@@ -46,32 +35,19 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">กอง/สำนัก</div>
-                <cpn-autoComplete
-                  v-model="data.mnst_id"
-                  name="mnst_id"
-                  :optionSelect="optionSelect.mnst_id"
-                  @keyup="keyupSubministry($event)"
-                  placeholder="เลือกกอง/สำนัก"
-                />
+                <cpn-autoComplete v-model="data.mnst_id" name="mnst_id" :optionSelect="optionSelect.mnst_id"
+                  @keyup="keyupSubministry($event)" placeholder="เลือกกอง/สำนัก" />
               </div>
               <div class="group-input">
                 <div class="name">ถึง</div>
-                <cpn-autoComplete
-                  v-model="data.department_dest_id"
-                  name="department_dest_id"
-                  :optionSelect="optionSelect.department_dest_id"
-                  @keyup="keyupDepartment($event)"
-                  placeholder="เลือกหน่วยงานปลายทาง"
-                />
+                <cpn-autoComplete v-model="data.department_dest_id" name="department_dest_id"
+                  :optionSelect="optionSelect.department_dest_id" @keyup="keyupDepartment($event)"
+                  placeholder="เลือกหน่วยงานปลายทาง" />
               </div>
             </div>
             <div class="group-input">
               <div class="name">ลงวันที่ตั้งแต่ - ถึง</div>
-              <cpn-datepickerRange
-                v-model="data.as_of_date"
-                name="as_of_date"
-                placeholder="เลือกวันที่ - ถึงวันที่"
-              />
+              <cpn-datepickerRange v-model="data.as_of_date" name="as_of_date" placeholder="เลือกวันที่ - ถึงวันที่" />
             </div>
             <div class="group-between">
               <div class="group-input">
@@ -89,11 +65,7 @@
             </div>
             <div class="group-input">
               <div class="name">วันที่ส่งตั้งแต่ - ถึง</div>
-              <cpn-datepickerRange
-                v-model="data.send_date"
-                name="send_date"
-                placeholder="เลือกวันที่ - ถึงวันที่"
-              />
+              <cpn-datepickerRange v-model="data.send_date" name="send_date" placeholder="เลือกวันที่ - ถึงวันที่" />
             </div>
             <div class="group-button">
               <div class="button-left">
@@ -156,13 +128,8 @@
           </table>
         </div>
         <div class="group-footer">
-          <cpn-pagination
-            :page="data.page"
-            :total="data.total"
-            :lastPage="data.lastPage"
-            :perPage="data.perPage"
-            @pageChange="pageChange"
-          />
+          <cpn-pagination :page="data.page" :total="data.total" :lastPage="data.lastPage" :perPage="data.perPage"
+            @pageChange="pageChange" />
         </div>
       </div>
     </div>
@@ -214,7 +181,7 @@ export default {
           name: "subministry-work.booking-out-edit",
           params: { id: item.book_id },
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     cancelClick() {
       this.data.regis_id = "";
@@ -293,6 +260,26 @@ export default {
               return item;
             });
             this.optionSelect.department_dest_id = response.data.data;
+          }
+        });
+    },
+    keyup_regis_type(e) {
+      this.optionSelect.regis_id = [];
+      this.axios
+        .get("/master-data/book-category", {
+          params: {
+            keyword: e.target.value,
+            book_type: 2,
+          },
+        })
+        .then((response) => {
+          if (response.data.data) {
+            response.data.data.filter((item) => {
+              item.value = item.id;
+              item.name = item.name;
+              return item;
+            });
+            this.optionSelect.regis_id = response.data.data;
           }
         });
     },
