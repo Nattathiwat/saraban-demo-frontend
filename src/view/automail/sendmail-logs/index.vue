@@ -22,7 +22,7 @@
                 />
               </div>
               <div class="group-input">
-                <div class="name">เลขออก สลค.</div>
+                <div class="name">เลขออกหนังสือส่งออก</div>
                 <cpn-input
                   v-model="data.book_out_document_number"
                   name="book_out_document_number"
@@ -119,7 +119,7 @@
                 <th class="col1">ลำดับ</th>
                 <th class="col2">สถานะ</th>
                 <th class="col3">วันและเวลาที่ส่ง</th>
-                <th class="col4">เลขที่หนังสือส่งออก</th>
+                <th class="col4">เลขออกหนังสือส่งออก</th>
                 <th class="col5">ทะเบียนหนังสือ</th>
                 <th class="col6">ความเร่งด่วน</th>
                 <th class="col7">ชื่อเรื่อง</th>
