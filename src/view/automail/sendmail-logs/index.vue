@@ -14,9 +14,10 @@
             <div class="group-between">
               <div class="group-input">
                 <div class="name">ทะเบียน</div>
-                <cpn-select
+                <cpn-autoComplete
                   v-model="data.regis_id"
                   name="regis_id"
+                  @keyup="keyup_regis_type"
                   :optionSelect="optionSelect.regis_id"
                   placeholder="กรุณาระบุ"
                 />
@@ -293,6 +294,26 @@ export default {
               return item;
             });
             this.optionSelect.department_dest_id = response.data.data;
+          }
+        });
+    },
+    keyup_regis_type(e) {
+      this.optionSelect.regis_id = [];
+      this.axios
+        .get("/master-data/book-category", {
+          params: {
+            keyword: e.target.value,
+            book_type: 2,
+          },
+        })
+        .then((response) => {
+          if (response.data.data) {
+            response.data.data.filter((item) => {
+              item.value = item.id;
+              item.name = item.name;
+              return item;
+            });
+            this.optionSelect.regis_id = response.data.data;
           }
         });
     },
