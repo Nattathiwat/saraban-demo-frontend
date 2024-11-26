@@ -14,12 +14,21 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">ทะเบียน</div>
-                <cpn-autoComplete v-model="data.regis_id" name="regis_id" @keyup="keyup_regis_type"
-                  :optionSelect="optionSelect.regis_id" placeholder="กรุณาระบุ" />
+                <cpn-autoComplete
+                  v-model="data.regis_id"
+                  name="regis_id"
+                  @keyup="keyup_regis_type"
+                  :optionSelect="optionSelect.regis_id"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
-                <div class="name">เลขออกหนังสือส่งออก</div>
-                <cpn-input v-model="data.document_number" name="document_number" placeholder="กรุณาระบุ" />
+                <div class="name">เลขที่หนังสือส่งออก</div>
+                <cpn-input
+                  v-model="data.document_number"
+                  name="document_number"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
             </div>
             <div class="group-between">
@@ -31,20 +40,33 @@
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">จาก</div>
-                <cpn-autoComplete v-model="data.department_id" name="department_id" @keyup="keyup_department"
-                  :optionSelect="optionSelect.department_id" placeholder="กรุณาระบุ" />
+                <cpn-autoComplete
+                  v-model="data.department_id"
+                  name="department_id"
+                  @keyup="keyup_department"
+                  :optionSelect="optionSelect.department_id"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
                 <div class="name">ถึง</div>
-                <cpn-autoComplete v-model="data.department_dest_id" name="department_dest_id"
-                  @keyup="keyup_department_desc" :optionSelect="optionSelect.department_dest_id"
-                  placeholder="เลือกหน่วยงานปลายทาง" />
+                <cpn-autoComplete
+                  v-model="data.department_dest_id"
+                  name="department_dest_id"
+                  @keyup="keyup_department_desc"
+                  :optionSelect="optionSelect.department_dest_id"
+                  placeholder="เลือกหน่วยงานปลายทาง"
+                />
               </div>
             </div>
             <div class="group-between">
               <div class="group-input left">
                 <div class="name">จากวันที่</div>
-                <cpn-datepicker v-model="data.start_date" name="start_date" placeholder="กรุณาระบุ" />
+                <cpn-datepicker
+                  v-model="data.start_date"
+                  name="start_date"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
               <div class="group-input">
                 <div class="name">ถึงวันที่</div>
@@ -74,7 +96,7 @@
                 <th class="col1">ลำดับ</th>
                 <th class="col2">ความเร่งด่วน</th>
                 <th class="col3">ชั้นความลับ</th>
-                <th class="col4">เลขออกหนังสือส่งออก</th>
+                <th class="col4">เลขที่หนังสือส่งออก</th>
                 <th class="col5">ทะเบียนหนังสือ</th>
                 <th class="col6">ชื่อเรื่อง</th>
                 <th class="col7">ชนิดหนังสือ</th>
@@ -88,8 +110,15 @@
             </thead>
             <tbody class="tbody">
               <template v-for="(item, index) in data.table" :key="index">
-                <tr class="tbody-row tbody-row-index" :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'">
-                  <td class="col1" :rowspan="item.rowspan" :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'">
+                <tr
+                  class="tbody-row tbody-row-index"
+                  :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'"
+                >
+                  <td
+                    class="col1"
+                    :rowspan="item.rowspan"
+                    :class="index % 2 != 0 ? 'color-tr1' : 'color-tr2'"
+                  >
                     {{ index + 1 + data.perPage * (data.page - 1) }}
                   </td>
                   <td class="col2">{{ item.speed_name }}</td>
@@ -110,19 +139,29 @@
                     </td>
                     <td class="col11">
                       <div class="group-icon">
-                        <img @click="listClick(item2)" src="@/assets/images/icon/share-from-square-solid.svg" alt=""
-                          class="icon-send pointer" />
+                        <img
+                          @click="listClick(item2)"
+                          src="@/assets/images/icon/share-from-square-solid.svg"
+                          alt=""
+                          class="icon-send pointer"
+                        />
                       </div>
                     </td>
                   </tr>
-                  <tr class="tbody-row" v-for="(item3, index3) in item2.subs" :key="index3" :class="index3 % 2 != 0
-                    ? index % 2 == 0
-                      ? 'color-tr2'
-                      : 'color-tr1'
-                    : index % 2 == 0
-                      ? 'color-tr2'
-                      : 'color-tr1'
-                    ">
+                  <tr
+                    class="tbody-row"
+                    v-for="(item3, index3) in item2.subs"
+                    :key="index3"
+                    :class="
+                      index3 % 2 != 0
+                        ? index % 2 == 0
+                          ? 'color-tr2'
+                          : 'color-tr1'
+                        : index % 2 == 0
+                        ? 'color-tr2'
+                        : 'color-tr1'
+                    "
+                  >
                     <td class="col3" colspan="3">
                       <div style="width: 140px" class="ms-auto">
                         {{ item3.book_out_document_number }}
@@ -134,8 +173,12 @@
                     <td class="col9">{{ item3.to }}</td>
                     <td class="col11">
                       <div class="group-icon">
-                        <img @click="sendmailClick(item3)" src="@/assets/images/icon/envelope-solid.svg" alt=""
-                          class="icon-send pointer" />
+                        <img
+                          @click="sendmailClick(item3)"
+                          src="@/assets/images/icon/envelope-solid.svg"
+                          alt=""
+                          class="icon-send pointer"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -148,8 +191,13 @@
           </table>
         </div>
         <div class="group-footer">
-          <cpn-pagination :page="data.page" :total="data.total" :lastPage="data.lastPage" :perPage="data.perPage"
-            @pageChange="pageChange" />
+          <cpn-pagination
+            :page="data.page"
+            :total="data.total"
+            :lastPage="data.lastPage"
+            :perPage="data.perPage"
+            @pageChange="pageChange"
+          />
         </div>
       </div>
     </div>
@@ -197,7 +245,7 @@ export default {
             perPage: this.data.perPage,
           },
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     listClick(item2) {
       this.$router
@@ -209,7 +257,7 @@ export default {
             perPage: this.data.perPage,
           },
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     pageChange(data) {
       this.data.perPage = data.perPage;
@@ -224,6 +272,7 @@ export default {
       this.data.name = "";
       this.data.start_date = "";
       this.data.end_date = "";
+      this.apiSendmailLists();
     },
     search() {
       this.data.status = true;
@@ -351,7 +400,7 @@ export default {
         .get("/master-data/department-user", {
           params: {
             keyword: e.target.value,
-            type: 1
+            type: 1,
           },
         })
         .then((response) => {
@@ -373,7 +422,7 @@ export default {
         .get("/master-data/department-user", {
           params: {
             keyword: e.target.value,
-            type: 1
+            type: 1,
           },
         })
         .then((response) => {

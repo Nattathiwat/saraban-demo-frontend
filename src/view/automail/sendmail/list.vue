@@ -10,8 +10,8 @@
             </div>
             <div class="group-end">
               <button type="button" class="button-back" @click="back()">
-                <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back">
-                <img src="@/assets/images/icon/line-up.svg" class="icon-line">
+                <img src="@/assets/images/icon/arrow-circle-left.svg" class="icon-back" />
+                <img src="@/assets/images/icon/line-up.svg" class="icon-line" />
                 ย้อนกลับ
               </button>
             </div>
@@ -20,9 +20,14 @@
           <div class="group-detail">
             <div class="group-between">
               <div class="group-input w-50">
-                <div class="name">คำขึ้นต้น </div>
+                <div class="name">คำขึ้นต้น</div>
                 <div class="group-recommend">
-                  <cpn-input v-model="data.greeting" name="greeting" class="input-recommend" placeholder="กรุณาระบุ" />
+                  <cpn-input
+                    v-model="data.greeting"
+                    name="greeting"
+                    class="input-recommend"
+                    placeholder="กรุณาระบุ"
+                  />
                   <button type="button" class="button-recommend" @click="recommendClick()">
                     <i class="bi bi-question icon-question"></i>
                     แนะนำ
@@ -30,7 +35,7 @@
                 </div>
               </div>
               <div class="group-input">
-                <div class="name">คำลงท้าย </div>
+                <div class="name">คำลงท้าย</div>
                 <div class="d-flex">
                   <cpn-input v-model="data.signature" name="signature" placeholder="กรุณาระบุ" />
 
@@ -43,7 +48,7 @@
             </div>
             <div class="group-between">
               <div class="group-input">
-                <div class="name">ข้อมูลผู้ติดต่อ </div>
+                <div class="name">ข้อมูลผู้ติดต่อ</div>
                 <div class="d-flex">
                   <cpn-input v-model="data.contact" name="contact" placeholder="กรุณาระบุ" />
 
@@ -61,15 +66,24 @@
               <thead class="thead">
                 <tr class="thead-row">
                   <th class="col1">ลำดับ</th>
-                  <th class="col2">เลขที่ออก สลค.<br><span>ลงวันที่</span></th>
-                  <th class="col3" v-show="false">ถึง<br><span class="ms-2">เรียน</span><br><span
-                      class="ms-4">คำขึ้นต้น</span><br><span class="ms-6">คำลงท้าย</span><br><span
-                      class="ms-8">ข้อมูลผู้ติดต่อ</span></th>
-                  <th class="col4" v-show="false">ส่งถึง (To)<br><span class="ms-2">สำเนาถึง (Cc)</span><br><span
-                      class="ms-4">สำเนาลับถึง (Bcc)</span><br><span class="ms-6">เรื่อง</span><br><span
-                      class="ms-8">ข้อความ</span></th>
-                  <th class="col5" v-show="false">วิธีการส่งไฟล์<br><span class="ms-2">ไฟล์ต้นเรื่อง</span><br><span
-                      class="ms-4">ไฟล์แนบ</span></th>
+                  <th class="col2">เลขที่หนังสือส่งออก<br /><span>ลงวันที่</span></th>
+                  <th class="col3" v-show="false">
+                    ถึง<br /><span class="ms-2">เรียน</span><br /><span class="ms-4">คำขึ้นต้น</span
+                    ><br /><span class="ms-6">คำลงท้าย</span><br /><span class="ms-8"
+                      >ข้อมูลผู้ติดต่อ</span
+                    >
+                  </th>
+                  <th class="col4" v-show="false">
+                    ส่งถึง (To)<br /><span class="ms-2">สำเนาถึง (Cc)</span><br /><span class="ms-4"
+                      >สำเนาลับถึง (Bcc)</span
+                    ><br /><span class="ms-6">เรื่อง</span><br /><span class="ms-8">ข้อความ</span>
+                  </th>
+                  <th class="col5" v-show="false">
+                    วิธีการส่งไฟล์<br /><span class="ms-2">ไฟล์ต้นเรื่อง</span><br /><span
+                      class="ms-4"
+                      >ไฟล์แนบ</span
+                    >
+                  </th>
                   <th class="col3">ข้อมูลผู้ติดต่อ</th>
                   <th class="col4"></th>
                   <th class="col5">วิธีส่งไฟล์</th>
@@ -78,24 +92,41 @@
               <tbody class="tbody" :class="data.table.length > 0 ? 'tbody-top' : ''">
                 <tr class="tbody-row" v-for="(item, index) in data.table" :key="index">
                   <td class="col1">{{ index + 1 }}</td>
-                  <td class="col2">{{ item.book_out_document_number }}<br>{{ item.as_of_date }}</td>
+                  <td class="col2">
+                    {{ item.book_out_document_number }}<br />{{ item.as_of_date }}
+                  </td>
                   <td class="col3">
                     <div class="new-line">
                       <div class="name">ถึง</div>
-                      <cpn-input v-model="item.bookout.to" :name="'bookout-to' + index" :disabled="true" />
+                      <cpn-input
+                        v-model="item.bookout.to"
+                        :name="'bookout-to' + index"
+                        :disabled="true"
+                      />
                     </div>
                     <div class="new-line">
                       <div class="name">เรียน</div>
-                      <cpn-input v-model="item.bookout.greeting" :name="'bookout-greeting' + index"
-                        class="input-recommend" placeholder="ผู้รับหนังสือ" />
+                      <cpn-input
+                        v-model="item.bookout.greeting"
+                        :name="'bookout-greeting' + index"
+                        class="input-recommend"
+                        placeholder="ผู้รับหนังสือ"
+                      />
                     </div>
                     <div class="new-line">
                       <div class="name">คำขึ้นต้น</div>
                       <div class="group-recommend">
-                        <cpn-input v-model="item.greeting" :name="'greeting' + index" class="input-recommend"
-                          placeholder="กรุณาระบุ" />
-                        <button type="button" class="button-recommend"
-                          @click="recommendClick(), indexTable = index, flgTable = true">
+                        <cpn-input
+                          v-model="item.greeting"
+                          :name="'greeting' + index"
+                          class="input-recommend"
+                          placeholder="กรุณาระบุ"
+                        />
+                        <button
+                          type="button"
+                          class="button-recommend"
+                          @click="recommendClick(), (indexTable = index), (flgTable = true)"
+                        >
                           <i class="bi bi-question icon-question"></i>
                           แนะนำ
                         </button>
@@ -111,12 +142,18 @@
                     </div>
                     <div class="new-line">
                       <div class="name">ข้อมูลผู้ติดต่อ</div>
-                      <cpn-input v-model="item.contact_name" :name="'contact_name' + index"
-                        placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ" />
+                      <cpn-input
+                        v-model="item.contact_name"
+                        :name="'contact_name' + index"
+                        placeholder="ชื่อส่วนราชการเจ้าของเรื่องหรือหน่วยงานที่ออกหนังสือ"
+                      />
                     </div>
                     <div class="new-line">
-                      <cpn-input v-model="item.contact" :name="'contact' + index"
-                        placeholder="เบอร์โทร และชื่อผู้ติดต่อ" />
+                      <cpn-input
+                        v-model="item.contact"
+                        :name="'contact' + index"
+                        placeholder="เบอร์โทร และชื่อผู้ติดต่อ"
+                      />
                     </div>
                   </td>
                   <td class="col4">
@@ -151,16 +188,24 @@
                     </div>
                     <div class="new-line">
                       <div class="name">วิธีการส่งไฟล์</div>
-                      <cpn-select v-model="item.send_type_id" :name="'send_type_id' + index"
-                        :optionSelect="optionSelect.send_type_id" :disabled="item.errorFileSize" />
+                      <cpn-select
+                        v-model="item.send_type_id"
+                        :name="'send_type_id' + index"
+                        :optionSelect="optionSelect.send_type_id"
+                        :disabled="item.errorFileSize"
+                      />
                     </div>
                     <div class="new-line">
                       <div class="name">ลิงก์ดาวน์โหลดเอกสาร</div>
                       <div class="group-recommend">
-                        <cpn-input v-model="item.link" :name="'link' + index" class="input-link"
+                        <cpn-input
+                          v-model="item.link"
+                          :name="'link' + index"
+                          class="input-link"
                           :disabled="item.send_type_id == 1"
                           :rules="item.errorFileSize || item.send_type_id == 2 ? 'required' : ''"
-                          placeholder="กรุณาระบุ" />
+                          placeholder="กรุณาระบุ"
+                        />
                         <button type="button" class="button-link none-pointer">
                           <i class="bi bi-link-45deg icon-question"></i>
                         </button>
@@ -169,9 +214,23 @@
                     <div class="new-line">
                       <div class="name">ไฟล์ต้นเรื่อง</div>
                       <div class="d-flex">
-                        <cpn-input v-model="item.main_file_name" :name="'main_file_name' + index" :disabled="true" />
-                        <button type="button" class="button-view"
-                          @click="previewFile({ filename: item.main_file_name, link: item.main_file_path ? backendport + '/' + item.main_file_path : '' })">
+                        <cpn-input
+                          v-model="item.main_file_name"
+                          :name="'main_file_name' + index"
+                          :disabled="true"
+                        />
+                        <button
+                          type="button"
+                          class="button-view"
+                          @click="
+                            previewFile({
+                              filename: item.main_file_name,
+                              link: item.main_file_path
+                                ? backendport + '/' + item.main_file_path
+                                : '',
+                            })
+                          "
+                        >
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
                       </div>
@@ -179,32 +238,81 @@
                     <div class="new-line">
                       <div class="name d-flex justify-content-between align-items-center mb-2">
                         <div>สิ่งที่แนบมาด้วย</div>
-                        <input type="file" multiple @change="fileChange('attachments' + index, item)"
-                          :name="'attachments' + index" style="display:none;" accept="application/pdf">
-                        <button type="button" class="button-file" @click="uploadFile('attachments' + index)">
+                        <input
+                          type="file"
+                          multiple
+                          @change="fileChange('attachments' + index, item)"
+                          :name="'attachments' + index"
+                          style="display: none"
+                          accept="application/pdf"
+                        />
+                        <button
+                          type="button"
+                          class="button-file"
+                          @click="uploadFile('attachments' + index)"
+                        >
                           <i class="bi bi-plus icon-plus"></i>
                           แนบเอกสาร
                         </button>
                       </div>
                       <div class="d-flex mb-2" v-if="item.copy_main_file_name">
-                        <cpn-input v-model="item.copy_main_file_name" :name="'copy_main_file_name' + index"
-                          :disabled="true" />
-                        <button type="button" class="button-view"
-                          @click="previewFile({ filename: item.copy_main_file_name, link: item.copy_main_file_path ? backendport + '/' + item.copy_main_file_path : '' })">
+                        <cpn-input
+                          v-model="item.copy_main_file_name"
+                          :name="'copy_main_file_name' + index"
+                          :disabled="true"
+                        />
+                        <button
+                          type="button"
+                          class="button-view"
+                          @click="
+                            previewFile({
+                              filename: item.copy_main_file_name,
+                              link: item.copy_main_file_path
+                                ? backendport + '/' + item.copy_main_file_path
+                                : '',
+                            })
+                          "
+                        >
                           <i class="bi bi-eye icon-eye"></i>
                         </button>
                       </div>
                       <div
-                        v-if="item?.attachments.filter(el => el.flag != 'delete')?.length > 0 || item.copy_main_file_name">
-                        <div v-for="(item2, index2) in item.attachments" :key="index2" v-show="item2.flag != 'delete'">
+                        v-if="
+                          item?.attachments.filter((el) => el.flag != 'delete')?.length > 0 ||
+                          item.copy_main_file_name
+                        "
+                      >
+                        <div
+                          v-for="(item2, index2) in item.attachments"
+                          :key="index2"
+                          v-show="item2.flag != 'delete'"
+                        >
                           <div class="d-flex mb-2">
-                            <cpn-input v-model="item2.filename" :name="'filename' + index2" :disabled="true" />
-                            <button type="button" class="button-view"
-                              @click="previewFile({ filename: item2.filename, link: item2.filepath ? backendport + '/' + item2.filepath : item2.link })">
+                            <cpn-input
+                              v-model="item2.filename"
+                              :name="'filename' + index2"
+                              :disabled="true"
+                            />
+                            <button
+                              type="button"
+                              class="button-view"
+                              @click="
+                                previewFile({
+                                  filename: item2.filename,
+                                  link: item2.filepath
+                                    ? backendport + '/' + item2.filepath
+                                    : item2.link,
+                                })
+                              "
+                            >
                               <i class="bi bi-eye icon-eye"></i>
                             </button>
-                            <button type="button" class="button-del" @click="deleteFile(item, item2, index2)"
-                              v-show="!item2.original_flag">
+                            <button
+                              type="button"
+                              class="button-del"
+                              @click="deleteFile(item, item2, index2)"
+                              v-show="!item2.original_flag"
+                            >
                               <i class="bi bi-trash icon-trash"></i>
                             </button>
                           </div>
@@ -226,13 +334,19 @@
           <div class="group-footer">
             <div class="footer-right">
               <button type="button" class="button-primary" @click="save(1)">
-                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle"
-                  class="icon-check-circle" />
+                <img
+                  src="~@/assets/images/icon/check-circle-duotone.svg"
+                  alt="times-circle"
+                  class="icon-check-circle"
+                />
                 บันทึกร่าง
               </button>
               <button type="submit" class="button-success">
-                <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle"
-                  class="icon-check-circle" />
+                <img
+                  src="~@/assets/images/icon/check-circle-duotone.svg"
+                  alt="times-circle"
+                  class="icon-check-circle"
+                />
                 บันทึกและส่ง
               </button>
             </div>
@@ -251,23 +365,35 @@
             <div class="line"></div>
             <div class="modal-detail">
               <div class="group-input">
-                <div class="name">ผู้รับหนังสือ </div>
-                <cpn-autoComplete v-model="modal.book_recipient" name="book_recipient"
-                  :optionSelect="modal.optionSelect.book_recipient" @keyup="keyupModal($event)"
-                  placeholder="กรุณาระบุ" />
+                <div class="name">ผู้รับหนังสือ</div>
+                <cpn-autoComplete
+                  v-model="modal.book_recipient"
+                  name="book_recipient"
+                  :optionSelect="modal.optionSelect.book_recipient"
+                  @keyup="keyupModal($event)"
+                  placeholder="กรุณาระบุ"
+                />
               </div>
             </div>
             <div class="line"></div>
             <div class="group-footer">
               <button type="button" @click="modal.showModal = false" class="btn button-danger">
                 <div class="group-name">
-                  <img src="~@/assets/images/icon/times-circle-duotone.svg" alt="times-circle" class="image-icon" />
+                  <img
+                    src="~@/assets/images/icon/times-circle-duotone.svg"
+                    alt="times-circle"
+                    class="image-icon"
+                  />
                   <div class="name">ยกเลิก</div>
                 </div>
               </button>
               <button type="submit" class="btn button-success" @click="modalClick()">
                 <div class="group-name">
-                  <img src="~@/assets/images/icon/check-circle-duotone.svg" alt="times-circle" class="image-icon" />
+                  <img
+                    src="~@/assets/images/icon/check-circle-duotone.svg"
+                    alt="times-circle"
+                    class="image-icon"
+                  />
                   <div class="name">ตกลง</div>
                 </div>
               </button>
@@ -282,324 +408,387 @@
 </template>
 <script>
 export default {
-  name: 'automail-sendmail-list',
+  name: "automail-sendmail-list",
   data() {
     return {
-      noData: 'ไม่มีสิ่งที่แนบมาด้วย',
+      noData: "ไม่มีสิ่งที่แนบมาด้วย",
       modalAlert: {
         showModal: false,
-        title: '',
-        message: ''
+        title: "",
+        message: "",
       },
       modal: {
         showModal: false,
-        book_recipient: '',
+        book_recipient: "",
         optionSelect: {
-          book_recipient: []
-        }
+          book_recipient: [],
+        },
       },
       showLoading: false,
       data: {
-        greeting: '',
-        signature: '',
+        greeting: "",
+        signature: "",
         // contact: 'โทร. 0 2280 9000 ต่อ .... (ชื่อผู้ติดต่อ ...)',
-        contact: '',
+        contact: "",
         table: [],
-        fileType: []
+        fileType: [],
       },
       optionSelect: {
-        send_type_id: [{ value: 1, name: 'แนบไฟล์ทั้งหมด ตามข้างล่างนี้' }, { value: 2, name: 'ไม่แนบไฟล์ แต่ใช้ลิงก์ข้างล่างนี้แทน' }]
+        send_type_id: [
+          { value: 1, name: "แนบไฟล์ทั้งหมด ตามข้างล่างนี้" },
+          { value: 2, name: "ไม่แนบไฟล์ แต่ใช้ลิงก์ข้างล่างนี้แทน" },
+        ],
       },
       indexTable: 0,
       flgTable: false,
-    }
+    };
   },
   methods: {
     save(flag) {
-      let _this = this
+      let _this = this;
       this.modalAlert = {
         showModal: true,
-        type: 'confirm',
-        title: `คุณยืนยันการ${flag == 1 ? 'บันทึกแบบร่าง' : 'บันทึกและส่งต่อ'}หรือไม่`,
+        type: "confirm",
+        title: `คุณยืนยันการ${flag == 1 ? "บันทึกแบบร่าง" : "บันทึกและส่งต่อ"}หรือไม่`,
         confirm: true,
         msgSuccess: true,
         afterPressAgree() {
-          _this.showLoading = true
-          _this.uploadFileAll(flag)
-        }
-      }
+          _this.showLoading = true;
+          _this.uploadFileAll(flag);
+        },
+      };
     },
     uploadFileAll(flag) {
-      let currentDate = this.assetsUtils.currentDate()
-      let axiosArray = []
-      let fileAttachments = []
-      this.data.table.filter(row => {
-        row.attachments.filter(row2 => {
-          if (row2.file && row2.flag == 'add') {
-            axiosArray.push(true)
+      let currentDate = this.assetsUtils.currentDate();
+      let axiosArray = [];
+      let fileAttachments = [];
+      this.data.table.filter((row) => {
+        row.attachments.filter((row2) => {
+          if (row2.file && row2.flag == "add") {
+            axiosArray.push(true);
           }
-        })
-      })
+        });
+      });
       if (axiosArray.length > 0) {
-        this.data.table.filter(row => {
-          row.attachments.filter(row2 => {
-            if (row2.file && row2.flag == 'add') {
+        this.data.table.filter((row) => {
+          row.attachments.filter((row2) => {
+            if (row2.file && row2.flag == "add") {
               let formDataFile = new FormData();
-              formDataFile.append('file', row2.file);
-              formDataFile.append('dst', `${currentDate.split('/')[0] + '-' + currentDate.split('/')[1] + '-' + currentDate.split('/')[2]}`)
-              this.axios.post(`/upload/single`, formDataFile, { headers: { 'Content-Type': 'multipart/form-data' } })
-                .then((responses) => {
-                  row2.filename = responses.data.data.filename
-                  row2.filepath = responses.data.data.path
-                  fileAttachments.push(true)
-                  if (axiosArray.length == fileAttachments.length) {
-                    this.callApiSave(flag)
-                  }
-                }).catch((error) => {
-                  this.showLoading = false
-                  this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
+              formDataFile.append("file", row2.file);
+              formDataFile.append(
+                "dst",
+                `${
+                  currentDate.split("/")[0] +
+                  "-" +
+                  currentDate.split("/")[1] +
+                  "-" +
+                  currentDate.split("/")[2]
+                }`
+              );
+              this.axios
+                .post(`/upload/single`, formDataFile, {
+                  headers: { "Content-Type": "multipart/form-data" },
                 })
+                .then((responses) => {
+                  row2.filename = responses.data.data.filename;
+                  row2.filepath = responses.data.data.path;
+                  fileAttachments.push(true);
+                  if (axiosArray.length == fileAttachments.length) {
+                    this.callApiSave(flag);
+                  }
+                })
+                .catch((error) => {
+                  this.showLoading = false;
+                  this.modalAlert = {
+                    showModal: true,
+                    type: "error",
+                    title: "Error",
+                    message: error.response.data.message,
+                  };
+                });
             }
-          })
-        })
+          });
+        });
       } else {
-        this.callApiSave(flag)
+        this.callApiSave(flag);
       }
     },
     callApiSave(flag) {
-      let _this = this
-      this.showLoading = true
-      this.data.table.filter(row => {
-        row.user_id = parseInt(localStorage.getItem('user_id'))
-        row.is_draft = flag == 1
-        row.flag = flag == 1 ? 'draft' : ''
-        row.greeting2 = row.bookout.greeting
-        row.department_id = parseInt(localStorage.getItem('department_id'))
-        row.attachments.filter(row2 => {
-          row2.flag = row2.flag == 'edit' ? row.id == 0 ? 'add' : '' : row2.flag
-        })
+      let _this = this;
+      this.showLoading = true;
+      this.data.table.filter((row) => {
+        row.user_id = parseInt(localStorage.getItem("user_id"));
+        row.is_draft = flag == 1;
+        row.flag = flag == 1 ? "draft" : "";
+        row.greeting2 = row.bookout.greeting;
+        row.department_id = parseInt(localStorage.getItem("department_id"));
+        row.attachments.filter((row2) => {
+          row2.flag = row2.flag == "edit" ? (row.id == 0 ? "add" : "") : row2.flag;
+        });
 
         if (row.send_type_id == 2) {
-          row.attachments = []
-          row.copy_main_file_name = ''
-          row.copy_main_file_path = ''
-          row.copy_main_file_size = ''
-          row.main_file_name = ''
-          row.main_file_path = ''
-          row.main_file_size = ''
+          row.attachments = [];
+          row.copy_main_file_name = "";
+          row.copy_main_file_path = "";
+          row.copy_main_file_size = "";
+          row.main_file_name = "";
+          row.main_file_path = "";
+          row.main_file_size = "";
         } else {
-          row.link = ''
+          row.link = "";
         }
-      })
-      this.axios.post(`/book-out-external/book-out-automail/series`, this.data.table)
+      });
+      this.axios
+        .post(`/book-out-external/book-out-automail/series`, this.data.table)
         .then(() => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'success', title: flag == 1 ? 'ทำการบันทึกแบบร่างสำเร็จแล้ว' : 'ทำการบันทึกและส่งต่อสำเร็จแล้ว', msgSuccess: true, afterPressAgree() { _this.back() } }
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "success",
+            title: flag == 1 ? "ทำการบันทึกแบบร่างสำเร็จแล้ว" : "ทำการบันทึกและส่งต่อสำเร็จแล้ว",
+            msgSuccess: true,
+            afterPressAgree() {
+              _this.back();
+            },
+          };
         })
         .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
     },
     sumfile(item) {
-      let size = 0
+      let size = 0;
       if (item.copy_main_file_name) {
-        size += item.copy_main_file_size ? +item.copy_main_file_size : 0
+        size += item.copy_main_file_size ? +item.copy_main_file_size : 0;
       }
       if (item.main_file_name) {
-        size += item.main_file_size ? +item.main_file_size : 0
+        size += item.main_file_size ? +item.main_file_size : 0;
       }
-      item?.attachments?.filter(row => {
-        if (row.flag != 'delete') {
-          size += +row.file_size
+      item?.attachments?.filter((row) => {
+        if (row.flag != "delete") {
+          size += +row.file_size;
         }
-      })
-      if ((size / 1024 / 1024) > 25) {
-        item.errorFileSize = true
-        item.send_type_id = 2
+      });
+      if (size / 1024 / 1024 > 25) {
+        item.errorFileSize = true;
+        item.send_type_id = 2;
       } else {
-        item.errorFileSize = false
+        item.errorFileSize = false;
       }
-      item.sumfile = (size / 1024 / 1024).toFixed(2)
+      item.sumfile = (size / 1024 / 1024).toFixed(2);
     },
     uploadFile(data) {
-      document.querySelector(`[name="${data}"]`).click()
+      document.querySelector(`[name="${data}"]`).click();
     },
     fileChange(data, item) {
       for (var i = 0; i < document.querySelector(`[name="${data}"]`).files.length; i++) {
-        let file = document.querySelector(`[name="${data}"]`).files[i]
-        if ((this.data.fileType.indexOf(file.type) == -1)) {
-          this.modalAlert = { showModal: true, type: 'error', message: this.defaultMessageErrorFile }
-          return false
+        let file = document.querySelector(`[name="${data}"]`).files[i];
+        if (this.data.fileType.indexOf(file.type) == -1) {
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            message: this.defaultMessageErrorFile,
+          };
+          return false;
         }
-        item?.attachments ? '' : (item.attachments = [])
-        if (file.type == 'application/pdf') {
+        item?.attachments ? "" : (item.attachments = []);
+        if (file.type == "application/pdf") {
           let dataFile = {
             filename: file.name,
             type: file.type,
             link: URL.createObjectURL(file),
-            size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
+            size: (file.size / 1024 / 1024).toFixed(2) + " MB",
             file_size: file.size,
             file: file,
-            flag: 'add',
-            original_flag: false
-          }
-          item.attachments.push(dataFile)
+            flag: "add",
+            original_flag: false,
+          };
+          item.attachments.push(dataFile);
         }
       }
-      this.sumfile(item)
+      this.sumfile(item);
       document.querySelector(`[name="${data}"]`).value = null;
     },
     previewFile(data) {
       if (data.filename && data.link) {
         this.axios({
-          method: 'get',
+          method: "get",
           url: data.link,
-          baseURL: '',
-          responseType: 'blob',
-        })
-          .then(response => {
-            const blob = new Blob([response.data], { type: this.assetsUtils.getTypeFile(data.filename) })
-            window.open(URL.createObjectURL(blob))
-          })
+          baseURL: "",
+          responseType: "blob",
+        }).then((response) => {
+          const blob = new Blob([response.data], {
+            type: this.assetsUtils.getTypeFile(data.filename),
+          });
+          window.open(URL.createObjectURL(blob));
+        });
       }
     },
     deleteFile(item, item2, index) {
-      if (item2.flag == 'edit') {
-        item2.flag = 'delete'
+      if (item2.flag == "edit") {
+        item2.flag = "delete";
       } else {
-        item.attachments.splice(index, 1)
+        item.attachments.splice(index, 1);
       }
-      this.sumfile(item)
+      this.sumfile(item);
     },
     keyupModal(e) {
-      this.modal.optionSelect.book_recipient = []
-      this.axios.get('/master-data/message-template', {
-        params: {
-          keyword: e.target.value,
-        }
-      })
+      this.modal.optionSelect.book_recipient = [];
+      this.axios
+        .get("/master-data/message-template", {
+          params: {
+            keyword: e.target.value,
+          },
+        })
         .then((response) => {
           if (response.data.data) {
-            response.data.data.meta.filter(item => {
-              item.value = item.id
-              item.name = item.receive_name
-              return item
-            })
-            this.modal.optionSelect.book_recipient = response.data.data.meta
+            response.data.data.meta.filter((item) => {
+              item.value = item.id;
+              item.name = item.receive_name;
+              return item;
+            });
+            this.modal.optionSelect.book_recipient = response.data.data.meta;
           }
-        })
+        });
     },
     modalClick() {
       if (this.modal.book_recipient) {
-        this.axios.get(`/master-data/message-template/${this.modal.book_recipient}`, {
-          params: {
-            keyword: this.modal.book_recipient,
-          }
-        })
+        this.axios
+          .get(`/master-data/message-template/${this.modal.book_recipient}`, {
+            params: {
+              keyword: this.modal.book_recipient,
+            },
+          })
           .then((response) => {
             if (this.flgTable) {
               // this.data.table[this.indexTable].bookout.greeting = response.data.data.receive_person_name
-              this.data.table[this.indexTable].greeting = response.data.data.title_name
-              this.data.table[this.indexTable].signature = response.data.data.signature
+              this.data.table[this.indexTable].greeting = response.data.data.title_name;
+              this.data.table[this.indexTable].signature = response.data.data.signature;
             } else {
-              this.data.greeting = response.data.data.title_name
-              this.data.signature = response.data.data.signature
+              this.data.greeting = response.data.data.title_name;
+              this.data.signature = response.data.data.signature;
             }
-            this.modal.showModal = false
-            this.indexTable = 0
-            this.flgTable = false
+            this.modal.showModal = false;
+            this.indexTable = 0;
+            this.flgTable = false;
           })
           .catch((error) => {
-            this.modal.showModal = false
-            this.indexTable = 0
-            this.flgTable = false
-            this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-          })
+            this.modal.showModal = false;
+            this.indexTable = 0;
+            this.flgTable = false;
+            this.modalAlert = {
+              showModal: true,
+              type: "error",
+              title: "Error",
+              message: error.response.data.message,
+            };
+          });
       } else {
-        this.modal.showModal = false
-        this.indexTable = 0
-        this.flgTable = false
+        this.modal.showModal = false;
+        this.indexTable = 0;
+        this.flgTable = false;
       }
     },
     recommendClick(item) {
-      this.modal.book_recipient = ''
-      this.keyupModal({ target: { value: '' } })
-      this.modal.showModal = true
+      this.modal.book_recipient = "";
+      this.keyupModal({ target: { value: "" } });
+      this.modal.showModal = true;
     },
     amendClick(flg) {
-      this.data.table.filter(row => {
+      this.data.table.filter((row) => {
         if (flg == 1) {
-          row.greeting = this.data.greeting
-          row.signature = this.data.signature
+          row.greeting = this.data.greeting;
+          row.signature = this.data.signature;
         } else {
-          row.contact = this.data.contact
+          row.contact = this.data.contact;
         }
-      })
+      });
     },
     back() {
-      this.$router.push({
-        name: 'automail-sendmail',
-        query: {
-          page: this.$route.query.page,
-          perPage: this.$route.query.perPage
-        }
-      }).catch(() => { });
+      this.$router
+        .push({
+          name: "automail-sendmail",
+          query: {
+            page: this.$route.query.page,
+            perPage: this.$route.query.perPage,
+          },
+        })
+        .catch(() => {});
     },
     apiSendmailList() {
-      this.data.table = []
-      this.showLoading = true
-      this.axios.get(`/book-out-external/book-out-automail/series/${this.$route.params.id}`)
+      this.data.table = [];
+      this.showLoading = true;
+      this.axios
+        .get(`/book-out-external/book-out-automail/series/${this.$route.params.id}`)
         .then((response) => {
-          this.showLoading = false
-          response.data.data.filter(row => {
-            row.attachments.filter(row2 => {
-              row2.flag = 'edit'
-              row2.file_size = parseInt(row2.file_size)
+          this.showLoading = false;
+          response.data.data.filter((row) => {
+            row.attachments.filter((row2) => {
+              row2.flag = "edit";
+              row2.file_size = parseInt(row2.file_size);
               row2.file = {
-                size: row2.file_size * 1024 * 1024
-              }
-            })
-            row.send_type_id = row.send_type_id ? row.send_type_id : 1
-            this.sumfile(row)
-          })
-          this.data.table = response.data.data
+                size: row2.file_size * 1024 * 1024,
+              };
+            });
+            row.send_type_id = row.send_type_id ? row.send_type_id : 1;
+            this.sumfile(row);
+          });
+          this.data.table = response.data.data;
         })
         .catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
     },
     apiMaster() {
-      this.showLoading = true
-      const request1 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`)
-      this.axios.all([request1])
-        .then(this.axios.spread((...responses) => {
-          this.showLoading = false
-          const response1 = responses[0]
-          this.data.fileType = []
-          response1.data.data.filter(item => {
-            if (item.active_flag == 1) {
-              this.data.fileType.push(item.content_type)
-            }
+      this.showLoading = true;
+      const request1 = this.axios.get(`/filetype?keyword=&page_size=50&page=1`);
+      this.axios
+        .all([request1])
+        .then(
+          this.axios.spread((...responses) => {
+            this.showLoading = false;
+            const response1 = responses[0];
+            this.data.fileType = [];
+            response1.data.data.filter((item) => {
+              if (item.active_flag == 1) {
+                this.data.fileType.push(item.content_type);
+              }
+            });
+            this.apiSendmailList();
           })
-          this.apiSendmailList()
-        })).catch((error) => {
-          this.showLoading = false
-          this.modalAlert = { showModal: true, type: 'error', title: 'Error', message: error.response.data.message }
-        })
-    }
+        )
+        .catch((error) => {
+          this.showLoading = false;
+          this.modalAlert = {
+            showModal: true,
+            type: "error",
+            title: "Error",
+            message: error.response.data.message,
+          };
+        });
+    },
   },
   mounted() {
-    this.apiMaster()
+    this.apiMaster();
   },
   watch: {
-    'modal.showModal'() {
-      document.body.style.overflow = this.modal.showModal ? 'hidden' : ''
-    }
-  }
-}
-
+    "modal.showModal"() {
+      document.body.style.overflow = this.modal.showModal ? "hidden" : "";
+    },
+  },
+};
 </script>
 <style lang="scss">
 .automail-sendmail-list {
@@ -1043,7 +1232,6 @@ export default {
         justify-content: center;
         align-items: center;
 
-
         .modal-size {
           width: 100%;
           pointer-events: auto;
@@ -1071,7 +1259,7 @@ export default {
             .title-size {
               font-size: 18px;
               font-weight: 700;
-              color: #0A1629;
+              color: #0a1629;
               margin-top: 5px;
             }
 
